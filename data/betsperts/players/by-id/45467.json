@@ -1,0 +1,148 @@
+{
+  "playerId": "45467",
+  "playerName": "Kim Leun-Kwang",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_my-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Kim Leun-Kwang",
+    "BirthPlace": "",
+    "BirthDate": "December 25, 1994",
+    "Age": "31",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "Malaysia",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Kim Leun-Kwang",
+        "player_num": "45467",
+        "Year": "2018",
+        "Rounds": "4",
+        "SG:TOT": "-5.85",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "62.5",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2018-10-14",
+        "position": "78",
+        "roundPosition": "78",
+        "TournamentName": "CIMB Classic",
+        "is_major": "0",
+        "playerName": "Kim Leun-Kwang",
+        "player_num": "45467",
+        "Rounds": "4",
+        "CourseID": "800",
+        "Course": "TPC Kuala Lumpur",
+        "ShotLink": "0",
+        "SG:TOT": "-5.85",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-6.179999828338623",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-6.559999942779541",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-8.789999961853027",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-1.8600000143051147",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-5.8474999368190765",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-5.8474999368190765",
+        "Rounds": "4"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-5.8474999368190765",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "76",
+        "PM": "75",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-5.8474999368190765",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:24.822Z",
+    "ok": true
+  }
+}

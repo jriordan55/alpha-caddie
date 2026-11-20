@@ -1,0 +1,173 @@
+{
+  "playerId": "45227",
+  "playerName": "Lars Van Meijel",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_nl-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Lars Van Meijel",
+    "BirthPlace": "",
+    "BirthDate": "June 12, 1994",
+    "Age": "32",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "Netherlands",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Lars Van Meijel",
+        "player_num": "45227",
+        "Year": "2022",
+        "Rounds": "4",
+        "SG:TOT": "0.36",
+        "SG:T2G": "-0.35",
+        "SG:OTT": "-0.07",
+        "SG:APP": "-0.46",
+        "SG:BS": "-0.53",
+        "SG:ARG": "0.17",
+        "SG:P": "0.71",
+        "Dr Distance": null,
+        "Dr Accuracy %": "64.1",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2022-07-17",
+        "position": "T53",
+        "roundPosition": null,
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Lars Van Meijel",
+        "player_num": "45227",
+        "Rounds": "4",
+        "CourseID": "668",
+        "Course": "St. Andrews GC (Old Course)",
+        "ShotLink": "4",
+        "SG:TOT": "0.36",
+        "SG:T2G": "-0.35",
+        "SG:OTT": "-0.07",
+        "SG:APP": "-0.46",
+        "SG:BS": "-0.53",
+        "SG:ARG": "0.17",
+        "SG:P": "0.71",
+        "SG:SG": "0.89"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "75.0",
+        "SG TOT 1+": "25.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "0.7130000200122595",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.2999999523162842",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "1.7200000286102295",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "0.3400000035762787",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "0.6800000071525574",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "0.6800000071525574",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "0.25333335995674133",
+        "Rounds": "3"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "1.030000016093254",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-1.2999999523162842",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "0.6800000071525574",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "0.36000002175569534",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "70",
+        "PM": "74",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "0.36000002175569534",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:32.197Z",
+    "ok": true
+  }
+}

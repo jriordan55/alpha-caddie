@@ -1,0 +1,210 @@
+{
+  "playerId": "26500",
+  "playerName": "Alejandro Cañizares",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_sp-flag-1.gif",
+  "profile": {
+    "ProfileImage": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/04/HDS_26500_CanizaresAle.png",
+    "Name": "Alejandro Cañizares",
+    "BirthPlace": "Madrid, Spain",
+    "BirthDate": "January 09, 1983",
+    "Age": "43",
+    "Height": "5ft 11in",
+    "Weight": "165 lbs",
+    "Nationality": "Spain",
+    "Residence": "Manilva, Malaga, Spain",
+    "ProWins": "2",
+    "TurnedPro": "2006",
+    "PGAWins": "0",
+    "College": "Arizona State University  (2006, Interdisciplinary Studies) "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Alejandro Cañizares",
+        "player_num": "26500",
+        "Year": "2023",
+        "Rounds": "2",
+        "SG:TOT": "-3.65",
+        "SG:T2G": "-5.14",
+        "SG:OTT": "-1.88",
+        "SG:APP": "-2.37",
+        "SG:BS": "-4.25",
+        "SG:ARG": "-0.89",
+        "SG:P": "1.76",
+        "Dr Distance": null,
+        "Dr Accuracy %": "57.1",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Alejandro Cañizares",
+        "player_num": "26500",
+        "Year": "2022",
+        "Rounds": "2",
+        "SG:TOT": "-1.51",
+        "SG:T2G": "-2.41",
+        "SG:OTT": "-1.42",
+        "SG:APP": "0.44",
+        "SG:BS": "-0.98",
+        "SG:ARG": "-1.43",
+        "SG:P": "0.90",
+        "Dr Distance": "276.6",
+        "Dr Accuracy %": "57.1",
+        "Ball Speed": "165.47"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2023-07-23",
+        "position": "CUT",
+        "roundPosition": null,
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Alejandro Cañizares",
+        "player_num": "26500",
+        "Rounds": "2",
+        "CourseID": "923",
+        "Course": "Royal Liverpool",
+        "ShotLink": "2",
+        "SG:TOT": "-3.65",
+        "SG:T2G": "-5.14",
+        "SG:OTT": "-1.88",
+        "SG:APP": "-2.37",
+        "SG:BS": "-4.25",
+        "SG:ARG": "-0.89",
+        "SG:P": "1.76",
+        "SG:SG": "0.87"
+      },
+      {
+        "Date": "2022-07-10",
+        "position": "CUT",
+        "roundPosition": "T110",
+        "TournamentName": "Barbasol Championship",
+        "is_major": "0",
+        "playerName": "Alejandro Cañizares",
+        "player_num": "26500",
+        "Rounds": "2",
+        "CourseID": "884",
+        "Course": "Keene Trace GC",
+        "ShotLink": "2",
+        "SG:TOT": "-1.51",
+        "SG:T2G": "-2.41",
+        "SG:OTT": "-1.42",
+        "SG:APP": "0.44",
+        "SG:BS": "-0.98",
+        "SG:ARG": "-1.43",
+        "SG:P": "0.90",
+        "SG:SG": "-0.53"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "25.0",
+        "SG TOT 1+": "25.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "5"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "1.3299999851733446",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "0.06000000238418579",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-5.215000152587891",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": null,
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-3.6500000953674316",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-1.5050000548362732",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": null,
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-3.6500000953674316",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-1.5050000548362732",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-3.6500000953674316",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-1.5050000548362732",
+        "Rounds": "3"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "73.5",
+        "PM": "74.5",
+        "Rounds": "5"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "5",
+        "50-100": null,
+        "100-150": "21.8",
+        "150-200": "29.1",
+        "200+": "67.9",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-2.5775000751018524",
+        "Rounds": "5"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:18:49.732Z",
+    "ok": true
+  }
+}

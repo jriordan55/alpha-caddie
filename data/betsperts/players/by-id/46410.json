@@ -1,0 +1,173 @@
+{
+  "playerId": "46410",
+  "playerName": "Jamie Rutherford",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/St_Georges_Cross.svg_.png",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Jamie Rutherford",
+    "BirthPlace": "",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "England",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Jamie Rutherford",
+        "player_num": "46410",
+        "Year": "2022",
+        "Rounds": "4",
+        "SG:TOT": "-2.64",
+        "SG:T2G": "-0.44",
+        "SG:OTT": "-0.70",
+        "SG:APP": "1.48",
+        "SG:BS": "0.78",
+        "SG:ARG": "-1.23",
+        "SG:P": "-2.20",
+        "Dr Distance": null,
+        "Dr Accuracy %": "65.6",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2022-07-17",
+        "position": "83",
+        "roundPosition": null,
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Jamie Rutherford",
+        "player_num": "46410",
+        "Rounds": "4",
+        "CourseID": "668",
+        "Course": "St. Andrews GC (Old Course)",
+        "ShotLink": "4",
+        "SG:TOT": "-2.64",
+        "SG:T2G": "-0.44",
+        "SG:OTT": "-0.70",
+        "SG:APP": "1.48",
+        "SG:BS": "0.78",
+        "SG:ARG": "-1.23",
+        "SG:P": "-2.20",
+        "SG:SG": "-3.42"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "25.0",
+        "SG TOT 1+": "25.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-2.197249997407198",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.30000001192092896",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "1.7200000286102295",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-6.659999847412109",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-5.320000171661377",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-5.320000171661377",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-1.7466666102409363",
+        "Rounds": "3"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-2.46999990940094",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-0.30000001192092896",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-5.320000171661377",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-2.6400000005960464",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74.33333333333333",
+        "PM": "73",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-2.6400000005960464",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:23.810Z",
+    "ok": true
+  }
+}

@@ -1,0 +1,138 @@
+{
+  "playerId": "31190",
+  "playerName": "Peter Williamson",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Peter Williamson",
+    "BirthPlace": null,
+    "BirthDate": "July 23, 1990",
+    "Age": "36",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Peter Williamson",
+        "player_num": "31190",
+        "Year": "2017",
+        "Rounds": "2",
+        "SG:TOT": "-3.10",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "39.3",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2017-03-26",
+        "position": "CUT",
+        "roundPosition": "T120",
+        "TournamentName": "Puerto Rico Open",
+        "is_major": "0",
+        "playerName": "Peter Williamson",
+        "player_num": "31190",
+        "Rounds": "2",
+        "CourseID": "742",
+        "Course": "Grand Reserve GC",
+        "ShotLink": "0",
+        "SG:TOT": "-3.10",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-3.5299999713897705",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-2.6600000858306885",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-3.0950000286102295",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-3.0950000286102295",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-3.0950000286102295",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74",
+        "PM": "73",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-3.0950000286102295",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:24:49.427Z",
+    "ok": true
+  }
+}

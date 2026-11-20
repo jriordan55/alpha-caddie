@@ -1,0 +1,162 @@
+{
+  "playerId": "71059",
+  "playerName": "Lorenzo Rodriguez",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Lorenzo Rodriguez",
+    "BirthPlace": null,
+    "BirthDate": "",
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Lorenzo Rodriguez",
+        "player_num": "71059",
+        "Year": "2026",
+        "Rounds": "2",
+        "SG:TOT": "-5.61",
+        "SG:T2G": "-2.29",
+        "SG:OTT": "-1.55",
+        "SG:APP": "-0.84",
+        "SG:BS": "-2.39",
+        "SG:ARG": "0.10",
+        "SG:P": "-3.32",
+        "Dr Distance": "292.9",
+        "Dr Accuracy %": "50.0",
+        "Ball Speed": "178.16"
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Lorenzo Rodriguez",
+        "player_num": "71059",
+        "Rounds": "2",
+        "SG:TOT": "-5.61",
+        "SG:T2G": "-2.29",
+        "SG:OTT": "-1.55",
+        "SG:APP": "-0.84",
+        "SG:BS": "-2.39",
+        "SG:ARG": "0.10",
+        "SG:P": "-3.32",
+        "SG:SG": "-3.22"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-08-09",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "Wyndham Championship",
+        "is_major": "0",
+        "playerName": "Lorenzo Rodriguez",
+        "player_num": "71059",
+        "Rounds": "2",
+        "CourseID": "752",
+        "Course": "Sedgefield CC",
+        "ShotLink": "2",
+        "SG:TOT": "-5.61",
+        "SG:T2G": "-2.29",
+        "SG:OTT": "-1.55",
+        "SG:APP": "-0.84",
+        "SG:BS": "-2.39",
+        "SG:ARG": "0.10",
+        "SG:P": "-3.32",
+        "SG:SG": "-3.22"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-3.3174999952316284",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-6.389999866485596",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-4.820000171661377",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-5.605000019073486",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-5.605000019073486",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-5.605000019073486",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74",
+        "PM": "75",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "48.5",
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-5.605000019073486",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:38.873Z",
+    "ok": true
+  }
+}

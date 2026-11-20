@@ -1,0 +1,148 @@
+{
+  "playerId": "50710",
+  "playerName": "Maclain Huge",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Maclain Huge",
+    "BirthPlace": "Leesburg, Virginia",
+    "BirthDate": "September 26, 1993",
+    "Age": "33",
+    "Height": "6ft 5in",
+    "Weight": "215 lbs",
+    "Nationality": "United States",
+    "Residence": "Lovettsville, Virginia",
+    "ProWins": "0",
+    "TurnedPro": "2016",
+    "PGAWins": "0",
+    "College": "Virginia Tech  (Public Relations, 2016) "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Maclain Huge",
+        "player_num": "50710",
+        "Year": "2022",
+        "Rounds": "2",
+        "SG:TOT": "-3.01",
+        "SG:T2G": "-4.20",
+        "SG:OTT": "-2.47",
+        "SG:APP": "-1.90",
+        "SG:BS": "-4.37",
+        "SG:ARG": "0.17",
+        "SG:P": "1.19",
+        "Dr Distance": "291.6",
+        "Dr Accuracy %": "60.7",
+        "Ball Speed": "183.07"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2022-07-10",
+        "position": "CUT",
+        "roundPosition": "T139",
+        "TournamentName": "Barbasol Championship",
+        "is_major": "0",
+        "playerName": "Maclain Huge",
+        "player_num": "50710",
+        "Rounds": "2",
+        "CourseID": "884",
+        "Course": "Keene Trace GC",
+        "ShotLink": "2",
+        "SG:TOT": "-3.01",
+        "SG:T2G": "-4.20",
+        "SG:OTT": "-2.47",
+        "SG:APP": "-1.90",
+        "SG:BS": "-4.37",
+        "SG:ARG": "0.17",
+        "SG:P": "1.19",
+        "SG:SG": "1.36"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "1.191500037908554",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.1299999952316284",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-4.880000114440918",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-3.005000054836273",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-3.005000054836273",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-3.005000054836273",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74",
+        "PM": "71",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "28.7",
+        "150-200": null,
+        "200+": "70.5",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-3.005000054836273",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:43.211Z",
+    "ok": true
+  }
+}

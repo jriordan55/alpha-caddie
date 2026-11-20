@@ -1,0 +1,105 @@
+{
+  "courseNum": "706",
+  "courseName": "Whistling Straits",
+  "list": {
+    "CourseName": "Whistling Straits",
+    "CourseNum": "706",
+    "CourseNums": [
+      706
+    ]
+  },
+  "details": {
+    "CourseName": "Whistling Straits",
+    "CourseNum": "706",
+    "Locations": [
+      "Midwest",
+      "Wisconsin"
+    ],
+    "SeasonHeld": "",
+    "CourseTypes": [
+      "Hybrid Links"
+    ],
+    "ParScore": "72",
+    "Yards": "7501",
+    "AVG": "104.2",
+    "CourseLength": "Long",
+    "Architects": [
+      "Pete Dye"
+    ],
+    "RedesignArchitects": [],
+    "Elevation": "646",
+    "CourseElevation": "Average",
+    "Bunkers": "1012",
+    "BunkersRank": "High",
+    "WaterHoles": "7",
+    "WaterDanger": "Average",
+    "ScoreRTP": "0.76",
+    "Difficulty": "",
+    "FwyGrass": "Fescue Mix",
+    "FwyWidth": "0",
+    "GreenSqFt": "7500",
+    "GreenSize": "Large",
+    "GreenGrass": "Bent",
+    "GreenStimp": "12",
+    "GreenSpeed": "Average",
+    "RoughType": "Fescue",
+    "RoughGrass": "Fescue",
+    "RoughLengthInc": "4",
+    "RoughLength": "Long",
+    "EventTypes": [
+      "36-Hole Cut",
+      "Major"
+    ],
+    "Tournaments": [
+      {
+        "Year": "2015",
+        "Tournament": "PGA Championship"
+      }
+    ],
+    "CorrelatedCourse": [],
+    "FieldSize": "Full Field",
+    "FieldStrength": "",
+    "OTTClub": "",
+    "FwyPct": "0",
+    "FwyAccuracy": "",
+    "GainOTT": "",
+    "MissedFairwayPenalty": "",
+    "RoughPenalty": "",
+    "GIRAccuracy": "",
+    "GIRPct": "0",
+    "GainAPP": "",
+    "ScramblingFromRough": "",
+    "ScramblingFromShortGrass": "",
+    "SandSaves": "",
+    "GainARG": "",
+    "GainingPuttingInside15": "",
+    "GainingPuttingOutside15": "",
+    "3PuttAVD": "",
+    "GainPutting": "",
+    "Par3Scoring": "",
+    "Par4Scoring": "",
+    "Par5Scoring": "",
+    "ShotLink": "1"
+  },
+  "tournaments": [
+    {
+      "CourseNum": "706",
+      "TNum": "33",
+      "TourneyName": "PGA Championship"
+    }
+  ],
+  "_meta": {
+    "pulledAt": "2026-11-20T22:18:26.541Z",
+    "detailStatus": 200,
+    "tournamentsStatus": 200
+  },
+  "auth": {
+    "holeBreakdown": [],
+    "correlated": [],
+    "_meta": {
+      "pulledAt": "2026-11-20T22:52:53.160Z",
+      "holeStatus": 200,
+      "correlatedStatus": 200
+    }
+  }
+}

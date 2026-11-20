@@ -1,0 +1,256 @@
+{
+  "playerId": "55888",
+  "playerName": "Devon Bling",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Devon Bling",
+    "BirthPlace": "",
+    "BirthDate": "October 09, 1999",
+    "Age": "27",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "United States",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Devon Bling",
+        "player_num": "55888",
+        "Year": "2023",
+        "Rounds": "2",
+        "SG:TOT": "-4.68",
+        "SG:T2G": "-4.18",
+        "SG:OTT": "-1.55",
+        "SG:APP": "-2.23",
+        "SG:BS": "-3.78",
+        "SG:ARG": "-0.39",
+        "SG:P": "-0.51",
+        "Dr Distance": "290.8",
+        "Dr Accuracy %": "39.3",
+        "Ball Speed": "174.06"
+      },
+      {
+        "playerName": "Devon Bling",
+        "player_num": "55888",
+        "Year": "2019",
+        "Rounds": "6",
+        "SG:TOT": "-3.44",
+        "SG:T2G": "-5.80",
+        "SG:OTT": "0.02",
+        "SG:APP": "-2.89",
+        "SG:BS": "-2.87",
+        "SG:ARG": "-2.93",
+        "SG:P": "-2.57",
+        "Dr Distance": "274.5",
+        "Dr Accuracy %": "54.8",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2023-09-17",
+        "position": "CUT",
+        "roundPosition": "T149",
+        "TournamentName": "Fortinet Championship",
+        "is_major": "0",
+        "playerName": "Devon Bling",
+        "player_num": "55888",
+        "Rounds": "2",
+        "CourseID": "926",
+        "Course": "Silverado Resort (North)",
+        "ShotLink": "2",
+        "SG:TOT": "-4.68",
+        "SG:T2G": "-4.18",
+        "SG:OTT": "-1.55",
+        "SG:APP": "-2.23",
+        "SG:BS": "-3.78",
+        "SG:ARG": "-0.39",
+        "SG:P": "-0.51",
+        "SG:SG": "-0.91"
+      },
+      {
+        "Date": "2019-06-16",
+        "position": "CUT",
+        "roundPosition": "156",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Devon Bling",
+        "player_num": "55888",
+        "Rounds": "2",
+        "CourseID": "666",
+        "Course": "Pebble Beach Golf Links",
+        "ShotLink": "2",
+        "SG:TOT": "-8.37",
+        "SG:T2G": "-5.80",
+        "SG:OTT": "0.02",
+        "SG:APP": "-2.89",
+        "SG:BS": "-2.87",
+        "SG:ARG": "-2.93",
+        "SG:P": "-2.57",
+        "SG:SG": "-5.50"
+      },
+      {
+        "Date": "2019-04-14",
+        "position": "55",
+        "roundPosition": "55",
+        "TournamentName": "Masters Tournament",
+        "is_major": "1",
+        "playerName": "Devon Bling",
+        "player_num": "55888",
+        "Rounds": "4",
+        "CourseID": "14",
+        "Course": "Augusta National GC",
+        "ShotLink": "4",
+        "SG:TOT": "-0.98",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "8"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": null,
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "-2.5714999437332153",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-4.68666676680247",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-4.733333269755046",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-0.23000000417232513",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-1.5399999618530273",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-0.9799999855458736",
+        "Rounds": "4"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-8.370000123977661",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-4.684999942779541",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-1.5079999655485152",
+        "Rounds": "5"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-5.75",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-8.370000123977661",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-3.443333365023136",
+        "Rounds": "6"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-4.684999942779541",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74.8",
+        "PM": "77",
+        "Rounds": "8"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "8",
+        "50-100": "27.5",
+        "100-150": "34.1",
+        "150-200": "34.9",
+        "200+": "45.1",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-4.684999942779541",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-0.9799999855458736",
+        "Rounds": "4"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-8.370000123977661",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:21:13.416Z",
+    "ok": true
+  }
+}

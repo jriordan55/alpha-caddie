@@ -1,0 +1,153 @@
+{
+  "playerId": "59490",
+  "playerName": "Charles Jahn",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Charles Jahn",
+    "BirthPlace": "",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "United States",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Charles Jahn",
+        "player_num": "59490",
+        "Year": "2022",
+        "Rounds": "2",
+        "SG:TOT": "-4.28",
+        "SG:T2G": "-3.82",
+        "SG:OTT": "0.19",
+        "SG:APP": "-2.02",
+        "SG:BS": "-1.83",
+        "SG:ARG": "-1.99",
+        "SG:P": "-0.47",
+        "Dr Distance": "298.6",
+        "Dr Accuracy %": "50.0",
+        "Ball Speed": "182.43"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2022-07-03",
+        "position": "CUT",
+        "roundPosition": "T145",
+        "TournamentName": "John Deere Classic",
+        "is_major": "0",
+        "playerName": "Charles Jahn",
+        "player_num": "59490",
+        "Rounds": "2",
+        "CourseID": "669",
+        "Course": "TPC Deere Run",
+        "ShotLink": "2",
+        "SG:TOT": "-4.28",
+        "SG:T2G": "-3.82",
+        "SG:OTT": "0.19",
+        "SG:APP": "-2.02",
+        "SG:BS": "-1.83",
+        "SG:ARG": "-1.99",
+        "SG:P": "-0.47",
+        "SG:SG": "-2.46"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.4699999839067459",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-3.700000047683716",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-4.869999885559082",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-4.284999966621399",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-3.700000047683716",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-4.869999885559082",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-4.284999966621399",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "75",
+        "PM": "74",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "21.2",
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-4.284999966621399",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:20:12.211Z",
+    "ok": true
+  }
+}

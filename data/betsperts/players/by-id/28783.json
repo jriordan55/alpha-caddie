@@ -1,0 +1,194 @@
+{
+  "playerId": "28783",
+  "playerName": "Sam Brazel",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/as-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Sam Brazel",
+    "BirthPlace": null,
+    "BirthDate": "December 28, 1978",
+    "Age": "47",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "Australia",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Sam Brazel",
+        "player_num": "28783",
+        "Year": "2017",
+        "Rounds": "8",
+        "SG:TOT": "-0.85",
+        "SG:T2G": "-1.26",
+        "SG:OTT": "-1.12",
+        "SG:APP": "-0.40",
+        "SG:BS": "-1.52",
+        "SG:ARG": "0.26",
+        "SG:P": "0.41",
+        "Dr Distance": "284.8",
+        "Dr Accuracy %": "46.4",
+        "Ball Speed": "167.97"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2017-08-06",
+        "position": "T47",
+        "roundPosition": "T47",
+        "TournamentName": "WGC - Bridgestone Invitational",
+        "is_major": "0",
+        "playerName": "Sam Brazel",
+        "player_num": "28783",
+        "Rounds": "4",
+        "CourseID": "36",
+        "Course": "Firestone CC (South)",
+        "ShotLink": "4",
+        "SG:TOT": "-0.76",
+        "SG:T2G": "-1.47",
+        "SG:OTT": "-1.20",
+        "SG:APP": "-0.21",
+        "SG:BS": "-1.41",
+        "SG:ARG": "-0.06",
+        "SG:P": "0.72",
+        "SG:SG": "0.66"
+      },
+      {
+        "Date": "2017-03-05",
+        "position": "T55",
+        "roundPosition": "T55",
+        "TournamentName": "WGC - Mexico",
+        "is_major": "0",
+        "playerName": "Sam Brazel",
+        "player_num": "28783",
+        "Rounds": "4",
+        "CourseID": "240",
+        "Course": "Club de Golf Chapultepec",
+        "ShotLink": "4",
+        "SG:TOT": "-0.95",
+        "SG:T2G": "-1.05",
+        "SG:OTT": "-1.04",
+        "SG:APP": "-0.59",
+        "SG:BS": "-1.63",
+        "SG:ARG": "0.58",
+        "SG:P": "0.10",
+        "SG:SG": "0.68"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "37.5",
+        "SG TOT 1+": "25.0",
+        "SG TOT 2+": "12.5",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "8"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "0.09799998998641968",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-3.1299999952316284",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "1.9249999523162842",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "0.019999980926513672",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-2.2249999344348907",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-0.9499999731779099",
+        "Rounds": "4"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-0.7550000250339508",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-0.9499999731779099",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-0.7550000250339508",
+        "Rounds": "4"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-0.8524999991059303",
+        "Rounds": "8"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "72.5",
+        "PM": "69",
+        "Rounds": "8"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "8",
+        "50-100": "15.7",
+        "100-150": "28",
+        "150-200": "34.9",
+        "200+": "54.2",
+        "200-250": null,
+        "250+": "97.9"
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-0.9499999731779099",
+        "Rounds": "4"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-0.7550000250339508",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:21.650Z",
+    "ok": true
+  }
+}

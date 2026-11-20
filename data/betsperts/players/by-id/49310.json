@@ -1,0 +1,215 @@
+{
+  "playerId": "49310",
+  "playerName": "David Gazzolo",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "David Gazzolo",
+    "BirthPlace": "Riverside, California",
+    "BirthDate": "April 11, 1993",
+    "Age": "33",
+    "Height": "6ft 1in",
+    "Weight": "177 lbs",
+    "Nationality": "United States",
+    "Residence": "Riverside, California",
+    "ProWins": "0",
+    "TurnedPro": "2015",
+    "PGAWins": "0",
+    "College": "University of California-Riverside 2015, Business Management"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "David Gazzolo",
+        "player_num": "49310",
+        "Year": "2021",
+        "Rounds": "4",
+        "SG:TOT": "0.34",
+        "SG:T2G": "-0.01",
+        "SG:OTT": "0.78",
+        "SG:APP": "-0.21",
+        "SG:BS": "0.57",
+        "SG:ARG": "-0.58",
+        "SG:P": "0.34",
+        "Dr Distance": "295.5",
+        "Dr Accuracy %": "60.7",
+        "Ball Speed": "179.91"
+      },
+      {
+        "playerName": "David Gazzolo",
+        "player_num": "49310",
+        "Year": "2018",
+        "Rounds": "2",
+        "SG:TOT": "-3.47",
+        "SG:T2G": "-3.07",
+        "SG:OTT": "-0.51",
+        "SG:APP": "-2.93",
+        "SG:BS": "-3.43",
+        "SG:ARG": "0.37",
+        "SG:P": "-0.40",
+        "Dr Distance": "293.4",
+        "Dr Accuracy %": "35.7",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2021-07-18",
+        "position": "T42",
+        "roundPosition": "T42",
+        "TournamentName": "Barbasol Championship",
+        "is_major": "0",
+        "playerName": "David Gazzolo",
+        "player_num": "49310",
+        "Rounds": "4",
+        "CourseID": "884",
+        "Course": "Keene Trace GC",
+        "ShotLink": "4",
+        "SG:TOT": "0.34",
+        "SG:T2G": "-0.01",
+        "SG:OTT": "0.78",
+        "SG:APP": "-0.21",
+        "SG:BS": "0.57",
+        "SG:ARG": "-0.58",
+        "SG:P": "0.34",
+        "SG:SG": "-0.24"
+      },
+      {
+        "Date": "2018-06-17",
+        "position": "CUT",
+        "roundPosition": "T131",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "David Gazzolo",
+        "player_num": "49310",
+        "Rounds": "2",
+        "CourseID": "618",
+        "Course": "Shinnecock Hills GC",
+        "ShotLink": "2",
+        "SG:TOT": "-3.47",
+        "SG:T2G": "-3.07",
+        "SG:OTT": "-0.51",
+        "SG:APP": "-2.93",
+        "SG:BS": "-3.43",
+        "SG:ARG": "0.37",
+        "SG:P": "-0.40",
+        "SG:SG": "-0.03"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "16.7",
+        "SG TOT 2+": "16.7",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "6"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "0.34325002133846283",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "0.06999999284744263",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-2.490000009536743",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-1.6799999475479126",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "0.9300000071525574",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "0.5566667119661967",
+        "Rounds": "3"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-3.4650000482797623",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-0.33000001311302185",
+        "Rounds": "1"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-3.4650000482797623",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "0.33500003069639206",
+        "Rounds": "4"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-3.4650000482797623",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "0.33500003069639206",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "72.25",
+        "PM": "73",
+        "Rounds": "6"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "6",
+        "50-100": null,
+        "100-150": "29.3",
+        "150-200": "40.3",
+        "200+": "63.7",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-0.9316666622956594",
+        "Rounds": "6"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:21:00.234Z",
+    "ok": true
+  }
+}

@@ -1,0 +1,214 @@
+{
+  "playerId": "54525",
+  "playerName": "Ian Holt",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Ian Holt",
+    "BirthPlace": "Stow, Ohio",
+    "BirthDate": "October 20, 1995",
+    "Age": "31",
+    "Height": "6ft 3in",
+    "Weight": "215 lbs",
+    "Nationality": "United States",
+    "Residence": "Charleston, South Carolina",
+    "ProWins": "0",
+    "TurnedPro": "2018",
+    "PGAWins": "0",
+    "College": "Kent State University 2018, Business Management"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Ian Holt",
+        "player_num": "54525",
+        "Year": "2026",
+        "Rounds": "2",
+        "SG:TOT": "-3.56",
+        "SG:T2G": "-2.79",
+        "SG:OTT": "-0.24",
+        "SG:APP": "-2.04",
+        "SG:BS": "-2.28",
+        "SG:ARG": "-0.51",
+        "SG:P": "-0.78",
+        "Dr Distance": "302.0",
+        "Dr Accuracy %": "39.3",
+        "Ball Speed": "177.54"
+      },
+      {
+        "playerName": "Ian Holt",
+        "player_num": "54525",
+        "Year": "2021",
+        "Rounds": "2",
+        "SG:TOT": "-0.30",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "42.9",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Ian Holt",
+        "player_num": "54525",
+        "Rounds": "2",
+        "SG:TOT": "-3.56",
+        "SG:T2G": "-2.79",
+        "SG:OTT": "-0.24",
+        "SG:APP": "-2.04",
+        "SG:BS": "-2.28",
+        "SG:ARG": "-0.51",
+        "SG:P": "-0.78",
+        "SG:SG": "-1.29"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-05-17",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "PGA Championship",
+        "is_major": "1",
+        "playerName": "Ian Holt",
+        "player_num": "54525",
+        "Rounds": "2",
+        "CourseID": "773",
+        "Course": "Aronimink Golf Club",
+        "ShotLink": "2",
+        "SG:TOT": "-3.56",
+        "SG:T2G": "-2.79",
+        "SG:OTT": "-0.24",
+        "SG:APP": "-2.04",
+        "SG:BS": "-2.28",
+        "SG:ARG": "-0.51",
+        "SG:P": "-0.78",
+        "SG:SG": "-1.29"
+      },
+      {
+        "Date": "2021-02-28",
+        "position": "CUT",
+        "roundPosition": "T76",
+        "TournamentName": "Puerto Rico Open",
+        "is_major": "0",
+        "playerName": "Ian Holt",
+        "player_num": "54525",
+        "Rounds": "2",
+        "CourseID": "742",
+        "Course": "Grand Reserve GC",
+        "ShotLink": "0",
+        "SG:TOT": "-0.30",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "25.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.7785000205039978",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.5149999856948853",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-2.3499999344348907",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-5.389999866485596",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-0.7799999912579855",
+        "Rounds": "3"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-0.29999998211860657",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-3.5649999380111694",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-3.5649999380111694",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-0.29999998211860657",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "72.5",
+        "PM": "75.5",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": "31.6",
+        "150-200": null,
+        "200+": "67",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-1.932499960064888",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:07.153Z",
+    "ok": true
+  }
+}

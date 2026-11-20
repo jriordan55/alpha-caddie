@@ -1,0 +1,225 @@
+{
+  "playerId": "45396",
+  "playerName": "Tomoyasu Sugiyama",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ja-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Tomoyasu Sugiyama",
+    "BirthPlace": "",
+    "BirthDate": "April 28, 1993",
+    "Age": "33",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "Japan",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Tomoyasu Sugiyama",
+        "player_num": "45396",
+        "Year": "2022",
+        "Rounds": "2",
+        "SG:TOT": "-3.62",
+        "SG:T2G": "-2.63",
+        "SG:OTT": "-0.72",
+        "SG:APP": "-2.11",
+        "SG:BS": "-2.83",
+        "SG:ARG": "0.20",
+        "SG:P": "-0.99",
+        "Dr Distance": "281.2",
+        "Dr Accuracy %": "46.4",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Tomoyasu Sugiyama",
+        "player_num": "45396",
+        "Year": "2021",
+        "Rounds": "4",
+        "SG:TOT": "-1.27",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "42.3",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2022-06-19",
+        "position": "CUT",
+        "roundPosition": "T141",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Tomoyasu Sugiyama",
+        "player_num": "45396",
+        "Rounds": "2",
+        "CourseID": "654",
+        "Course": "The Country Club",
+        "ShotLink": "2",
+        "SG:TOT": "-3.62",
+        "SG:T2G": "-2.63",
+        "SG:OTT": "-0.72",
+        "SG:APP": "-2.11",
+        "SG:BS": "-2.83",
+        "SG:ARG": "0.20",
+        "SG:P": "-0.99",
+        "SG:SG": "-0.79"
+      },
+      {
+        "Date": "2021-10-24",
+        "position": "T57",
+        "roundPosition": "T57",
+        "TournamentName": "ZOZO Championship",
+        "is_major": "0",
+        "playerName": "Tomoyasu Sugiyama",
+        "player_num": "45396",
+        "Rounds": "4",
+        "CourseID": "875",
+        "Course": "Accordia Golf Narashino CC",
+        "ShotLink": "0",
+        "SG:TOT": "-1.27",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "16.7",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "6"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": null,
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "-0.9890000820159912",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.9550000429153442",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-3.6350001096725464",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-1.909999966621399",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "0.7799999713897705",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-3.620000123977661",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-1.2675000131130219",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "0.7799999713897705",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-1.950000007947286",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-3.620000123977661",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-3.620000123977661",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-1.2675000131130219",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "73.5",
+        "PM": "73",
+        "Rounds": "6"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "6",
+        "50-100": "32",
+        "100-150": null,
+        "150-200": "48.1",
+        "200+": "47.6",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-1.2675000131130219",
+        "Rounds": "4"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-3.620000123977661",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:26:10.813Z",
+    "ok": true
+  }
+}

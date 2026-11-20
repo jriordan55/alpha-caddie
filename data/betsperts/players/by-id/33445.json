@@ -1,0 +1,219 @@
+{
+  "playerId": "33445",
+  "playerName": "Patrick Wilkes-Krier",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Patrick Wilkes-Krier",
+    "BirthPlace": null,
+    "BirthDate": "January 28, 1984",
+    "Age": "42",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Patrick Wilkes-Krier",
+        "player_num": "33445",
+        "Year": "2026",
+        "Rounds": "2",
+        "SG:TOT": "-4.31",
+        "SG:T2G": "-3.90",
+        "SG:OTT": "-2.95",
+        "SG:APP": "-0.69",
+        "SG:BS": "-3.65",
+        "SG:ARG": "-0.25",
+        "SG:P": "-0.41",
+        "Dr Distance": "291.6",
+        "Dr Accuracy %": "46.4",
+        "Ball Speed": "171.87"
+      },
+      {
+        "playerName": "Patrick Wilkes-Krier",
+        "player_num": "33445",
+        "Year": "2016",
+        "Rounds": "2",
+        "SG:TOT": "-1.08",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "50.0",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Patrick Wilkes-Krier",
+        "player_num": "33445",
+        "Rounds": "2",
+        "SG:TOT": "-4.31",
+        "SG:T2G": "-3.90",
+        "SG:OTT": "-2.95",
+        "SG:APP": "-0.69",
+        "SG:BS": "-3.65",
+        "SG:ARG": "-0.25",
+        "SG:P": "-0.41",
+        "SG:SG": "-0.66"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-08-02",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "Rocket Classic",
+        "is_major": "0",
+        "playerName": "Patrick Wilkes-Krier",
+        "player_num": "33445",
+        "Rounds": "2",
+        "CourseID": "947",
+        "Course": "Detroit GC",
+        "ShotLink": "2",
+        "SG:TOT": "-4.31",
+        "SG:T2G": "-3.90",
+        "SG:OTT": "-2.95",
+        "SG:APP": "-0.69",
+        "SG:BS": "-3.65",
+        "SG:ARG": "-0.25",
+        "SG:P": "-0.41",
+        "SG:SG": "-0.66"
+      },
+      {
+        "Date": "2016-06-19",
+        "position": "CUT",
+        "roundPosition": "T100",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Patrick Wilkes-Krier",
+        "player_num": "33445",
+        "Rounds": "2",
+        "CourseID": "608",
+        "Course": "Oakmont CC",
+        "ShotLink": "0",
+        "SG:TOT": "-1.08",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "25.0",
+        "SG TOT 1+": "25.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.4050000309944153",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": null,
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-4.2850000858306885",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.1049999594688416",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-1.0849999785423279",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-4.305000066757202",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-4.305000066757202",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-1.0849999785423279",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-4.305000066757202",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-1.0849999785423279",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "72.5",
+        "PM": "76",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "35.2",
+        "200+": "57.3",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-2.695000022649765",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:24:41.631Z",
+    "ok": true
+  }
+}

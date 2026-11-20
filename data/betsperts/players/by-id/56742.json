@@ -1,0 +1,190 @@
+{
+  "playerId": "56742",
+  "playerName": "Brady Calkins",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Brady Calkins",
+    "BirthPlace": "Chehalis, Washington",
+    "BirthDate": "April 02, 1995",
+    "Age": "31",
+    "Height": "5ft 9in",
+    "Weight": "190 lbs",
+    "Nationality": "United States",
+    "Residence": "Scottsdale, Arizona",
+    "ProWins": "0",
+    "TurnedPro": "2014",
+    "PGAWins": "0",
+    "College": "Spokane Community College "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Brady Calkins",
+        "player_num": "56742",
+        "Year": "2025",
+        "Rounds": "2",
+        "SG:TOT": "-8.79",
+        "SG:T2G": "-6.32",
+        "SG:OTT": "-4.14",
+        "SG:APP": "0.78",
+        "SG:BS": "-3.35",
+        "SG:ARG": "-2.96",
+        "SG:P": "-2.48",
+        "Dr Distance": "298.0",
+        "Dr Accuracy %": "21.4",
+        "Ball Speed": "174.55"
+      },
+      {
+        "playerName": "Brady Calkins",
+        "player_num": "56742",
+        "Year": "2022",
+        "Rounds": "2",
+        "SG:TOT": "-2.12",
+        "SG:T2G": "-2.36",
+        "SG:OTT": "-1.13",
+        "SG:APP": "0.76",
+        "SG:BS": "-0.37",
+        "SG:ARG": "-1.99",
+        "SG:P": "0.24",
+        "Dr Distance": "298.2",
+        "Dr Accuracy %": "35.7",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2025-06-15",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Brady Calkins",
+        "player_num": "56742",
+        "Rounds": "2",
+        "CourseID": "608",
+        "Course": "Oakmont CC",
+        "ShotLink": "2",
+        "SG:TOT": "-8.79",
+        "SG:T2G": "-6.32",
+        "SG:OTT": "-4.14",
+        "SG:APP": "0.78",
+        "SG:BS": "-3.35",
+        "SG:ARG": "-2.96",
+        "SG:P": "-2.48",
+        "SG:SG": "-5.44"
+      },
+      {
+        "Date": "2022-06-19",
+        "position": "CUT",
+        "roundPosition": "T125",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Brady Calkins",
+        "player_num": "56742",
+        "Rounds": "2",
+        "CourseID": "654",
+        "Course": "The Country Club",
+        "ShotLink": "2",
+        "SG:TOT": "-2.12",
+        "SG:T2G": "-2.36",
+        "SG:OTT": "-1.13",
+        "SG:APP": "0.76",
+        "SG:BS": "-0.37",
+        "SG:ARG": "-1.99",
+        "SG:P": "0.24",
+        "SG:SG": "-1.75"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "-1.1175000369548798",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-5.295000076293945",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-5.615000128746033",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-2.1200000047683716",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-8.790000200271606",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-5.455000102519989",
+        "Rounds": "4"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-5.455000102519989",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "82",
+        "PM": "78",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": "30.4",
+        "100-150": "35.1",
+        "150-200": "41.1",
+        "200+": "56.9",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-5.455000102519989",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:38.991Z",
+    "ok": true
+  }
+}

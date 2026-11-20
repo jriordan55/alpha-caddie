@@ -1,0 +1,148 @@
+{
+  "playerId": "25457",
+  "playerName": "Alexandre Rocha",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_br-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Alexandre Rocha",
+    "BirthPlace": "Sao Paulo, Brazil",
+    "BirthDate": "November 21, 1977",
+    "Age": "48",
+    "Height": "6ft 0in",
+    "Weight": "185 lbs",
+    "Nationality": "Brazil",
+    "Residence": "Ponte Vedra Beach, Florida",
+    "ProWins": null,
+    "TurnedPro": "2000",
+    "PGAWins": null,
+    "College": "Mississippi State University 2000, Business"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Alexandre Rocha",
+        "player_num": "25457",
+        "Year": "2015",
+        "Rounds": "4",
+        "SG:TOT": "0.26",
+        "SG:T2G": "0.04",
+        "SG:OTT": "0.50",
+        "SG:APP": "0.44",
+        "SG:BS": "0.93",
+        "SG:ARG": "-0.90",
+        "SG:P": "0.23",
+        "Dr Distance": "272.6",
+        "Dr Accuracy %": "76.8",
+        "Ball Speed": "161.62"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2015-06-28",
+        "position": "T54",
+        "roundPosition": "T54",
+        "TournamentName": "Travelers Championship",
+        "is_major": "0",
+        "playerName": "Alexandre Rocha",
+        "player_num": "25457",
+        "Rounds": "4",
+        "CourseID": "503",
+        "Course": "TPC River Highlands",
+        "ShotLink": "4",
+        "SG:TOT": "0.26",
+        "SG:T2G": "0.04",
+        "SG:OTT": "0.50",
+        "SG:APP": "0.44",
+        "SG:BS": "0.93",
+        "SG:ARG": "-0.90",
+        "SG:P": "0.23",
+        "SG:SG": "-0.67"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "25.0",
+        "SG TOT 2+": "25.0",
+        "SG TOT 3+": "25.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "3.0799999237060547",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "0.05000000074505806",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-0.5799999833106995",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-1.4900000095367432",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "0.26499998290091753",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "0.26499998290091753",
+        "Rounds": "4"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "0.26499998290091753",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "68.66666666666667",
+        "PM": "70",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": "26.7",
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "0.26499998290091753",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:18:55.321Z",
+    "ok": true
+  }
+}

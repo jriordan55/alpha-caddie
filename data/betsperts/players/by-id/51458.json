@@ -1,0 +1,246 @@
+{
+  "playerId": "51458",
+  "playerName": "Preston Cole",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Preston Cole",
+    "BirthPlace": "Greer, South Carolina",
+    "BirthDate": "December 18, 1993",
+    "Age": "32",
+    "Height": "5ft 10in",
+    "Weight": "200 lbs",
+    "Nationality": "United States",
+    "Residence": "Charlotte, North Carolina",
+    "ProWins": null,
+    "TurnedPro": "2016",
+    "PGAWins": null,
+    "College": "Furman University 2016, Accounting and Health Sciences"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Preston Cole",
+        "player_num": "51458",
+        "Year": "2025",
+        "Rounds": "4",
+        "SG:TOT": "-4.63",
+        "SG:T2G": "-2.64",
+        "SG:OTT": "-1.20",
+        "SG:APP": "-0.58",
+        "SG:BS": "-1.78",
+        "SG:ARG": "-0.86",
+        "SG:P": "-1.98",
+        "Dr Distance": "284.6",
+        "Dr Accuracy %": "57.1",
+        "Ball Speed": "172.59"
+      },
+      {
+        "playerName": "Preston Cole",
+        "player_num": "51458",
+        "Year": "2024",
+        "Rounds": "2",
+        "SG:TOT": "-7.83",
+        "SG:T2G": "-6.31",
+        "SG:OTT": "-0.35",
+        "SG:APP": "-3.03",
+        "SG:BS": "-3.38",
+        "SG:ARG": "-2.94",
+        "SG:P": "-1.52",
+        "Dr Distance": "284.4",
+        "Dr Accuracy %": "60.7",
+        "Ball Speed": "174.17"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2025-08-03",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "Wyndham Championship",
+        "is_major": "0",
+        "playerName": "Preston Cole",
+        "player_num": "51458",
+        "Rounds": "2",
+        "CourseID": "752",
+        "Course": "Sedgefield CC",
+        "ShotLink": "2",
+        "SG:TOT": "-4.07",
+        "SG:T2G": "-1.90",
+        "SG:OTT": "-1.80",
+        "SG:APP": "0.58",
+        "SG:BS": "-1.22",
+        "SG:ARG": "-0.69",
+        "SG:P": "-2.16",
+        "SG:SG": "-2.84"
+      },
+      {
+        "Date": "2025-05-11",
+        "position": "CUT",
+        "roundPosition": "131",
+        "TournamentName": "Myrtle Beach Classic",
+        "is_major": "0",
+        "playerName": "Preston Cole",
+        "player_num": "51458",
+        "Rounds": "2",
+        "CourseID": "925",
+        "Course": "Dunes Golf & Beach Club",
+        "ShotLink": "2",
+        "SG:TOT": "-5.19",
+        "SG:T2G": "-3.38",
+        "SG:OTT": "-0.60",
+        "SG:APP": "-1.74",
+        "SG:BS": "-2.34",
+        "SG:ARG": "-1.04",
+        "SG:P": "-1.81",
+        "SG:SG": "-2.85"
+      },
+      {
+        "Date": "2024-05-19",
+        "position": "CUT",
+        "roundPosition": "T69",
+        "TournamentName": "PGA Championship",
+        "is_major": "1",
+        "playerName": "Preston Cole",
+        "player_num": "51458",
+        "Rounds": "2",
+        "CourseID": "671",
+        "Course": "Valhalla Golf Club",
+        "ShotLink": "2",
+        "SG:TOT": "-7.83",
+        "SG:T2G": "-6.31",
+        "SG:OTT": "-0.35",
+        "SG:APP": "-3.03",
+        "SG:BS": "-3.38",
+        "SG:ARG": "-2.94",
+        "SG:P": "-1.52",
+        "SG:SG": "-4.46"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "6"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-1.5214999914169312",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-1.9842500239610672",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-5.4100000858306885",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-5.979999939600627",
+        "Rounds": "3"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-5.185000061988831",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-4.065000057220459",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-7.834999918937683",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-5.414999961853027",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-6.980000019073486",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-5.53000020980835",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-4.065000057220459",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-7.834999918937683",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-5.185000061988831",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "75.33333333333333",
+        "PM": "76.33333333333333",
+        "Rounds": "6"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "6",
+        "50-100": "25",
+        "100-150": "35.2",
+        "150-200": "38.5",
+        "200+": "47.1",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-6.509999990463257",
+        "Rounds": "4"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-4.065000057220459",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:24:52.326Z",
+    "ok": true
+  }
+}

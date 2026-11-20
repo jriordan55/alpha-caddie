@@ -1,0 +1,185 @@
+{
+  "playerId": "8191",
+  "playerName": "Paul Broadhurst",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/St_Georges_Cross.svg_.png",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Paul Broadhurst",
+    "BirthPlace": "Walsall, England",
+    "BirthDate": "August 14, 1965",
+    "Age": "61",
+    "Height": "5ft 11in",
+    "Weight": "172 lbs",
+    "Nationality": "England",
+    "Residence": "Atherstone, England",
+    "ProWins": "9",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Paul Broadhurst",
+        "player_num": "8191",
+        "Year": "2018",
+        "Rounds": "2",
+        "SG:TOT": "-1.51",
+        "SG:T2G": "-1.46",
+        "SG:OTT": "-1.22",
+        "SG:APP": "0.36",
+        "SG:BS": "-0.87",
+        "SG:ARG": "-0.60",
+        "SG:P": "-0.05",
+        "Dr Distance": "269.0",
+        "Dr Accuracy %": "60.7",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Paul Broadhurst",
+        "player_num": "8191",
+        "Year": "2017",
+        "Rounds": "2",
+        "SG:TOT": "-0.52",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "64.3",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2018-08-12",
+        "position": "CUT",
+        "roundPosition": "T115",
+        "TournamentName": "PGA Championship",
+        "is_major": "1",
+        "playerName": "Paul Broadhurst",
+        "player_num": "8191",
+        "Rounds": "2",
+        "CourseID": "534",
+        "Course": "Bellerive CC",
+        "ShotLink": "2",
+        "SG:TOT": "-1.51",
+        "SG:T2G": "-1.46",
+        "SG:OTT": "-1.22",
+        "SG:APP": "0.36",
+        "SG:BS": "-0.87",
+        "SG:ARG": "-0.60",
+        "SG:P": "-0.05",
+        "SG:SG": "-0.65"
+      },
+      {
+        "Date": "2017-07-23",
+        "position": "CUT",
+        "roundPosition": "T89",
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Paul Broadhurst",
+        "player_num": "8191",
+        "Rounds": "2",
+        "CourseID": "541",
+        "Course": "Royal Birkdale GC",
+        "ShotLink": "0",
+        "SG:TOT": "-0.52",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "25.0",
+        "SG TOT 1+": "25.0",
+        "SG TOT 2+": "25.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-2.8499999046325684",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "0.8099999874830246",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-0.5249999761581421",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-1.5149999409914017",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-1.5149999409914017",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-0.5249999761581421",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-1.0199999585747719",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "72.5",
+        "PM": "73",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": "45.8",
+        "200-250": "45.8",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-1.0199999585747719",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:24:42.301Z",
+    "ok": true
+  }
+}

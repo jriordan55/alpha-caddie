@@ -1,0 +1,247 @@
+{
+  "playerId": "61143",
+  "playerName": "Austin Greaser",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/07/images-3.jpg",
+    "Name": "Austin Greaser",
+    "BirthPlace": "",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "United States",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Austin Greaser",
+        "player_num": "61143",
+        "Year": "2023",
+        "Rounds": "2",
+        "SG:TOT": "-1.60",
+        "SG:T2G": "-0.91",
+        "SG:OTT": "-0.85",
+        "SG:APP": "0.67",
+        "SG:BS": "-0.18",
+        "SG:ARG": "-0.73",
+        "SG:P": "-0.69",
+        "Dr Distance": "311.6",
+        "Dr Accuracy %": "35.7",
+        "Ball Speed": "177.16"
+      },
+      {
+        "playerName": "Austin Greaser",
+        "player_num": "61143",
+        "Year": "2022",
+        "Rounds": "6",
+        "SG:TOT": "-1.53",
+        "SG:T2G": "-1.32",
+        "SG:OTT": "0.05",
+        "SG:APP": "-0.86",
+        "SG:BS": "-0.81",
+        "SG:ARG": "-0.51",
+        "SG:P": "-0.21",
+        "Dr Distance": "285.1",
+        "Dr Accuracy %": "45.2",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2023-05-07",
+        "position": "CUT",
+        "roundPosition": "T114",
+        "TournamentName": "Wells Fargo Championship",
+        "is_major": "0",
+        "playerName": "Austin Greaser",
+        "player_num": "61143",
+        "Rounds": "2",
+        "CourseID": "872",
+        "Course": "Quail Hollow Club",
+        "ShotLink": "2",
+        "SG:TOT": "-1.60",
+        "SG:T2G": "-0.91",
+        "SG:OTT": "-0.85",
+        "SG:APP": "0.67",
+        "SG:BS": "-0.18",
+        "SG:ARG": "-0.73",
+        "SG:P": "-0.69",
+        "SG:SG": "-1.42"
+      },
+      {
+        "Date": "2022-06-19",
+        "position": "T61",
+        "roundPosition": "T61",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Austin Greaser",
+        "player_num": "61143",
+        "Rounds": "4",
+        "CourseID": "654",
+        "Course": "The Country Club",
+        "ShotLink": "4",
+        "SG:TOT": "-1.65",
+        "SG:T2G": "-1.34",
+        "SG:OTT": "-0.01",
+        "SG:APP": "-1.20",
+        "SG:BS": "-1.21",
+        "SG:ARG": "-0.13",
+        "SG:P": "-0.32",
+        "SG:SG": "-0.45"
+      },
+      {
+        "Date": "2022-04-10",
+        "position": "CUT",
+        "roundPosition": "T64",
+        "TournamentName": "Masters Tournament",
+        "is_major": "1",
+        "playerName": "Austin Greaser",
+        "player_num": "61143",
+        "Rounds": "2",
+        "CourseID": "14",
+        "Course": "Augusta National GC",
+        "ShotLink": "2",
+        "SG:TOT": "-1.28",
+        "SG:T2G": "-1.28",
+        "SG:OTT": "0.17",
+        "SG:APP": "-0.18",
+        "SG:BS": "-0.02",
+        "SG:ARG": "-1.26",
+        "SG:P": "0.00",
+        "SG:SG": "-1.26"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "25.0",
+        "SG TOT 1+": "12.5",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "8"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "0",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "-0.31775000784546137",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa Trivialis",
+        "StrokesGainedAverage": "-0.6935000047087669",
+        "Rounds": "2"
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.559999997417132",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.4400000373522441",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-2.4700000286102295",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-6.909999847412109",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-1.529999998708566",
+        "Rounds": "6"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-1.5999999940395355",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-0.9200000166893005",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-2.2799999713897705",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-1.529999998708566",
+        "Rounds": "6"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Strong",
+        "StrokesGainedAverage": "-1.5999999940395355",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-1.529999998708566",
+        "Rounds": "6"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74.6",
+        "PM": "73.66666666666667",
+        "Rounds": "8"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "8",
+        "50-100": "28.6",
+        "100-150": "24.6",
+        "150-200": "34",
+        "200+": "59.3",
+        "200-250": "59.3",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-1.4400000236928463",
+        "Rounds": "4"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-1.6549999713897705",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:15.325Z",
+    "ok": true
+  }
+}

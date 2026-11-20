@@ -1,0 +1,148 @@
+{
+  "playerId": "39437",
+  "playerName": "Aaron Crawford",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ca-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Aaron Crawford",
+    "BirthPlace": "Calgary, Alberta, Canada",
+    "BirthDate": "August 07, 1994",
+    "Age": "32",
+    "Height": "6ft 2in",
+    "Weight": "None lbs",
+    "Nationality": "Canada",
+    "Residence": "Calgary, Alberta, Canada",
+    "ProWins": "0",
+    "TurnedPro": "2012",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Aaron Crawford",
+        "player_num": "39437",
+        "Year": "2020",
+        "Rounds": "2",
+        "SG:TOT": "-0.92",
+        "SG:T2G": "-0.69",
+        "SG:OTT": "-0.36",
+        "SG:APP": "-1.60",
+        "SG:BS": "-1.97",
+        "SG:ARG": "1.27",
+        "SG:P": "-0.23",
+        "Dr Distance": "290.9",
+        "Dr Accuracy %": "50.0",
+        "Ball Speed": "167.21"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2020-07-26",
+        "position": "CUT",
+        "roundPosition": "T99",
+        "TournamentName": "3M Open",
+        "is_major": "0",
+        "playerName": "Aaron Crawford",
+        "player_num": "39437",
+        "Rounds": "2",
+        "CourseID": "883",
+        "Course": "TPC Twin Cities",
+        "ShotLink": "2",
+        "SG:TOT": "-0.92",
+        "SG:T2G": "-0.69",
+        "SG:OTT": "-0.36",
+        "SG:APP": "-1.60",
+        "SG:BS": "-1.97",
+        "SG:ARG": "1.27",
+        "SG:P": "-0.23",
+        "SG:SG": "1.04"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "50.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.2279999852180481",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "1.4299999475479126",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-3.2699999809265137",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-0.9200000166893005",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-0.9200000166893005",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-0.9200000166893005",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74",
+        "PM": "69",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": "49.9",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-0.9200000166893005",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:18:42.546Z",
+    "ok": true
+  }
+}

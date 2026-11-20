@@ -1,0 +1,158 @@
+{
+  "playerId": "29891",
+  "playerName": "Scott Arnold",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/as-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Scott Arnold",
+    "BirthPlace": null,
+    "BirthDate": "September 13, 1985",
+    "Age": "41",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "Australia",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Scott Arnold",
+        "player_num": "29891",
+        "Year": "2015",
+        "Rounds": "4",
+        "SG:TOT": "0.69",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "65.6",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2015-07-19",
+        "position": "T40",
+        "roundPosition": "T40",
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Scott Arnold",
+        "player_num": "29891",
+        "Rounds": "4",
+        "CourseID": "668",
+        "Course": "St. Andrews GC (Old Course)",
+        "ShotLink": "0",
+        "SG:TOT": "0.69",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "50.0",
+        "SG TOT 2+": "25.0",
+        "SG TOT 3+": "25.0",
+        "SG TOT 4+": "25.0",
+        "SG TOT 5+": "25.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": null,
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "1.2400000095367432",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.6399999856948853",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-3.2899999618530273",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "5.440000057220459",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "0.6875000298023224",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "0.6875000298023224",
+        "Rounds": "4"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "0.6875000298023224",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "70",
+        "PM": "73",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "0.6875000298023224",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:26.065Z",
+    "ok": true
+  }
+}

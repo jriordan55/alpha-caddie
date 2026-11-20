@@ -1,0 +1,138 @@
+{
+  "playerId": "12660",
+  "playerName": "Jesper Parnevik",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_sw-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Jesper Parnevik",
+    "BirthPlace": "Stockholm, Sweden",
+    "BirthDate": "March 07, 1965",
+    "Age": "61",
+    "Height": "6ft 0in",
+    "Weight": "175 lbs",
+    "Nationality": "Sweden",
+    "Residence": "Stockholm, Sweden",
+    "ProWins": null,
+    "TurnedPro": "1986",
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Jesper Parnevik",
+        "player_num": "12660",
+        "Year": "2015",
+        "Rounds": "2",
+        "SG:TOT": "-2.73",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "53.6",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2015-03-08",
+        "position": "CUT",
+        "roundPosition": "T115",
+        "TournamentName": "Puerto Rico Open",
+        "is_major": "0",
+        "playerName": "Jesper Parnevik",
+        "player_num": "12660",
+        "Rounds": "2",
+        "CourseID": "742",
+        "Course": "Grand Reserve GC",
+        "ShotLink": "0",
+        "SG:TOT": "-2.73",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "0.009999999776482582",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-5.460000038146973",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-2.725000019185245",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-2.725000019185245",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-2.725000019185245",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "78",
+        "PM": "74",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-2.725000019185245",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:42.645Z",
+    "ok": true
+  }
+}

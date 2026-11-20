@@ -1,0 +1,190 @@
+{
+  "playerId": "31111",
+  "playerName": "David Coupland",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/St_Georges_Cross.svg_.png",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "David Coupland",
+    "BirthPlace": "",
+    "BirthDate": "March 16, 1986",
+    "Age": "40",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "England",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "David Coupland",
+        "player_num": "31111",
+        "Year": "2021",
+        "Rounds": "2",
+        "SG:TOT": "-3.25",
+        "SG:T2G": "-3.03",
+        "SG:OTT": "-0.57",
+        "SG:APP": "-2.02",
+        "SG:BS": "-2.59",
+        "SG:ARG": "-0.44",
+        "SG:P": "-0.22",
+        "Dr Distance": "292.4",
+        "Dr Accuracy %": "53.6",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "David Coupland",
+        "player_num": "31111",
+        "Year": "2016",
+        "Rounds": "2",
+        "SG:TOT": "-1.79",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "64.3",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2021-06-20",
+        "position": "CUT",
+        "roundPosition": null,
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "David Coupland",
+        "player_num": "31111",
+        "Rounds": "2",
+        "CourseID": "744",
+        "Course": "Torrey Pines GC (South)",
+        "ShotLink": "2",
+        "SG:TOT": "-3.25",
+        "SG:T2G": "-3.03",
+        "SG:OTT": "-0.57",
+        "SG:APP": "-2.02",
+        "SG:BS": "-2.59",
+        "SG:ARG": "-0.44",
+        "SG:P": "-0.22",
+        "SG:SG": "-0.66"
+      },
+      {
+        "Date": "2016-07-17",
+        "position": "CUT",
+        "roundPosition": "T111",
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "David Coupland",
+        "player_num": "31111",
+        "Rounds": "2",
+        "CourseID": "709",
+        "Course": "Royal Troon",
+        "ShotLink": "0",
+        "SG:TOT": "-1.79",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "25.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "-0.22200000286102295",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.12500000093132257",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-4.914999961853027",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-1.7949999431148171",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-3.2450000196695328",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-2.519999981392175",
+        "Rounds": "4"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-2.519999981392175",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "76",
+        "PM": "76",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-2.519999981392175",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:20:59.292Z",
+    "ok": true
+  }
+}

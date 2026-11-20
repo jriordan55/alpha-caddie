@@ -1,0 +1,205 @@
+{
+  "playerId": "20436",
+  "playerName": "Garrett Willis",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Garrett Willis",
+    "BirthPlace": "Charlotte, North Carolina",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "6ft 1in",
+    "Weight": "185 lbs",
+    "Nationality": "United States",
+    "Residence": "Knoxville, Tennessee",
+    "ProWins": null,
+    "TurnedPro": "1996",
+    "PGAWins": null,
+    "College": "East Tennessee State University  (1996, Communications) "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Garrett Willis",
+        "player_num": "20436",
+        "Year": "2016",
+        "Rounds": "1",
+        "SG:TOT": "-4.56",
+        "SG:T2G": "-3.93",
+        "SG:OTT": "-3.44",
+        "SG:APP": "-0.31",
+        "SG:BS": "-3.75",
+        "SG:ARG": "-0.17",
+        "SG:P": "-0.63",
+        "Dr Distance": "267.1",
+        "Dr Accuracy %": "64.3",
+        "Ball Speed": "162.96"
+      },
+      {
+        "playerName": "Garrett Willis",
+        "player_num": "20436",
+        "Year": "2015",
+        "Rounds": "4",
+        "SG:TOT": "0.30",
+        "SG:T2G": "1.03",
+        "SG:OTT": "0.36",
+        "SG:APP": "0.39",
+        "SG:BS": "0.75",
+        "SG:ARG": "0.28",
+        "SG:P": "-0.72",
+        "Dr Distance": "275.1",
+        "Dr Accuracy %": "80.4",
+        "Ball Speed": "160.26"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2016-08-14",
+        "position": "W/D",
+        "roundPosition": "T138",
+        "TournamentName": "John Deere Classic",
+        "is_major": "0",
+        "playerName": "Garrett Willis",
+        "player_num": "20436",
+        "Rounds": "1",
+        "CourseID": "669",
+        "Course": "TPC Deere Run",
+        "ShotLink": "1",
+        "SG:TOT": "-4.56",
+        "SG:T2G": "-3.93",
+        "SG:OTT": "-3.44",
+        "SG:APP": "-0.31",
+        "SG:BS": "-3.75",
+        "SG:ARG": "-0.17",
+        "SG:P": "-0.63",
+        "SG:SG": "-0.81"
+      },
+      {
+        "Date": "2015-07-19",
+        "position": "T48",
+        "roundPosition": "T48",
+        "TournamentName": "Barbasol Championship",
+        "is_major": "0",
+        "playerName": "Garrett Willis",
+        "player_num": "20436",
+        "Rounds": "4",
+        "CourseID": "819",
+        "Course": "RTJ Trail (Grand National)",
+        "ShotLink": "4",
+        "SG:TOT": "0.30",
+        "SG:T2G": "1.03",
+        "SG:OTT": "0.36",
+        "SG:APP": "0.39",
+        "SG:BS": "0.75",
+        "SG:ARG": "0.28",
+        "SG:P": "-0.72",
+        "SG:SG": "-0.45"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "60.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "5"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.6309999823570251",
+        "Rounds": "1"
+      },
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-0.7237499952316284",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-2.3999999687075615",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "0.36000001430511475",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "0.5600000023841858",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "0.5299999713897705",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "0.30249999836087227",
+        "Rounds": "4"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-4.559999942779541",
+        "Rounds": "1"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-0.6699999898672104",
+        "Rounds": "5"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-0.6699999898672104",
+        "Rounds": "5"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "69.66666666666667",
+        "PM": "72.5",
+        "Rounds": "5"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "5",
+        "50-100": null,
+        "100-150": "23.4",
+        "150-200": null,
+        "200+": "50.4",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-0.6699999898672104",
+        "Rounds": "5"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:21:41.416Z",
+    "ok": true
+  }
+}

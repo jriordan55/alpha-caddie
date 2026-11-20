@@ -1,0 +1,153 @@
+{
+  "playerId": "28243",
+  "playerName": "Min-gyu Cho",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ks-flag-1.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Min-gyu Cho",
+    "BirthPlace": "",
+    "BirthDate": "August 08, 1988",
+    "Age": "38",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "South Korea",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Min-gyu Cho",
+        "player_num": "28243",
+        "Year": "2022",
+        "Rounds": "2",
+        "SG:TOT": "-1.79",
+        "SG:T2G": "-0.17",
+        "SG:OTT": "-1.63",
+        "SG:APP": "1.50",
+        "SG:BS": "-0.13",
+        "SG:ARG": "-0.04",
+        "SG:P": "-1.62",
+        "Dr Distance": null,
+        "Dr Accuracy %": "53.1",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2022-07-17",
+        "position": "CUT",
+        "roundPosition": null,
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Min-gyu Cho",
+        "player_num": "28243",
+        "Rounds": "2",
+        "CourseID": "668",
+        "Course": "St. Andrews GC (Old Course)",
+        "ShotLink": "2",
+        "SG:TOT": "-1.79",
+        "SG:T2G": "-0.17",
+        "SG:OTT": "-1.63",
+        "SG:APP": "1.50",
+        "SG:BS": "-0.13",
+        "SG:ARG": "-0.04",
+        "SG:P": "-1.62",
+        "SG:SG": "-1.65"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-1.6150000095367432",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-2.299999952316284",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.2799999713897705",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-1.7899999618530273",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-1.2799999713897705",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-2.299999952316284",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-1.7899999618530273",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "73",
+        "PM": "75",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-1.7899999618530273",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:24:18.500Z",
+    "ok": true
+  }
+}

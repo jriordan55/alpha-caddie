@@ -1,0 +1,157 @@
+{
+  "playerId": "30637",
+  "playerName": "Yohann Benson",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ca-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Yohann Benson",
+    "BirthPlace": "Pincourt, Quebec, Canada",
+    "BirthDate": "December 18, 1981",
+    "Age": "44",
+    "Height": "5ft 8in",
+    "Weight": "178 lbs",
+    "Nationality": "Canada",
+    "Residence": "Pincourt, Quebec, Canada",
+    "ProWins": null,
+    "TurnedPro": "2007",
+    "PGAWins": null,
+    "College": "College Gerald-Godin "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Yohann Benson",
+        "player_num": "30637",
+        "Year": "2026",
+        "Rounds": "2",
+        "SG:TOT": "-3.21",
+        "SG:T2G": "-2.12",
+        "SG:OTT": "-0.81",
+        "SG:APP": "-0.54",
+        "SG:BS": "-1.35",
+        "SG:ARG": "-0.77",
+        "SG:P": "-1.10",
+        "Dr Distance": "288.7",
+        "Dr Accuracy %": "60.7",
+        "Ball Speed": "164.75"
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Yohann Benson",
+        "player_num": "30637",
+        "Rounds": "2",
+        "SG:TOT": "-3.21",
+        "SG:T2G": "-2.12",
+        "SG:OTT": "-0.81",
+        "SG:APP": "-0.54",
+        "SG:BS": "-1.35",
+        "SG:ARG": "-0.77",
+        "SG:P": "-1.10",
+        "SG:SG": "-1.87"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-06-14",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "RBC Canadian Open",
+        "is_major": "0",
+        "playerName": "Yohann Benson",
+        "player_num": "30637",
+        "Rounds": "2",
+        "CourseID": "935",
+        "Course": "TPC Toronto at Osprey Valley (North)",
+        "ShotLink": "2",
+        "SG:TOT": "-3.21",
+        "SG:T2G": "-2.12",
+        "SG:OTT": "-0.81",
+        "SG:APP": "-0.54",
+        "SG:BS": "-1.35",
+        "SG:ARG": "-0.77",
+        "SG:P": "-1.10",
+        "SG:SG": "-1.87"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-5.489999771118164",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.9399999976158142",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-3.214999884366989",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-0.9399999976158142",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-5.489999771118164",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-3.214999884366989",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74",
+        "PM": "71",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "43.1",
+        "200+": "52.7",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-3.214999884366989",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:26:31.626Z",
+    "ok": true
+  }
+}

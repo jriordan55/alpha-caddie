@@ -1,0 +1,104 @@
+{
+  "courseNum": "819",
+  "courseName": "RTJ Trail (Grand National)",
+  "list": {
+    "CourseName": "RTJ Trail (Grand National)",
+    "CourseNum": "819",
+    "CourseNums": [
+      819
+    ]
+  },
+  "details": {
+    "CourseName": "RTJ Trail (Grand National)",
+    "CourseNum": "819",
+    "Locations": [
+      "Southeast",
+      "Alabama"
+    ],
+    "SeasonHeld": "Summer",
+    "CourseTypes": [
+      "Parkland"
+    ],
+    "ParScore": "71",
+    "Yards": "7289",
+    "AVG": "102.7",
+    "CourseLength": "Average",
+    "Architects": [
+      "Robert Trent Jones"
+    ],
+    "RedesignArchitects": [],
+    "Elevation": "807",
+    "CourseElevation": "Average",
+    "Bunkers": "53",
+    "BunkersRank": "Low",
+    "WaterHoles": "10",
+    "WaterDanger": "High",
+    "ScoreRTP": "-1.6",
+    "Difficulty": "Easy",
+    "FwyGrass": "Bermuda",
+    "FwyWidth": "0",
+    "GreenSqFt": "6800",
+    "GreenSize": "Average",
+    "GreenGrass": "Bermuda",
+    "GreenStimp": "11",
+    "GreenSpeed": "Slow",
+    "RoughType": "Bermuda",
+    "RoughGrass": "Bermuda",
+    "RoughLengthInc": "2.5",
+    "RoughLength": "Average",
+    "EventTypes": [
+      "36-Hole Cut"
+    ],
+    "Tournaments": [
+      {
+        "Year": "2015-2017",
+        "Tournament": "Barbasol Championship"
+      }
+    ],
+    "CorrelatedCourse": [],
+    "FieldSize": "Average Size Field",
+    "FieldStrength": "Very Weak",
+    "OTTClub": "Less Than Driver",
+    "FwyPct": "66",
+    "FwyAccuracy": "Easy",
+    "GainOTT": "Easy",
+    "MissedFairwayPenalty": "Average",
+    "RoughPenalty": "Average",
+    "GIRAccuracy": "Easy",
+    "GIRPct": "71.6",
+    "GainAPP": "Very Easy",
+    "ScramblingFromRough": "Easy",
+    "ScramblingFromShortGrass": "Difficult",
+    "SandSaves": "Easy",
+    "GainARG": "Very Easy",
+    "GainingPuttingInside15": "Average",
+    "GainingPuttingOutside15": "Average",
+    "3PuttAVD": "Difficult",
+    "GainPutting": "Difficult",
+    "Par3Scoring": "Easy",
+    "Par4Scoring": "Easy",
+    "Par5Scoring": "Easy",
+    "ShotLink": "1"
+  },
+  "tournaments": [
+    {
+      "CourseNum": "819",
+      "TNum": "518",
+      "TourneyName": "Barbasol Championship"
+    }
+  ],
+  "_meta": {
+    "pulledAt": "2026-11-20T22:18:25.881Z",
+    "detailStatus": 200,
+    "tournamentsStatus": 200
+  },
+  "auth": {
+    "holeBreakdown": [],
+    "correlated": [],
+    "_meta": {
+      "pulledAt": "2026-11-20T22:52:52.524Z",
+      "holeStatus": 200,
+      "correlatedStatus": 200
+    }
+  }
+}

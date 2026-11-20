@@ -1,0 +1,148 @@
+{
+  "playerId": "63776",
+  "playerName": "Jack Wall",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Jack Wall",
+    "BirthPlace": "",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "United States",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Jack Wall",
+        "player_num": "63776",
+        "Year": "2023",
+        "Rounds": "2",
+        "SG:TOT": "-1.57",
+        "SG:T2G": "-1.61",
+        "SG:OTT": "-0.92",
+        "SG:APP": "-1.17",
+        "SG:BS": "-2.09",
+        "SG:ARG": "0.48",
+        "SG:P": "0.04",
+        "Dr Distance": "296.6",
+        "Dr Accuracy %": "25.0",
+        "Ball Speed": "182.40"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2023-02-19",
+        "position": "CUT",
+        "roundPosition": "T94",
+        "TournamentName": "The Genesis Invitational",
+        "is_major": "0",
+        "playerName": "Jack Wall",
+        "player_num": "63776",
+        "Rounds": "2",
+        "CourseID": "500",
+        "Course": "Riviera CC",
+        "ShotLink": "2",
+        "SG:TOT": "-1.57",
+        "SG:T2G": "-1.61",
+        "SG:OTT": "-0.92",
+        "SG:APP": "-1.17",
+        "SG:BS": "-2.09",
+        "SG:ARG": "0.48",
+        "SG:P": "0.04",
+        "SG:SG": "0.52"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "0.038999974727630615",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-2.9800000190734863",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.1599999964237213",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-1.5700000077486038",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-1.5700000077486038",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-1.5700000077486038",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "72",
+        "PM": "74",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "22.2",
+        "150-200": "43.9",
+        "200+": "84",
+        "200-250": "78.2",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "West Coast",
+        "StrokesGainedAverage": "-1.5700000077486038",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:12.992Z",
+    "ok": true
+  }
+}

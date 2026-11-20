@@ -1,0 +1,262 @@
+{
+  "playerId": "49022",
+  "playerName": "Yoseop Seo",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ks-flag-1.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Yoseop Seo",
+    "BirthPlace": "",
+    "BirthDate": "May 08, 1996",
+    "Age": "30",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "South Korea",
+    "Residence": "",
+    "ProWins": "2",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Yoseop Seo",
+        "player_num": "49022",
+        "Year": "2023",
+        "Rounds": "2",
+        "SG:TOT": "-5.06",
+        "SG:T2G": "-5.58",
+        "SG:OTT": "-2.33",
+        "SG:APP": "-1.70",
+        "SG:BS": "-4.02",
+        "SG:ARG": "-1.56",
+        "SG:P": "0.54",
+        "Dr Distance": "288.5",
+        "Dr Accuracy %": "46.2",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Yoseop Seo",
+        "player_num": "49022",
+        "Year": "2022",
+        "Rounds": "4",
+        "SG:TOT": "-5.28",
+        "SG:T2G": "-5.04",
+        "SG:OTT": "-1.62",
+        "SG:APP": "-1.04",
+        "SG:BS": "-2.66",
+        "SG:ARG": "-2.38",
+        "SG:P": "-0.25",
+        "Dr Distance": "287.2",
+        "Dr Accuracy %": "66.1",
+        "Ball Speed": "168.30"
+      },
+      {
+        "playerName": "Yoseop Seo",
+        "player_num": "49022",
+        "Year": "2021",
+        "Rounds": "4",
+        "SG:TOT": "-2.07",
+        "SG:T2G": "-1.02",
+        "SG:OTT": "0.04",
+        "SG:APP": "-1.04",
+        "SG:BS": "-1.00",
+        "SG:ARG": "-0.03",
+        "SG:P": "-1.05",
+        "Dr Distance": "301.3",
+        "Dr Accuracy %": "62.5",
+        "Ball Speed": "170.60"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2023-07-16",
+        "position": "CUT",
+        "roundPosition": "T152",
+        "TournamentName": "Genesis Scottish Open",
+        "is_major": "0",
+        "playerName": "Yoseop Seo",
+        "player_num": "49022",
+        "Rounds": "2",
+        "CourseID": "977",
+        "Course": "The Renaissance Club",
+        "ShotLink": "2",
+        "SG:TOT": "-5.06",
+        "SG:T2G": "-5.58",
+        "SG:OTT": "-2.33",
+        "SG:APP": "-1.70",
+        "SG:BS": "-4.02",
+        "SG:ARG": "-1.56",
+        "SG:P": "0.54",
+        "SG:SG": "-1.02"
+      },
+      {
+        "Date": "2022-10-23",
+        "position": "T77",
+        "roundPosition": "T77",
+        "TournamentName": "The CJ CUP",
+        "is_major": "0",
+        "playerName": "Yoseop Seo",
+        "player_num": "49022",
+        "Rounds": "4",
+        "CourseID": "902",
+        "Course": "Congaree Golf Club",
+        "ShotLink": "4",
+        "SG:TOT": "-5.28",
+        "SG:T2G": "-5.04",
+        "SG:OTT": "-1.62",
+        "SG:APP": "-1.04",
+        "SG:BS": "-2.66",
+        "SG:ARG": "-2.38",
+        "SG:P": "-0.25",
+        "SG:SG": "-2.63"
+      },
+      {
+        "Date": "2021-10-17",
+        "position": "T72",
+        "roundPosition": "T72",
+        "TournamentName": "The CJ CUP @ Summit",
+        "is_major": "0",
+        "playerName": "Yoseop Seo",
+        "player_num": "49022",
+        "Rounds": "4",
+        "CourseID": "899",
+        "Course": "The Summit Club",
+        "ShotLink": "4",
+        "SG:TOT": "-2.07",
+        "SG:T2G": "-1.02",
+        "SG:OTT": "0.04",
+        "SG:APP": "-1.04",
+        "SG:BS": "-1.00",
+        "SG:ARG": "-0.03",
+        "SG:P": "-1.05",
+        "SG:SG": "-1.07"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "10.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "10"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-1.045249991118908",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-0.24899998307228088",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-5.703333377838135",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-2.6399999459584556",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-3.6399999856948853",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-3.609999990090728",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-2.885714285607849",
+        "Rounds": "7"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-6.519999980926514",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-6.289999961853027",
+        "Rounds": "1"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-6.4433333079020185",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-3.9766666094462075",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-2.0675000427290797",
+        "Rounds": "4"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Strong",
+        "StrokesGainedAverage": "-3.9529999922960997",
+        "Rounds": "10"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "73.57142857142857",
+        "PM": "73",
+        "Rounds": "10"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "10",
+        "50-100": "22.3",
+        "100-150": "25.7",
+        "150-200": "30.5",
+        "200+": "67.5",
+        "200-250": "65",
+        "250+": "71.7"
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-3.6762500046752393",
+        "Rounds": "8"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-5.059999942779541",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:26:31.865Z",
+    "ok": true
+  }
+}

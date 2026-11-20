@@ -1,0 +1,209 @@
+{
+  "playerId": "51776",
+  "playerName": "Michael Feuerstein",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Michael Feuerstein",
+    "BirthPlace": "San Diego, California",
+    "BirthDate": "December 10, 1983",
+    "Age": "42",
+    "Height": "5ft 11in",
+    "Weight": "175 lbs",
+    "Nationality": "United States",
+    "Residence": "San Diego, California",
+    "ProWins": null,
+    "TurnedPro": "2010",
+    "PGAWins": null,
+    "College": "University of Colorado "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Michael Feuerstein",
+        "player_num": "51776",
+        "Year": "2025",
+        "Rounds": "6",
+        "SG:TOT": "-3.16",
+        "SG:T2G": "-3.22",
+        "SG:OTT": "-0.66",
+        "SG:APP": "-2.33",
+        "SG:BS": "-2.98",
+        "SG:ARG": "-0.24",
+        "SG:P": "0.06",
+        "Dr Distance": "273.5",
+        "Dr Accuracy %": "71.4",
+        "Ball Speed": "162.54"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2025-07-27",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "3M Open",
+        "is_major": "0",
+        "playerName": "Michael Feuerstein",
+        "player_num": "51776",
+        "Rounds": "2",
+        "CourseID": "883",
+        "Course": "TPC Twin Cities",
+        "ShotLink": "2",
+        "SG:TOT": "-3.99",
+        "SG:T2G": "-3.82",
+        "SG:OTT": "-1.05",
+        "SG:APP": "-2.70",
+        "SG:BS": "-3.75",
+        "SG:ARG": "-0.08",
+        "SG:P": "-0.17",
+        "SG:SG": "-0.24"
+      },
+      {
+        "Date": "2025-05-11",
+        "position": "69",
+        "roundPosition": "69",
+        "TournamentName": "Myrtle Beach Classic",
+        "is_major": "0",
+        "playerName": "Michael Feuerstein",
+        "player_num": "51776",
+        "Rounds": "4",
+        "CourseID": "925",
+        "Course": "Dunes Golf & Beach Club",
+        "ShotLink": "4",
+        "SG:TOT": "-2.74",
+        "SG:T2G": "-2.92",
+        "SG:OTT": "-0.46",
+        "SG:APP": "-2.14",
+        "SG:BS": "-2.60",
+        "SG:ARG": "-0.32",
+        "SG:P": "0.17",
+        "SG:SG": "-0.14"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "33.3",
+        "SG TOT 1+": "16.7",
+        "SG TOT 2+": "16.7",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "10"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.16600000858306885",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "0.17424998059868813",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-5.0400002002716064",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "1.364999946206808",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-8.039999961853027",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-3.559999942779541",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-3.0780000939965246",
+        "Rounds": "5"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-3.559999942779541",
+        "Rounds": "1"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-2.715000033378601",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-1.9800000190734863",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-3.8466667756438255",
+        "Rounds": "3"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-3.990000192075968",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-2.7425000071525574",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "73.33333333333333",
+        "PM": "72.66666666666667",
+        "Rounds": "10"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "10",
+        "50-100": "12.4",
+        "100-150": "29.7",
+        "150-200": "37.6",
+        "200+": "66.7",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-2.7425000071525574",
+        "Rounds": "4"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-3.990000192075968",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:24:08.691Z",
+    "ok": true
+  }
+}

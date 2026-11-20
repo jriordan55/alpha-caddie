@@ -1,0 +1,148 @@
+{
+  "playerId": "65312",
+  "playerName": "Charlie Flynn",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Charlie Flynn",
+    "BirthPlace": null,
+    "BirthDate": "",
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Charlie Flynn",
+        "player_num": "65312",
+        "Year": "2024",
+        "Rounds": "2",
+        "SG:TOT": "-4.99",
+        "SG:T2G": "-4.63",
+        "SG:OTT": "-1.68",
+        "SG:APP": "-1.90",
+        "SG:BS": "-3.58",
+        "SG:ARG": "-1.06",
+        "SG:P": "-0.36",
+        "Dr Distance": "291.9",
+        "Dr Accuracy %": "42.9",
+        "Ball Speed": "183.48"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2024-10-06",
+        "position": "CUT",
+        "roundPosition": "T125",
+        "TournamentName": "Sanderson Farms Championship",
+        "is_major": "0",
+        "playerName": "Charlie Flynn",
+        "player_num": "65312",
+        "Rounds": "2",
+        "CourseID": "746",
+        "Course": "The Country Club of Jackson",
+        "ShotLink": "2",
+        "SG:TOT": "-4.99",
+        "SG:T2G": "-4.63",
+        "SG:OTT": "-1.68",
+        "SG:APP": "-1.90",
+        "SG:BS": "-3.58",
+        "SG:ARG": "-1.06",
+        "SG:P": "-0.36",
+        "SG:SG": "-1.42"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-0.3630000054836273",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-4.829999923706055",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-5.159999847412109",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-4.994999885559082",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-4.994999885559082",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-4.994999885559082",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "75",
+        "PM": "74",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "38.2",
+        "200+": "42.3",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-4.994999885559082",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:20:13.480Z",
+    "ok": true
+  }
+}

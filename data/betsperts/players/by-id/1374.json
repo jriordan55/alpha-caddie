@@ -1,0 +1,143 @@
+{
+  "playerId": "1374",
+  "playerName": "Robin Freeman",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Robin Freeman",
+    "BirthPlace": "St. Charles, Missouri",
+    "BirthDate": "May 07, 1959",
+    "Age": "67",
+    "Height": "6ft 0in",
+    "Weight": "180 lbs",
+    "Nationality": "United States",
+    "Residence": "Coronado, California",
+    "ProWins": null,
+    "TurnedPro": "1983",
+    "PGAWins": null,
+    "College": "University of Central Oklahoma "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Robin Freeman",
+        "player_num": "1374",
+        "Year": "2015",
+        "Rounds": "1",
+        "SG:TOT": "-10.24",
+        "SG:T2G": "-6.06",
+        "SG:OTT": "-2.62",
+        "SG:APP": "-2.07",
+        "SG:BS": "-4.69",
+        "SG:ARG": "-1.37",
+        "SG:P": "-4.18",
+        "Dr Distance": "270.4",
+        "Dr Accuracy %": "50.0",
+        "Ball Speed": "161.89"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2015-07-19",
+        "position": "W/D",
+        "roundPosition": "129",
+        "TournamentName": "Barbasol Championship",
+        "is_major": "0",
+        "playerName": "Robin Freeman",
+        "player_num": "1374",
+        "Rounds": "1",
+        "CourseID": "819",
+        "Course": "RTJ Trail (Grand National)",
+        "ShotLink": "1",
+        "SG:TOT": "-10.24",
+        "SG:T2G": "-6.06",
+        "SG:OTT": "-2.62",
+        "SG:APP": "-2.07",
+        "SG:BS": "-4.69",
+        "SG:ARG": "-1.37",
+        "SG:P": "-4.18",
+        "SG:SG": "-5.54"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "1"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-4.175000190734863",
+        "Rounds": "1"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-10.239999771118164",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-10.239999771118164",
+        "Rounds": "1"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-10.239999771118164",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-10.239999771118164",
+        "Rounds": "1"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "81",
+        "PM": null,
+        "Rounds": "1"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "1",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "57.5",
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-10.239999771118164",
+        "Rounds": "1"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:07.712Z",
+    "ok": true
+  }
+}

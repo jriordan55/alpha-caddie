@@ -1,0 +1,214 @@
+{
+  "playerId": "29294",
+  "playerName": "Ho Sung Choi",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ks-flag-1.gif",
+  "profile": {
+    "ProfileImage": "0",
+    "Name": "Ho Sung Choi",
+    "BirthPlace": "Pohang, South Korea",
+    "BirthDate": "September 23, 1973",
+    "Age": "53",
+    "Height": "5ft 8in",
+    "Weight": "170 lbs",
+    "Nationality": "South Korea",
+    "Residence": null,
+    "ProWins": "5",
+    "TurnedPro": null,
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Ho Sung Choi",
+        "player_num": "29294",
+        "Year": "2019",
+        "Rounds": "5",
+        "SG:TOT": "-2.73",
+        "SG:T2G": "-2.77",
+        "SG:OTT": "0.23",
+        "SG:APP": "-1.99",
+        "SG:BS": "-1.76",
+        "SG:ARG": "-1.01",
+        "SG:P": "0.36",
+        "Dr Distance": "279.9",
+        "Dr Accuracy %": "66.7",
+        "Ball Speed": "159.21"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2019-07-14",
+        "position": "CUT",
+        "roundPosition": "T120",
+        "TournamentName": "John Deere Classic",
+        "is_major": "0",
+        "playerName": "Ho Sung Choi",
+        "player_num": "29294",
+        "Rounds": "2",
+        "CourseID": "669",
+        "Course": "TPC Deere Run",
+        "ShotLink": "2",
+        "SG:TOT": "-1.72",
+        "SG:T2G": "-2.06",
+        "SG:OTT": "0.84",
+        "SG:APP": "-2.05",
+        "SG:BS": "-1.21",
+        "SG:ARG": "-0.85",
+        "SG:P": "0.34",
+        "SG:SG": "-0.51"
+      },
+      {
+        "Date": "2019-02-10",
+        "position": "CUT",
+        "roundPosition": "T138",
+        "TournamentName": "AT&T Pebble Beach Pro-Am",
+        "is_major": "0",
+        "playerName": "Ho Sung Choi",
+        "player_num": "29294",
+        "Rounds": "3",
+        "CourseID": "5",
+        "Course": "Pebble Beach Golf Links",
+        "ShotLink": "1",
+        "SG:TOT": "-3.40",
+        "SG:T2G": "-4.18",
+        "SG:OTT": "-0.98",
+        "SG:APP": "-1.86",
+        "SG:BS": "-2.84",
+        "SG:ARG": "-1.35",
+        "SG:P": "0.40",
+        "SG:SG": "-0.95"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "7"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "0.3360000252723694",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "0.3970000147819519",
+        "Rounds": "3"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.7499999552965164",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-3.1799999475479126",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-3.7899999618530273",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": null,
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-1.7249999791383743",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-3.3999999364217124",
+        "Rounds": "3"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-3.3999999364217124",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": null,
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-1.7249999791383743",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-3.3999999364217124",
+        "Rounds": "3"
+      },
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": null,
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-1.7249999791383743",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74",
+        "PM": "73",
+        "Rounds": "7"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "7",
+        "50-100": null,
+        "100-150": "31",
+        "150-200": null,
+        "200+": "55.5",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-1.7249999791383743",
+        "Rounds": "4"
+      },
+      {
+        "SeasonHeld": "West Coast",
+        "StrokesGainedAverage": "-3.3999999364217124",
+        "Rounds": "3"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:03.218Z",
+    "ok": true
+  }
+}

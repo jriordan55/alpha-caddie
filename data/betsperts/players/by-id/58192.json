@@ -1,0 +1,257 @@
+{
+  "playerId": "58192",
+  "playerName": "Daniel Wetterich",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Daniel Wetterich",
+    "BirthPlace": "Cincinnati, Ohio",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "6ft 1in",
+    "Weight": "160 lbs",
+    "Nationality": "United States",
+    "Residence": "Cincinnati, Ohio",
+    "ProWins": "0",
+    "TurnedPro": "2019",
+    "PGAWins": "0",
+    "College": "Ohio State University 2019, Finance"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Daniel Wetterich",
+        "player_num": "58192",
+        "Year": "2022",
+        "Rounds": "2",
+        "SG:TOT": "-2.01",
+        "SG:T2G": "-2.85",
+        "SG:OTT": "-0.51",
+        "SG:APP": "-2.10",
+        "SG:BS": "-2.61",
+        "SG:ARG": "-0.24",
+        "SG:P": "0.85",
+        "Dr Distance": "307.7",
+        "Dr Accuracy %": "39.3",
+        "Ball Speed": "182.32"
+      },
+      {
+        "playerName": "Daniel Wetterich",
+        "player_num": "58192",
+        "Year": "2021",
+        "Rounds": "2",
+        "SG:TOT": "-0.12",
+        "SG:T2G": "-0.84",
+        "SG:OTT": "0.34",
+        "SG:APP": "-0.78",
+        "SG:BS": "-0.44",
+        "SG:ARG": "-0.41",
+        "SG:P": "0.72",
+        "Dr Distance": "300.2",
+        "Dr Accuracy %": "42.9",
+        "Ball Speed": "179.99"
+      },
+      {
+        "playerName": "Daniel Wetterich",
+        "player_num": "58192",
+        "Year": "2020",
+        "Rounds": "2",
+        "SG:TOT": "-0.44",
+        "SG:T2G": "1.38",
+        "SG:OTT": "0.16",
+        "SG:APP": "0.89",
+        "SG:BS": "1.05",
+        "SG:ARG": "0.33",
+        "SG:P": "-1.82",
+        "Dr Distance": "283.3",
+        "Dr Accuracy %": "53.6",
+        "Ball Speed": "178.40"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2022-07-10",
+        "position": "CUT",
+        "roundPosition": "T124",
+        "TournamentName": "Barbasol Championship",
+        "is_major": "0",
+        "playerName": "Daniel Wetterich",
+        "player_num": "58192",
+        "Rounds": "2",
+        "CourseID": "884",
+        "Course": "Keene Trace GC",
+        "ShotLink": "2",
+        "SG:TOT": "-2.01",
+        "SG:T2G": "-2.85",
+        "SG:OTT": "-0.51",
+        "SG:APP": "-2.10",
+        "SG:BS": "-2.61",
+        "SG:ARG": "-0.24",
+        "SG:P": "0.85",
+        "SG:SG": "0.61"
+      },
+      {
+        "Date": "2021-07-04",
+        "position": "CUT",
+        "roundPosition": "T78",
+        "TournamentName": "Rocket Mortgage Classic",
+        "is_major": "0",
+        "playerName": "Daniel Wetterich",
+        "player_num": "58192",
+        "Rounds": "2",
+        "CourseID": "876",
+        "Course": "Detroit GC",
+        "ShotLink": "2",
+        "SG:TOT": "-0.12",
+        "SG:T2G": "-0.84",
+        "SG:OTT": "0.34",
+        "SG:APP": "-0.78",
+        "SG:BS": "-0.44",
+        "SG:ARG": "-0.41",
+        "SG:P": "0.72",
+        "SG:SG": "0.31"
+      },
+      {
+        "Date": "2020-03-01",
+        "position": "CUT",
+        "roundPosition": "T83",
+        "TournamentName": "The Honda Classic",
+        "is_major": "0",
+        "playerName": "Daniel Wetterich",
+        "player_num": "58192",
+        "Rounds": "2",
+        "CourseID": "734",
+        "Course": "PGA National (Champion)",
+        "ShotLink": "2",
+        "SG:TOT": "-0.44",
+        "SG:T2G": "1.38",
+        "SG:OTT": "0.16",
+        "SG:APP": "0.89",
+        "SG:BS": "1.05",
+        "SG:ARG": "0.33",
+        "SG:P": "-1.82",
+        "SG:SG": "-1.48"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "16.7",
+        "SG TOT 1+": "16.7",
+        "SG TOT 2+": "16.7",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "6"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "0.8479999601840973",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-1.8159999959170818",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.9166666697710752",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "0.20999995867411295",
+        "Rounds": "3"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-2.609999895095825",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "0.49999995715916157",
+        "Rounds": "3"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-2.005000054836273",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "2.369999885559082",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-0.43500000704079866",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-2.206666668256124",
+        "Rounds": "3"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-0.2775000059045851",
+        "Rounds": "4"
+      },
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-2.005000054836273",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "72",
+        "PM": "71.33333333333333",
+        "Rounds": "6"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "6",
+        "50-100": null,
+        "100-150": "27.8",
+        "150-200": "37.2",
+        "200+": "43.5",
+        "200-250": "45.6",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Florida",
+        "StrokesGainedAverage": "-0.43500000704079866",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-1.0625000298023224",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:20:52.429Z",
+    "ok": true
+  }
+}

@@ -1,0 +1,235 @@
+{
+  "playerId": "55648",
+  "playerName": "Minchel Choi",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ks-flag-1.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Minchel Choi",
+    "BirthPlace": "",
+    "BirthDate": "November 07, 1988",
+    "Age": "38",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "South Korea",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Minchel Choi",
+        "player_num": "55648",
+        "Year": "2018",
+        "Rounds": "10",
+        "SG:TOT": "-3.36",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "57.0",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2018-10-21",
+        "position": "T77",
+        "roundPosition": "T77",
+        "TournamentName": "The CJ CUP at Nine Bridges",
+        "is_major": "0",
+        "playerName": "Minchel Choi",
+        "player_num": "55648",
+        "Rounds": "4",
+        "CourseID": "242",
+        "Course": "Nine Bridges",
+        "ShotLink": "0",
+        "SG:TOT": "-4.30",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2018-10-14",
+        "position": "71",
+        "roundPosition": "71",
+        "TournamentName": "CIMB Classic",
+        "is_major": "0",
+        "playerName": "Minchel Choi",
+        "player_num": "55648",
+        "Rounds": "4",
+        "CourseID": "800",
+        "Course": "TPC Kuala Lumpur",
+        "ShotLink": "0",
+        "SG:TOT": "-2.35",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2018-07-22",
+        "position": "CUT",
+        "roundPosition": "T140",
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Minchel Choi",
+        "player_num": "55648",
+        "Rounds": "2",
+        "CourseID": "658",
+        "Course": "Carnoustie GC",
+        "ShotLink": "0",
+        "SG:TOT": "-3.52",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "10.0",
+        "SG TOT 1+": "10.0",
+        "SG TOT 2+": "10.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "10"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": null,
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-5.916666587193807",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.8900000055631",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-0.3799999952316284",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-4.7250001430511475",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-3.515000104904175",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-4.302499935030937",
+        "Rounds": "4"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-2.3475000262260437",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-4.302499935030937",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-3.515000104904175",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-2.3475000262260437",
+        "Rounds": "4"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-4.302499935030937",
+        "Rounds": "4"
+      },
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-3.515000104904175",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-2.3475000262260437",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "73",
+        "PM": "74.57142857142857",
+        "Rounds": "10"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "10",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-3.3249999806284904",
+        "Rounds": "8"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-3.515000104904175",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:24:18.506Z",
+    "ok": true
+  }
+}

@@ -1,0 +1,241 @@
+{
+  "playerId": "50490",
+  "playerName": "Chase Parker",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Chase Parker",
+    "BirthPlace": "Augusta, Georgia",
+    "BirthDate": "April 03, 1991",
+    "Age": "35",
+    "Height": "5ft 9in",
+    "Weight": "170 lbs",
+    "Nationality": "United States",
+    "Residence": "Augusta, Georgia",
+    "ProWins": null,
+    "TurnedPro": "2014",
+    "PGAWins": null,
+    "College": "University of Kentucky 2013, Community Leadership and Development"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Chase Parker",
+        "player_num": "50490",
+        "Year": "2023",
+        "Rounds": "2",
+        "SG:TOT": "-0.20",
+        "SG:T2G": "-0.49",
+        "SG:OTT": "-0.27",
+        "SG:APP": "0.12",
+        "SG:BS": "-0.15",
+        "SG:ARG": "-0.34",
+        "SG:P": "0.29",
+        "Dr Distance": "287.8",
+        "Dr Accuracy %": "60.7",
+        "Ball Speed": "168.34"
+      },
+      {
+        "playerName": "Chase Parker",
+        "player_num": "50490",
+        "Year": "2016",
+        "Rounds": "6",
+        "SG:TOT": "-1.32",
+        "SG:T2G": "1.06",
+        "SG:OTT": "-0.51",
+        "SG:APP": "1.56",
+        "SG:BS": "1.06",
+        "SG:ARG": "0.00",
+        "SG:P": "-2.69",
+        "Dr Distance": "278.8",
+        "Dr Accuracy %": "59.5",
+        "Ball Speed": "166.11"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2023-10-08",
+        "position": "CUT",
+        "roundPosition": "T79",
+        "TournamentName": "Sanderson Farms Championship",
+        "is_major": "0",
+        "playerName": "Chase Parker",
+        "player_num": "50490",
+        "Rounds": "2",
+        "CourseID": "746",
+        "Course": "The Country Club of Jackson",
+        "ShotLink": "2",
+        "SG:TOT": "-0.20",
+        "SG:T2G": "-0.49",
+        "SG:OTT": "-0.27",
+        "SG:APP": "0.12",
+        "SG:BS": "-0.15",
+        "SG:ARG": "-0.34",
+        "SG:P": "0.29",
+        "SG:SG": "-0.05"
+      },
+      {
+        "Date": "2016-07-17",
+        "position": "CUT",
+        "roundPosition": "T99",
+        "TournamentName": "Barbasol Championship",
+        "is_major": "0",
+        "playerName": "Chase Parker",
+        "player_num": "50490",
+        "Rounds": "2",
+        "CourseID": "819",
+        "Course": "RTJ Trail (Grand National)",
+        "ShotLink": "2",
+        "SG:TOT": "-1.63",
+        "SG:T2G": "1.06",
+        "SG:OTT": "-0.51",
+        "SG:APP": "1.56",
+        "SG:BS": "1.06",
+        "SG:ARG": "0.00",
+        "SG:P": "-2.69",
+        "SG:SG": "-2.68"
+      },
+      {
+        "Date": "2016-06-19",
+        "position": "64",
+        "roundPosition": "64",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Chase Parker",
+        "player_num": "50490",
+        "Rounds": "4",
+        "CourseID": "608",
+        "Course": "Oakmont CC",
+        "ShotLink": "0",
+        "SG:TOT": "-1.17",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "37.5",
+        "SG TOT 1+": "12.5",
+        "SG TOT 2+": "12.5",
+        "SG TOT 3+": "12.5",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "8"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-1.1987500311806798",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": null,
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.5300000210603077",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "1.2533333003520966",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "0.029999999329447746",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-7.539999961853027",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-1.3233333531146247",
+        "Rounds": "6"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-0.20000000298023224",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-1.1700000097043812",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-0.9150000214576721",
+        "Rounds": "4"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-1.1700000097043812",
+        "Rounds": "4"
+      },
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-0.9150000214576721",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "72.5",
+        "PM": "72.75",
+        "Rounds": "8"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "8",
+        "50-100": null,
+        "100-150": "19.3",
+        "150-200": "34",
+        "200+": "51.2",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-0.20000000298023224",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-1.3233333531146247",
+        "Rounds": "6"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:20:15.332Z",
+    "ok": true
+  }
+}

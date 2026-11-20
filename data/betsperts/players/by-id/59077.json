@@ -1,0 +1,163 @@
+{
+  "playerId": "59077",
+  "playerName": "Spencer Cross",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Spencer Cross",
+    "BirthPlace": "Sevierville, Tennessee",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "6ft 0in",
+    "Weight": "165 lbs",
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": "2021",
+    "PGAWins": null,
+    "College": "University of Tennessee 2020, Marketing"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Spencer Cross",
+        "player_num": "59077",
+        "Year": "2024",
+        "Rounds": "4",
+        "SG:TOT": "1.28",
+        "SG:T2G": "0.50",
+        "SG:OTT": "0.03",
+        "SG:APP": "0.27",
+        "SG:BS": "0.30",
+        "SG:ARG": "0.20",
+        "SG:P": "0.78",
+        "Dr Distance": "308.2",
+        "Dr Accuracy %": "57.1",
+        "Ball Speed": "173.54"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2024-07-14",
+        "position": "T25",
+        "roundPosition": "T25",
+        "TournamentName": "ISCO Championship",
+        "is_major": "0",
+        "playerName": "Spencer Cross",
+        "player_num": "59077",
+        "Rounds": "4",
+        "CourseID": "884",
+        "Course": "Keene Trace GC",
+        "ShotLink": "4",
+        "SG:TOT": "1.28",
+        "SG:T2G": "0.50",
+        "SG:OTT": "0.03",
+        "SG:APP": "0.27",
+        "SG:BS": "0.30",
+        "SG:ARG": "0.20",
+        "SG:P": "0.78",
+        "SG:SG": "0.98"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "75.0",
+        "SG TOT 1+": "50.0",
+        "SG TOT 2+": "25.0",
+        "SG TOT 3+": "25.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "0.7830000072717667",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "0.41999998688697815",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "3.7899999618530273",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "1.340000033378601",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-0.41999998688697815",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "1.282499998807907",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-0.41999998688697815",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "1.8499999940395355",
+        "Rounds": "3"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "1.282499998807907",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "69",
+        "PM": "68",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": "18.6",
+        "100-150": "24.3",
+        "150-200": null,
+        "200+": "55.4",
+        "200-250": "58.4",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "1.282499998807907",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:39.841Z",
+    "ok": true
+  }
+}

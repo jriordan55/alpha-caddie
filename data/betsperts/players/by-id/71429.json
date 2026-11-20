@@ -1,0 +1,152 @@
+{
+  "playerId": "71429",
+  "playerName": "Tyler Jones",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2026/09/122665-4-Purple-1.jpg",
+    "Name": "Tyler Jones",
+    "BirthPlace": null,
+    "BirthDate": "",
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Tyler Jones",
+        "player_num": "71429",
+        "Year": "2026",
+        "Rounds": "2",
+        "SG:TOT": "-6.72",
+        "SG:T2G": "-5.32",
+        "SG:OTT": "-2.22",
+        "SG:APP": "-1.52",
+        "SG:BS": "-3.74",
+        "SG:ARG": "-1.58",
+        "SG:P": "-1.41",
+        "Dr Distance": "296.2",
+        "Dr Accuracy %": "46.2",
+        "Ball Speed": "174.03"
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Tyler Jones",
+        "player_num": "71429",
+        "Rounds": "2",
+        "SG:TOT": "-6.72",
+        "SG:T2G": "-5.32",
+        "SG:OTT": "-2.22",
+        "SG:APP": "-1.52",
+        "SG:BS": "-3.74",
+        "SG:ARG": "-1.58",
+        "SG:P": "-1.41",
+        "SG:SG": "-2.98"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-09-20",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "Biltmore Championship Asheville",
+        "is_major": null,
+        "playerName": "Tyler Jones",
+        "player_num": "71429",
+        "Rounds": "2",
+        "CourseID": "942",
+        "Course": "The Cliffs at Walnut Cove",
+        "ShotLink": "2",
+        "SG:TOT": "-6.72",
+        "SG:T2G": "-5.32",
+        "SG:OTT": "-2.22",
+        "SG:APP": "-1.52",
+        "SG:BS": "-3.74",
+        "SG:ARG": "-1.58",
+        "SG:P": "-1.41",
+        "SG:SG": "-2.98"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.3600000143051147",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-12.079999923706055",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-6.719999969005585",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-6.719999969005585",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-6.719999969005585",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "71",
+        "PM": "82",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-6.719999969005585",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:26:17.068Z",
+    "ok": true
+  }
+}

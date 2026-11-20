@@ -1,0 +1,138 @@
+{
+  "playerId": "63958",
+  "playerName": "Taylor Lowe",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Taylor Lowe",
+    "BirthPlace": "",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "United States",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Taylor Lowe",
+        "player_num": "63958",
+        "Year": "2022",
+        "Rounds": "2",
+        "SG:TOT": "-8.86",
+        "SG:T2G": "-4.93",
+        "SG:OTT": "-1.10",
+        "SG:APP": "-2.17",
+        "SG:BS": "-3.27",
+        "SG:ARG": "-1.66",
+        "SG:P": "-3.93",
+        "Dr Distance": "284.4",
+        "Dr Accuracy %": "35.7",
+        "Ball Speed": "169.25"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2022-09-18",
+        "position": "CUT",
+        "roundPosition": "155",
+        "TournamentName": "Fortinet Championship",
+        "is_major": "0",
+        "playerName": "Taylor Lowe",
+        "player_num": "63958",
+        "Rounds": "2",
+        "CourseID": "552",
+        "Course": "Silverado Resort (North)",
+        "ShotLink": "2",
+        "SG:TOT": "-8.86",
+        "SG:T2G": "-4.93",
+        "SG:OTT": "-1.10",
+        "SG:APP": "-2.17",
+        "SG:BS": "-3.27",
+        "SG:ARG": "-1.66",
+        "SG:P": "-3.93",
+        "SG:SG": "-5.59"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-9.619999885559082",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-8.109999656677246",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-8.864999771118164",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-8.864999771118164",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-8.864999771118164",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "80",
+        "PM": "81",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": "21.8",
+        "100-150": "43.5",
+        "150-200": null,
+        "200+": "97.4",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-8.864999771118164",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:56.206Z",
+    "ok": true
+  }
+}

@@ -1,0 +1,235 @@
+{
+  "playerId": "20443",
+  "playerName": "Jin Park",
+  "flag": null,
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Jin Park",
+    "BirthPlace": "Seoul, South Korea",
+    "BirthDate": "October 12, 1979",
+    "Age": "47",
+    "Height": "5ft 8in",
+    "Weight": "160 lbs",
+    "Nationality": "Republic of Korea",
+    "Residence": "Phoenix, Arizona",
+    "ProWins": null,
+    "TurnedPro": "2001",
+    "PGAWins": null,
+    "College": "Arizona State University  (2001, Political Science) "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Jin Park",
+        "player_num": "20443",
+        "Year": "2015",
+        "Rounds": "7",
+        "SG:TOT": "-2.05",
+        "SG:T2G": "-2.44",
+        "SG:OTT": "-0.32",
+        "SG:APP": "-2.33",
+        "SG:BS": "-2.65",
+        "SG:ARG": "0.21",
+        "SG:P": "0.49",
+        "Dr Distance": "274.7",
+        "Dr Accuracy %": "63.3",
+        "Ball Speed": "154.23"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2015-10-25",
+        "position": "T76",
+        "roundPosition": "T76",
+        "TournamentName": "Shriners Childrens Open",
+        "is_major": "0",
+        "playerName": "Jin Park",
+        "player_num": "20443",
+        "Rounds": "3",
+        "CourseID": "538",
+        "Course": "TPC Summerlin",
+        "ShotLink": "3",
+        "SG:TOT": "-0.99",
+        "SG:T2G": "-1.89",
+        "SG:OTT": "0.03",
+        "SG:APP": "-1.68",
+        "SG:BS": "-1.65",
+        "SG:ARG": "-0.24",
+        "SG:P": "0.90",
+        "SG:SG": "0.66"
+      },
+      {
+        "Date": "2015-02-22",
+        "position": "CUT",
+        "roundPosition": "T136",
+        "TournamentName": "Northern Trust Open",
+        "is_major": "0",
+        "playerName": "Jin Park",
+        "player_num": "20443",
+        "Rounds": "2",
+        "CourseID": "500",
+        "Course": "Riviera CC",
+        "ShotLink": "2",
+        "SG:TOT": "-4.68",
+        "SG:T2G": "-4.70",
+        "SG:OTT": "-0.45",
+        "SG:APP": "-3.97",
+        "SG:BS": "-4.42",
+        "SG:ARG": "-0.28",
+        "SG:P": "0.02",
+        "SG:SG": "-0.26"
+      },
+      {
+        "Date": "2015-02-08",
+        "position": "CUT",
+        "roundPosition": "T108",
+        "TournamentName": "Farmers Insurance Open",
+        "is_major": "0",
+        "playerName": "Jin Park",
+        "player_num": "20443",
+        "Rounds": "2",
+        "CourseID": "4",
+        "Course": "Torrey Pines GC (South)",
+        "ShotLink": "1",
+        "SG:TOT": "-1.03",
+        "SG:T2G": "0.44",
+        "SG:OTT": "-1.12",
+        "SG:APP": "-1.00",
+        "SG:BS": "-2.12",
+        "SG:ARG": "2.56",
+        "SG:P": "0.23",
+        "SG:SG": "2.79"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "28.6",
+        "SG TOT 1+": "14.3",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "7"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "0.8993333379427592",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "0.09066665172576904",
+        "Rounds": "3"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-2.1266667445500693",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.6533333659172058",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-3.0199999809265137",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-2.4620000600814818",
+        "Rounds": "5"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-2.7100000381469727",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "0.6600000262260437",
+        "Rounds": "1"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-4.675000190734863",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-0.9866666396458944",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "0.6600000262260437",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-2.7100000381469727",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-2.850000098347664",
+        "Rounds": "4"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-0.9866666396458944",
+        "Rounds": "3"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74.33333333333333",
+        "PM": "73",
+        "Rounds": "7"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "7",
+        "50-100": null,
+        "100-150": "32.5",
+        "150-200": "46",
+        "200+": "60.4",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-0.9866666396458944",
+        "Rounds": "3"
+      },
+      {
+        "SeasonHeld": "West Coast",
+        "StrokesGainedAverage": "-2.850000098347664",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:46.957Z",
+    "ok": true
+  }
+}

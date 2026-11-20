@@ -1,0 +1,200 @@
+{
+  "playerId": "58166",
+  "playerName": "Abel Gallegos",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/ar-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Abel Gallegos",
+    "BirthPlace": "Veinticinco de Mayo, Buenos Aires, Argentina",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "6ft 2in",
+    "Weight": "206 lbs",
+    "Nationality": "Argentina",
+    "Residence": "Buenos Aires, Argentina",
+    "ProWins": "0",
+    "TurnedPro": "2022",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Abel Gallegos",
+        "player_num": "58166",
+        "Year": "2021",
+        "Rounds": "2",
+        "SG:TOT": "-3.83",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "35.7",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Abel Gallegos",
+        "player_num": "58166",
+        "Year": "2020",
+        "Rounds": "2",
+        "SG:TOT": "-8.39",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "53.6",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2021-07-18",
+        "position": "CUT",
+        "roundPosition": null,
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Abel Gallegos",
+        "player_num": "58166",
+        "Rounds": "2",
+        "CourseID": "778",
+        "Course": "Royal St. Georges GC",
+        "ShotLink": "0",
+        "SG:TOT": "-3.83",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2020-11-15",
+        "position": "CUT",
+        "roundPosition": "T89",
+        "TournamentName": "Masters Tournament",
+        "is_major": "1",
+        "playerName": "Abel Gallegos",
+        "player_num": "58166",
+        "Rounds": "2",
+        "CourseID": "14",
+        "Course": "Augusta National GC",
+        "ShotLink": "2",
+        "SG:TOT": "-8.39",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": null,
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-4.815000057220459",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-7.3999998569488525",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-3.825000047683716",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-8.389999866485596",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-8.389999866485596",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-3.825000047683716",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-6.107499957084656",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "76",
+        "PM": "78.5",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-8.389999866485596",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-3.825000047683716",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:18:43.486Z",
+    "ok": true
+  }
+}

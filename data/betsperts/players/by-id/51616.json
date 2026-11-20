@@ -1,0 +1,179 @@
+{
+  "playerId": "51616",
+  "playerName": "Lukas Michel",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/as-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Lukas Michel",
+    "BirthPlace": "",
+    "BirthDate": "January 23, 1994",
+    "Age": "32",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "Australia",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Lukas Michel",
+        "player_num": "51616",
+        "Year": "2020",
+        "Rounds": "4",
+        "SG:TOT": "-3.99",
+        "SG:T2G": "-3.18",
+        "SG:OTT": "-0.01",
+        "SG:APP": "-2.75",
+        "SG:BS": "-2.76",
+        "SG:ARG": "-0.42",
+        "SG:P": "-1.42",
+        "Dr Distance": "291.0",
+        "Dr Accuracy %": "30.4",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2020-11-15",
+        "position": "CUT",
+        "roundPosition": "T81",
+        "TournamentName": "Masters Tournament",
+        "is_major": "1",
+        "playerName": "Lukas Michel",
+        "player_num": "51616",
+        "Rounds": "2",
+        "CourseID": "14",
+        "Course": "Augusta National GC",
+        "ShotLink": "2",
+        "SG:TOT": "-3.39",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2020-09-20",
+        "position": "CUT",
+        "roundPosition": "T136",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Lukas Michel",
+        "player_num": "51616",
+        "Rounds": "2",
+        "CourseID": "891",
+        "Course": "Winged Foot GC",
+        "ShotLink": "2",
+        "SG:TOT": "-4.60",
+        "SG:T2G": "-3.18",
+        "SG:OTT": "-0.01",
+        "SG:APP": "-2.75",
+        "SG:BS": "-2.76",
+        "SG:ARG": "-0.42",
+        "SG:P": "-1.42",
+        "SG:SG": "-1.83"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": null,
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-6.015000104904175",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.9700000286102295",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-3.390000104904175",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-4.5950000286102295",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-3.390000104904175",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-4.5950000286102295",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-3.992500066757202",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "76.5",
+        "PM": "77",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": "40",
+        "150-200": "48.8",
+        "200+": "69.4",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-3.992500066757202",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:40.791Z",
+    "ok": true
+  }
+}

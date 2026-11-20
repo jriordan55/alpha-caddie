@@ -1,0 +1,148 @@
+{
+  "playerId": "58986",
+  "playerName": "Zihao Jin",
+  "flag": null,
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Zihao Jin",
+    "BirthPlace": "Lanzhou, China",
+    "BirthDate": "March 04, 1999",
+    "Age": "27",
+    "Height": "5ft 9in",
+    "Weight": "170 lbs",
+    "Nationality": "People’s Rep of Chin",
+    "Residence": "San Diego, California",
+    "ProWins": null,
+    "TurnedPro": "2022",
+    "PGAWins": null,
+    "College": "San Diego State University 2022, International Business"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Zihao Jin",
+        "player_num": "58986",
+        "Year": "2025",
+        "Rounds": "2",
+        "SG:TOT": "-3.29",
+        "SG:T2G": "-3.34",
+        "SG:OTT": "-0.28",
+        "SG:APP": "-2.45",
+        "SG:BS": "-2.73",
+        "SG:ARG": "-0.61",
+        "SG:P": "0.06",
+        "Dr Distance": "290.5",
+        "Dr Accuracy %": "60.7",
+        "Ball Speed": "166.33"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2025-07-13",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "ISCO Championship",
+        "is_major": "0",
+        "playerName": "Zihao Jin",
+        "player_num": "58986",
+        "Rounds": "2",
+        "CourseID": "934",
+        "Course": "Hurstbourne CC",
+        "ShotLink": "2",
+        "SG:TOT": "-3.29",
+        "SG:T2G": "-3.34",
+        "SG:OTT": "-0.28",
+        "SG:APP": "-2.45",
+        "SG:BS": "-2.73",
+        "SG:ARG": "-0.61",
+        "SG:P": "0.06",
+        "SG:SG": "-0.55"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "0.05700001120567322",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.850000023841858",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-4.730000019073486",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-3.290000021457672",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-3.290000021457672",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-3.290000021457672",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "73",
+        "PM": "76",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "53.8",
+        "200+": "81.9",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-3.290000021457672",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:26:37.491Z",
+    "ok": true
+  }
+}

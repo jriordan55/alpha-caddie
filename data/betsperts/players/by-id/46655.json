@@ -1,0 +1,185 @@
+{
+  "playerId": "46655",
+  "playerName": "Jacob Eggers",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Jacob Eggers",
+    "BirthPlace": "Boone, North Carolina",
+    "BirthDate": "January 28, 1988",
+    "Age": "38",
+    "Height": "5ft 10in",
+    "Weight": "230 lbs",
+    "Nationality": "United States",
+    "Residence": "Palm Beach Gardens, Florida",
+    "ProWins": "0",
+    "TurnedPro": "2011",
+    "PGAWins": "0",
+    "College": "Appalachian State University 2011, Economics"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Jacob Eggers",
+        "player_num": "46655",
+        "Year": "2019",
+        "Rounds": "2",
+        "SG:TOT": "-3.08",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "75.0",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Jacob Eggers",
+        "player_num": "46655",
+        "Year": "2016",
+        "Rounds": "2",
+        "SG:TOT": "-1.65",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "75.0",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2019-03-31",
+        "position": "CUT",
+        "roundPosition": "T115",
+        "TournamentName": "Corales Puntacana Championship",
+        "is_major": "0",
+        "playerName": "Jacob Eggers",
+        "player_num": "46655",
+        "Rounds": "2",
+        "CourseID": "244",
+        "Course": "Corales Golf Course",
+        "ShotLink": "0",
+        "SG:TOT": "-3.08",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2016-03-27",
+        "position": "CUT",
+        "roundPosition": "T96",
+        "TournamentName": "Puerto Rico Open",
+        "is_major": "0",
+        "playerName": "Jacob Eggers",
+        "player_num": "46655",
+        "Rounds": "2",
+        "CourseID": "742",
+        "Course": "Grand Reserve GC",
+        "ShotLink": "0",
+        "SG:TOT": "-1.65",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "25.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-3.8149999380111694",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.9149999767541885",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-1.6499999910593033",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-3.0799999237060547",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-1.6499999910593033",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-3.0799999237060547",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-2.364999957382679",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74",
+        "PM": "74",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-2.364999957382679",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:14.957Z",
+    "ok": true
+  }
+}

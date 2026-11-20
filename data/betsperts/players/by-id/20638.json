@@ -1,0 +1,158 @@
+{
+  "playerId": "20638",
+  "playerName": "Jason Norris",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/as-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Jason Norris",
+    "BirthPlace": "",
+    "BirthDate": "September 07, 1972",
+    "Age": "54",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "Australia",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Jason Norris",
+        "player_num": "20638",
+        "Year": "2018",
+        "Rounds": "4",
+        "SG:TOT": "-0.99",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "53.6",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2018-10-28",
+        "position": "T50",
+        "roundPosition": "T50",
+        "TournamentName": "WGC - HSBC Champions",
+        "is_major": "0",
+        "playerName": "Jason Norris",
+        "player_num": "20638",
+        "Rounds": "4",
+        "CourseID": "766",
+        "Course": "Sheshan International GC",
+        "ShotLink": "0",
+        "SG:TOT": "-0.99",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "25.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": null,
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.7100000381469727",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.10000000149011612",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "0.4699999988079071",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-2.619999885559082",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-0.9899999815970659",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-0.9899999815970659",
+        "Rounds": "4"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Strong",
+        "StrokesGainedAverage": "-0.9899999815970659",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74.66666666666667",
+        "PM": "73",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-0.9899999815970659",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:27.794Z",
+    "ok": true
+  }
+}

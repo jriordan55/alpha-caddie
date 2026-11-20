@@ -1,0 +1,138 @@
+{
+  "playerId": "20594",
+  "playerName": "David Bransdon",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/as-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "David Bransdon",
+    "BirthPlace": "",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "Australia",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "David Bransdon",
+        "player_num": "20594",
+        "Year": "2018",
+        "Rounds": "2",
+        "SG:TOT": "-1.46",
+        "SG:T2G": "0.04",
+        "SG:OTT": "0.83",
+        "SG:APP": "0.94",
+        "SG:BS": "1.77",
+        "SG:ARG": "-1.72",
+        "SG:P": "-1.51",
+        "Dr Distance": "286.4",
+        "Dr Accuracy %": "85.7",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2018-06-17",
+        "position": "CUT",
+        "roundPosition": "T106",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "David Bransdon",
+        "player_num": "20594",
+        "Rounds": "2",
+        "CourseID": "618",
+        "Course": "Shinnecock Hills GC",
+        "ShotLink": "2",
+        "SG:TOT": "-1.46",
+        "SG:T2G": "0.04",
+        "SG:OTT": "0.83",
+        "SG:APP": "0.94",
+        "SG:BS": "1.77",
+        "SG:ARG": "-1.72",
+        "SG:P": "-1.51",
+        "SG:SG": "-3.23"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-2.5299999713897705",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.4000000059604645",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-1.4649999886751175",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-1.4649999886751175",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-1.4649999886751175",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "79",
+        "PM": "74",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "43.2",
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-1.4649999886751175",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:20:56.409Z",
+    "ok": true
+  }
+}

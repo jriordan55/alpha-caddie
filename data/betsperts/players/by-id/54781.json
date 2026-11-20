@@ -1,0 +1,215 @@
+{
+  "playerId": "54781",
+  "playerName": "Grant Hirschman",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Grant Hirschman",
+    "BirthPlace": "Memphis, Tennessee",
+    "BirthDate": "March 18, 1995",
+    "Age": "31",
+    "Height": "5ft 10in",
+    "Weight": "165 lbs",
+    "Nationality": "United States",
+    "Residence": "Dallas, Texas",
+    "ProWins": "0",
+    "TurnedPro": "2018",
+    "PGAWins": "0",
+    "College": "University of Oklahoma 2018, Business Management"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Grant Hirschman",
+        "player_num": "54781",
+        "Year": "2021",
+        "Rounds": "4",
+        "SG:TOT": "1.71",
+        "SG:T2G": "0.48",
+        "SG:OTT": "-0.17",
+        "SG:APP": "-0.03",
+        "SG:BS": "-0.19",
+        "SG:ARG": "0.68",
+        "SG:P": "1.23",
+        "Dr Distance": "282.0",
+        "Dr Accuracy %": "60.7",
+        "Ball Speed": "165.73"
+      },
+      {
+        "playerName": "Grant Hirschman",
+        "player_num": "54781",
+        "Year": "2018",
+        "Rounds": "4",
+        "SG:TOT": "-0.31",
+        "SG:T2G": "0.53",
+        "SG:OTT": "0.26",
+        "SG:APP": "0.41",
+        "SG:BS": "0.67",
+        "SG:ARG": "-0.14",
+        "SG:P": "-0.84",
+        "Dr Distance": "286.9",
+        "Dr Accuracy %": "50.0",
+        "Ball Speed": "163.41"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2021-10-03",
+        "position": "T17",
+        "roundPosition": "T17",
+        "TournamentName": "Sanderson Farms Championship",
+        "is_major": "0",
+        "playerName": "Grant Hirschman",
+        "player_num": "54781",
+        "Rounds": "4",
+        "CourseID": "746",
+        "Course": "The Country Club of Jackson",
+        "ShotLink": "4",
+        "SG:TOT": "1.71",
+        "SG:T2G": "0.48",
+        "SG:OTT": "-0.17",
+        "SG:APP": "-0.03",
+        "SG:BS": "-0.19",
+        "SG:ARG": "0.68",
+        "SG:P": "1.23",
+        "SG:SG": "1.90"
+      },
+      {
+        "Date": "2018-06-10",
+        "position": "T63",
+        "roundPosition": "T63",
+        "TournamentName": "FedEx St. Jude Classic",
+        "is_major": "0",
+        "playerName": "Grant Hirschman",
+        "player_num": "54781",
+        "Rounds": "4",
+        "CourseID": "513",
+        "Course": "TPC Southwind",
+        "ShotLink": "4",
+        "SG:TOT": "-0.31",
+        "SG:T2G": "0.53",
+        "SG:OTT": "0.26",
+        "SG:APP": "0.41",
+        "SG:BS": "0.67",
+        "SG:ARG": "-0.14",
+        "SG:P": "-0.84",
+        "SG:SG": "-0.98"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "75.0",
+        "SG TOT 1+": "50.0",
+        "SG TOT 2+": "37.5",
+        "SG TOT 3+": "12.5",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "12"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "0.1954999938607216",
+        "Rounds": "8"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "1.6850000023841858",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "2.1200000047683716",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "0.2849999666213989",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-1.280000001192093",
+        "Rounds": "3"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-0.3050000071525574",
+        "Rounds": "4"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "1.709999993443489",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-0.3050000071525574",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "0.6000000238418579",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "2.0799999833106995",
+        "Rounds": "3"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "0.7024999931454659",
+        "Rounds": "8"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "69.75",
+        "PM": "69",
+        "Rounds": "12"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "12",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "36.9",
+        "200+": "58.5",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "1.709999993443489",
+        "Rounds": "4"
+      },
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-0.3050000071525574",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:21:49.968Z",
+    "ok": true
+  }
+}

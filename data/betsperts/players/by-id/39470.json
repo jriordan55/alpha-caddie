@@ -1,0 +1,215 @@
+{
+  "playerId": "39470",
+  "playerName": "Richard Jung",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ca-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Richard Jung",
+    "BirthPlace": "Seoul, South Korea",
+    "BirthDate": "October 08, 1992",
+    "Age": "34",
+    "Height": "5ft 8in",
+    "Weight": "183 lbs",
+    "Nationality": "Canada",
+    "Residence": "Markham, Ontario, Canada",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Richard Jung",
+        "player_num": "39470",
+        "Year": "2019",
+        "Rounds": "4",
+        "SG:TOT": "-1.48",
+        "SG:T2G": "-0.93",
+        "SG:OTT": "0.36",
+        "SG:APP": "-0.89",
+        "SG:BS": "-0.53",
+        "SG:ARG": "-0.40",
+        "SG:P": "-0.55",
+        "Dr Distance": "289.9",
+        "Dr Accuracy %": "53.6",
+        "Ball Speed": "183.14"
+      },
+      {
+        "playerName": "Richard Jung",
+        "player_num": "39470",
+        "Year": "2015",
+        "Rounds": "2",
+        "SG:TOT": "-1.82",
+        "SG:T2G": "-2.40",
+        "SG:OTT": "-1.21",
+        "SG:APP": "-0.77",
+        "SG:BS": "-1.98",
+        "SG:ARG": "-0.42",
+        "SG:P": "0.58",
+        "Dr Distance": "309.3",
+        "Dr Accuracy %": "28.6",
+        "Ball Speed": "174.48"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2019-06-09",
+        "position": "69",
+        "roundPosition": "69",
+        "TournamentName": "RBC Canadian Open",
+        "is_major": "0",
+        "playerName": "Richard Jung",
+        "player_num": "39470",
+        "Rounds": "4",
+        "CourseID": "874",
+        "Course": "Hamilton Golf & Country Club",
+        "ShotLink": "4",
+        "SG:TOT": "-1.48",
+        "SG:T2G": "-0.93",
+        "SG:OTT": "0.36",
+        "SG:APP": "-0.89",
+        "SG:BS": "-0.53",
+        "SG:ARG": "-0.40",
+        "SG:P": "-0.55",
+        "SG:SG": "-0.95"
+      },
+      {
+        "Date": "2015-07-26",
+        "position": "CUT",
+        "roundPosition": "T119",
+        "TournamentName": "RBC Canadian Open",
+        "is_major": "0",
+        "playerName": "Richard Jung",
+        "player_num": "39470",
+        "Rounds": "2",
+        "CourseID": "32",
+        "Course": "Glen Abbey GC",
+        "ShotLink": "2",
+        "SG:TOT": "-1.82",
+        "SG:T2G": "-2.40",
+        "SG:OTT": "-1.21",
+        "SG:APP": "-0.77",
+        "SG:BS": "-1.98",
+        "SG:ARG": "-0.42",
+        "SG:P": "0.58",
+        "SG:SG": "0.16"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "33.3",
+        "SG TOT 1+": "16.7",
+        "SG TOT 2+": "16.7",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "6"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "0.5824999958276749",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "0.7700000405311584",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.1099999845027924",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-4.550000190734863",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-4.320000171661377",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-1.8199999928474426",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-1.4775000661611557",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-1.4775000661611557",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-1.8199999928474426",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-1.4775000661611557",
+        "Rounds": "4"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-1.8199999928474426",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "72.33333333333333",
+        "PM": "71.33333333333333",
+        "Rounds": "6"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "6",
+        "50-100": "26.5",
+        "100-150": "33.2",
+        "150-200": "36.5",
+        "200+": "46",
+        "200-250": "46",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-1.4775000661611557",
+        "Rounds": "4"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-1.8199999928474426",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:24:59.832Z",
+    "ok": true
+  }
+}

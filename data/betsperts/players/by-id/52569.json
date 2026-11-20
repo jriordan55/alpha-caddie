@@ -1,0 +1,257 @@
+{
+  "playerId": "52569",
+  "playerName": "Harry Ellis",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/St_Georges_Cross.svg_.png",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Harry Ellis",
+    "BirthPlace": "",
+    "BirthDate": "September 10, 1995",
+    "Age": "31",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "England",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Harry Ellis",
+        "player_num": "52569",
+        "Year": "2018",
+        "Rounds": "6",
+        "SG:TOT": "-6.09",
+        "SG:T2G": "-3.77",
+        "SG:OTT": "-1.74",
+        "SG:APP": "-0.74",
+        "SG:BS": "-2.48",
+        "SG:ARG": "-1.28",
+        "SG:P": "-0.96",
+        "Dr Distance": "287.8",
+        "Dr Accuracy %": "40.5",
+        "Ball Speed": "179.46"
+      },
+      {
+        "playerName": "Harry Ellis",
+        "player_num": "52569",
+        "Year": "2017",
+        "Rounds": "2",
+        "SG:TOT": "-3.02",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "21.4",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2018-06-17",
+        "position": "CUT",
+        "roundPosition": "T148",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Harry Ellis",
+        "player_num": "52569",
+        "Rounds": "2",
+        "CourseID": "618",
+        "Course": "Shinnecock Hills GC",
+        "ShotLink": "2",
+        "SG:TOT": "-4.47",
+        "SG:T2G": "-2.30",
+        "SG:OTT": "0.14",
+        "SG:APP": "-0.55",
+        "SG:BS": "-0.40",
+        "SG:ARG": "-1.90",
+        "SG:P": "-2.16",
+        "SG:SG": "-4.06"
+      },
+      {
+        "Date": "2018-06-03",
+        "position": "CUT",
+        "roundPosition": "T113",
+        "TournamentName": "the Memorial Tournament",
+        "is_major": "0",
+        "playerName": "Harry Ellis",
+        "player_num": "52569",
+        "Rounds": "2",
+        "CourseID": "23",
+        "Course": "Muirfield Village GC",
+        "ShotLink": "2",
+        "SG:TOT": "-4.99",
+        "SG:T2G": "-5.23",
+        "SG:OTT": "-3.63",
+        "SG:APP": "-0.93",
+        "SG:BS": "-4.56",
+        "SG:ARG": "-0.67",
+        "SG:P": "0.24",
+        "SG:SG": "-0.43"
+      },
+      {
+        "Date": "2018-04-08",
+        "position": "CUT",
+        "roundPosition": "87",
+        "TournamentName": "Masters Tournament",
+        "is_major": "1",
+        "playerName": "Harry Ellis",
+        "player_num": "52569",
+        "Rounds": "2",
+        "CourseID": "14",
+        "Course": "Augusta National GC",
+        "ShotLink": "0",
+        "SG:TOT": "-8.83",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2017-07-23",
+        "position": "CUT",
+        "roundPosition": "T137",
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Harry Ellis",
+        "player_num": "52569",
+        "Rounds": "2",
+        "CourseID": "541",
+        "Course": "Royal Birkdale GC",
+        "ShotLink": "0",
+        "SG:TOT": "-3.02",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "8"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": null,
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-5.314999982714653",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-5.337500035762787",
+        "Rounds": "4"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-4.007499977946281",
+        "Rounds": "4"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-8.825000047683716",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-4.465000033378601",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-4.989999979734421",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-8.825000047683716",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-3.7450000047683716",
+        "Rounds": "4"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Strong",
+        "StrokesGainedAverage": "-4.989999979734421",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-5.438333352406819",
+        "Rounds": "6"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "80.75",
+        "PM": "76.75",
+        "Rounds": "8"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "8",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "41.6",
+        "200+": "55.9",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-6.907500013709068",
+        "Rounds": "4"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-3.7450000047683716",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:21:58.024Z",
+    "ok": true
+  }
+}

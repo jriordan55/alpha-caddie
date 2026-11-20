@@ -1,0 +1,158 @@
+{
+  "playerId": "50423",
+  "playerName": "Philip Eriksson",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_sw-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Philip Eriksson",
+    "BirthPlace": "",
+    "BirthDate": "November 22, 1991",
+    "Age": "34",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "Sweden",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Philip Eriksson",
+        "player_num": "50423",
+        "Year": "2019",
+        "Rounds": "4",
+        "SG:TOT": "-1.49",
+        "SG:T2G": "-1.15",
+        "SG:OTT": "0.24",
+        "SG:APP": "-0.85",
+        "SG:BS": "-0.62",
+        "SG:ARG": "-0.54",
+        "SG:P": "-0.35",
+        "Dr Distance": "291.2",
+        "Dr Accuracy %": "55.4",
+        "Ball Speed": "172.28"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2019-07-28",
+        "position": "T51",
+        "roundPosition": "T51",
+        "TournamentName": "WGC - FedEx St. Jude Invitational",
+        "is_major": "0",
+        "playerName": "Philip Eriksson",
+        "player_num": "50423",
+        "Rounds": "4",
+        "CourseID": "513",
+        "Course": "TPC Southwind",
+        "ShotLink": "4",
+        "SG:TOT": "-1.49",
+        "SG:T2G": "-1.15",
+        "SG:OTT": "0.24",
+        "SG:APP": "-0.85",
+        "SG:BS": "-0.62",
+        "SG:ARG": "-0.54",
+        "SG:P": "-0.35",
+        "SG:SG": "-0.88"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "25.0",
+        "SG TOT 1+": "25.0",
+        "SG TOT 2+": "25.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-0.34574997425079346",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-3.5199999809265137",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.8600000143051147",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-3.059999942779541",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "2.4600000381469727",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-1.4949999749660492",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-1.4949999749660492",
+        "Rounds": "4"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Strong",
+        "StrokesGainedAverage": "-1.4949999749660492",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "70.33333333333333",
+        "PM": "73",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": "25.2",
+        "150-200": "38.8",
+        "200+": "48.8",
+        "200-250": "41.5",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-1.4949999749660492",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:24:50.322Z",
+    "ok": true
+  }
+}

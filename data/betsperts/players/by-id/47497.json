@@ -1,0 +1,234 @@
+{
+  "playerId": "47497",
+  "playerName": "Hennie Du Plessis",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_sf-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Hennie Du Plessis",
+    "BirthPlace": null,
+    "BirthDate": "October 14, 1996",
+    "Age": "30",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "South Africa",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Hennie Du Plessis",
+        "player_num": "47497",
+        "Year": "2026",
+        "Rounds": "10",
+        "SG:TOT": "-0.59",
+        "SG:T2G": "0.61",
+        "SG:OTT": "-0.34",
+        "SG:APP": "0.27",
+        "SG:BS": "-0.07",
+        "SG:ARG": "0.69",
+        "SG:P": "-1.21",
+        "Dr Distance": "298.9",
+        "Dr Accuracy %": "57.4",
+        "Ball Speed": "179.21"
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Hennie Du Plessis",
+        "player_num": "47497",
+        "Rounds": "10",
+        "SG:TOT": "-0.59",
+        "SG:T2G": "0.61",
+        "SG:OTT": "-0.34",
+        "SG:APP": "0.27",
+        "SG:BS": "-0.07",
+        "SG:ARG": "0.69",
+        "SG:P": "-1.21",
+        "SG:SG": "-0.52"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-07-19",
+        "position": "T46",
+        "roundPosition": "T46",
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Hennie Du Plessis",
+        "player_num": "47497",
+        "Rounds": "4",
+        "CourseID": "541",
+        "Course": "Royal Birkdale GC",
+        "ShotLink": "4",
+        "SG:TOT": "0.66",
+        "SG:T2G": "0.57",
+        "SG:OTT": "-1.00",
+        "SG:APP": "0.78",
+        "SG:BS": "-0.22",
+        "SG:ARG": "0.79",
+        "SG:P": "0.09",
+        "SG:SG": "0.89"
+      },
+      {
+        "Date": "2026-07-12",
+        "position": "T61",
+        "roundPosition": "T61",
+        "TournamentName": "Genesis Scottish Open",
+        "is_major": "0",
+        "playerName": "Hennie Du Plessis",
+        "player_num": "47497",
+        "Rounds": "4",
+        "CourseID": "945",
+        "Course": "The Renaissance Club",
+        "ShotLink": "4",
+        "SG:TOT": "-0.53",
+        "SG:T2G": "0.45",
+        "SG:OTT": "0.22",
+        "SG:APP": "-0.54",
+        "SG:BS": "-0.32",
+        "SG:ARG": "0.77",
+        "SG:P": "-0.98",
+        "SG:SG": "-0.21"
+      },
+      {
+        "Date": "2026-06-21",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Hennie Du Plessis",
+        "player_num": "47497",
+        "Rounds": "2",
+        "CourseID": "618",
+        "Course": "Shinnecock Hills GC",
+        "ShotLink": "2",
+        "SG:TOT": "-3.24",
+        "SG:T2G": "1.04",
+        "SG:OTT": "-0.13",
+        "SG:APP": "0.87",
+        "SG:BS": "0.74",
+        "SG:ARG": "0.30",
+        "SG:P": "-4.27",
+        "SG:SG": "-3.97"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "40.0",
+        "SG TOT 2+": "10.0",
+        "SG TOT 3+": "10.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "10"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.476666659116745",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "0.446666677792867",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-2.2700001001358032",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-0.649999987334013",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "1.0400000164906185",
+        "Rounds": "6"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-2.8500000946223736",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-3.2350000143051147",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "1.260000003874302",
+        "Rounds": "5"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "0.020000040531158447",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-5.800000190734863",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-3.2350000143051147",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Strong",
+        "StrokesGainedAverage": "-0.5275000464171171",
+        "Rounds": "4"
+      },
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-0.6366666555404663",
+        "Rounds": "6"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "70.2",
+        "PM": "72.4",
+        "Rounds": "10"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "10",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "40.8",
+        "200+": "65.6",
+        "200-250": "42.1",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-0.5930000118911266",
+        "Rounds": "10"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:01.004Z",
+    "ok": true
+  }
+}

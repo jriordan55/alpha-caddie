@@ -1,0 +1,143 @@
+{
+  "playerId": "58583",
+  "playerName": "Oliver Farrell",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/St_Georges_Cross.svg_.png",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Oliver Farrell",
+    "BirthPlace": "Frimley, England",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "6ft 3in",
+    "Weight": "195 lbs",
+    "Nationality": "England",
+    "Residence": "England",
+    "ProWins": null,
+    "TurnedPro": "2020",
+    "PGAWins": null,
+    "College": "Marquette University 2019, Communication Studies"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Oliver Farrell",
+        "player_num": "58583",
+        "Year": "2025",
+        "Rounds": "2",
+        "SG:TOT": "-0.77",
+        "SG:T2G": "0.47",
+        "SG:OTT": "0.16",
+        "SG:APP": "-0.45",
+        "SG:BS": "-0.29",
+        "SG:ARG": "0.76",
+        "SG:P": "-1.25",
+        "Dr Distance": null,
+        "Dr Accuracy %": "39.3",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2025-07-20",
+        "position": "CUT",
+        "roundPosition": null,
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Oliver Farrell",
+        "player_num": "58583",
+        "Rounds": "2",
+        "CourseID": "885",
+        "Course": "Royal Portrush GC",
+        "ShotLink": "2",
+        "SG:TOT": "-0.77",
+        "SG:T2G": "0.47",
+        "SG:OTT": "0.16",
+        "SG:APP": "-0.45",
+        "SG:BS": "-0.29",
+        "SG:ARG": "0.76",
+        "SG:P": "-1.25",
+        "SG:SG": "-0.49"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.9599999785423279",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.5899999737739563",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-0.7749999761581421",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-0.5899999737739563",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-0.9599999785423279",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-0.7749999761581421",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "72",
+        "PM": "74",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-0.7749999761581421",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:24:33.095Z",
+    "ok": true
+  }
+}

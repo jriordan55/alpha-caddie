@@ -1,0 +1,143 @@
+{
+  "playerId": "65408",
+  "playerName": "Barend Botha",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_sf-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Barend Botha",
+    "BirthPlace": "George, South Africa",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "6ft 1in",
+    "Weight": "185 lbs",
+    "Nationality": "South Africa",
+    "Residence": "George, South Africa",
+    "ProWins": null,
+    "TurnedPro": "2024",
+    "PGAWins": null,
+    "College": "University of Toledo 2024, Marketing, Management"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Barend Botha",
+        "player_num": "65408",
+        "Year": "2025",
+        "Rounds": "2",
+        "SG:TOT": "-1.36",
+        "SG:T2G": "-1.84",
+        "SG:OTT": "-0.20",
+        "SG:APP": "-1.59",
+        "SG:BS": "-1.79",
+        "SG:ARG": "-0.05",
+        "SG:P": "0.49",
+        "Dr Distance": "300.7",
+        "Dr Accuracy %": "46.4",
+        "Ball Speed": "180.09"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2025-06-08",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "RBC Canadian Open",
+        "is_major": "0",
+        "playerName": "Barend Botha",
+        "player_num": "65408",
+        "Rounds": "2",
+        "CourseID": "935",
+        "Course": "TPC Toronto at Osprey Valley (North)",
+        "ShotLink": "2",
+        "SG:TOT": "-1.36",
+        "SG:T2G": "-1.84",
+        "SG:OTT": "-0.20",
+        "SG:APP": "-1.59",
+        "SG:BS": "-1.79",
+        "SG:ARG": "-0.05",
+        "SG:P": "0.49",
+        "SG:SG": "0.43"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.2400000095367432",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.4700000286102295",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-1.3550000190734863",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-1.4700000286102295",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-1.2400000095367432",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-1.3550000190734863",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "70",
+        "PM": "71",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "26.6",
+        "150-200": "40.8",
+        "200+": "61",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-1.3550000190734863",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:19.149Z",
+    "ok": true
+  }
+}

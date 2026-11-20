@@ -1,0 +1,237 @@
+{
+  "playerId": "35834",
+  "playerName": "Hyungjoon Lee",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ks-flag-1.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Hyungjoon Lee",
+    "BirthPlace": "",
+    "BirthDate": "June 13, 1992",
+    "Age": "34",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "South Korea",
+    "Residence": "",
+    "ProWins": "1",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Hyungjoon Lee",
+        "player_num": "35834",
+        "Year": "2019",
+        "Rounds": "4",
+        "SG:TOT": "-0.41",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "67.9",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Hyungjoon Lee",
+        "player_num": "35834",
+        "Year": "2018",
+        "Rounds": "4",
+        "SG:TOT": "-2.55",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "66.1",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Hyungjoon Lee",
+        "player_num": "35834",
+        "Year": "2017",
+        "Rounds": "4",
+        "SG:TOT": "-1.30",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "73.2",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2019-10-20",
+        "position": "T46",
+        "roundPosition": "T46",
+        "TournamentName": "The CJ CUP at Nine Bridges",
+        "is_major": "0",
+        "playerName": "Hyungjoon Lee",
+        "player_num": "35834",
+        "Rounds": "4",
+        "CourseID": "242",
+        "Course": "Nine Bridges",
+        "ShotLink": "0",
+        "SG:TOT": "-0.41",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2018-10-21",
+        "position": "T73",
+        "roundPosition": "T73",
+        "TournamentName": "The CJ CUP at Nine Bridges",
+        "is_major": "0",
+        "playerName": "Hyungjoon Lee",
+        "player_num": "35834",
+        "Rounds": "4",
+        "CourseID": "242",
+        "Course": "Nine Bridges",
+        "ShotLink": "0",
+        "SG:TOT": "-2.55",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2017-10-22",
+        "position": "60",
+        "roundPosition": "60",
+        "TournamentName": "The CJ CUP at Nine Bridges",
+        "is_major": "0",
+        "playerName": "Hyungjoon Lee",
+        "player_num": "35834",
+        "Rounds": "4",
+        "CourseID": "242",
+        "Course": "Nine Bridges",
+        "ShotLink": "0",
+        "SG:TOT": "-1.30",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "25.0",
+        "SG TOT 1+": "8.3",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "12"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": null,
+        "Rounds": "12"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.963333323597908",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "0.24666666984558105",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-3.0433332758645215",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-1.9266666372617085",
+        "Rounds": "3"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-1.4216666417196393",
+        "Rounds": "12"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-1.3049999922513962",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-1.4799999664537609",
+        "Rounds": "8"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-1.4216666417196393",
+        "Rounds": "12"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "73.14285714285714",
+        "PM": "73",
+        "Rounds": "12"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "12",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-1.4216666417196393",
+        "Rounds": "12"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:06.692Z",
+    "ok": true
+  }
+}

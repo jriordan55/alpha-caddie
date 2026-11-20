@@ -1,0 +1,209 @@
+{
+  "playerId": "60222",
+  "playerName": "Austin Wylie",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Austin Wylie",
+    "BirthPlace": null,
+    "BirthDate": "",
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Austin Wylie",
+        "player_num": "60222",
+        "Year": "2026",
+        "Rounds": "2",
+        "SG:TOT": "-4.95",
+        "SG:T2G": "-5.11",
+        "SG:OTT": "-1.30",
+        "SG:APP": "-2.30",
+        "SG:BS": "-3.61",
+        "SG:ARG": "-1.51",
+        "SG:P": "0.17",
+        "Dr Distance": "277.9",
+        "Dr Accuracy %": "57.1",
+        "Ball Speed": "160.97"
+      },
+      {
+        "playerName": "Austin Wylie",
+        "player_num": "60222",
+        "Year": "2024",
+        "Rounds": "2",
+        "SG:TOT": "-4.07",
+        "SG:T2G": "-3.19",
+        "SG:OTT": "-2.66",
+        "SG:APP": "-0.49",
+        "SG:BS": "-3.15",
+        "SG:ARG": "-0.03",
+        "SG:P": "-0.89",
+        "Dr Distance": "278.7",
+        "Dr Accuracy %": "50.0",
+        "Ball Speed": "161.78"
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Austin Wylie",
+        "player_num": "60222",
+        "Rounds": "2",
+        "SG:TOT": "-4.95",
+        "SG:T2G": "-5.11",
+        "SG:OTT": "-1.30",
+        "SG:APP": "-2.30",
+        "SG:BS": "-3.61",
+        "SG:ARG": "-1.51",
+        "SG:P": "0.17",
+        "SG:SG": "-1.34"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-04-05",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "Valero Texas Open",
+        "is_major": "0",
+        "playerName": "Austin Wylie",
+        "player_num": "60222",
+        "Rounds": "2",
+        "CourseID": "770",
+        "Course": "TPC San Antonio (Oaks)",
+        "ShotLink": "2",
+        "SG:TOT": "-4.95",
+        "SG:T2G": "-5.11",
+        "SG:OTT": "-1.30",
+        "SG:APP": "-2.30",
+        "SG:BS": "-3.61",
+        "SG:ARG": "-1.51",
+        "SG:P": "0.17",
+        "SG:SG": "-1.34"
+      },
+      {
+        "Date": "2024-02-25",
+        "position": "CUT",
+        "roundPosition": "121",
+        "TournamentName": "Mexico Open at Vidanta",
+        "is_major": "0",
+        "playerName": "Austin Wylie",
+        "player_num": "60222",
+        "Rounds": "2",
+        "CourseID": "978",
+        "Course": "Vidanta Vallarta",
+        "ShotLink": "2",
+        "SG:TOT": "-4.07",
+        "SG:T2G": "-3.19",
+        "SG:OTT": "-2.66",
+        "SG:APP": "-0.49",
+        "SG:BS": "-3.15",
+        "SG:ARG": "-0.03",
+        "SG:P": "-0.89",
+        "SG:SG": "-0.93"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Poa Trivialis",
+        "StrokesGainedAverage": "0.16600000858306885",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-5.8349997997283936",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-3.190000057220459",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-4.512499928474426",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-3.5649999380111694",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-5.459999918937683",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-4.949999928474426",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-4.074999928474426",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "76.5",
+        "PM": "74",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": "35.6",
+        "150-200": "36.4",
+        "200+": "72.2",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-4.512499928474426",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:17.341Z",
+    "ok": true
+  }
+}

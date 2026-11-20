@@ -1,0 +1,168 @@
+{
+  "playerId": "50154",
+  "playerName": "Joseph Winslow",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Joseph Winslow",
+    "BirthPlace": "Overland Park, Kansas",
+    "BirthDate": "January 02, 1993",
+    "Age": "33",
+    "Height": "6ft 5in",
+    "Weight": "190 lbs",
+    "Nationality": "United States",
+    "Residence": "Overland Park, Kansas",
+    "ProWins": "0",
+    "TurnedPro": "2015",
+    "PGAWins": "0",
+    "College": "University of South Florida 2015, Organizational Communications"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Joseph Winslow",
+        "player_num": "50154",
+        "Year": "2023",
+        "Rounds": "4",
+        "SG:TOT": "0.16",
+        "SG:T2G": "0.07",
+        "SG:OTT": "-0.16",
+        "SG:APP": "0.23",
+        "SG:BS": "0.07",
+        "SG:ARG": "-0.01",
+        "SG:P": "0.09",
+        "Dr Distance": "311.6",
+        "Dr Accuracy %": "39.3",
+        "Ball Speed": "179.69"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2023-01-15",
+        "position": "T54",
+        "roundPosition": "T54",
+        "TournamentName": "Sony Open",
+        "is_major": "0",
+        "playerName": "Joseph Winslow",
+        "player_num": "50154",
+        "Rounds": "4",
+        "CourseID": "6",
+        "Course": "Waialae CC",
+        "ShotLink": "4",
+        "SG:TOT": "0.16",
+        "SG:T2G": "0.07",
+        "SG:OTT": "-0.16",
+        "SG:APP": "0.23",
+        "SG:BS": "0.07",
+        "SG:ARG": "-0.01",
+        "SG:P": "0.09",
+        "SG:SG": "0.08"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "75.0",
+        "SG TOT 1+": "50.0",
+        "SG TOT 2+": "25.0",
+        "SG TOT 3+": "25.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "0.0915000275708735",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "3.4700000286102295",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "1.190000057220459",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-4.28000020980835",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "0.25",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "0.15749996900558472",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "3.4700000286102295",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "1.190000057220459",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-2.015000104904175",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "0.15749996900558472",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "68",
+        "PM": "69",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": "11.1",
+        "100-150": "25.4",
+        "150-200": "39.5",
+        "200+": "59.3",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Aloha",
+        "StrokesGainedAverage": "0.15749996900558472",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:05.750Z",
+    "ok": true
+  }
+}

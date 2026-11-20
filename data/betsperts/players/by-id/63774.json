@@ -1,0 +1,158 @@
+{
+  "playerId": "63774",
+  "playerName": "Caleb Hicks",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2026/05/headshot_63774.png",
+    "Name": "Caleb Hicks",
+    "BirthPlace": "Arlington, Texas",
+    "BirthDate": "July 10, 2000",
+    "Age": "26",
+    "Height": "5ft 8in",
+    "Weight": "180 lbs",
+    "Nationality": "United States",
+    "Residence": "Arlington, Texas",
+    "ProWins": null,
+    "TurnedPro": "2023",
+    "PGAWins": null,
+    "College": "University of Texas-Arlington (2023, University Studies)"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Caleb Hicks",
+        "player_num": "63774",
+        "Year": "2024",
+        "Rounds": "2",
+        "SG:TOT": "-2.49",
+        "SG:T2G": "-0.36",
+        "SG:OTT": "0.13",
+        "SG:APP": "0.17",
+        "SG:BS": "0.30",
+        "SG:ARG": "-0.65",
+        "SG:P": "-2.14",
+        "Dr Distance": "298.0",
+        "Dr Accuracy %": "42.9",
+        "Ball Speed": "171.73"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2024-10-06",
+        "position": "CUT",
+        "roundPosition": "T108",
+        "TournamentName": "Sanderson Farms Championship",
+        "is_major": "0",
+        "playerName": "Caleb Hicks",
+        "player_num": "63774",
+        "Rounds": "2",
+        "CourseID": "746",
+        "Course": "The Country Club of Jackson",
+        "ShotLink": "2",
+        "SG:TOT": "-2.49",
+        "SG:T2G": "-0.36",
+        "SG:OTT": "0.13",
+        "SG:APP": "0.17",
+        "SG:BS": "0.30",
+        "SG:ARG": "-0.65",
+        "SG:P": "-2.14",
+        "SG:SG": "-2.79"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "6"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-2.1404999494552612",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.8299999833106995",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-4.159999847412109",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": null,
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": null,
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-2.4949999153614044",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-2.4949999153614044",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-2.4949999153614044",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74",
+        "PM": "70",
+        "Rounds": "6"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "6",
+        "50-100": null,
+        "100-150": "30.7",
+        "150-200": null,
+        "200+": "59.3",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-2.4949999153614044",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:58.645Z",
+    "ok": true
+  }
+}

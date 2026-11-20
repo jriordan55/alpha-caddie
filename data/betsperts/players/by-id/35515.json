@@ -1,0 +1,148 @@
+{
+  "playerId": "35515",
+  "playerName": "Brian Maurer",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Brian Maurer",
+    "BirthPlace": "Richmond, Indiana",
+    "BirthDate": "November 14, 1986",
+    "Age": "40",
+    "Height": "6ft 1in",
+    "Weight": "190 lbs",
+    "Nationality": "United States",
+    "Residence": "Richmond, Indiana",
+    "ProWins": null,
+    "TurnedPro": "2009",
+    "PGAWins": null,
+    "College": "Ball State University  (2009, Sport Administration) "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Brian Maurer",
+        "player_num": "35515",
+        "Year": "2015",
+        "Rounds": "2",
+        "SG:TOT": "-2.59",
+        "SG:T2G": "-0.88",
+        "SG:OTT": "-0.23",
+        "SG:APP": "0.12",
+        "SG:BS": "-0.10",
+        "SG:ARG": "-0.78",
+        "SG:P": "-1.70",
+        "Dr Distance": "268.7",
+        "Dr Accuracy %": "60.7",
+        "Ball Speed": "166.62"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2015-11-08",
+        "position": "CUT",
+        "roundPosition": "T107",
+        "TournamentName": "Sanderson Farms Championship",
+        "is_major": "0",
+        "playerName": "Brian Maurer",
+        "player_num": "35515",
+        "Rounds": "2",
+        "CourseID": "746",
+        "Course": "The Country Club of Jackson",
+        "ShotLink": "2",
+        "SG:TOT": "-2.59",
+        "SG:T2G": "-0.88",
+        "SG:OTT": "-0.23",
+        "SG:APP": "0.12",
+        "SG:BS": "-0.10",
+        "SG:ARG": "-0.78",
+        "SG:P": "-1.70",
+        "SG:SG": "-2.48"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-1.7010000348091125",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-4.130000114440918",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.0399999618530273",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-2.5850000381469727",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-2.5850000381469727",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-2.5850000381469727",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "73",
+        "PM": null,
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "26.9",
+        "200+": "82.4",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-2.5850000381469727",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:50.624Z",
+    "ok": true
+  }
+}

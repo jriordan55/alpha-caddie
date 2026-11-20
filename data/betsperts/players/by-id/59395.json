@@ -1,0 +1,138 @@
+{
+  "playerId": "59395",
+  "playerName": "Eduard Rousaud",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_sp-flag-1.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Eduard Rousaud",
+    "BirthPlace": "",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "Spain",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Eduard Rousaud",
+        "player_num": "59395",
+        "Year": "2020",
+        "Rounds": "2",
+        "SG:TOT": "-6.60",
+        "SG:T2G": "-3.78",
+        "SG:OTT": "0.84",
+        "SG:APP": "-1.87",
+        "SG:BS": "-1.03",
+        "SG:ARG": "-2.75",
+        "SG:P": "-2.81",
+        "Dr Distance": "296.4",
+        "Dr Accuracy %": "28.6",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2020-09-20",
+        "position": "CUT",
+        "roundPosition": "143",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Eduard Rousaud",
+        "player_num": "59395",
+        "Rounds": "2",
+        "CourseID": "891",
+        "Course": "Winged Foot GC",
+        "ShotLink": "2",
+        "SG:TOT": "-6.60",
+        "SG:T2G": "-3.78",
+        "SG:OTT": "0.84",
+        "SG:APP": "-1.87",
+        "SG:BS": "-1.03",
+        "SG:ARG": "-2.75",
+        "SG:P": "-2.81",
+        "SG:SG": "-5.56"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-3.440000057220459",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-9.75",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-6.5950000286102295",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-6.5950000286102295",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-6.5950000286102295",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "85",
+        "PM": "76",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": "45.5",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-6.5950000286102295",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:21:23.191Z",
+    "ok": true
+  }
+}

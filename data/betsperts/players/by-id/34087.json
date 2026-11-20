@@ -1,0 +1,628 @@
+{
+  "playerId": "34087",
+  "playerName": "Carlos Sainz Jr",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Carlos Sainz Jr",
+    "BirthPlace": "Chicago, Illinois",
+    "BirthDate": "November 07, 1985",
+    "Age": "41",
+    "Height": "5ft 11in",
+    "Weight": "185 lbs",
+    "Nationality": "United States",
+    "Residence": "Elgin, Illinois",
+    "ProWins": "1",
+    "TurnedPro": "2010",
+    "PGAWins": "0",
+    "College": "Mississippi State University  (2010) "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Carlos Sainz Jr",
+        "player_num": "34087",
+        "Year": "2025",
+        "Rounds": "2",
+        "SG:TOT": "-2.35",
+        "SG:T2G": "-3.60",
+        "SG:OTT": "-0.55",
+        "SG:APP": "-1.29",
+        "SG:BS": "-1.84",
+        "SG:ARG": "0.04",
+        "SG:P": "-0.55",
+        "Dr Distance": "272.5",
+        "Dr Accuracy %": "65.4",
+        "Ball Speed": "160.71"
+      },
+      {
+        "playerName": "Carlos Sainz Jr",
+        "player_num": "34087",
+        "Year": "2021",
+        "Rounds": "2",
+        "SG:TOT": "-5.24",
+        "SG:T2G": "-3.93",
+        "SG:OTT": "-1.29",
+        "SG:APP": "-1.13",
+        "SG:BS": "-2.42",
+        "SG:ARG": "-1.51",
+        "SG:P": "-1.31",
+        "Dr Distance": "281.6",
+        "Dr Accuracy %": "28.6",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Carlos Sainz Jr",
+        "player_num": "34087",
+        "Year": "2015",
+        "Rounds": "38",
+        "SG:TOT": "-1.54",
+        "SG:T2G": "-0.64",
+        "SG:OTT": "-0.23",
+        "SG:APP": "-0.30",
+        "SG:BS": "-0.53",
+        "SG:ARG": "-0.11",
+        "SG:P": "-0.49",
+        "Dr Distance": "280.6",
+        "Dr Accuracy %": "58.2",
+        "Ball Speed": "168.53"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2025-03-30",
+        "position": "CUT",
+        "roundPosition": "T136",
+        "TournamentName": "Texas Childrens Houston Open",
+        "is_major": "0",
+        "playerName": "Carlos Sainz Jr",
+        "player_num": "34087",
+        "Rounds": "2",
+        "CourseID": "897",
+        "Course": "Memorial Park Golf Course",
+        "ShotLink": "2",
+        "SG:TOT": "-2.35",
+        "SG:T2G": "-3.60",
+        "SG:OTT": "-0.55",
+        "SG:APP": "-1.29",
+        "SG:BS": "-1.84",
+        "SG:ARG": "0.04",
+        "SG:P": "-0.55",
+        "SG:SG": "-0.51"
+      },
+      {
+        "Date": "2021-04-04",
+        "position": "CUT",
+        "roundPosition": "T139",
+        "TournamentName": "Valero Texas Open",
+        "is_major": "0",
+        "playerName": "Carlos Sainz Jr",
+        "player_num": "34087",
+        "Rounds": "2",
+        "CourseID": "770",
+        "Course": "TPC San Antonio (Oaks)",
+        "ShotLink": "2",
+        "SG:TOT": "-5.24",
+        "SG:T2G": "-3.93",
+        "SG:OTT": "-1.29",
+        "SG:APP": "-1.13",
+        "SG:BS": "-2.42",
+        "SG:ARG": "-1.51",
+        "SG:P": "-1.31",
+        "SG:SG": "-2.83"
+      },
+      {
+        "Date": "2015-08-23",
+        "position": "CUT",
+        "roundPosition": "T90",
+        "TournamentName": "Wyndham Championship",
+        "is_major": "0",
+        "playerName": "Carlos Sainz Jr",
+        "player_num": "34087",
+        "Rounds": "2",
+        "CourseID": "752",
+        "Course": "Sedgefield CC",
+        "ShotLink": "2",
+        "SG:TOT": "-0.55",
+        "SG:T2G": "-1.09",
+        "SG:OTT": "-0.75",
+        "SG:APP": "-0.12",
+        "SG:BS": "-0.87",
+        "SG:ARG": "-0.22",
+        "SG:P": "0.55",
+        "SG:SG": "0.33"
+      },
+      {
+        "Date": "2015-07-26",
+        "position": "CUT",
+        "roundPosition": "T127",
+        "TournamentName": "RBC Canadian Open",
+        "is_major": "0",
+        "playerName": "Carlos Sainz Jr",
+        "player_num": "34087",
+        "Rounds": "2",
+        "CourseID": "32",
+        "Course": "Glen Abbey GC",
+        "ShotLink": "2",
+        "SG:TOT": "-2.32",
+        "SG:T2G": "-1.08",
+        "SG:OTT": "-0.82",
+        "SG:APP": "0.48",
+        "SG:BS": "-0.33",
+        "SG:ARG": "-0.75",
+        "SG:P": "-1.24",
+        "SG:SG": "-1.98"
+      },
+      {
+        "Date": "2015-07-19",
+        "position": "T48",
+        "roundPosition": "T48",
+        "TournamentName": "Barbasol Championship",
+        "is_major": "0",
+        "playerName": "Carlos Sainz Jr",
+        "player_num": "34087",
+        "Rounds": "4",
+        "CourseID": "819",
+        "Course": "RTJ Trail (Grand National)",
+        "ShotLink": "4",
+        "SG:TOT": "0.30",
+        "SG:T2G": "0.34",
+        "SG:OTT": "0.31",
+        "SG:APP": "-0.53",
+        "SG:BS": "-0.22",
+        "SG:ARG": "0.56",
+        "SG:P": "-0.04",
+        "SG:SG": "0.52"
+      },
+      {
+        "Date": "2015-07-12",
+        "position": "CUT",
+        "roundPosition": "T74",
+        "TournamentName": "John Deere Classic",
+        "is_major": "0",
+        "playerName": "Carlos Sainz Jr",
+        "player_num": "34087",
+        "Rounds": "2",
+        "CourseID": "669",
+        "Course": "TPC Deere Run",
+        "ShotLink": "2",
+        "SG:TOT": "0.19",
+        "SG:T2G": "0.08",
+        "SG:OTT": "-0.16",
+        "SG:APP": "0.05",
+        "SG:BS": "-0.11",
+        "SG:ARG": "0.19",
+        "SG:P": "0.11",
+        "SG:SG": "0.30"
+      },
+      {
+        "Date": "2015-07-05",
+        "position": "CUT",
+        "roundPosition": "T79",
+        "TournamentName": "The Greenbrier Classic",
+        "is_major": "0",
+        "playerName": "Carlos Sainz Jr",
+        "player_num": "34087",
+        "Rounds": "2",
+        "CourseID": "771",
+        "Course": "The Old White TPC",
+        "ShotLink": "2",
+        "SG:TOT": "-0.17",
+        "SG:T2G": "-0.67",
+        "SG:OTT": "0.24",
+        "SG:APP": "-0.50",
+        "SG:BS": "-0.26",
+        "SG:ARG": "-0.41",
+        "SG:P": "0.49",
+        "SG:SG": "0.09"
+      },
+      {
+        "Date": "2015-06-28",
+        "position": "CUT",
+        "roundPosition": "T128",
+        "TournamentName": "Travelers Championship",
+        "is_major": "0",
+        "playerName": "Carlos Sainz Jr",
+        "player_num": "34087",
+        "Rounds": "2",
+        "CourseID": "503",
+        "Course": "TPC River Highlands",
+        "ShotLink": "2",
+        "SG:TOT": "-1.94",
+        "SG:T2G": "-0.23",
+        "SG:OTT": "0.74",
+        "SG:APP": "-0.75",
+        "SG:BS": "-0.01",
+        "SG:ARG": "-0.22",
+        "SG:P": "-1.70",
+        "SG:SG": "-1.93"
+      },
+      {
+        "Date": "2015-06-14",
+        "position": "CUT",
+        "roundPosition": "T97",
+        "TournamentName": "FedEx St. Jude Classic",
+        "is_major": "0",
+        "playerName": "Carlos Sainz Jr",
+        "player_num": "34087",
+        "Rounds": "2",
+        "CourseID": "513",
+        "Course": "TPC Southwind",
+        "ShotLink": "2",
+        "SG:TOT": "-0.84",
+        "SG:T2G": "-0.60",
+        "SG:OTT": "-1.36",
+        "SG:APP": "0.93",
+        "SG:BS": "-0.43",
+        "SG:ARG": "-0.17",
+        "SG:P": "-0.23",
+        "SG:SG": "-0.40"
+      },
+      {
+        "Date": "2015-05-31",
+        "position": "CUT",
+        "roundPosition": "T145",
+        "TournamentName": "AT&T Byron Nelson",
+        "is_major": "0",
+        "playerName": "Carlos Sainz Jr",
+        "player_num": "34087",
+        "Rounds": "2",
+        "CourseID": "822",
+        "Course": "TPC Four Seasons Resort",
+        "ShotLink": "2",
+        "SG:TOT": "-3.40",
+        "SG:T2G": "0.10",
+        "SG:OTT": "-0.34",
+        "SG:APP": "0.16",
+        "SG:BS": "-0.18",
+        "SG:ARG": "0.28",
+        "SG:P": "-2.58",
+        "SG:SG": "-2.31"
+      },
+      {
+        "Date": "2015-05-17",
+        "position": "T58",
+        "roundPosition": "T58",
+        "TournamentName": "Wells Fargo Championship",
+        "is_major": "0",
+        "playerName": "Carlos Sainz Jr",
+        "player_num": "34087",
+        "Rounds": "4",
+        "CourseID": "698",
+        "Course": "Quail Hollow Club",
+        "ShotLink": "4",
+        "SG:TOT": "0.02",
+        "SG:T2G": "0.87",
+        "SG:OTT": "-0.03",
+        "SG:APP": "0.56",
+        "SG:BS": "0.52",
+        "SG:ARG": "0.34",
+        "SG:P": "-0.84",
+        "SG:SG": "-0.50"
+      },
+      {
+        "Date": "2015-04-26",
+        "position": "CUT",
+        "roundPosition": "T132",
+        "TournamentName": "Zurich Classic",
+        "is_major": "0",
+        "playerName": "Carlos Sainz Jr",
+        "player_num": "34087",
+        "Rounds": "2",
+        "CourseID": "714",
+        "Course": "TPC Louisiana",
+        "ShotLink": "2",
+        "SG:TOT": "-2.76",
+        "SG:T2G": "-1.04",
+        "SG:OTT": "0.12",
+        "SG:APP": "-1.26",
+        "SG:BS": "-1.14",
+        "SG:ARG": "0.10",
+        "SG:P": "-1.72",
+        "SG:SG": "-1.62"
+      },
+      {
+        "Date": "2015-03-08",
+        "position": "CUT",
+        "roundPosition": "T100",
+        "TournamentName": "Puerto Rico Open",
+        "is_major": "0",
+        "playerName": "Carlos Sainz Jr",
+        "player_num": "34087",
+        "Rounds": "2",
+        "CourseID": "742",
+        "Course": "Grand Reserve GC",
+        "ShotLink": "0",
+        "SG:TOT": "-1.73",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2015-02-22",
+        "position": "CUT",
+        "roundPosition": "T103",
+        "TournamentName": "Northern Trust Open",
+        "is_major": "0",
+        "playerName": "Carlos Sainz Jr",
+        "player_num": "34087",
+        "Rounds": "2",
+        "CourseID": "500",
+        "Course": "Riviera CC",
+        "ShotLink": "2",
+        "SG:TOT": "-1.17",
+        "SG:T2G": "-2.54",
+        "SG:OTT": "-0.69",
+        "SG:APP": "-1.33",
+        "SG:BS": "-2.02",
+        "SG:ARG": "-0.52",
+        "SG:P": "1.36",
+        "SG:SG": "0.84"
+      },
+      {
+        "Date": "2015-02-15",
+        "position": "CUT",
+        "roundPosition": "T129",
+        "TournamentName": "AT&T Pebble Beach Pro-Am",
+        "is_major": "0",
+        "playerName": "Carlos Sainz Jr",
+        "player_num": "34087",
+        "Rounds": "3",
+        "CourseID": "5",
+        "Course": "Pebble Beach Golf Links",
+        "ShotLink": "1",
+        "SG:TOT": "-1.91",
+        "SG:T2G": "-3.12",
+        "SG:OTT": "0.84",
+        "SG:APP": "-1.90",
+        "SG:BS": "-1.06",
+        "SG:ARG": "-2.06",
+        "SG:P": "1.02",
+        "SG:SG": "-1.04"
+      },
+      {
+        "Date": "2015-02-08",
+        "position": "CUT",
+        "roundPosition": "154",
+        "TournamentName": "Farmers Insurance Open",
+        "is_major": "0",
+        "playerName": "Carlos Sainz Jr",
+        "player_num": "34087",
+        "Rounds": "2",
+        "CourseID": "104",
+        "Course": "Torrey Pines GC (North)",
+        "ShotLink": "1",
+        "SG:TOT": "-6.14",
+        "SG:T2G": "-3.50",
+        "SG:OTT": "-0.49",
+        "SG:APP": "-3.06",
+        "SG:BS": "-3.55",
+        "SG:ARG": "0.04",
+        "SG:P": "-1.97",
+        "SG:SG": "-1.93"
+      },
+      {
+        "Date": "2015-01-25",
+        "position": "CUT",
+        "roundPosition": "T127",
+        "TournamentName": "Humana Challenge",
+        "is_major": "0",
+        "playerName": "Carlos Sainz Jr",
+        "player_num": "34087",
+        "Rounds": "3",
+        "CourseID": "649",
+        "Course": "PGA West (Palmer)",
+        "ShotLink": "1",
+        "SG:TOT": "-2.16",
+        "SG:T2G": "-0.94",
+        "SG:OTT": "-3.52",
+        "SG:APP": "2.36",
+        "SG:BS": "-1.16",
+        "SG:ARG": "0.22",
+        "SG:P": "1.15",
+        "SG:SG": "1.38"
+      },
+      {
+        "Date": "2015-01-18",
+        "position": "CUT",
+        "roundPosition": "T126",
+        "TournamentName": "Sony Open",
+        "is_major": "0",
+        "playerName": "Carlos Sainz Jr",
+        "player_num": "34087",
+        "Rounds": "2",
+        "CourseID": "6",
+        "Course": "Waialae CC",
+        "ShotLink": "2",
+        "SG:TOT": "-3.08",
+        "SG:T2G": "-1.11",
+        "SG:OTT": "0.38",
+        "SG:APP": "-0.82",
+        "SG:BS": "-0.45",
+        "SG:ARG": "-0.66",
+        "SG:P": "-1.97",
+        "SG:SG": "-2.63"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "26.0",
+        "SG TOT 1+": "18.0",
+        "SG TOT 2+": "12.0",
+        "SG TOT 3+": "4.0",
+        "SG TOT 4+": "2.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "52"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.5492857375315258",
+        "Rounds": "9"
+      },
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-0.574916692605863",
+        "Rounds": "12"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "0.44075000286102295",
+        "Rounds": "6"
+      },
+      {
+        "GreenSurface": "Poa Trivialis",
+        "StrokesGainedAverage": "-0.6602222418619527",
+        "Rounds": "11"
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.9414285485233579",
+        "Rounds": "22"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-2.626666716876484",
+        "Rounds": "22"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-1.1739999949932098",
+        "Rounds": "5"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "1.5199999809265137",
+        "Rounds": "3"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "",
+        "StrokesGainedAverage": null,
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-1.702222251229816",
+        "Rounds": "18"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-0.5616666525602341",
+        "Rounds": "6"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-2.0355555713176727",
+        "Rounds": "9"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-5.46999979019165",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-2.009999994188547",
+        "Rounds": "8"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-1.3666666878594294",
+        "Rounds": "9"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-2.2437500469386578",
+        "Rounds": "8"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-1.8644444329871073",
+        "Rounds": "11"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-5.46999979019165",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-1.4253333379824957",
+        "Rounds": "15"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-2.478333349029223",
+        "Rounds": "12"
+      },
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-0.23249998316168785",
+        "Rounds": "10"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-1.921818194064227",
+        "Rounds": "22"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "72.24",
+        "PM": "71.88",
+        "Rounds": "52"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "52",
+        "50-100": "14.8",
+        "100-150": "25.4",
+        "150-200": "35.6",
+        "200+": "57.2",
+        "200-250": "47",
+        "250+": "93.8"
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Aloha",
+        "StrokesGainedAverage": "-3.075000047683716",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-2.033125043846667",
+        "Rounds": "16"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-0.5964285550372941",
+        "Rounds": "16"
+      },
+      {
+        "SeasonHeld": "West Coast",
+        "StrokesGainedAverage": "-2.6849999755620955",
+        "Rounds": "10"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:20:05.919Z",
+    "ok": true
+  }
+}

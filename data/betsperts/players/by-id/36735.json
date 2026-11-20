@@ -1,0 +1,215 @@
+{
+  "playerId": "36735",
+  "playerName": "Jorge Fernández Valdés",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/ar-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Jorge Fernández Valdés",
+    "BirthPlace": "Cordoba, Argentina",
+    "BirthDate": "August 06, 1992",
+    "Age": "34",
+    "Height": "5ft 10in",
+    "Weight": "150 lbs",
+    "Nationality": "Argentina",
+    "Residence": "Miami, Florida",
+    "ProWins": "0",
+    "TurnedPro": "2012",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Jorge Fernández Valdés",
+        "player_num": "36735",
+        "Year": "2022",
+        "Rounds": "2",
+        "SG:TOT": "-3.29",
+        "SG:T2G": "-3.20",
+        "SG:OTT": "-1.03",
+        "SG:APP": "-0.50",
+        "SG:BS": "-1.53",
+        "SG:ARG": "-1.67",
+        "SG:P": "-0.09",
+        "Dr Distance": null,
+        "Dr Accuracy %": "53.1",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Jorge Fernández Valdés",
+        "player_num": "36735",
+        "Year": "2016",
+        "Rounds": "4",
+        "SG:TOT": "0.23",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "53.6",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2022-07-17",
+        "position": "CUT",
+        "roundPosition": null,
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Jorge Fernández Valdés",
+        "player_num": "36735",
+        "Rounds": "2",
+        "CourseID": "668",
+        "Course": "St. Andrews GC (Old Course)",
+        "ShotLink": "2",
+        "SG:TOT": "-3.29",
+        "SG:T2G": "-3.20",
+        "SG:OTT": "-1.03",
+        "SG:APP": "-0.50",
+        "SG:BS": "-1.53",
+        "SG:ARG": "-1.67",
+        "SG:P": "-0.09",
+        "SG:SG": "-1.76"
+      },
+      {
+        "Date": "2016-03-27",
+        "position": "T47",
+        "roundPosition": "T47",
+        "TournamentName": "Puerto Rico Open",
+        "is_major": "0",
+        "playerName": "Jorge Fernández Valdés",
+        "player_num": "36735",
+        "Rounds": "4",
+        "CourseID": "742",
+        "Course": "Grand Reserve GC",
+        "ShotLink": "0",
+        "SG:TOT": "0.23",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "33.3",
+        "SG TOT 1+": "33.3",
+        "SG TOT 2+": "33.3",
+        "SG TOT 3+": "33.3",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "10"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.08699998259544373",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.0399999618530273",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.9000000953674316",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "3.680000066757202",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-5.449999809265137",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "0.2325000762939453",
+        "Rounds": "4"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-3.290000081062317",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-0.8699999809265136",
+        "Rounds": "5"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-1.2999999523162842",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-3.290000081062317",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "0.2325000762939453",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "73",
+        "PM": "72.75",
+        "Rounds": "10"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "10",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "0.2325000762939453",
+        "Rounds": "4"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-3.290000081062317",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:03.235Z",
+    "ok": true
+  }
+}

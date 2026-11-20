@@ -1,0 +1,158 @@
+{
+  "playerId": "60586",
+  "playerName": "Isaac Simmons",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Isaac Simmons",
+    "BirthPlace": "Roanoke, Virginia",
+    "BirthDate": "",
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": "Ruston, Louisiana",
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": "Liberty University "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Isaac Simmons",
+        "player_num": "60586",
+        "Year": "2023",
+        "Rounds": "2",
+        "SG:TOT": "-5.20",
+        "SG:T2G": "-4.54",
+        "SG:OTT": "-1.80",
+        "SG:APP": "-3.25",
+        "SG:BS": "-5.04",
+        "SG:ARG": "0.50",
+        "SG:P": "-0.66",
+        "Dr Distance": "296.0",
+        "Dr Accuracy %": "57.7",
+        "Ball Speed": "178.66"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2023-06-18",
+        "position": "CUT",
+        "roundPosition": "T152",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Isaac Simmons",
+        "player_num": "60586",
+        "Rounds": "2",
+        "CourseID": "43",
+        "Course": "Los Angeles CC (North)",
+        "ShotLink": "2",
+        "SG:TOT": "-5.20",
+        "SG:T2G": "-4.54",
+        "SG:OTT": "-1.80",
+        "SG:APP": "-3.25",
+        "SG:BS": "-5.04",
+        "SG:ARG": "0.50",
+        "SG:P": "-0.66",
+        "SG:SG": "-0.16"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-0.6634999811649323",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-5.619999885559082",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-4.78000020980835",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-5.619999885559082",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-4.78000020980835",
+        "Rounds": "1"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-5.619999885559082",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-4.78000020980835",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-5.200000047683716",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "77",
+        "PM": "77",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "52.5",
+        "200+": "59.4",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-5.200000047683716",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:09.002Z",
+    "ok": true
+  }
+}

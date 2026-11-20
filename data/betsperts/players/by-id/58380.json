@@ -1,0 +1,210 @@
+{
+  "playerId": "58380",
+  "playerName": "Scott de Borba",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Scott de Borba",
+    "BirthPlace": "",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "United States",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Scott de Borba",
+        "player_num": "58380",
+        "Year": "2022",
+        "Rounds": "2",
+        "SG:TOT": "-3.86",
+        "SG:T2G": "-3.84",
+        "SG:OTT": "-0.97",
+        "SG:APP": "-1.87",
+        "SG:BS": "-2.84",
+        "SG:ARG": "-1.00",
+        "SG:P": "-0.02",
+        "Dr Distance": "282.7",
+        "Dr Accuracy %": "50.0",
+        "Ball Speed": "166.80"
+      },
+      {
+        "playerName": "Scott de Borba",
+        "player_num": "58380",
+        "Year": "2020",
+        "Rounds": "3",
+        "SG:TOT": "-4.17",
+        "SG:T2G": "-4.72",
+        "SG:OTT": "0.17",
+        "SG:APP": "-5.47",
+        "SG:BS": "-5.30",
+        "SG:ARG": "0.58",
+        "SG:P": "1.66",
+        "Dr Distance": "278.4",
+        "Dr Accuracy %": "43.9",
+        "Ball Speed": "168.28"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2022-09-18",
+        "position": "CUT",
+        "roundPosition": "T145",
+        "TournamentName": "Fortinet Championship",
+        "is_major": "0",
+        "playerName": "Scott de Borba",
+        "player_num": "58380",
+        "Rounds": "2",
+        "CourseID": "552",
+        "Course": "Silverado Resort (North)",
+        "ShotLink": "2",
+        "SG:TOT": "-3.86",
+        "SG:T2G": "-3.84",
+        "SG:OTT": "-0.97",
+        "SG:APP": "-1.87",
+        "SG:BS": "-2.84",
+        "SG:ARG": "-1.00",
+        "SG:P": "-0.02",
+        "SG:SG": "-1.02"
+      },
+      {
+        "Date": "2020-02-09",
+        "position": "CUT",
+        "roundPosition": "T150",
+        "TournamentName": "AT&T Pebble Beach Pro-Am",
+        "is_major": "0",
+        "playerName": "Scott de Borba",
+        "player_num": "58380",
+        "Rounds": "3",
+        "CourseID": "769",
+        "Course": "Monterey Peninsula Country Club (Shore)",
+        "ShotLink": "1",
+        "SG:TOT": "-4.17",
+        "SG:T2G": "-4.72",
+        "SG:OTT": "0.17",
+        "SG:APP": "-5.47",
+        "SG:BS": "-5.30",
+        "SG:ARG": "0.58",
+        "SG:P": "1.66",
+        "SG:SG": "2.25"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "5"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "1.6610000133514404",
+        "Rounds": "3"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-4.8399999141693115",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-3.2199999690055847",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-4.119999885559082",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-4.047999930381775",
+        "Rounds": "5"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-3.8649999499320984",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-4.194999933242798",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-4.119999885559082",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-4.169999917348226",
+        "Rounds": "3"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-3.8649999499320984",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "75.5",
+        "PM": "75.66666666666667",
+        "Rounds": "5"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "5",
+        "50-100": "25.7",
+        "100-150": "30.5",
+        "150-200": null,
+        "200+": "77.4",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-3.8649999499320984",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "West Coast",
+        "StrokesGainedAverage": "-4.169999917348226",
+        "Rounds": "3"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:26.386Z",
+    "ok": true
+  }
+}

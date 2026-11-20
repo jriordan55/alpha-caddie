@@ -1,0 +1,158 @@
+{
+  "playerId": "57883",
+  "playerName": "Jack Trent",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/as-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Jack Trent",
+    "BirthPlace": "Brisbane, Australia",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "6ft 3in",
+    "Weight": "216 lbs",
+    "Nationality": "Australia",
+    "Residence": "Las Vegas, Nevada",
+    "ProWins": "0",
+    "TurnedPro": "2021",
+    "PGAWins": "0",
+    "College": "University of Nevada-Las Vegas 2021, Sociology"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Jack Trent",
+        "player_num": "57883",
+        "Year": "2019",
+        "Rounds": "4",
+        "SG:TOT": "1.28",
+        "SG:T2G": "0.15",
+        "SG:OTT": "0.51",
+        "SG:APP": "-0.17",
+        "SG:BS": "0.33",
+        "SG:ARG": "-0.18",
+        "SG:P": "1.12",
+        "Dr Distance": "304.2",
+        "Dr Accuracy %": "71.4",
+        "Ball Speed": "180.52"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2019-10-06",
+        "position": "T29",
+        "roundPosition": "T29",
+        "TournamentName": "Shriners Childrens Open",
+        "is_major": "0",
+        "playerName": "Jack Trent",
+        "player_num": "57883",
+        "Rounds": "4",
+        "CourseID": "538",
+        "Course": "TPC Summerlin",
+        "ShotLink": "4",
+        "SG:TOT": "1.28",
+        "SG:T2G": "0.15",
+        "SG:OTT": "0.51",
+        "SG:APP": "-0.17",
+        "SG:BS": "0.33",
+        "SG:ARG": "-0.18",
+        "SG:P": "1.12",
+        "SG:SG": "0.94"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "75.0",
+        "SG TOT 1+": "75.0",
+        "SG TOT 2+": "25.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "1.1237499937415123",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "2.2300000190734863",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.11999999731779099",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "1.75",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "1.2400000095367432",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "1.2750000078231096",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "1.2750000078231096",
+        "Rounds": "4"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "1.2750000078231096",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "66.5",
+        "PM": "68.5",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": "23.2",
+        "150-200": null,
+        "200+": "47.6",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "1.2750000078231096",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:12.727Z",
+    "ok": true
+  }
+}

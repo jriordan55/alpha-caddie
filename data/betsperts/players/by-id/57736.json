@@ -1,0 +1,189 @@
+{
+  "playerId": "57736",
+  "playerName": "Matthew McClean",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/Flag-of-Northern-Ireland.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Matthew McClean",
+    "BirthPlace": null,
+    "BirthDate": "June 07, 1993",
+    "Age": "33",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "Northern Ireland",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Matthew McClean",
+        "player_num": "57736",
+        "Year": "2023",
+        "Rounds": "4",
+        "SG:TOT": "-3.20",
+        "SG:T2G": "-3.22",
+        "SG:OTT": "-1.84",
+        "SG:APP": "-0.29",
+        "SG:BS": "-2.13",
+        "SG:ARG": "-1.09",
+        "SG:P": "0.03",
+        "Dr Distance": "277.5",
+        "Dr Accuracy %": "59.3",
+        "Ball Speed": "167.84"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2023-06-18",
+        "position": "CUT",
+        "roundPosition": "T144",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Matthew McClean",
+        "player_num": "57736",
+        "Rounds": "2",
+        "CourseID": "43",
+        "Course": "Los Angeles CC (North)",
+        "ShotLink": "2",
+        "SG:TOT": "-3.70",
+        "SG:T2G": "-2.96",
+        "SG:OTT": "-1.89",
+        "SG:APP": "-0.54",
+        "SG:BS": "-2.43",
+        "SG:ARG": "-0.53",
+        "SG:P": "-0.74",
+        "SG:SG": "-1.28"
+      },
+      {
+        "Date": "2023-04-09",
+        "position": "CUT",
+        "roundPosition": "T70",
+        "TournamentName": "Masters Tournament",
+        "is_major": "1",
+        "playerName": "Matthew McClean",
+        "player_num": "57736",
+        "Rounds": "2",
+        "CourseID": "14",
+        "Course": "Augusta National GC",
+        "ShotLink": "2",
+        "SG:TOT": "-2.69",
+        "SG:T2G": "-3.48",
+        "SG:OTT": "-1.78",
+        "SG:APP": "-0.05",
+        "SG:BS": "-1.83",
+        "SG:ARG": "-1.64",
+        "SG:P": "0.81",
+        "SG:SG": "-0.83"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "0.8124999850988388",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-0.7440000772476196",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-3.1399999260902405",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-3.255000114440918",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-2.3366666237513223",
+        "Rounds": "3"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-5.78000020980835",
+        "Rounds": "1"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-2.3366666237513223",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-5.78000020980835",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-3.1975000202655792",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "75",
+        "PM": "76",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "48.5",
+        "200+": "59.2",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-2.694999933242798",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-3.7000001072883606",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:24:01.414Z",
+    "ok": true
+  }
+}

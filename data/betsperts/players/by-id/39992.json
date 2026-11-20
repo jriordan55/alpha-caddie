@@ -1,0 +1,148 @@
+{
+  "playerId": "39992",
+  "playerName": "Jeff Kellen",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Jeff Kellen",
+    "BirthPlace": null,
+    "BirthDate": "September 24, 1988",
+    "Age": "38",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Jeff Kellen",
+        "player_num": "39992",
+        "Year": "2024",
+        "Rounds": "2",
+        "SG:TOT": "-8.34",
+        "SG:T2G": "-6.24",
+        "SG:OTT": "-0.54",
+        "SG:APP": "-2.56",
+        "SG:BS": "-3.09",
+        "SG:ARG": "-3.15",
+        "SG:P": "-2.10",
+        "Dr Distance": "283.7",
+        "Dr Accuracy %": "67.9",
+        "Ball Speed": "177.11"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2024-05-19",
+        "position": "CUT",
+        "roundPosition": "T69",
+        "TournamentName": "PGA Championship",
+        "is_major": "1",
+        "playerName": "Jeff Kellen",
+        "player_num": "39992",
+        "Rounds": "2",
+        "CourseID": "671",
+        "Course": "Valhalla Golf Club",
+        "ShotLink": "2",
+        "SG:TOT": "-8.34",
+        "SG:T2G": "-6.24",
+        "SG:OTT": "-0.54",
+        "SG:APP": "-2.56",
+        "SG:BS": "-3.09",
+        "SG:ARG": "-3.15",
+        "SG:P": "-2.10",
+        "SG:SG": "-5.24"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-2.0964999198913574",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-15.720000267028809",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.949999988079071",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-8.33500012755394",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-8.33500012755394",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-8.33500012755394",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "87",
+        "PM": "72",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": "26.6",
+        "100-150": null,
+        "150-200": null,
+        "200+": "49.8",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-8.33500012755394",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:36.497Z",
+    "ok": true
+  }
+}

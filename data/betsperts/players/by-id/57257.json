@@ -1,0 +1,219 @@
+{
+  "playerId": "57257",
+  "playerName": "Filip Jakubcik",
+  "flag": null,
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Filip Jakubcik",
+    "BirthPlace": null,
+    "BirthDate": "November 22, 2003",
+    "Age": "22",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "Czechia",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Filip Jakubcik",
+        "player_num": "57257",
+        "Year": "2026",
+        "Rounds": "2",
+        "SG:TOT": "-2.72",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "53.6",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Filip Jakubcik",
+        "player_num": "57257",
+        "Year": "2025",
+        "Rounds": "2",
+        "SG:TOT": "-1.78",
+        "SG:T2G": "-0.87",
+        "SG:OTT": "-0.98",
+        "SG:APP": "0.31",
+        "SG:BS": "-0.67",
+        "SG:ARG": "-0.21",
+        "SG:P": "-0.90",
+        "Dr Distance": null,
+        "Dr Accuracy %": "50.0",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Filip Jakubcik",
+        "player_num": "57257",
+        "Rounds": "2",
+        "SG:TOT": "-2.72",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-03-08",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "Puerto Rico Open",
+        "is_major": "0",
+        "playerName": "Filip Jakubcik",
+        "player_num": "57257",
+        "Rounds": "2",
+        "CourseID": "940",
+        "Course": "Grand Reserve GC",
+        "ShotLink": "0",
+        "SG:TOT": "-2.72",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2025-07-20",
+        "position": "CUT",
+        "roundPosition": null,
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Filip Jakubcik",
+        "player_num": "57257",
+        "Rounds": "2",
+        "CourseID": "885",
+        "Course": "Royal Portrush GC",
+        "ShotLink": "2",
+        "SG:TOT": "-1.78",
+        "SG:T2G": "-0.87",
+        "SG:OTT": "-0.98",
+        "SG:APP": "0.31",
+        "SG:BS": "-0.67",
+        "SG:ARG": "-0.21",
+        "SG:P": "-0.90",
+        "SG:SG": "-1.11"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-2.9600000381469727",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.5350000262260437",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-1.7750000357627869",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-2.7200000286102295",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-3.9600000381469727",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-1.590000033378601",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-1.4800000190734863",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-1.9600000381469727",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-1.7750000357627869",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-2.7200000286102295",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "73.5",
+        "PM": "74.5",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-2.7200000286102295",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-1.7750000357627869",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:21:35.457Z",
+    "ok": true
+  }
+}

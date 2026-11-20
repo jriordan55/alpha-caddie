@@ -1,0 +1,109 @@
+{
+  "playerId": "32741",
+  "playerName": "Michael McCabe",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Michael McCabe",
+    "BirthPlace": "Moorpark, California",
+    "BirthDate": "April 19, 1983",
+    "Age": "43",
+    "Height": "5ft 7in",
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": "Moorpark, California",
+    "ProWins": null,
+    "TurnedPro": "2006",
+    "PGAWins": null,
+    "College": "University of Portland 2005, Communications"
+  },
+  "stats": {
+    "sgSummary": [],
+    "sgGuest": [],
+    "sgByEvent": [],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": null,
+        "SG TOT 1+": null,
+        "SG TOT 2+": null,
+        "SG TOT 3+": null,
+        "SG TOT 4+": null,
+        "SG TOT 5+": null,
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": null,
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": null,
+        "Rounds": "1"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": null,
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": null,
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "",
+        "StrokesGainedAverage": null,
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": null,
+        "Rounds": "4"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": null,
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": null,
+        "PM": null,
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": null,
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:24:11.160Z",
+    "ok": true
+  }
+}

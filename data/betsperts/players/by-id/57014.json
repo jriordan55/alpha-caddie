@@ -1,0 +1,153 @@
+{
+  "playerId": "57014",
+  "playerName": "Stephen Franken",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Stephen Franken",
+    "BirthPlace": null,
+    "BirthDate": "May 23, 1997",
+    "Age": "29",
+    "Height": "5ft 10in",
+    "Weight": "165 lbs",
+    "Nationality": "United States",
+    "Residence": "Raleigh, North Carolina",
+    "ProWins": null,
+    "TurnedPro": "2019",
+    "PGAWins": null,
+    "College": "North Carolina State University 2019, Finance"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Stephen Franken",
+        "player_num": "57014",
+        "Year": "2025",
+        "Rounds": "2",
+        "SG:TOT": "-1.06",
+        "SG:T2G": "-0.60",
+        "SG:OTT": "0.55",
+        "SG:APP": "-1.41",
+        "SG:BS": "-0.86",
+        "SG:ARG": "0.26",
+        "SG:P": "-0.46",
+        "Dr Distance": "298.4",
+        "Dr Accuracy %": "53.6",
+        "Ball Speed": "182.59"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2025-08-03",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "Wyndham Championship",
+        "is_major": "0",
+        "playerName": "Stephen Franken",
+        "player_num": "57014",
+        "Rounds": "2",
+        "CourseID": "752",
+        "Course": "Sedgefield CC",
+        "ShotLink": "2",
+        "SG:TOT": "-1.06",
+        "SG:T2G": "-0.60",
+        "SG:OTT": "0.55",
+        "SG:APP": "-1.41",
+        "SG:BS": "-0.86",
+        "SG:ARG": "0.26",
+        "SG:P": "-0.46",
+        "SG:SG": "-0.20"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-0.4594999849796295",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.5299999713897705",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.6000000238418579",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-1.0649999976158142",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-0.6000000238418579",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-1.5299999713897705",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-1.0649999976158142",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "70",
+        "PM": "70",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "43.2",
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-1.0649999976158142",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:42.415Z",
+    "ok": true
+  }
+}

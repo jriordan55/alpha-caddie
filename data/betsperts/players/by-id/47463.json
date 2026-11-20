@@ -1,0 +1,167 @@
+{
+  "playerId": "47463",
+  "playerName": "Cameron John",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/as-flag.gif",
+  "profile": {
+    "ProfileImage": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2026/09/image.png",
+    "Name": "Cameron John",
+    "BirthPlace": "Melbourne,  Australia",
+    "BirthDate": "April 27, 1999",
+    "Age": "27",
+    "Height": "6ft 3in",
+    "Weight": "183 lbs",
+    "Nationality": "Australia",
+    "Residence": "Melbourne, Australia",
+    "ProWins": null,
+    "TurnedPro": "2017",
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Cameron John",
+        "player_num": "47463",
+        "Year": "2026",
+        "Rounds": "4",
+        "SG:TOT": "1.16",
+        "SG:T2G": "-0.25",
+        "SG:OTT": "0.04",
+        "SG:APP": "-0.26",
+        "SG:BS": "-0.22",
+        "SG:ARG": "-0.03",
+        "SG:P": "1.41",
+        "Dr Distance": null,
+        "Dr Accuracy %": "42.9",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Cameron John",
+        "player_num": "47463",
+        "Rounds": "4",
+        "SG:TOT": "1.16",
+        "SG:T2G": "-0.25",
+        "SG:OTT": "0.04",
+        "SG:APP": "-0.26",
+        "SG:BS": "-0.22",
+        "SG:ARG": "-0.03",
+        "SG:P": "1.41",
+        "SG:SG": "1.38"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-07-19",
+        "position": "T28",
+        "roundPosition": "T28",
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Cameron John",
+        "player_num": "47463",
+        "Rounds": "4",
+        "CourseID": "541",
+        "Course": "Royal Birkdale GC",
+        "ShotLink": "4",
+        "SG:TOT": "1.16",
+        "SG:T2G": "-0.25",
+        "SG:OTT": "0.04",
+        "SG:APP": "-0.26",
+        "SG:BS": "-0.22",
+        "SG:ARG": "-0.03",
+        "SG:P": "1.41",
+        "SG:SG": "1.38"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "75.0",
+        "SG TOT 1+": "75.0",
+        "SG TOT 2+": "25.0",
+        "SG TOT 3+": "25.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "1.440000057220459",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "3.3499999046325684",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "1.2599999904632568",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-1.399999976158142",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "1.1624999940395355",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "2.3049999475479126",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "0.020000040531158447",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "1.1624999940395355",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "67",
+        "PM": "70.33333333333333",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "1.1624999940395355",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:20:02.385Z",
+    "ok": true
+  }
+}

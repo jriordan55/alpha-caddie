@@ -1,0 +1,148 @@
+{
+  "playerId": "51476",
+  "playerName": "Matt Lee",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Matt Lee",
+    "BirthPlace": "Scottsdale, Arizona",
+    "BirthDate": "April 28, 1994",
+    "Age": "32",
+    "Height": "6ft 2in",
+    "Weight": "185 lbs",
+    "Nationality": "United States",
+    "Residence": "Scottsdale, Arizona",
+    "ProWins": null,
+    "TurnedPro": "2016",
+    "PGAWins": null,
+    "College": "University of the Pacific  (Business Marketing, 2016) "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Matt Lee",
+        "player_num": "51476",
+        "Year": "2017",
+        "Rounds": "2",
+        "SG:TOT": "-6.75",
+        "SG:T2G": "-5.44",
+        "SG:OTT": "-2.59",
+        "SG:APP": "-2.59",
+        "SG:BS": "-5.18",
+        "SG:ARG": "-0.26",
+        "SG:P": "-1.32",
+        "Dr Distance": "277.0",
+        "Dr Accuracy %": "46.4",
+        "Ball Speed": "176.56"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2017-07-16",
+        "position": "CUT",
+        "roundPosition": "T152",
+        "TournamentName": "John Deere Classic",
+        "is_major": "0",
+        "playerName": "Matt Lee",
+        "player_num": "51476",
+        "Rounds": "2",
+        "CourseID": "669",
+        "Course": "TPC Deere Run",
+        "ShotLink": "2",
+        "SG:TOT": "-6.75",
+        "SG:T2G": "-5.44",
+        "SG:OTT": "-2.59",
+        "SG:APP": "-2.59",
+        "SG:BS": "-5.18",
+        "SG:ARG": "-0.26",
+        "SG:P": "-1.32",
+        "SG:SG": "-1.58"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-1.3184999823570251",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-9.279999732971191",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-4.230000019073486",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-6.754999876022339",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-6.754999876022339",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-6.754999876022339",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74",
+        "PM": "80",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": "84.2",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-6.754999876022339",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:56.887Z",
+    "ok": true
+  }
+}

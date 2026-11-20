@@ -1,0 +1,151 @@
+{
+  "courseNum": "668",
+  "courseName": "St. Andrews GC (Old Course)",
+  "list": {
+    "CourseName": "St. Andrews GC (Old Course)",
+    "CourseNum": "668",
+    "CourseNums": [
+      668
+    ]
+  },
+  "details": {
+    "CourseName": "St. Andrews GC (Old Course)",
+    "CourseNum": "668",
+    "Locations": [
+      "UK/Ireland",
+      "International"
+    ],
+    "SeasonHeld": "Summer",
+    "CourseTypes": [
+      "Coastal",
+      "Ocean",
+      "Links"
+    ],
+    "ParScore": "72",
+    "Yards": "7297",
+    "AVG": "101.3",
+    "CourseLength": "Short",
+    "Architects": [
+      "Old Tom Morris"
+    ],
+    "RedesignArchitects": [],
+    "Elevation": "50",
+    "CourseElevation": "Sea Level",
+    "Bunkers": "110",
+    "BunkersRank": "High",
+    "WaterHoles": "2",
+    "WaterDanger": "Low",
+    "ScoreRTP": "-0.38",
+    "Difficulty": "Average",
+    "FwyGrass": "Fescue Mix",
+    "FwyWidth": "0",
+    "GreenSqFt": "13",
+    "GreenSize": "Large",
+    "GreenGrass": "Native",
+    "GreenStimp": "10.5",
+    "GreenSpeed": "Slow",
+    "RoughType": "Fescue/Bent",
+    "RoughGrass": "Fescue",
+    "RoughLengthInc": "1.65",
+    "RoughLength": "Short",
+    "EventTypes": [
+      "36-Hole Cut",
+      "Major"
+    ],
+    "Tournaments": [
+      {
+        "Year": "2015, 2022",
+        "Tournament": "The Open Championship"
+      }
+    ],
+    "CorrelatedCourse": [
+      "Royal Portrush GC",
+      "Royal Birkdale GC",
+      "Royal St. Georges GC",
+      "Shinnecock Hills GC",
+      "The Renaissance Club",
+      "Erin Hills",
+      "Augusta National GC"
+    ],
+    "FieldSize": "Full Field",
+    "FieldStrength": "Very Strong",
+    "OTTClub": "Driver Heavy",
+    "FwyPct": "63.5",
+    "FwyAccuracy": "Average",
+    "GainOTT": "Very Easy",
+    "MissedFairwayPenalty": "Average",
+    "RoughPenalty": "Low",
+    "GIRAccuracy": "Easy",
+    "GIRPct": "77.7",
+    "GainAPP": "Very Difficult",
+    "ScramblingFromRough": "Average",
+    "ScramblingFromShortGrass": "Difficult",
+    "SandSaves": "Difficult",
+    "GainARG": "Very Difficult",
+    "GainingPuttingInside15": "Easy",
+    "GainingPuttingOutside15": "Difficult",
+    "3PuttAVD": "Difficult",
+    "GainPutting": "Average",
+    "Par3Scoring": "Difficult",
+    "Par4Scoring": "Average",
+    "Par5Scoring": "Average",
+    "ShotLink": "1"
+  },
+  "tournaments": [
+    {
+      "CourseNum": "668",
+      "TNum": "100",
+      "TourneyName": "The Open Championship"
+    }
+  ],
+  "_meta": {
+    "pulledAt": "2026-11-20T22:18:26.027Z",
+    "detailStatus": 200,
+    "tournamentsStatus": 200
+  },
+  "auth": {
+    "holeBreakdown": [],
+    "correlated": [
+      {
+        "CourseNum": "14",
+        "CourseName": "Augusta National GC",
+        "CourseNums": "[14]"
+      },
+      {
+        "CourseNum": "236",
+        "CourseName": "Erin Hills",
+        "CourseNums": "[236]"
+      },
+      {
+        "CourseNum": "541",
+        "CourseName": "Royal Birkdale GC",
+        "CourseNums": "[541]"
+      },
+      {
+        "CourseNum": "618",
+        "CourseName": "Shinnecock Hills GC",
+        "CourseNums": "[618]"
+      },
+      {
+        "CourseNum": "778",
+        "CourseName": "Royal St. Georges GC",
+        "CourseNums": "[778]"
+      },
+      {
+        "CourseNum": "885",
+        "CourseName": "Royal Portrush GC",
+        "CourseNums": "[885]"
+      },
+      {
+        "CourseNum": "945",
+        "CourseName": "The Renaissance Club",
+        "CourseNums": "[945, 977]"
+      }
+    ],
+    "_meta": {
+      "pulledAt": "2026-11-20T22:52:52.695Z",
+      "holeStatus": 200,
+      "correlatedStatus": 200
+    }
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "courseNum": "235",
+  "courseName": "Eagle Point GC",
+  "list": {
+    "CourseName": "Eagle Point GC",
+    "CourseNum": "235",
+    "CourseNums": [
+      235
+    ]
+  },
+  "details": {
+    "CourseName": "Eagle Point GC",
+    "CourseNum": "235",
+    "Locations": [
+      "Southeast",
+      "North Carolina"
+    ],
+    "SeasonHeld": "Spring",
+    "CourseTypes": [
+      "Coastal",
+      "Parkland"
+    ],
+    "ParScore": "72",
+    "Yards": "7471",
+    "AVG": "103.8",
+    "CourseLength": "Long",
+    "Architects": [
+      "Tom Fazio"
+    ],
+    "RedesignArchitects": [],
+    "Elevation": "36",
+    "CourseElevation": "Sea Level",
+    "Bunkers": "74",
+    "BunkersRank": "Average",
+    "WaterHoles": "6",
+    "WaterDanger": "Average",
+    "ScoreRTP": "0.82",
+    "Difficulty": "Difficult",
+    "FwyGrass": "Rye",
+    "FwyWidth": "0",
+    "GreenSqFt": "6700",
+    "GreenSize": "Average",
+    "GreenGrass": "Bent",
+    "GreenStimp": "12.5",
+    "GreenSpeed": "Average",
+    "RoughType": "Tifsport Bermuda/Rye",
+    "RoughGrass": "Ryegrass",
+    "RoughLengthInc": "2.5",
+    "RoughLength": "Average",
+    "EventTypes": [
+      "36-Hole Cut"
+    ],
+    "Tournaments": [
+      {
+        "Year": "2017",
+        "Tournament": "Wells Fargo Championship"
+      }
+    ],
+    "CorrelatedCourse": [],
+    "FieldSize": "Full Field",
+    "FieldStrength": "Average",
+    "OTTClub": "Less Than Driver",
+    "FwyPct": "59.8",
+    "FwyAccuracy": "Average",
+    "GainOTT": "Difficult",
+    "MissedFairwayPenalty": "Low",
+    "RoughPenalty": "Low",
+    "GIRAccuracy": "Difficult",
+    "GIRPct": "60.3",
+    "GainAPP": "Very Difficult",
+    "ScramblingFromRough": "Average",
+    "ScramblingFromShortGrass": "Average",
+    "SandSaves": "Difficult",
+    "GainARG": "Average",
+    "GainingPuttingInside15": "Easy",
+    "GainingPuttingOutside15": "Difficult",
+    "3PuttAVD": "Difficult",
+    "GainPutting": "Average",
+    "Par3Scoring": "Difficult",
+    "Par4Scoring": "Average",
+    "Par5Scoring": "Difficult",
+    "ShotLink": "1"
+  },
+  "tournaments": [
+    {
+      "CourseNum": "235",
+      "TNum": "480",
+      "TourneyName": "Wells Fargo Championship"
+    }
+  ],
+  "_meta": {
+    "pulledAt": "2026-11-20T22:18:25.035Z",
+    "detailStatus": 200,
+    "tournamentsStatus": 200
+  },
+  "auth": {
+    "holeBreakdown": [],
+    "correlated": [],
+    "_meta": {
+      "pulledAt": "2026-11-20T22:52:51.803Z",
+      "holeStatus": 200,
+      "correlatedStatus": 200
+    }
+  }
+}

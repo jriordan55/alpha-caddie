@@ -1,0 +1,200 @@
+{
+  "playerId": "46504",
+  "playerName": "Ashley Chesters",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/St_Georges_Cross.svg_.png",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Ashley Chesters",
+    "BirthPlace": "",
+    "BirthDate": "August 25, 1989",
+    "Age": "37",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "England",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Ashley Chesters",
+        "player_num": "46504",
+        "Year": "2022",
+        "Rounds": "2",
+        "SG:TOT": "-1.79",
+        "SG:T2G": "-0.88",
+        "SG:OTT": "0.15",
+        "SG:APP": "-0.98",
+        "SG:BS": "-0.83",
+        "SG:ARG": "-0.05",
+        "SG:P": "-0.90",
+        "Dr Distance": null,
+        "Dr Accuracy %": "68.8",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Ashley Chesters",
+        "player_num": "46504",
+        "Year": "2015",
+        "Rounds": "4",
+        "SG:TOT": "1.69",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "71.9",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2022-07-17",
+        "position": "CUT",
+        "roundPosition": null,
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Ashley Chesters",
+        "player_num": "46504",
+        "Rounds": "2",
+        "CourseID": "668",
+        "Course": "St. Andrews GC (Old Course)",
+        "ShotLink": "2",
+        "SG:TOT": "-1.79",
+        "SG:T2G": "-0.88",
+        "SG:OTT": "0.15",
+        "SG:APP": "-0.98",
+        "SG:BS": "-0.83",
+        "SG:ARG": "-0.05",
+        "SG:P": "-0.90",
+        "SG:SG": "-0.95"
+      },
+      {
+        "Date": "2015-07-19",
+        "position": "T12",
+        "roundPosition": "T12",
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Ashley Chesters",
+        "player_num": "46504",
+        "Rounds": "4",
+        "CourseID": "668",
+        "Course": "St. Andrews GC (Old Course)",
+        "ShotLink": "0",
+        "SG:TOT": "1.69",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "66.7",
+        "SG TOT 1+": "50.0",
+        "SG TOT 2+": "33.3",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "6"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.9040000229142606",
+        "Rounds": "6"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.5299999713897705",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.4599999785423279",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "2.7100000381469727",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "2.440000057220459",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "0.5283333659172058",
+        "Rounds": "6"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "1.0940000295639039",
+        "Rounds": "5"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-2.299999952316284",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "0.5283333659172058",
+        "Rounds": "6"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "71.33333333333333",
+        "PM": "71",
+        "Rounds": "6"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "6",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "0.5283333659172058",
+        "Rounds": "6"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:13.673Z",
+    "ok": true
+  }
+}

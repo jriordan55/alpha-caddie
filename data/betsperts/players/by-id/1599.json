@@ -1,0 +1,205 @@
+{
+  "playerId": "1599",
+  "playerName": "Steve Jones",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Steve Jones",
+    "BirthPlace": "Artesia, New Mexico",
+    "BirthDate": "December 27, 1958",
+    "Age": "67",
+    "Height": "6ft 4in",
+    "Weight": "200 lbs",
+    "Nationality": "United States",
+    "Residence": "Tempe, Arizona",
+    "ProWins": "9",
+    "TurnedPro": "1981",
+    "PGAWins": "8",
+    "College": "University of Colorado "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Steve Jones",
+        "player_num": "1599",
+        "Year": "2021",
+        "Rounds": "2",
+        "SG:TOT": "-5.21",
+        "SG:T2G": "-2.25",
+        "SG:OTT": "-0.27",
+        "SG:APP": "-1.11",
+        "SG:BS": "-1.38",
+        "SG:ARG": "-0.87",
+        "SG:P": "0.32",
+        "Dr Distance": "255.4",
+        "Dr Accuracy %": "78.6",
+        "Ball Speed": "151.64"
+      },
+      {
+        "playerName": "Steve Jones",
+        "player_num": "1599",
+        "Year": "2019",
+        "Rounds": "3",
+        "SG:TOT": "-7.00",
+        "SG:T2G": "-2.13",
+        "SG:OTT": "-0.12",
+        "SG:APP": "-1.43",
+        "SG:BS": "-1.55",
+        "SG:ARG": "-0.59",
+        "SG:P": "-2.46",
+        "Dr Distance": "240.2",
+        "Dr Accuracy %": "73.2",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2021-01-24",
+        "position": "CUT",
+        "roundPosition": "T150",
+        "TournamentName": "The American Express",
+        "is_major": "0",
+        "playerName": "Steve Jones",
+        "player_num": "1599",
+        "Rounds": "2",
+        "CourseID": "233",
+        "Course": "Nicklaus Tournament Course",
+        "ShotLink": "1",
+        "SG:TOT": "-5.21",
+        "SG:T2G": "-2.25",
+        "SG:OTT": "-0.27",
+        "SG:APP": "-1.11",
+        "SG:BS": "-1.38",
+        "SG:ARG": "-0.87",
+        "SG:P": "0.32",
+        "SG:SG": "-0.55"
+      },
+      {
+        "Date": "2019-02-10",
+        "position": "CUT",
+        "roundPosition": "155",
+        "TournamentName": "AT&T Pebble Beach Pro-Am",
+        "is_major": "0",
+        "playerName": "Steve Jones",
+        "player_num": "1599",
+        "Rounds": "3",
+        "CourseID": "205",
+        "Course": "Spyglass Hill",
+        "ShotLink": "1",
+        "SG:TOT": "-7.00",
+        "SG:T2G": "-2.13",
+        "SG:OTT": "-0.12",
+        "SG:APP": "-1.43",
+        "SG:BS": "-1.55",
+        "SG:ARG": "-0.59",
+        "SG:P": "-2.46",
+        "SG:SG": "-3.05"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "5"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "-2.4619998931884766",
+        "Rounds": "3"
+      },
+      {
+        "GreenSurface": "Poa Trivialis",
+        "StrokesGainedAverage": "0.3160000145435333",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-3.2699999809265137",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-10.184999942779541",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-4.519999980926514",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-8.489999771118164",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-5.735000014305115",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-7.372499942779541",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-1.940000057220459",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-6.285999965667725",
+        "Rounds": "5"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "75",
+        "PM": "81.5",
+        "Rounds": "5"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "5",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "41.8",
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "West Coast",
+        "StrokesGainedAverage": "-6.285999965667725",
+        "Rounds": "5"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:45.787Z",
+    "ok": true
+  }
+}

@@ -1,0 +1,153 @@
+{
+  "playerId": "39048",
+  "playerName": "Rodrigo Lee",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_br-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Rodrigo Lee",
+    "BirthPlace": "Sao Paulo, Brazil",
+    "BirthDate": "September 23, 1987",
+    "Age": "39",
+    "Height": "5ft 11in",
+    "Weight": "176 lbs",
+    "Nationality": "Brazil",
+    "Residence": "Sao Paulo, Brazil",
+    "ProWins": "1",
+    "TurnedPro": "2010",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Rodrigo Lee",
+        "player_num": "39048",
+        "Year": "2021",
+        "Rounds": "2",
+        "SG:TOT": "-2.07",
+        "SG:T2G": "-1.34",
+        "SG:OTT": "-1.03",
+        "SG:APP": "-0.05",
+        "SG:BS": "-1.08",
+        "SG:ARG": "-0.26",
+        "SG:P": "-0.73",
+        "Dr Distance": "288.9",
+        "Dr Accuracy %": "42.9",
+        "Ball Speed": "164.12"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2021-07-11",
+        "position": "CUT",
+        "roundPosition": "T123",
+        "TournamentName": "John Deere Classic",
+        "is_major": "0",
+        "playerName": "Rodrigo Lee",
+        "player_num": "39048",
+        "Rounds": "2",
+        "CourseID": "669",
+        "Course": "TPC Deere Run",
+        "ShotLink": "2",
+        "SG:TOT": "-2.07",
+        "SG:T2G": "-1.34",
+        "SG:OTT": "-1.03",
+        "SG:APP": "-0.05",
+        "SG:BS": "-1.08",
+        "SG:ARG": "-0.26",
+        "SG:P": "-0.73",
+        "SG:SG": "-0.99"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.7294999957084656",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.11999999731779099",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-4.010000228881836",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-2.0650001130998135",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-0.11999999731779099",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-4.010000228881836",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-2.0650001130998135",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "73",
+        "PM": "70",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "20.1",
+        "150-200": "44.2",
+        "200+": "57.1",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-2.0650001130998135",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:09.314Z",
+    "ok": true
+  }
+}

@@ -1,0 +1,148 @@
+{
+  "playerId": "49743",
+  "playerName": "Sean Kelly",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Sean Kelly",
+    "BirthPlace": "Staten Island, New York",
+    "BirthDate": "December 15, 1992",
+    "Age": "33",
+    "Height": "5ft 10in",
+    "Weight": "205 lbs",
+    "Nationality": "United States",
+    "Residence": "Bradenton, Florida",
+    "ProWins": null,
+    "TurnedPro": "2016",
+    "PGAWins": null,
+    "College": "University of South Carolina  (2016, Finance and Accounting) "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Sean Kelly",
+        "player_num": "49743",
+        "Year": "2017",
+        "Rounds": "2",
+        "SG:TOT": "-1.32",
+        "SG:T2G": "-1.38",
+        "SG:OTT": "1.48",
+        "SG:APP": "-1.31",
+        "SG:BS": "0.16",
+        "SG:ARG": "-1.54",
+        "SG:P": "0.06",
+        "Dr Distance": "300.3",
+        "Dr Accuracy %": "60.7",
+        "Ball Speed": "174.48"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2017-05-21",
+        "position": "CUT",
+        "roundPosition": "T108",
+        "TournamentName": "AT&T Byron Nelson",
+        "is_major": "0",
+        "playerName": "Sean Kelly",
+        "player_num": "49743",
+        "Rounds": "2",
+        "CourseID": "19",
+        "Course": "TPC Four Seasons Resort",
+        "ShotLink": "2",
+        "SG:TOT": "-1.32",
+        "SG:T2G": "-1.38",
+        "SG:OTT": "1.48",
+        "SG:APP": "-1.31",
+        "SG:BS": "0.16",
+        "SG:ARG": "-1.54",
+        "SG:P": "0.06",
+        "SG:SG": "-1.49"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "0.05650000274181366",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-2.0799999237060547",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.5699999928474426",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-1.3249999582767487",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-1.3249999582767487",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-1.3249999582767487",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "71",
+        "PM": "74",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "30",
+        "150-200": null,
+        "200+": "74.7",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-1.3249999582767487",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:31.983Z",
+    "ok": true
+  }
+}

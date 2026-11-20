@@ -1,0 +1,158 @@
+{
+  "playerId": "58668",
+  "playerName": "Austen Christiansen",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Austen Christiansen",
+    "BirthPlace": "Houston, Texas",
+    "BirthDate": "July 26, 1996",
+    "Age": "30",
+    "Height": "6ft 1in",
+    "Weight": "160 lbs",
+    "Nationality": "United States",
+    "Residence": "Tomball, Texas",
+    "ProWins": null,
+    "TurnedPro": "2019",
+    "PGAWins": null,
+    "College": "Brigham Young University (2019, Business)"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Austen Christiansen",
+        "player_num": "58668",
+        "Year": "2025",
+        "Rounds": "2",
+        "SG:TOT": "-0.38",
+        "SG:T2G": "-1.05",
+        "SG:OTT": "-1.77",
+        "SG:APP": "0.60",
+        "SG:BS": "-1.17",
+        "SG:ARG": "0.13",
+        "SG:P": "0.67",
+        "Dr Distance": "293.9",
+        "Dr Accuracy %": "32.1",
+        "Ball Speed": "180.38"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2025-04-06",
+        "position": "CUT",
+        "roundPosition": "T80",
+        "TournamentName": "Valero Texas Open",
+        "is_major": "0",
+        "playerName": "Austen Christiansen",
+        "player_num": "58668",
+        "Rounds": "2",
+        "CourseID": "770",
+        "Course": "TPC San Antonio (Oaks)",
+        "ShotLink": "2",
+        "SG:TOT": "-0.38",
+        "SG:T2G": "-1.05",
+        "SG:OTT": "-1.77",
+        "SG:APP": "0.60",
+        "SG:BS": "-1.17",
+        "SG:ARG": "0.13",
+        "SG:P": "0.67",
+        "SG:SG": "0.79"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "50.0",
+        "SG TOT 2+": "50.0",
+        "SG TOT 3+": "50.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Poa Trivialis",
+        "StrokesGainedAverage": "0.6679999828338623",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-4",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "3.240000009536743",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "3.240000009536743",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-4",
+        "Rounds": "1"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-4",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "3.240000009536743",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-0.3799999952316284",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "76",
+        "PM": "68",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": "76.4",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-0.3799999952316284",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:14.573Z",
+    "ok": true
+  }
+}

@@ -1,0 +1,231 @@
+{
+  "playerId": "57725",
+  "playerName": "Angus Flanagan",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/St_Georges_Cross.svg_.png",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Angus Flanagan",
+    "BirthPlace": "Woking, England",
+    "BirthDate": "March 31, 1999",
+    "Age": "27",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "England",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "2021",
+    "PGAWins": "0",
+    "College": "University of Minnesota "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Angus Flanagan",
+        "player_num": "57725",
+        "Year": "2021",
+        "Rounds": "4",
+        "SG:TOT": "-5.97",
+        "SG:T2G": "-4.41",
+        "SG:OTT": "-1.71",
+        "SG:APP": "-1.58",
+        "SG:BS": "-3.30",
+        "SG:ARG": "-1.11",
+        "SG:P": "-1.57",
+        "Dr Distance": "293.7",
+        "Dr Accuracy %": "30.4",
+        "Ball Speed": "170.38"
+      },
+      {
+        "playerName": "Angus Flanagan",
+        "player_num": "57725",
+        "Year": "2020",
+        "Rounds": "2",
+        "SG:TOT": "-2.42",
+        "SG:T2G": "-0.98",
+        "SG:OTT": "-0.12",
+        "SG:APP": "-1.06",
+        "SG:BS": "-1.18",
+        "SG:ARG": "0.20",
+        "SG:P": "-1.44",
+        "Dr Distance": "294.2",
+        "Dr Accuracy %": "42.9",
+        "Ball Speed": "172.22"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2021-07-25",
+        "position": "CUT",
+        "roundPosition": "153",
+        "TournamentName": "3M Open",
+        "is_major": "0",
+        "playerName": "Angus Flanagan",
+        "player_num": "57725",
+        "Rounds": "2",
+        "CourseID": "883",
+        "Course": "TPC Twin Cities",
+        "ShotLink": "2",
+        "SG:TOT": "-6.51",
+        "SG:T2G": "-4.89",
+        "SG:OTT": "-2.56",
+        "SG:APP": "-2.07",
+        "SG:BS": "-4.63",
+        "SG:ARG": "-0.26",
+        "SG:P": "-1.62",
+        "SG:SG": "-1.88"
+      },
+      {
+        "Date": "2021-02-21",
+        "position": "CUT",
+        "roundPosition": "119",
+        "TournamentName": "The Genesis Invitational",
+        "is_major": "0",
+        "playerName": "Angus Flanagan",
+        "player_num": "57725",
+        "Rounds": "2",
+        "CourseID": "500",
+        "Course": "Riviera CC",
+        "ShotLink": "2",
+        "SG:TOT": "-5.44",
+        "SG:T2G": "-3.93",
+        "SG:OTT": "-0.87",
+        "SG:APP": "-1.10",
+        "SG:BS": "-1.96",
+        "SG:ARG": "-1.97",
+        "SG:P": "-1.51",
+        "SG:SG": "-3.48"
+      },
+      {
+        "Date": "2020-07-26",
+        "position": "CUT",
+        "roundPosition": "T129",
+        "TournamentName": "3M Open",
+        "is_major": "0",
+        "playerName": "Angus Flanagan",
+        "player_num": "57725",
+        "Rounds": "2",
+        "CourseID": "883",
+        "Course": "TPC Twin Cities",
+        "ShotLink": "2",
+        "SG:TOT": "-2.42",
+        "SG:T2G": "-0.98",
+        "SG:OTT": "-0.12",
+        "SG:APP": "-1.06",
+        "SG:BS": "-1.18",
+        "SG:ARG": "0.20",
+        "SG:P": "-1.44",
+        "SG:SG": "-1.24"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "6"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-1.5312499925494194",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "-1.5075000524520874",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-2.646666646003723",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-6.933333237965901",
+        "Rounds": "3"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-5.974999934434891",
+        "Rounds": "4"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-2.4199999570846558",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-5.974999934434891",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-2.4199999570846558",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-5.440000057220459",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-4.464999884366989",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "73.33333333333333",
+        "PM": "77.66666666666667",
+        "Rounds": "6"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "6",
+        "50-100": "20.4",
+        "100-150": "28.5",
+        "150-200": "40.6",
+        "200+": "68",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-4.464999884366989",
+        "Rounds": "4"
+      },
+      {
+        "SeasonHeld": "West Coast",
+        "StrokesGainedAverage": "-5.440000057220459",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:08.412Z",
+    "ok": true
+  }
+}

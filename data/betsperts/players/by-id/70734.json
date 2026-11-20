@@ -1,0 +1,167 @@
+{
+  "playerId": "70734",
+  "playerName": "Eric Lee",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Eric Lee",
+    "BirthPlace": null,
+    "BirthDate": "",
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Eric Lee",
+        "player_num": "70734",
+        "Year": "2026",
+        "Rounds": "4",
+        "SG:TOT": "-0.61",
+        "SG:T2G": "-0.62",
+        "SG:OTT": "0.40",
+        "SG:APP": "0.13",
+        "SG:BS": "0.53",
+        "SG:ARG": "-1.15",
+        "SG:P": "0.00",
+        "Dr Distance": "302.5",
+        "Dr Accuracy %": "76.8",
+        "Ball Speed": "172.90"
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Eric Lee",
+        "player_num": "70734",
+        "Rounds": "4",
+        "SG:TOT": "-0.61",
+        "SG:T2G": "-0.62",
+        "SG:OTT": "0.40",
+        "SG:APP": "0.13",
+        "SG:BS": "0.53",
+        "SG:ARG": "-1.15",
+        "SG:P": "0.00",
+        "SG:SG": "-1.15"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-06-21",
+        "position": "T63",
+        "roundPosition": "T63",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Eric Lee",
+        "player_num": "70734",
+        "Rounds": "4",
+        "CourseID": "618",
+        "Course": "Shinnecock Hills GC",
+        "ShotLink": "4",
+        "SG:TOT": "-0.61",
+        "SG:T2G": "-0.62",
+        "SG:OTT": "0.40",
+        "SG:APP": "0.13",
+        "SG:BS": "0.53",
+        "SG:ARG": "-1.15",
+        "SG:P": "0.00",
+        "SG:SG": "-1.15"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "25.0",
+        "SG TOT 2+": "25.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.7200000286102295",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "2.25",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-4.369999885559082",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "0.38999998569488525",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-0.6124999821186066",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "0.38999998569488525",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-0.9466666380564371",
+        "Rounds": "3"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-0.6124999821186066",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74.33333333333333",
+        "PM": "70",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "37.4",
+        "200+": "62.2",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-0.6124999821186066",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:21:27.508Z",
+    "ok": true
+  }
+}

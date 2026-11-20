@@ -1,0 +1,205 @@
+{
+  "playerId": "46103",
+  "playerName": "Jae Yong Kim",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ca-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Jae Yong Kim",
+    "BirthPlace": null,
+    "BirthDate": "October 02, 1990",
+    "Age": "36",
+    "Height": "6ft 1in",
+    "Weight": "185 lbs",
+    "Nationality": "Canada",
+    "Residence": "North York, Ontario, Canada",
+    "ProWins": null,
+    "TurnedPro": "2013",
+    "PGAWins": null,
+    "College": "Gardner-Webb University 2013, Marketing"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Jae Yong Kim",
+        "player_num": "46103",
+        "Year": "2023",
+        "Rounds": "2",
+        "SG:TOT": "-4.30",
+        "SG:T2G": "-4.79",
+        "SG:OTT": "-0.09",
+        "SG:APP": "-2.40",
+        "SG:BS": "-2.48",
+        "SG:ARG": "-2.30",
+        "SG:P": "0.48",
+        "Dr Distance": "281.7",
+        "Dr Accuracy %": "60.0",
+        "Ball Speed": "173.17"
+      },
+      {
+        "playerName": "Jae Yong Kim",
+        "player_num": "46103",
+        "Year": "2017",
+        "Rounds": "2",
+        "SG:TOT": "-2.00",
+        "SG:T2G": "-0.44",
+        "SG:OTT": "-0.92",
+        "SG:APP": "-1.29",
+        "SG:BS": "-2.21",
+        "SG:ARG": "1.78",
+        "SG:P": "-1.57",
+        "Dr Distance": "292.6",
+        "Dr Accuracy %": "42.9",
+        "Ball Speed": "169.63"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2023-06-11",
+        "position": "CUT",
+        "roundPosition": "T144",
+        "TournamentName": "RBC Canadian Open",
+        "is_major": "0",
+        "playerName": "Jae Yong Kim",
+        "player_num": "46103",
+        "Rounds": "2",
+        "CourseID": "908",
+        "Course": "Oakdale Golf & Country Club",
+        "ShotLink": "2",
+        "SG:TOT": "-4.30",
+        "SG:T2G": "-4.79",
+        "SG:OTT": "-0.09",
+        "SG:APP": "-2.40",
+        "SG:BS": "-2.48",
+        "SG:ARG": "-2.30",
+        "SG:P": "0.48",
+        "SG:SG": "-1.82"
+      },
+      {
+        "Date": "2017-07-30",
+        "position": "CUT",
+        "roundPosition": "T127",
+        "TournamentName": "RBC Canadian Open",
+        "is_major": "0",
+        "playerName": "Jae Yong Kim",
+        "player_num": "46103",
+        "Rounds": "2",
+        "CourseID": "32",
+        "Course": "Glen Abbey GC",
+        "ShotLink": "2",
+        "SG:TOT": "-2.00",
+        "SG:T2G": "-0.44",
+        "SG:OTT": "-0.92",
+        "SG:APP": "-1.29",
+        "SG:BS": "-2.21",
+        "SG:ARG": "1.78",
+        "SG:P": "-1.57",
+        "SG:SG": "0.21"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "25.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-1.56850004196167",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-6.224999904632568",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.08000001311302185",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-3.152499958872795",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "0.9599999785423279",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-9.569999694824219",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-2.0000000596046448",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-4.304999858140945",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-2.0000000596046448",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "77.5",
+        "PM": "71.5",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": "26",
+        "100-150": "31.3",
+        "150-200": "42.7",
+        "200+": "51.9",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-4.304999858140945",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-2.0000000596046448",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:15.985Z",
+    "ok": true
+  }
+}

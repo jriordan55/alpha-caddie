@@ -1,0 +1,138 @@
+{
+  "playerId": "23725",
+  "playerName": "Brendan Jones",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/as-flag.gif",
+  "profile": {
+    "ProfileImage": "0",
+    "Name": "Brendan Jones",
+    "BirthPlace": "West Wyalong, New South Wales, Australia",
+    "BirthDate": "March 03, 1975",
+    "Age": "51",
+    "Height": "6ft 2in",
+    "Weight": "200 lbs",
+    "Nationality": "Australia",
+    "Residence": "Canberra, Australia",
+    "ProWins": "13",
+    "TurnedPro": "1999",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Brendan Jones",
+        "player_num": "23725",
+        "Year": "2019",
+        "Rounds": "2",
+        "SG:TOT": "-5.14",
+        "SG:T2G": "-4.75",
+        "SG:OTT": "-0.55",
+        "SG:APP": "-2.95",
+        "SG:BS": "-3.50",
+        "SG:ARG": "-1.25",
+        "SG:P": "-0.39",
+        "Dr Distance": "284.7",
+        "Dr Accuracy %": "53.6",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2019-05-19",
+        "position": "CUT",
+        "roundPosition": "T147",
+        "TournamentName": "PGA Championship",
+        "is_major": "1",
+        "playerName": "Brendan Jones",
+        "player_num": "23725",
+        "Rounds": "2",
+        "CourseID": "880",
+        "Course": "Bethpage State Park (Black)",
+        "ShotLink": "2",
+        "SG:TOT": "-5.14",
+        "SG:T2G": "-4.75",
+        "SG:OTT": "-0.55",
+        "SG:APP": "-2.95",
+        "SG:BS": "-3.50",
+        "SG:ARG": "-1.25",
+        "SG:P": "-0.39",
+        "SG:SG": "-1.64"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-4.940000057220459",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-5.349999904632568",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-5.144999980926514",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-5.144999980926514",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-5.144999980926514",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "78",
+        "PM": "77",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": "24.6",
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-5.144999980926514",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:42.633Z",
+    "ok": true
+  }
+}

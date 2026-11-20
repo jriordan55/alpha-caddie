@@ -1,0 +1,210 @@
+{
+  "playerId": "10201",
+  "playerName": "Matt Gogel",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Matt Gogel",
+    "BirthPlace": "",
+    "BirthDate": "February 09, 1971",
+    "Age": "55",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "United States",
+    "Residence": "",
+    "ProWins": "1",
+    "TurnedPro": "0",
+    "PGAWins": "1",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Matt Gogel",
+        "player_num": "10201",
+        "Year": "2022",
+        "Rounds": "2",
+        "SG:TOT": "-6.14",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "75.0",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Matt Gogel",
+        "player_num": "10201",
+        "Year": "2021",
+        "Rounds": "2",
+        "SG:TOT": "-4.78",
+        "SG:T2G": "-5.68",
+        "SG:OTT": "-1.71",
+        "SG:APP": "-2.84",
+        "SG:BS": "-4.55",
+        "SG:ARG": "-1.13",
+        "SG:P": "-1.06",
+        "Dr Distance": "256.7",
+        "Dr Accuracy %": "75.0",
+        "Ball Speed": "150.58"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2022-03-27",
+        "position": "CUT",
+        "roundPosition": "116",
+        "TournamentName": "Corales Puntacana Championship",
+        "is_major": "0",
+        "playerName": "Matt Gogel",
+        "player_num": "10201",
+        "Rounds": "2",
+        "CourseID": "244",
+        "Course": "Corales Golf Course",
+        "ShotLink": "0",
+        "SG:TOT": "-6.14",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2021-02-14",
+        "position": "CUT",
+        "roundPosition": "T148",
+        "TournamentName": "AT&T Pebble Beach Pro-Am",
+        "is_major": "0",
+        "playerName": "Matt Gogel",
+        "player_num": "10201",
+        "Rounds": "2",
+        "CourseID": "205",
+        "Course": "Spyglass Hill",
+        "ShotLink": "1",
+        "SG:TOT": "-4.78",
+        "SG:T2G": "-5.68",
+        "SG:OTT": "-1.71",
+        "SG:APP": "-2.84",
+        "SG:BS": "-4.55",
+        "SG:ARG": "-1.13",
+        "SG:P": "-1.06",
+        "SG:SG": "-2.19"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "-1.062999963760376",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-6.489999771118164",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-4.435000061988831",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-6.144999980926514",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-4.779999852180481",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-4.529999852180481",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-6.050000190734863",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-6.739999771118164",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-6.144999980926514",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-4.779999852180481",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "76.5",
+        "PM": "78",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": "78.7",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-6.144999980926514",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "West Coast",
+        "StrokesGainedAverage": "-4.779999852180481",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:56.027Z",
+    "ok": true
+  }
+}

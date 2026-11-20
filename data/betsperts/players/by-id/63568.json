@@ -1,0 +1,153 @@
+{
+  "playerId": "63568",
+  "playerName": "Calum Scott",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/04/Flag_of_Scotland.svg_.png",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Calum Scott",
+    "BirthPlace": "Inverness, Scotland",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "6ft 3in",
+    "Weight": "170 lbs",
+    "Nationality": "Scotland",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": "2025",
+    "PGAWins": null,
+    "College": "Texas Tech University "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Calum Scott",
+        "player_num": "63568",
+        "Year": "2024",
+        "Rounds": "4",
+        "SG:TOT": "0.60",
+        "SG:T2G": "0.33",
+        "SG:OTT": "0.38",
+        "SG:APP": "-0.11",
+        "SG:BS": "0.27",
+        "SG:ARG": "0.06",
+        "SG:P": "0.27",
+        "Dr Distance": null,
+        "Dr Accuracy %": "39.3",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2024-07-21",
+        "position": "T43",
+        "roundPosition": null,
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Calum Scott",
+        "player_num": "63568",
+        "Rounds": "4",
+        "CourseID": "709",
+        "Course": "Royal Troon",
+        "ShotLink": "4",
+        "SG:TOT": "0.60",
+        "SG:T2G": "0.33",
+        "SG:OTT": "0.38",
+        "SG:APP": "-0.11",
+        "SG:BS": "0.27",
+        "SG:ARG": "0.06",
+        "SG:P": "0.27",
+        "SG:SG": "0.33"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "50.0",
+        "SG TOT 2+": "50.0",
+        "SG TOT 3+": "25.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "3.440000057220459",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.6399999856948853",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "2.440000057220459",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-2.8499999046325684",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "0.5975000560283661",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "2.440000057220459",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-0.016666611035664875",
+        "Rounds": "3"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "0.5975000560283661",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "70.5",
+        "PM": "75.5",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "0.5975000560283661",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:20:00.344Z",
+    "ok": true
+  }
+}

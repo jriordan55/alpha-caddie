@@ -1,0 +1,162 @@
+{
+  "playerId": "62798",
+  "playerName": "Seonghyeon An",
+  "flag": null,
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Seonghyeon An",
+    "BirthPlace": null,
+    "BirthDate": "",
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "Republic of Korea",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Seonghyeon An",
+        "player_num": "62798",
+        "Year": "2026",
+        "Rounds": "2",
+        "SG:TOT": "-5.00",
+        "SG:T2G": "-4.00",
+        "SG:OTT": "0.31",
+        "SG:APP": "-2.91",
+        "SG:BS": "-2.60",
+        "SG:ARG": "-1.40",
+        "SG:P": "-1.00",
+        "Dr Distance": "315.3",
+        "Dr Accuracy %": "82.1",
+        "Ball Speed": "179.54"
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Seonghyeon An",
+        "player_num": "62798",
+        "Rounds": "2",
+        "SG:TOT": "-5.00",
+        "SG:T2G": "-4.00",
+        "SG:OTT": "0.31",
+        "SG:APP": "-2.91",
+        "SG:BS": "-2.60",
+        "SG:ARG": "-1.40",
+        "SG:P": "-1.00",
+        "SG:SG": "-2.40"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-10-04",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "Bank of Utah Championship",
+        "is_major": "0",
+        "playerName": "Seonghyeon An",
+        "player_num": "62798",
+        "Rounds": "2",
+        "CourseID": "930",
+        "Course": "Black Desert Resort",
+        "ShotLink": "2",
+        "SG:TOT": "-5.00",
+        "SG:T2G": "-4.00",
+        "SG:OTT": "0.31",
+        "SG:APP": "-2.91",
+        "SG:BS": "-2.60",
+        "SG:ARG": "-1.40",
+        "SG:P": "-1.00",
+        "SG:SG": "-2.40"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-1.0040000677108765",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-7.960000038146973",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-2.049999952316284",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-5.004999995231628",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-5.004999995231628",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-5.004999995231628",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "76",
+        "PM": "70",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-5.004999995231628",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:33.971Z",
+    "ok": true
+  }
+}

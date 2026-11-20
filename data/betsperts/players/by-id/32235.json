@@ -1,0 +1,138 @@
+{
+  "playerId": "32235",
+  "playerName": "Gi-Whan Kim",
+  "flag": null,
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Gi-Whan Kim",
+    "BirthPlace": null,
+    "BirthDate": null,
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "Republic of Korea",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Gi-Whan Kim",
+        "player_num": "32235",
+        "Year": "2017",
+        "Rounds": "2",
+        "SG:TOT": "-1.03",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "50.0",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2017-07-23",
+        "position": "CUT",
+        "roundPosition": "T99",
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Gi-Whan Kim",
+        "player_num": "32235",
+        "Rounds": "2",
+        "CourseID": "541",
+        "Course": "Royal Birkdale GC",
+        "ShotLink": "0",
+        "SG:TOT": "-1.03",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.0800000429153442",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.9700000286102295",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-1.0250000357627869",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-1.0250000357627869",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-1.0250000357627869",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "75",
+        "PM": "73",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-1.0250000357627869",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:21:47.949Z",
+    "ok": true
+  }
+}

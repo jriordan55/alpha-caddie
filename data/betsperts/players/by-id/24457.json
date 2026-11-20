@@ -1,0 +1,210 @@
+{
+  "playerId": "24457",
+  "playerName": "Jaco Van Zyl",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_sf-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Jaco Van Zyl",
+    "BirthPlace": null,
+    "BirthDate": "February 23, 1979",
+    "Age": "47",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "South Africa",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Jaco Van Zyl",
+        "player_num": "24457",
+        "Year": "2016",
+        "Rounds": "2",
+        "SG:TOT": "-2.59",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "60.7",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Jaco Van Zyl",
+        "player_num": "24457",
+        "Year": "2015",
+        "Rounds": "2",
+        "SG:TOT": "-1.70",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "75.0",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2016-06-19",
+        "position": "CUT",
+        "roundPosition": "T125",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Jaco Van Zyl",
+        "player_num": "24457",
+        "Rounds": "2",
+        "CourseID": "608",
+        "Course": "Oakmont CC",
+        "ShotLink": "0",
+        "SG:TOT": "-2.59",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2015-07-19",
+        "position": "CUT",
+        "roundPosition": "T118",
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Jaco Van Zyl",
+        "player_num": "24457",
+        "Rounds": "2",
+        "CourseID": "668",
+        "Course": "St. Andrews GC (Old Course)",
+        "ShotLink": "0",
+        "SG:TOT": "-1.70",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "25.0",
+        "SG TOT 1+": "25.0",
+        "SG TOT 2+": "25.0",
+        "SG TOT 3+": "25.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "19"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": null,
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": null,
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.4166667461395264",
+        "Rounds": "6"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.2133333683013916",
+        "Rounds": "6"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-10.199999809265137",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-5.590000152587891",
+        "Rounds": "3"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-2.5850000381469727",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-1.7000001668930054",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-1.7000001668930054",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-2.5850000381469727",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-2.142500102519989",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "75.5",
+        "PM": "76.25",
+        "Rounds": "19"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "19",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-2.142500102519989",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:14.618Z",
+    "ok": true
+  }
+}

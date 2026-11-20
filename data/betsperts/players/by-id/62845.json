@@ -1,0 +1,209 @@
+{
+  "playerId": "62845",
+  "playerName": "Austin Hurt",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Austin Hurt",
+    "BirthPlace": "",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "United States",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Austin Hurt",
+        "player_num": "62845",
+        "Year": "2026",
+        "Rounds": "2",
+        "SG:TOT": "-5.06",
+        "SG:T2G": "-4.42",
+        "SG:OTT": "-0.98",
+        "SG:APP": "-2.44",
+        "SG:BS": "-3.43",
+        "SG:ARG": "-1.00",
+        "SG:P": "-0.64",
+        "Dr Distance": "285.5",
+        "Dr Accuracy %": "60.7",
+        "Ball Speed": "166.95"
+      },
+      {
+        "playerName": "Austin Hurt",
+        "player_num": "62845",
+        "Year": "2022",
+        "Rounds": "2",
+        "SG:TOT": "-6.78",
+        "SG:T2G": "-5.34",
+        "SG:OTT": "-0.91",
+        "SG:APP": "-3.63",
+        "SG:BS": "-4.54",
+        "SG:ARG": "-0.80",
+        "SG:P": "-1.44",
+        "Dr Distance": "298.2",
+        "Dr Accuracy %": "57.1",
+        "Ball Speed": "166.65"
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Austin Hurt",
+        "player_num": "62845",
+        "Rounds": "2",
+        "SG:TOT": "-5.06",
+        "SG:T2G": "-4.42",
+        "SG:OTT": "-0.98",
+        "SG:APP": "-2.44",
+        "SG:BS": "-3.43",
+        "SG:ARG": "-1.00",
+        "SG:P": "-0.64",
+        "SG:SG": "-1.64"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-05-17",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "PGA Championship",
+        "is_major": "1",
+        "playerName": "Austin Hurt",
+        "player_num": "62845",
+        "Rounds": "2",
+        "CourseID": "773",
+        "Course": "Aronimink Golf Club",
+        "ShotLink": "2",
+        "SG:TOT": "-5.06",
+        "SG:T2G": "-4.42",
+        "SG:OTT": "-0.98",
+        "SG:APP": "-2.44",
+        "SG:BS": "-3.43",
+        "SG:ARG": "-1.00",
+        "SG:P": "-0.64",
+        "SG:SG": "-1.64"
+      },
+      {
+        "Date": "2022-05-22",
+        "position": "CUT",
+        "roundPosition": "154",
+        "TournamentName": "PGA Championship",
+        "is_major": "1",
+        "playerName": "Austin Hurt",
+        "player_num": "62845",
+        "Rounds": "2",
+        "CourseID": "611",
+        "Course": "Southern Hills CC",
+        "ShotLink": "2",
+        "SG:TOT": "-6.78",
+        "SG:T2G": "-5.34",
+        "SG:OTT": "-0.91",
+        "SG:APP": "-3.63",
+        "SG:BS": "-4.54",
+        "SG:ARG": "-0.80",
+        "SG:P": "-1.44",
+        "SG:SG": "-2.24"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-1.0407499819993973",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-5.954999923706055",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-5.894999861717224",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-3.390000104904175",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-6.739999771118164",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-6.784999847412109",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-5.924999892711639",
+        "Rounds": "4"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-5.924999892711639",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "78.5",
+        "PM": "78.5",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": "23.4",
+        "100-150": "45.4",
+        "150-200": "42.4",
+        "200+": "63.3",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-5.924999892711639",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:16.306Z",
+    "ok": true
+  }
+}

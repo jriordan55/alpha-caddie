@@ -1,0 +1,180 @@
+{
+  "playerId": "56551",
+  "playerName": "Curtis Knipes",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/St_Georges_Cross.svg_.png",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Curtis Knipes",
+    "BirthPlace": "",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "England",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Curtis Knipes",
+        "player_num": "56551",
+        "Year": "2025",
+        "Rounds": "2",
+        "SG:TOT": "-1.77",
+        "SG:T2G": "-0.58",
+        "SG:OTT": "-0.31",
+        "SG:APP": "-0.34",
+        "SG:BS": "-0.65",
+        "SG:ARG": "0.07",
+        "SG:P": "-1.19",
+        "Dr Distance": null,
+        "Dr Accuracy %": "32.1",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Curtis Knipes",
+        "player_num": "56551",
+        "Year": "2019",
+        "Rounds": "2",
+        "SG:TOT": "-3.31",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "46.4",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2025-07-20",
+        "position": "CUT",
+        "roundPosition": null,
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Curtis Knipes",
+        "player_num": "56551",
+        "Rounds": "2",
+        "CourseID": "885",
+        "Course": "Royal Portrush GC",
+        "ShotLink": "2",
+        "SG:TOT": "-1.77",
+        "SG:T2G": "-0.58",
+        "SG:OTT": "-0.31",
+        "SG:APP": "-0.34",
+        "SG:BS": "-0.65",
+        "SG:ARG": "0.07",
+        "SG:P": "-1.19",
+        "SG:SG": "-1.12"
+      },
+      {
+        "Date": "2019-07-21",
+        "position": "CUT",
+        "roundPosition": "T139",
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Curtis Knipes",
+        "player_num": "56551",
+        "Rounds": "2",
+        "CourseID": "885",
+        "Course": "Royal Portrush GC",
+        "ShotLink": "0",
+        "SG:TOT": "-3.31",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "0.5150000043213367",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-5.600000023841858",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-2.5425000097602606",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-3.4033333460489907",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "0.03999999910593033",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-2.5425000097602606",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "73.5",
+        "PM": "76",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-2.5425000097602606",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:20:40.655Z",
+    "ok": true
+  }
+}

@@ -1,0 +1,617 @@
+{
+  "playerId": "22621",
+  "playerName": "Ben Curtis",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Ben Curtis",
+    "BirthPlace": "Columbus, Ohio",
+    "BirthDate": "May 26, 1977",
+    "Age": "49",
+    "Height": "5ft 11in",
+    "Weight": "175 lbs",
+    "Nationality": "United States",
+    "Residence": "Kent, Ohio",
+    "ProWins": null,
+    "TurnedPro": "2000",
+    "PGAWins": null,
+    "College": "Kent State University  (2000, Recreation Management) "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Ben Curtis",
+        "player_num": "22621",
+        "Year": "2017",
+        "Rounds": "2",
+        "SG:TOT": "-2.09",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "57.1",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Ben Curtis",
+        "player_num": "22621",
+        "Year": "2016",
+        "Rounds": "12",
+        "SG:TOT": "-3.81",
+        "SG:T2G": "-2.90",
+        "SG:OTT": "-2.40",
+        "SG:APP": "-0.86",
+        "SG:BS": "-3.26",
+        "SG:ARG": "0.36",
+        "SG:P": "-0.31",
+        "Dr Distance": "257.1",
+        "Dr Accuracy %": "56.5",
+        "Ball Speed": "157.13"
+      },
+      {
+        "playerName": "Ben Curtis",
+        "player_num": "22621",
+        "Year": "2015",
+        "Rounds": "25",
+        "SG:TOT": "-2.65",
+        "SG:T2G": "-3.22",
+        "SG:OTT": "-2.31",
+        "SG:APP": "-1.07",
+        "SG:BS": "-3.38",
+        "SG:ARG": "0.17",
+        "SG:P": "-0.08",
+        "Dr Distance": "264.7",
+        "Dr Accuracy %": "52.3",
+        "Ball Speed": "157.00"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2017-03-26",
+        "position": "CUT",
+        "roundPosition": "T107",
+        "TournamentName": "Puerto Rico Open",
+        "is_major": "0",
+        "playerName": "Ben Curtis",
+        "player_num": "22621",
+        "Rounds": "2",
+        "CourseID": "742",
+        "Course": "Grand Reserve GC",
+        "ShotLink": "0",
+        "SG:TOT": "-2.09",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2016-10-30",
+        "position": "CUT",
+        "roundPosition": "131",
+        "TournamentName": "Sanderson Farms Championship",
+        "is_major": "0",
+        "playerName": "Ben Curtis",
+        "player_num": "22621",
+        "Rounds": "2",
+        "CourseID": "746",
+        "Course": "The Country Club of Jackson",
+        "ShotLink": "2",
+        "SG:TOT": "-6.54",
+        "SG:T2G": "-4.85",
+        "SG:OTT": "-2.96",
+        "SG:APP": "-2.92",
+        "SG:BS": "-5.88",
+        "SG:ARG": "1.03",
+        "SG:P": "-1.69",
+        "SG:SG": "-0.66"
+      },
+      {
+        "Date": "2016-08-14",
+        "position": "T47",
+        "roundPosition": "T47",
+        "TournamentName": "John Deere Classic",
+        "is_major": "0",
+        "playerName": "Ben Curtis",
+        "player_num": "22621",
+        "Rounds": "4",
+        "CourseID": "669",
+        "Course": "TPC Deere Run",
+        "ShotLink": "4",
+        "SG:TOT": "0.50",
+        "SG:T2G": "-0.74",
+        "SG:OTT": "-0.80",
+        "SG:APP": "0.20",
+        "SG:BS": "-0.60",
+        "SG:ARG": "-0.14",
+        "SG:P": "1.23",
+        "SG:SG": "1.09"
+      },
+      {
+        "Date": "2016-07-17",
+        "position": "CUT",
+        "roundPosition": "153",
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Ben Curtis",
+        "player_num": "22621",
+        "Rounds": "2",
+        "CourseID": "709",
+        "Course": "Royal Troon",
+        "ShotLink": "0",
+        "SG:TOT": "-6.79",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2016-04-24",
+        "position": "CUT",
+        "roundPosition": "T109",
+        "TournamentName": "Valero Texas Open",
+        "is_major": "0",
+        "playerName": "Ben Curtis",
+        "player_num": "22621",
+        "Rounds": "2",
+        "CourseID": "770",
+        "Course": "TPC San Antonio (Oaks)",
+        "ShotLink": "2",
+        "SG:TOT": "-1.05",
+        "SG:T2G": "-0.52",
+        "SG:OTT": "-2.67",
+        "SG:APP": "1.74",
+        "SG:BS": "-0.93",
+        "SG:ARG": "0.41",
+        "SG:P": "-0.52",
+        "SG:SG": "-0.11"
+      },
+      {
+        "Date": "2016-03-20",
+        "position": "CUT",
+        "roundPosition": "120",
+        "TournamentName": "Arnold Palmer Invitational",
+        "is_major": "0",
+        "playerName": "Ben Curtis",
+        "player_num": "22621",
+        "Rounds": "2",
+        "CourseID": "9",
+        "Course": "Bay Hill Club & Lodge",
+        "ShotLink": "2",
+        "SG:TOT": "-9.44",
+        "SG:T2G": "-7.64",
+        "SG:OTT": "-4.75",
+        "SG:APP": "-3.54",
+        "SG:BS": "-8.30",
+        "SG:ARG": "0.66",
+        "SG:P": "-1.80",
+        "SG:SG": "-1.15"
+      },
+      {
+        "Date": "2015-08-23",
+        "position": "CUT",
+        "roundPosition": "T142",
+        "TournamentName": "Wyndham Championship",
+        "is_major": "0",
+        "playerName": "Ben Curtis",
+        "player_num": "22621",
+        "Rounds": "2",
+        "CourseID": "752",
+        "Course": "Sedgefield CC",
+        "ShotLink": "2",
+        "SG:TOT": "-3.55",
+        "SG:T2G": "-3.52",
+        "SG:OTT": "-3.46",
+        "SG:APP": "-1.13",
+        "SG:BS": "-4.59",
+        "SG:ARG": "1.07",
+        "SG:P": "-0.02",
+        "SG:SG": "1.05"
+      },
+      {
+        "Date": "2015-07-19",
+        "position": "CUT",
+        "roundPosition": "T127",
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Ben Curtis",
+        "player_num": "22621",
+        "Rounds": "2",
+        "CourseID": "668",
+        "Course": "St. Andrews GC (Old Course)",
+        "ShotLink": "0",
+        "SG:TOT": "-2.20",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2015-07-12",
+        "position": "CUT",
+        "roundPosition": "T127",
+        "TournamentName": "John Deere Classic",
+        "is_major": "0",
+        "playerName": "Ben Curtis",
+        "player_num": "22621",
+        "Rounds": "2",
+        "CourseID": "669",
+        "Course": "TPC Deere Run",
+        "ShotLink": "2",
+        "SG:TOT": "-2.31",
+        "SG:T2G": "-2.63",
+        "SG:OTT": "-1.29",
+        "SG:APP": "-1.40",
+        "SG:BS": "-2.70",
+        "SG:ARG": "0.07",
+        "SG:P": "0.32",
+        "SG:SG": "0.39"
+      },
+      {
+        "Date": "2015-06-28",
+        "position": "CUT",
+        "roundPosition": "154",
+        "TournamentName": "Travelers Championship",
+        "is_major": "0",
+        "playerName": "Ben Curtis",
+        "player_num": "22621",
+        "Rounds": "2",
+        "CourseID": "503",
+        "Course": "TPC River Highlands",
+        "ShotLink": "2",
+        "SG:TOT": "-7.43",
+        "SG:T2G": "-5.99",
+        "SG:OTT": "-5.03",
+        "SG:APP": "-0.81",
+        "SG:BS": "-5.84",
+        "SG:ARG": "-0.15",
+        "SG:P": "-1.44",
+        "SG:SG": "-1.59"
+      },
+      {
+        "Date": "2015-06-14",
+        "position": "CUT",
+        "roundPosition": "T140",
+        "TournamentName": "FedEx St. Jude Classic",
+        "is_major": "0",
+        "playerName": "Ben Curtis",
+        "player_num": "22621",
+        "Rounds": "2",
+        "CourseID": "513",
+        "Course": "TPC Southwind",
+        "ShotLink": "2",
+        "SG:TOT": "-3.83",
+        "SG:T2G": "-4.50",
+        "SG:OTT": "-4.43",
+        "SG:APP": "0.03",
+        "SG:BS": "-4.39",
+        "SG:ARG": "-0.11",
+        "SG:P": "0.67",
+        "SG:SG": "0.56"
+      },
+      {
+        "Date": "2015-06-07",
+        "position": "CUT",
+        "roundPosition": "T96",
+        "TournamentName": "the Memorial Tournament",
+        "is_major": "0",
+        "playerName": "Ben Curtis",
+        "player_num": "22621",
+        "Rounds": "2",
+        "CourseID": "23",
+        "Course": "Muirfield Village GC",
+        "ShotLink": "2",
+        "SG:TOT": "-2.22",
+        "SG:T2G": "-3.25",
+        "SG:OTT": "-0.96",
+        "SG:APP": "-2.29",
+        "SG:BS": "-3.25",
+        "SG:ARG": "0.00",
+        "SG:P": "1.03",
+        "SG:SG": "1.03"
+      },
+      {
+        "Date": "2015-05-31",
+        "position": "T66",
+        "roundPosition": "T66",
+        "TournamentName": "AT&T Byron Nelson",
+        "is_major": "0",
+        "playerName": "Ben Curtis",
+        "player_num": "22621",
+        "Rounds": "4",
+        "CourseID": "822",
+        "Course": "TPC Four Seasons Resort",
+        "ShotLink": "4",
+        "SG:TOT": "-0.59",
+        "SG:T2G": "1.04",
+        "SG:OTT": "-0.54",
+        "SG:APP": "0.93",
+        "SG:BS": "0.39",
+        "SG:ARG": "0.65",
+        "SG:P": "-2.53",
+        "SG:SG": "-1.87"
+      },
+      {
+        "Date": "2015-03-29",
+        "position": "CUT",
+        "roundPosition": "T100",
+        "TournamentName": "Valero Texas Open",
+        "is_major": "0",
+        "playerName": "Ben Curtis",
+        "player_num": "22621",
+        "Rounds": "2",
+        "CourseID": "770",
+        "Course": "TPC San Antonio (Oaks)",
+        "ShotLink": "2",
+        "SG:TOT": "-1.47",
+        "SG:T2G": "-2.06",
+        "SG:OTT": "-0.63",
+        "SG:APP": "-0.76",
+        "SG:BS": "-1.39",
+        "SG:ARG": "-0.67",
+        "SG:P": "0.59",
+        "SG:SG": "-0.08"
+      },
+      {
+        "Date": "2015-03-22",
+        "position": "CUT",
+        "roundPosition": "T100",
+        "TournamentName": "Arnold Palmer Invitational",
+        "is_major": "0",
+        "playerName": "Ben Curtis",
+        "player_num": "22621",
+        "Rounds": "2",
+        "CourseID": "9",
+        "Course": "Bay Hill Club & Lodge",
+        "ShotLink": "2",
+        "SG:TOT": "-2.30",
+        "SG:T2G": "-2.00",
+        "SG:OTT": "-1.00",
+        "SG:APP": "-1.30",
+        "SG:BS": "-2.29",
+        "SG:ARG": "0.30",
+        "SG:P": "-0.30",
+        "SG:SG": "-0.00"
+      },
+      {
+        "Date": "2015-03-08",
+        "position": "CUT",
+        "roundPosition": "T97",
+        "TournamentName": "Puerto Rico Open",
+        "is_major": "0",
+        "playerName": "Ben Curtis",
+        "player_num": "22621",
+        "Rounds": "2",
+        "CourseID": "742",
+        "Course": "Grand Reserve GC",
+        "ShotLink": "0",
+        "SG:TOT": "-1.23",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2015-02-15",
+        "position": "CUT",
+        "roundPosition": "T142",
+        "TournamentName": "AT&T Pebble Beach Pro-Am",
+        "is_major": "0",
+        "playerName": "Ben Curtis",
+        "player_num": "22621",
+        "Rounds": "3",
+        "CourseID": "5",
+        "Course": "Pebble Beach Golf Links",
+        "ShotLink": "1",
+        "SG:TOT": "-3.57",
+        "SG:T2G": "-4.61",
+        "SG:OTT": "-2.82",
+        "SG:APP": "-2.79",
+        "SG:BS": "-5.62",
+        "SG:ARG": "1.01",
+        "SG:P": "-0.49",
+        "SG:SG": "0.52"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "24.5",
+        "SG TOT 1+": "16.3",
+        "SG TOT 2+": "10.2",
+        "SG TOT 3+": "6.1",
+        "SG TOT 4+": "2.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "51"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "0.43442854285240173",
+        "Rounds": "12"
+      },
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-0.6278000116348267",
+        "Rounds": "10"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "-0.48899999260902405",
+        "Rounds": "3"
+      },
+      {
+        "GreenSurface": "Poa Trivialis",
+        "StrokesGainedAverage": "0.03275001794099808",
+        "Rounds": "4"
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-3.458999991416931",
+        "Rounds": "21"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.8489999800920487",
+        "Rounds": "21"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-1.193999981880188",
+        "Rounds": "5"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-0.8124999860301614",
+        "Rounds": "4"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "",
+        "StrokesGainedAverage": null,
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-1.8075000047683716",
+        "Rounds": "8"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-3.444285695041929",
+        "Rounds": "14"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-2.3099999877934656",
+        "Rounds": "12"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-5.117999935150147",
+        "Rounds": "5"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-3.2268749866634607",
+        "Rounds": "18"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-2.529999978840351",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-2.9680000066757204",
+        "Rounds": "5"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-4.129999965429306",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-2.2879999700933693",
+        "Rounds": "10"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-1.4650000929832458",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Strong",
+        "StrokesGainedAverage": "-4.653333266576131",
+        "Rounds": "6"
+      },
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-4.497499942779541",
+        "Rounds": "4"
+      },
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-1.863333317451179",
+        "Rounds": "14"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-2.985999995470047",
+        "Rounds": "15"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "73",
+        "PM": "73.4090909090909",
+        "Rounds": "51"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "51",
+        "50-100": "17.7",
+        "100-150": "25.7",
+        "150-200": "39.3",
+        "200+": "61.1",
+        "200-250": "57",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-6.539999961853027",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Florida",
+        "StrokesGainedAverage": "-5.869999900460243",
+        "Rounds": "4"
+      },
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-1.6325000151991844",
+        "Rounds": "16"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-3.042142838505762",
+        "Rounds": "16"
+      },
+      {
+        "SeasonHeld": "West Coast",
+        "StrokesGainedAverage": "-3.573333263397217",
+        "Rounds": "3"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:22.832Z",
+    "ok": true
+  }
+}

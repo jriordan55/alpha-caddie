@@ -1,0 +1,251 @@
+{
+  "playerId": "30050",
+  "playerName": "Sean Jacklin",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/04/Flag_of_Scotland.svg_.png",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Sean Jacklin",
+    "BirthPlace": "Edinburgh, Scotland",
+    "BirthDate": "November 18, 1991",
+    "Age": "35",
+    "Height": "5ft 11in",
+    "Weight": "170 lbs",
+    "Nationality": "Scotland",
+    "Residence": "Bradenton, Florida",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": "University of North Carolina "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Sean Jacklin",
+        "player_num": "30050",
+        "Year": "2022",
+        "Rounds": "4",
+        "SG:TOT": "-5.40",
+        "SG:T2G": "-3.55",
+        "SG:OTT": "-0.67",
+        "SG:APP": "-1.96",
+        "SG:BS": "-2.63",
+        "SG:ARG": "-0.91",
+        "SG:P": "-1.85",
+        "Dr Distance": "282.4",
+        "Dr Accuracy %": "44.4",
+        "Ball Speed": "169.73"
+      },
+      {
+        "playerName": "Sean Jacklin",
+        "player_num": "30050",
+        "Year": "2017",
+        "Rounds": "2",
+        "SG:TOT": "-2.07",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "67.9",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2022-11-13",
+        "position": "CUT",
+        "roundPosition": "T118",
+        "TournamentName": "Houston Open",
+        "is_major": "0",
+        "playerName": "Sean Jacklin",
+        "player_num": "30050",
+        "Rounds": "2",
+        "CourseID": "897",
+        "Course": "Memorial Park Golf Course",
+        "ShotLink": "2",
+        "SG:TOT": "-4.18",
+        "SG:T2G": "-4.15",
+        "SG:OTT": "-0.44",
+        "SG:APP": "-2.89",
+        "SG:BS": "-3.32",
+        "SG:ARG": "-0.83",
+        "SG:P": "-0.03",
+        "SG:SG": "-0.86"
+      },
+      {
+        "Date": "2022-06-19",
+        "position": "CUT",
+        "roundPosition": "T154",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Sean Jacklin",
+        "player_num": "30050",
+        "Rounds": "2",
+        "CourseID": "654",
+        "Course": "The Country Club",
+        "ShotLink": "2",
+        "SG:TOT": "-6.62",
+        "SG:T2G": "-2.94",
+        "SG:OTT": "-0.90",
+        "SG:APP": "-1.04",
+        "SG:BS": "-1.94",
+        "SG:ARG": "-1.00",
+        "SG:P": "-3.68",
+        "SG:SG": "-4.68"
+      },
+      {
+        "Date": "2017-11-12",
+        "position": "CUT",
+        "roundPosition": "T106",
+        "TournamentName": "Mayakoba Golf Classic",
+        "is_major": "0",
+        "playerName": "Sean Jacklin",
+        "player_num": "30050",
+        "Rounds": "2",
+        "CourseID": "733",
+        "Course": "El Camaleon GC",
+        "ShotLink": "0",
+        "SG:TOT": "-2.07",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "6"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-0.030499935150146484",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "-3.677999973297119",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-2.4333333174387612",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-6.150000095367432",
+        "Rounds": "3"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-4.886666735013326",
+        "Rounds": "3"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-6.940000057220459",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-2.074999988079071",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-6.940000057220459",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-1.4199999570846558",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-2.074999988079071",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-6.620000123977661",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-4.180000007152557",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-6.620000123977661",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-2.074999988079071",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "73",
+        "PM": "76.5",
+        "Rounds": "6"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "6",
+        "50-100": null,
+        "100-150": "35.2",
+        "150-200": "37.5",
+        "200+": "60",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-3.127499997615814",
+        "Rounds": "4"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-6.620000123977661",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:31.723Z",
+    "ok": true
+  }
+}

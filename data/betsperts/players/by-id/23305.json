@@ -1,0 +1,138 @@
+{
+  "playerId": "23305",
+  "playerName": "Frank Bensel, Jr.",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Frank Bensel, Jr.",
+    "BirthPlace": "",
+    "BirthDate": "March 04, 1968",
+    "Age": "58",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "United States",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Frank Bensel",
+        "player_num": "23305",
+        "Year": "2021",
+        "Rounds": "2",
+        "SG:TOT": "-7.35",
+        "SG:T2G": "-8.21",
+        "SG:OTT": "-2.05",
+        "SG:APP": "-2.82",
+        "SG:BS": "-4.87",
+        "SG:ARG": "-3.33",
+        "SG:P": "0.85",
+        "Dr Distance": "270.7",
+        "Dr Accuracy %": "46.4",
+        "Ball Speed": "153.90"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2021-05-23",
+        "position": "CUT",
+        "roundPosition": "T149",
+        "TournamentName": "PGA Championship",
+        "is_major": "1",
+        "playerName": "Frank Bensel",
+        "player_num": "23305",
+        "Rounds": "2",
+        "CourseID": "697",
+        "Course": "Ocean Course at Kiawah Island",
+        "ShotLink": "2",
+        "SG:TOT": "-7.35",
+        "SG:T2G": "-8.21",
+        "SG:OTT": "-2.05",
+        "SG:APP": "-2.82",
+        "SG:BS": "-4.87",
+        "SG:ARG": "-3.33",
+        "SG:P": "0.85",
+        "SG:SG": "-2.48"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-11.220000267028809",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-3.4800000190734863",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-7.3500001430511475",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-7.3500001430511475",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-7.3500001430511475",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "79",
+        "PM": "86",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "41.2",
+        "150-200": null,
+        "200+": "78.1",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-7.3500001430511475",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:21:36.953Z",
+    "ok": true
+  }
+}

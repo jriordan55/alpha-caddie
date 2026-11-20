@@ -1,0 +1,152 @@
+{
+  "playerId": "66834",
+  "playerName": "Baekjun Kim",
+  "flag": null,
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Baekjun Kim",
+    "BirthPlace": null,
+    "BirthDate": "",
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "Republic of Korea",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Baekjun Kim",
+        "player_num": "66834",
+        "Year": "2026",
+        "Rounds": "2",
+        "SG:TOT": "-4.71",
+        "SG:T2G": "-4.21",
+        "SG:OTT": "-0.63",
+        "SG:APP": "-0.94",
+        "SG:BS": "-1.57",
+        "SG:ARG": "-2.65",
+        "SG:P": "-0.49",
+        "Dr Distance": "294.7",
+        "Dr Accuracy %": "38.5",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Baekjun Kim",
+        "player_num": "66834",
+        "Rounds": "2",
+        "SG:TOT": "-4.71",
+        "SG:T2G": "-4.21",
+        "SG:OTT": "-0.63",
+        "SG:APP": "-0.94",
+        "SG:BS": "-1.57",
+        "SG:ARG": "-2.65",
+        "SG:P": "-0.49",
+        "SG:SG": "-3.14"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-07-12",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "Genesis Scottish Open",
+        "is_major": "0",
+        "playerName": "Baekjun Kim",
+        "player_num": "66834",
+        "Rounds": "2",
+        "CourseID": "945",
+        "Course": "The Renaissance Club",
+        "ShotLink": "2",
+        "SG:TOT": "-4.71",
+        "SG:T2G": "-4.21",
+        "SG:OTT": "-0.63",
+        "SG:APP": "-0.94",
+        "SG:BS": "-1.57",
+        "SG:ARG": "-2.65",
+        "SG:P": "-0.49",
+        "SG:SG": "-3.14"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-5.150000095367432",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-4.260000228881836",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-4.705000162124634",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-4.705000162124634",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Strong",
+        "StrokesGainedAverage": "-4.705000162124634",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74",
+        "PM": "75",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "51.8",
+        "200+": "56.8",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-4.705000162124634",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:17.941Z",
+    "ok": true
+  }
+}

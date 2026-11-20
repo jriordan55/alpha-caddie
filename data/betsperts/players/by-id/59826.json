@@ -1,0 +1,148 @@
+{
+  "playerId": "59826",
+  "playerName": "Joel Moscatel",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_sp-flag-1.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Joel Moscatel",
+    "BirthPlace": null,
+    "BirthDate": "",
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "Spain",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Joel Moscatel",
+        "player_num": "59826",
+        "Year": "2025",
+        "Rounds": "2",
+        "SG:TOT": "-0.29",
+        "SG:T2G": "-1.46",
+        "SG:OTT": "0.29",
+        "SG:APP": "-1.17",
+        "SG:BS": "-0.88",
+        "SG:ARG": "-0.58",
+        "SG:P": "1.18",
+        "Dr Distance": "303.8",
+        "Dr Accuracy %": "35.7",
+        "Ball Speed": "186.83"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2025-07-13",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "ISCO Championship",
+        "is_major": "0",
+        "playerName": "Joel Moscatel",
+        "player_num": "59826",
+        "Rounds": "2",
+        "CourseID": "934",
+        "Course": "Hurstbourne CC",
+        "ShotLink": "2",
+        "SG:TOT": "-0.29",
+        "SG:T2G": "-1.46",
+        "SG:OTT": "0.29",
+        "SG:APP": "-1.17",
+        "SG:BS": "-0.88",
+        "SG:ARG": "-0.58",
+        "SG:P": "1.18",
+        "SG:SG": "0.59"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "50.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "1.1760000437498093",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "1.149999976158142",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.7300000190734863",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-0.2900000214576721",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-0.2900000214576721",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-0.2900000214576721",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "73",
+        "PM": "70",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "31.3",
+        "150-200": null,
+        "200+": "52.4",
+        "200-250": "52.4",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-0.2900000214576721",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:49.903Z",
+    "ok": true
+  }
+}

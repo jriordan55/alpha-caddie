@@ -1,0 +1,138 @@
+{
+  "playerId": "63185",
+  "playerName": "Sangha Park",
+  "flag": null,
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Sangha Park",
+    "BirthPlace": null,
+    "BirthDate": "",
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "Republic of Korea",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Sangha Park",
+        "player_num": "63185",
+        "Year": "2025",
+        "Rounds": "2",
+        "SG:TOT": "-1.59",
+        "SG:T2G": "-1.46",
+        "SG:OTT": "0.00",
+        "SG:APP": "-0.84",
+        "SG:BS": "-0.83",
+        "SG:ARG": "-0.63",
+        "SG:P": "-0.13",
+        "Dr Distance": "284.9",
+        "Dr Accuracy %": "50.0",
+        "Ball Speed": "169.85"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2025-09-14",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "Procore Championship",
+        "is_major": "0",
+        "playerName": "Sangha Park",
+        "player_num": "63185",
+        "Rounds": "2",
+        "CourseID": "926",
+        "Course": "Silverado Resort (North)",
+        "ShotLink": "2",
+        "SG:TOT": "-1.59",
+        "SG:T2G": "-1.46",
+        "SG:OTT": "0.00",
+        "SG:APP": "-0.84",
+        "SG:BS": "-0.83",
+        "SG:ARG": "-0.63",
+        "SG:P": "-0.13",
+        "SG:SG": "-0.76"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.2200000286102295",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.9600000381469727",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-1.590000033378601",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-1.590000033378601",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Strong",
+        "StrokesGainedAverage": "-1.590000033378601",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74",
+        "PM": "73",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "34.5",
+        "150-200": "48",
+        "200+": "81.8",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-1.590000033378601",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:24.625Z",
+    "ok": true
+  }
+}

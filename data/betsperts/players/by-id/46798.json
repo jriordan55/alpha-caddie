@@ -1,0 +1,173 @@
+{
+  "playerId": "46798",
+  "playerName": "Anthony Quayle",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/as-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Anthony Quayle",
+    "BirthPlace": "",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "Australia",
+    "Residence": "",
+    "ProWins": "2",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Anthony Quayle",
+        "player_num": "46798",
+        "Year": "2022",
+        "Rounds": "4",
+        "SG:TOT": "1.86",
+        "SG:T2G": "0.73",
+        "SG:OTT": "0.79",
+        "SG:APP": "-0.11",
+        "SG:BS": "0.68",
+        "SG:ARG": "0.05",
+        "SG:P": "1.13",
+        "Dr Distance": null,
+        "Dr Accuracy %": "70.3",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2022-07-17",
+        "position": "T15",
+        "roundPosition": null,
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Anthony Quayle",
+        "player_num": "46798",
+        "Rounds": "4",
+        "CourseID": "668",
+        "Course": "St. Andrews GC (Old Course)",
+        "ShotLink": "4",
+        "SG:TOT": "1.86",
+        "SG:T2G": "0.73",
+        "SG:OTT": "0.79",
+        "SG:APP": "-0.11",
+        "SG:BS": "0.68",
+        "SG:ARG": "0.05",
+        "SG:P": "1.13",
+        "SG:SG": "1.18"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "75.0",
+        "SG TOT 1+": "75.0",
+        "SG TOT 2+": "75.0",
+        "SG TOT 3+": "25.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "1.1262499764561653",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.2999999523162842",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "2.7200000286102295",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "3.3399999141693115",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "2.680000066757202",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "2.680000066757202",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "1.5866666634877522",
+        "Rounds": "3"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "3.0299999713897705",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-1.2999999523162842",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "2.680000066757202",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "1.8600000143051147",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "71",
+        "PM": "68",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "1.8600000143051147",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:10.333Z",
+    "ok": true
+  }
+}

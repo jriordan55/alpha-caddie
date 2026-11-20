@@ -1,0 +1,85 @@
+{
+  "playerId": "26434",
+  "playerName": "Antonio Lascuna",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_rp-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Antonio Lascuna",
+    "BirthPlace": null,
+    "BirthDate": "December 26, 1970",
+    "Age": "55",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "Philippines",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [],
+    "sgGuest": [],
+    "sgByEvent": [],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "8"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.5150000154972076",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-3.4999999552965164",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-1.4949999824166298",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-3.44500008225441",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [],
+    "byScoringCondition": [],
+    "byFieldStrength": [],
+    "amPmSplit": [
+      {
+        "AM": "74.2",
+        "PM": "75",
+        "Rounds": "8"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "8",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": []
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:11.079Z",
+    "ok": true
+  }
+}

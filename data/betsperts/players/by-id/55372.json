@@ -1,0 +1,180 @@
+{
+  "playerId": "55372",
+  "playerName": "Adam D'Amario",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Adam D'Amario",
+    "BirthPlace": "",
+    "BirthDate": "February 06, 1984",
+    "Age": "42",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "United States",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Adam DAmario",
+        "player_num": "55372",
+        "Year": "2022",
+        "Rounds": "2",
+        "SG:TOT": "-9.04",
+        "SG:T2G": "-9.05",
+        "SG:OTT": "-2.27",
+        "SG:APP": "-6.23",
+        "SG:BS": "-8.50",
+        "SG:ARG": "-0.55",
+        "SG:P": "0.01",
+        "Dr Distance": "268.1",
+        "Dr Accuracy %": "39.3",
+        "Ball Speed": "161.75"
+      },
+      {
+        "playerName": "Adam DAmario",
+        "player_num": "55372",
+        "Year": "2018",
+        "Rounds": "2",
+        "SG:TOT": "-7.12",
+        "SG:T2G": "-5.36",
+        "SG:OTT": "-1.23",
+        "SG:APP": "-3.81",
+        "SG:BS": "-5.05",
+        "SG:ARG": "-0.32",
+        "SG:P": "-1.75",
+        "Dr Distance": "274.8",
+        "Dr Accuracy %": "60.7",
+        "Ball Speed": "160.51"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2022-06-26",
+        "position": "CUT",
+        "roundPosition": "154",
+        "TournamentName": "Travelers Championship",
+        "is_major": "0",
+        "playerName": "Adam DAmario",
+        "player_num": "55372",
+        "Rounds": "2",
+        "CourseID": "503",
+        "Course": "TPC River Highlands",
+        "ShotLink": "2",
+        "SG:TOT": "-9.04",
+        "SG:T2G": "-9.05",
+        "SG:OTT": "-2.27",
+        "SG:APP": "-6.23",
+        "SG:BS": "-8.50",
+        "SG:ARG": "-0.55",
+        "SG:P": "0.01",
+        "SG:SG": "-0.54"
+      },
+      {
+        "Date": "2018-06-24",
+        "position": "CUT",
+        "roundPosition": "155",
+        "TournamentName": "Travelers Championship",
+        "is_major": "0",
+        "playerName": "Adam DAmario",
+        "player_num": "55372",
+        "Rounds": "2",
+        "CourseID": "503",
+        "Course": "TPC River Highlands",
+        "ShotLink": "2",
+        "SG:TOT": "-7.12",
+        "SG:T2G": "-5.36",
+        "SG:OTT": "-1.23",
+        "SG:APP": "-3.81",
+        "SG:BS": "-5.05",
+        "SG:ARG": "-0.32",
+        "SG:P": "-1.75",
+        "SG:SG": "-2.07"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-7.1600000858306885",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-8.990000247955322",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-8.075000166893005",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-7.776666800181071",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-8.970000267028809",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Strong",
+        "StrokesGainedAverage": "-8.075000166893005",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "76.5",
+        "PM": "79",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "58.4",
+        "200+": "66.7",
+        "200-250": "66.7",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-8.075000166893005",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:18:44.432Z",
+    "ok": true
+  }
+}

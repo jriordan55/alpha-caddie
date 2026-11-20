@@ -1,0 +1,148 @@
+{
+  "playerId": "58407",
+  "playerName": "Sean Yu",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/image.png",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Sean Yu",
+    "BirthPlace": "",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "Chinese Taipei",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Sean Yu",
+        "player_num": "58407",
+        "Year": "2020",
+        "Rounds": "2",
+        "SG:TOT": "-4.21",
+        "SG:T2G": "-4.23",
+        "SG:OTT": "-0.65",
+        "SG:APP": "-2.10",
+        "SG:BS": "-2.75",
+        "SG:ARG": "-1.49",
+        "SG:P": "0.02",
+        "Dr Distance": "290.6",
+        "Dr Accuracy %": "53.6",
+        "Ball Speed": "172.65"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2020-02-16",
+        "position": "CUT",
+        "roundPosition": "119",
+        "TournamentName": "The Genesis Invitational",
+        "is_major": "0",
+        "playerName": "Sean Yu",
+        "player_num": "58407",
+        "Rounds": "2",
+        "CourseID": "500",
+        "Course": "Riviera CC",
+        "ShotLink": "2",
+        "SG:TOT": "-4.21",
+        "SG:T2G": "-4.23",
+        "SG:OTT": "-0.65",
+        "SG:APP": "-2.10",
+        "SG:BS": "-2.75",
+        "SG:ARG": "-1.49",
+        "SG:P": "0.02",
+        "SG:SG": "-1.47"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "0.018999993801116943",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-6.590000152587891",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.8300000429153442",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-4.210000097751617",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-4.210000097751617",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-4.210000097751617",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "73",
+        "PM": "78",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "37.3",
+        "200+": "51.7",
+        "200-250": "51.7",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "West Coast",
+        "StrokesGainedAverage": "-4.210000097751617",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:32.248Z",
+    "ok": true
+  }
+}

@@ -1,0 +1,226 @@
+{
+  "playerId": "22080",
+  "playerName": "Prayad Marksaeng",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_th-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Prayad Marksaeng",
+    "BirthPlace": "",
+    "BirthDate": "January 30, 1966",
+    "Age": "60",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "Thailand",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Prayad Marksaeng",
+        "player_num": "22080",
+        "Year": "2017",
+        "Rounds": "6",
+        "SG:TOT": "-0.73",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "79.8",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Prayad Marksaeng",
+        "player_num": "22080",
+        "Year": "2015",
+        "Rounds": "4",
+        "SG:TOT": "-1.13",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "64.3",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2017-10-15",
+        "position": "T44",
+        "roundPosition": "T44",
+        "TournamentName": "CIMB Classic",
+        "is_major": "0",
+        "playerName": "Prayad Marksaeng",
+        "player_num": "22080",
+        "Rounds": "4",
+        "CourseID": "800",
+        "Course": "TPC Kuala Lumpur",
+        "ShotLink": "0",
+        "SG:TOT": "-0.08",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2017-07-23",
+        "position": "CUT",
+        "roundPosition": "T123",
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Prayad Marksaeng",
+        "player_num": "22080",
+        "Rounds": "2",
+        "CourseID": "541",
+        "Course": "Royal Birkdale GC",
+        "ShotLink": "0",
+        "SG:TOT": "-2.02",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2015-11-01",
+        "position": "T56",
+        "roundPosition": "T56",
+        "TournamentName": "CIMB Classic",
+        "is_major": "0",
+        "playerName": "Prayad Marksaeng",
+        "player_num": "22080",
+        "Rounds": "4",
+        "CourseID": "800",
+        "Course": "TPC Kuala Lumpur",
+        "ShotLink": "0",
+        "SG:TOT": "-1.13",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "40.0",
+        "SG TOT 1+": "20.0",
+        "SG TOT 2+": "10.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "10"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-2.413333257039388",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-2.2399999238550663",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "1.3849999904632568",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "1.1449999660253525",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-2.0249999621883035",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-0.6062499631661922",
+        "Rounds": "8"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-0.6062499631661922",
+        "Rounds": "8"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-2.0249999621883035",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-2.0249999621883035",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-0.6062499631661922",
+        "Rounds": "8"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "72",
+        "PM": "71.2",
+        "Rounds": "10"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "10",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-0.6062499631661922",
+        "Rounds": "8"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-2.0249999621883035",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:24:52.155Z",
+    "ok": true
+  }
+}

@@ -1,0 +1,210 @@
+{
+  "playerId": "1797",
+  "playerName": "Rocco Mediate",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Rocco Mediate",
+    "BirthPlace": "Greensburg, Pennsylvania",
+    "BirthDate": "December 17, 1962",
+    "Age": "63",
+    "Height": "6ft 1in",
+    "Weight": "190 lbs",
+    "Nationality": "United States",
+    "Residence": "Naples, Florida",
+    "ProWins": null,
+    "TurnedPro": "1985",
+    "PGAWins": null,
+    "College": "Florida Southern College "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Rocco Mediate",
+        "player_num": "1797",
+        "Year": "2016",
+        "Rounds": "2",
+        "SG:TOT": "-3.31",
+        "SG:T2G": "-0.54",
+        "SG:OTT": "-0.35",
+        "SG:APP": "0.00",
+        "SG:BS": "-0.35",
+        "SG:ARG": "-0.19",
+        "SG:P": "-2.77",
+        "Dr Distance": "271.7",
+        "Dr Accuracy %": "60.7",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Rocco Mediate",
+        "player_num": "1797",
+        "Year": "2015",
+        "Rounds": "2",
+        "SG:TOT": "-2.72",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "71.4",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2016-07-31",
+        "position": "CUT",
+        "roundPosition": "T142",
+        "TournamentName": "PGA Championship",
+        "is_major": "1",
+        "playerName": "Rocco Mediate",
+        "player_num": "1797",
+        "Rounds": "2",
+        "CourseID": "715",
+        "Course": "Baltusrol GC",
+        "ShotLink": "2",
+        "SG:TOT": "-3.31",
+        "SG:T2G": "-0.54",
+        "SG:OTT": "-0.35",
+        "SG:APP": "0.00",
+        "SG:BS": "-0.35",
+        "SG:ARG": "-0.19",
+        "SG:P": "-2.77",
+        "SG:SG": "-2.96"
+      },
+      {
+        "Date": "2015-03-08",
+        "position": "CUT",
+        "roundPosition": "T115",
+        "TournamentName": "Puerto Rico Open",
+        "is_major": "0",
+        "playerName": "Rocco Mediate",
+        "player_num": "1797",
+        "Rounds": "2",
+        "CourseID": "742",
+        "Course": "Grand Reserve GC",
+        "ShotLink": "0",
+        "SG:TOT": "-2.72",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "13"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-4.6499998569488525",
+        "Rounds": "6"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.3849999755620956",
+        "Rounds": "5"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": null,
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": null,
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "",
+        "StrokesGainedAverage": null,
+        "Rounds": "4"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-2.724999889731407",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-3.309999942779541",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": null,
+        "Rounds": "4"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-3.017499916255474",
+        "Rounds": "4"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-3.309999942779541",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-2.724999889731407",
+        "Rounds": "6"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "76",
+        "PM": "74.5",
+        "Rounds": "13"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "13",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": "46.1",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-2.724999889731407",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-3.309999942779541",
+        "Rounds": "6"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:08.367Z",
+    "ok": true
+  }
+}

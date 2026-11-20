@@ -1,0 +1,162 @@
+{
+  "playerId": "67611",
+  "playerName": "Jansen Preston",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Jansen Preston",
+    "BirthPlace": null,
+    "BirthDate": "",
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Jansen Preston",
+        "player_num": "67611",
+        "Year": "2026",
+        "Rounds": "2",
+        "SG:TOT": "-3.45",
+        "SG:T2G": "-2.10",
+        "SG:OTT": "0.11",
+        "SG:APP": "-0.71",
+        "SG:BS": "-0.60",
+        "SG:ARG": "-1.50",
+        "SG:P": "-1.35",
+        "Dr Distance": "279.1",
+        "Dr Accuracy %": "67.9",
+        "Ball Speed": "166.47"
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Jansen Preston",
+        "player_num": "67611",
+        "Rounds": "2",
+        "SG:TOT": "-3.45",
+        "SG:T2G": "-2.10",
+        "SG:OTT": "0.11",
+        "SG:APP": "-0.71",
+        "SG:BS": "-0.60",
+        "SG:ARG": "-1.50",
+        "SG:P": "-1.35",
+        "SG:SG": "-2.85"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-07-12",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "ISCO Championship",
+        "is_major": "0",
+        "playerName": "Jansen Preston",
+        "player_num": "67611",
+        "Rounds": "2",
+        "CourseID": "934",
+        "Course": "Hurstbourne CC",
+        "ShotLink": "2",
+        "SG:TOT": "-3.45",
+        "SG:T2G": "-2.10",
+        "SG:OTT": "0.11",
+        "SG:APP": "-0.71",
+        "SG:BS": "-0.60",
+        "SG:ARG": "-1.50",
+        "SG:P": "-1.35",
+        "SG:SG": "-2.85"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-1.347500056028366",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.8199999928474426",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-6.070000171661377",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-3.44500008225441",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-3.44500008225441",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-3.44500008225441",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "75",
+        "PM": "70",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "20.1",
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-3.44500008225441",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:24.201Z",
+    "ok": true
+  }
+}

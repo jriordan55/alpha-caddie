@@ -1,0 +1,143 @@
+{
+  "playerId": "56490",
+  "playerName": "Travis Trace",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Travis Trace",
+    "BirthPlace": "Jacksonville, Florida",
+    "BirthDate": "June 12, 1996",
+    "Age": "30",
+    "Height": "6ft 1in",
+    "Weight": "180 lbs",
+    "Nationality": "United States",
+    "Residence": "Jacksonville, Florida",
+    "ProWins": "0",
+    "TurnedPro": "2019",
+    "PGAWins": "0",
+    "College": "University of North Florida 2019"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Travis Trace",
+        "player_num": "56490",
+        "Year": "2022",
+        "Rounds": "2",
+        "SG:TOT": "-0.53",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "42.9",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2022-11-06",
+        "position": "CUT",
+        "roundPosition": "T84",
+        "TournamentName": "World Wide Technology Championship",
+        "is_major": "0",
+        "playerName": "Travis Trace",
+        "player_num": "56490",
+        "Rounds": "2",
+        "CourseID": "733",
+        "Course": "El Camaleón Golf Course at Mayakoba",
+        "ShotLink": "0",
+        "SG:TOT": "-0.53",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "50.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-2.7899999618530273",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "1.7300000190734863",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-0.5299999713897705",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "1.7300000190734863",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-2.7899999618530273",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-0.5299999713897705",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "72",
+        "PM": "68",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-0.5299999713897705",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:26:13.345Z",
+    "ok": true
+  }
+}

@@ -1,0 +1,148 @@
+{
+  "playerId": "51827",
+  "playerName": "Brooks Blackburn",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Brooks Blackburn",
+    "BirthPlace": null,
+    "BirthDate": "October 14, 1969",
+    "Age": "57",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Brooks Blackburn",
+        "player_num": "51827",
+        "Year": "2017",
+        "Rounds": "2",
+        "SG:TOT": "-7.89",
+        "SG:T2G": "-7.41",
+        "SG:OTT": "0.38",
+        "SG:APP": "-5.02",
+        "SG:BS": "-4.63",
+        "SG:ARG": "-2.78",
+        "SG:P": "-0.48",
+        "Dr Distance": "271.7",
+        "Dr Accuracy %": "67.9",
+        "Ball Speed": "164.68"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2017-04-16",
+        "position": "CUT",
+        "roundPosition": "131",
+        "TournamentName": "RBC Heritage",
+        "is_major": "0",
+        "playerName": "Brooks Blackburn",
+        "player_num": "51827",
+        "Rounds": "2",
+        "CourseID": "12",
+        "Course": "Harbour Town Golf Links",
+        "ShotLink": "2",
+        "SG:TOT": "-7.89",
+        "SG:T2G": "-7.41",
+        "SG:OTT": "0.38",
+        "SG:APP": "-5.02",
+        "SG:BS": "-4.63",
+        "SG:ARG": "-2.78",
+        "SG:P": "-0.48",
+        "SG:SG": "-3.26"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-0.48099997639656067",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-10.670000076293945",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-5.110000133514404",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-7.890000104904175",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-7.890000104904175",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-7.890000104904175",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "76",
+        "PM": "81",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "43.3",
+        "150-200": null,
+        "200+": "67.5",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-7.890000104904175",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:53.840Z",
+    "ok": true
+  }
+}

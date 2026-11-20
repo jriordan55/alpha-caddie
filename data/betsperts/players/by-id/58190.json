@@ -1,0 +1,138 @@
+{
+  "playerId": "58190",
+  "playerName": "Andy Spencer",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Andy Spencer",
+    "BirthPlace": "Kansas City, Missouri",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "6ft 1in",
+    "Weight": "210 lbs",
+    "Nationality": "United States",
+    "Residence": "Prairie Village, Kansas",
+    "ProWins": null,
+    "TurnedPro": "2020",
+    "PGAWins": null,
+    "College": "University of Kansas 2020, Finance"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Andy Spencer",
+        "player_num": "58190",
+        "Year": "2023",
+        "Rounds": "2",
+        "SG:TOT": "-5.43",
+        "SG:T2G": "-3.89",
+        "SG:OTT": "-2.09",
+        "SG:APP": "-1.73",
+        "SG:BS": "-3.82",
+        "SG:ARG": "-0.08",
+        "SG:P": "-1.54",
+        "Dr Distance": "307.1",
+        "Dr Accuracy %": "35.7",
+        "Ball Speed": "182.60"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2023-07-02",
+        "position": "CUT",
+        "roundPosition": "154",
+        "TournamentName": "Rocket Mortgage Classic",
+        "is_major": "0",
+        "playerName": "Andy Spencer",
+        "player_num": "58190",
+        "Rounds": "2",
+        "CourseID": "876",
+        "Course": "Detroit GC",
+        "ShotLink": "2",
+        "SG:TOT": "-5.43",
+        "SG:T2G": "-3.89",
+        "SG:OTT": "-2.09",
+        "SG:APP": "-1.73",
+        "SG:BS": "-3.82",
+        "SG:ARG": "-0.08",
+        "SG:P": "-1.54",
+        "SG:SG": "-1.62"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-5.630000114440918",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-5.239999771118164",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-5.434999942779541",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-5.434999942779541",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-5.434999942779541",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "76",
+        "PM": "75",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": "31.4",
+        "100-150": null,
+        "150-200": null,
+        "200+": "72.4",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-5.434999942779541",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:06.484Z",
+    "ok": true
+  }
+}

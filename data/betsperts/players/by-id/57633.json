@@ -1,0 +1,283 @@
+{
+  "playerId": "57633",
+  "playerName": "Charles Osborne",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Charles Osborne",
+    "BirthPlace": "Reno, Nevada",
+    "BirthDate": "November 11, 1999",
+    "Age": "27",
+    "Height": "6ft 1in",
+    "Weight": "200 lbs",
+    "Nationality": "United States",
+    "Residence": "Dallas, Texas",
+    "ProWins": "0",
+    "TurnedPro": "2022",
+    "PGAWins": "0",
+    "College": "Southern Methodist University 2022, Real Estate Finance"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Charles Osborne",
+        "player_num": "57633",
+        "Year": "2025",
+        "Rounds": "2",
+        "SG:TOT": "-1.17",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": null,
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Ollie Osborne",
+        "player_num": "57633",
+        "Year": "2022",
+        "Rounds": "2",
+        "SG:TOT": "-4.04",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": null,
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Charles Osborne",
+        "player_num": "57633",
+        "Year": "2021",
+        "Rounds": "4",
+        "SG:TOT": "-1.43",
+        "SG:T2G": "-0.33",
+        "SG:OTT": "0.08",
+        "SG:APP": "0.11",
+        "SG:BS": "0.18",
+        "SG:ARG": "-0.51",
+        "SG:P": "-1.09",
+        "Dr Distance": "320.5",
+        "Dr Accuracy %": "42.9",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2025-07-20",
+        "position": "CUT",
+        "roundPosition": null,
+        "TournamentName": "Barracuda Championship",
+        "is_major": null,
+        "playerName": "Charles Osborne",
+        "player_num": "57633",
+        "Rounds": "2",
+        "CourseID": "931",
+        "Course": "Tahoe Mountain Club (Old Greenwood)",
+        "ShotLink": "0",
+        "SG:TOT": "-1.17",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2022-07-17",
+        "position": "CUT",
+        "roundPosition": null,
+        "TournamentName": "Barracuda Championship",
+        "is_major": null,
+        "playerName": "Ollie Osborne",
+        "player_num": "57633",
+        "Rounds": "2",
+        "CourseID": "890",
+        "Course": "Tahoe Mountain Club (Old Greenwood)",
+        "ShotLink": "0",
+        "SG:TOT": "-4.04",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2021-06-20",
+        "position": "CUT",
+        "roundPosition": null,
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Charles Osborne",
+        "player_num": "57633",
+        "Rounds": "2",
+        "CourseID": "744",
+        "Course": "Torrey Pines GC (South)",
+        "ShotLink": "2",
+        "SG:TOT": "-0.25",
+        "SG:T2G": "0.89",
+        "SG:OTT": "0.88",
+        "SG:APP": "0.81",
+        "SG:BS": "1.69",
+        "SG:ARG": "-0.81",
+        "SG:P": "-1.14",
+        "SG:SG": "-1.95"
+      },
+      {
+        "Date": "2021-04-11",
+        "position": "CUT",
+        "roundPosition": null,
+        "TournamentName": "Masters Tournament",
+        "is_major": "1",
+        "playerName": "Charles Osborne",
+        "player_num": "57633",
+        "Rounds": "2",
+        "CourseID": "14",
+        "Course": "Augusta National GC",
+        "ShotLink": "2",
+        "SG:TOT": "-2.62",
+        "SG:T2G": "-1.54",
+        "SG:OTT": "-0.73",
+        "SG:APP": "-0.60",
+        "SG:BS": "-1.32",
+        "SG:ARG": "-0.22",
+        "SG:P": "-1.03",
+        "SG:SG": "-1.25"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "12.5",
+        "SG TOT 1+": "12.5",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "10"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-1.0330000445246696",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "-1.1380000114440918",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.319999999832362",
+        "Rounds": "5"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-2.715000033378601",
+        "Rounds": "5"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-3.75",
+        "Rounds": "3"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-2.3800000246614217",
+        "Rounds": "5"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-0.24500000476837158",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-2.7033333871513605",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-3.75",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-2.309999942779541",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-0.6566666762034098",
+        "Rounds": "3"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-1.4300000071525574",
+        "Rounds": "4"
+      },
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-2.6050000260584056",
+        "Rounds": "6"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74",
+        "PM": "76",
+        "Rounds": "10"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "10",
+        "50-100": null,
+        "100-150": "29.7",
+        "150-200": "39.7",
+        "200+": "59.2",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-2.615000009536743",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-1.8183333522950609",
+        "Rounds": "8"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:20:12.240Z",
+    "ok": true
+  }
+}

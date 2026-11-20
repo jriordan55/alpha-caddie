@@ -1,0 +1,168 @@
+{
+  "playerId": "33196",
+  "playerName": "Carlos Pigem",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_sp-flag-1.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Carlos Pigem",
+    "BirthPlace": "",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "Spain",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Carlos Pigem",
+        "player_num": "33196",
+        "Year": "2022",
+        "Rounds": "4",
+        "SG:TOT": "0.20",
+        "SG:T2G": "-1.23",
+        "SG:OTT": "0.21",
+        "SG:APP": "-0.91",
+        "SG:BS": "-0.71",
+        "SG:ARG": "-0.53",
+        "SG:P": "1.43",
+        "Dr Distance": "289.4",
+        "Dr Accuracy %": "58.9",
+        "Ball Speed": "172.28"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2022-07-10",
+        "position": "T54",
+        "roundPosition": "T54",
+        "TournamentName": "Barbasol Championship",
+        "is_major": "0",
+        "playerName": "Carlos Pigem",
+        "player_num": "33196",
+        "Rounds": "4",
+        "CourseID": "884",
+        "Course": "Keene Trace GC",
+        "ShotLink": "4",
+        "SG:TOT": "0.20",
+        "SG:T2G": "-1.23",
+        "SG:OTT": "0.21",
+        "SG:APP": "-0.91",
+        "SG:BS": "-0.71",
+        "SG:ARG": "-0.53",
+        "SG:P": "1.43",
+        "SG:SG": "0.90"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "25.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "1.429749995470047",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "1.8700000047683716",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.8799999952316284",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-0.8100000023841858",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "0.6000000238418579",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "0.6000000238418579",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "0.06000000238418579",
+        "Rounds": "3"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "0.6000000238418579",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "0.06000000238418579",
+        "Rounds": "3"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "0.19500000774860382",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "70.33333333333333",
+        "PM": "68",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": "18.6",
+        "100-150": null,
+        "150-200": null,
+        "200+": "46.7",
+        "200-250": "49.7",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "0.19500000774860382",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:20:05.916Z",
+    "ok": true
+  }
+}

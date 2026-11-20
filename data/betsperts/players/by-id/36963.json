@@ -1,0 +1,210 @@
+{
+  "playerId": "36963",
+  "playerName": "Derek Barron",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Derek Barron",
+    "BirthPlace": "Tacoma, Washington",
+    "BirthDate": "March 31, 1985",
+    "Age": "41",
+    "Height": "6ft 1in",
+    "Weight": "195 lbs",
+    "Nationality": "United States",
+    "Residence": "Tacoma, Washington",
+    "ProWins": "0",
+    "TurnedPro": "2012",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Derek Barron",
+        "player_num": "36963",
+        "Year": "2018",
+        "Rounds": "2",
+        "SG:TOT": "-1.51",
+        "SG:T2G": "-4.86",
+        "SG:OTT": "-0.14",
+        "SG:APP": "-3.17",
+        "SG:BS": "-3.31",
+        "SG:ARG": "-1.55",
+        "SG:P": "1.53",
+        "Dr Distance": "299.8",
+        "Dr Accuracy %": "42.9",
+        "Ball Speed": "176.36"
+      },
+      {
+        "playerName": "Derek Barron",
+        "player_num": "36963",
+        "Year": "2017",
+        "Rounds": "2",
+        "SG:TOT": "-3.19",
+        "SG:T2G": "-1.68",
+        "SG:OTT": "0.57",
+        "SG:APP": "-2.25",
+        "SG:BS": "-1.68",
+        "SG:ARG": "-0.00",
+        "SG:P": "-1.51",
+        "Dr Distance": "301.7",
+        "Dr Accuracy %": "57.1",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2018-01-28",
+        "position": "CUT",
+        "roundPosition": "T124",
+        "TournamentName": "Farmers Insurance Open",
+        "is_major": "0",
+        "playerName": "Derek Barron",
+        "player_num": "36963",
+        "Rounds": "2",
+        "CourseID": "4",
+        "Course": "Torrey Pines GC (South)",
+        "ShotLink": "1",
+        "SG:TOT": "-1.51",
+        "SG:T2G": "-4.86",
+        "SG:OTT": "-0.14",
+        "SG:APP": "-3.17",
+        "SG:BS": "-3.31",
+        "SG:ARG": "-1.55",
+        "SG:P": "1.53",
+        "SG:SG": "-0.02"
+      },
+      {
+        "Date": "2017-06-18",
+        "position": "CUT",
+        "roundPosition": "T140",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Derek Barron",
+        "player_num": "36963",
+        "Rounds": "2",
+        "CourseID": "236",
+        "Course": "Erin Hills",
+        "ShotLink": "2",
+        "SG:TOT": "-3.19",
+        "SG:T2G": "-1.68",
+        "SG:OTT": "0.57",
+        "SG:APP": "-2.25",
+        "SG:BS": "-1.68",
+        "SG:ARG": "-0.00",
+        "SG:P": "-1.51",
+        "SG:SG": "-1.51"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "25.0",
+        "SG TOT 2+": "25.0",
+        "SG TOT 3+": "25.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-1.5109999775886536",
+        "Rounds": "3"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "1.5290000438690186",
+        "Rounds": "1"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "1.8500000536441803",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-6.550000190734863",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "0.3100000023841858",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-3.236666758855184",
+        "Rounds": "3"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "0.3100000023841858",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-3.236666758855184",
+        "Rounds": "3"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-1.5099999606609344",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-3.1900001764297485",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "77",
+        "PM": "73",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "49.7",
+        "200+": "54.6",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-3.1900001764297485",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "West Coast",
+        "StrokesGainedAverage": "-1.5099999606609344",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:21:11.506Z",
+    "ok": true
+  }
+}

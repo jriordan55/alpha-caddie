@@ -1,0 +1,148 @@
+{
+  "playerId": "20574",
+  "playerName": "Mathew Goggin",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/as-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Mathew Goggin",
+    "BirthPlace": "Hobart, Tasmania, Australia",
+    "BirthDate": "June 13, 1974",
+    "Age": "52",
+    "Height": "6ft 0in",
+    "Weight": "185 lbs",
+    "Nationality": "Australia",
+    "Residence": "Charlotte, North Carolina",
+    "ProWins": "3",
+    "TurnedPro": "1995",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Mathew Goggin",
+        "player_num": "20574",
+        "Year": "2019",
+        "Rounds": "2",
+        "SG:TOT": "-4.41",
+        "SG:T2G": "-4.10",
+        "SG:OTT": "-0.55",
+        "SG:APP": "-3.64",
+        "SG:BS": "-4.19",
+        "SG:ARG": "0.09",
+        "SG:P": "-0.31",
+        "Dr Distance": "288.6",
+        "Dr Accuracy %": "53.6",
+        "Ball Speed": "162.95"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2019-05-05",
+        "position": "CUT",
+        "roundPosition": "149",
+        "TournamentName": "Wells Fargo Championship",
+        "is_major": "0",
+        "playerName": "Mathew Goggin",
+        "player_num": "20574",
+        "Rounds": "2",
+        "CourseID": "872",
+        "Course": "Quail Hollow Club",
+        "ShotLink": "2",
+        "SG:TOT": "-4.41",
+        "SG:T2G": "-4.10",
+        "SG:OTT": "-0.55",
+        "SG:APP": "-3.64",
+        "SG:BS": "-4.19",
+        "SG:ARG": "0.09",
+        "SG:P": "-0.31",
+        "SG:SG": "-0.22"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "25.0",
+        "SG TOT 1+": "25.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Poa Trivialis",
+        "StrokesGainedAverage": "-0.3140000104904175",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.2449999451637268",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-6.324999809265137",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-4.409999847412109",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-4.409999847412109",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-4.409999847412109",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "73.5",
+        "PM": "78",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": "32.1",
+        "150-200": "37.6",
+        "200+": "81.4",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-4.409999847412109",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:54.267Z",
+    "ok": true
+  }
+}

@@ -1,0 +1,236 @@
+{
+  "playerId": "33780",
+  "playerName": "Nick Cullen",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/as-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Nick Cullen",
+    "BirthPlace": "Adelaide, South Australia, Australia",
+    "BirthDate": "April 10, 1984",
+    "Age": "42",
+    "Height": "6ft 1in",
+    "Weight": "180 lbs",
+    "Nationality": "Australia",
+    "Residence": "Atlanta, Georgia",
+    "ProWins": null,
+    "TurnedPro": "2009",
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Nick Cullen",
+        "player_num": "33780",
+        "Year": "2016",
+        "Rounds": "2",
+        "SG:TOT": "-1.80",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "53.6",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Nick Cullen",
+        "player_num": "33780",
+        "Year": "2015",
+        "Rounds": "8",
+        "SG:TOT": "-2.85",
+        "SG:T2G": "-5.07",
+        "SG:OTT": "-0.69",
+        "SG:APP": "-3.05",
+        "SG:BS": "-3.74",
+        "SG:ARG": "-1.33",
+        "SG:P": "0.79",
+        "Dr Distance": "295.1",
+        "Dr Accuracy %": "45.5",
+        "Ball Speed": "162.45"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2016-07-17",
+        "position": "CUT",
+        "roundPosition": "T111",
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Nick Cullen",
+        "player_num": "33780",
+        "Rounds": "2",
+        "CourseID": "709",
+        "Course": "Royal Troon",
+        "ShotLink": "0",
+        "SG:TOT": "-1.80",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2015-11-08",
+        "position": "T58",
+        "roundPosition": "T58",
+        "TournamentName": "WGC - HSBC Champions",
+        "is_major": "0",
+        "playerName": "Nick Cullen",
+        "player_num": "33780",
+        "Rounds": "4",
+        "CourseID": "766",
+        "Course": "Sheshan International GC",
+        "ShotLink": "0",
+        "SG:TOT": "-1.42",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2015-08-09",
+        "position": "T75",
+        "roundPosition": "T75",
+        "TournamentName": "WGC - Bridgestone Invitational",
+        "is_major": "0",
+        "playerName": "Nick Cullen",
+        "player_num": "33780",
+        "Rounds": "4",
+        "CourseID": "36",
+        "Course": "Firestone CC (South)",
+        "ShotLink": "4",
+        "SG:TOT": "-4.28",
+        "SG:T2G": "-5.07",
+        "SG:OTT": "-0.69",
+        "SG:APP": "-3.05",
+        "SG:BS": "-3.74",
+        "SG:ARG": "-1.33",
+        "SG:P": "0.79",
+        "SG:SG": "-0.54"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "10.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "10"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": null,
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-4.009999990463257",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.2233333388964336",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-2.259999915957451",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-3.0900001525878906",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-1.5450000415245693",
+        "Rounds": "6"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-4.282499969005585",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-1.4200000539422035",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-3.45333331823349",
+        "Rounds": "6"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Strong",
+        "StrokesGainedAverage": "-1.4200000539422035",
+        "Rounds": "4"
+      },
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-3.45333331823349",
+        "Rounds": "6"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74.2",
+        "PM": "73.6",
+        "Rounds": "10"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "10",
+        "50-100": "26.8",
+        "100-150": "30.6",
+        "150-200": "51.1",
+        "200+": "68.6",
+        "200-250": "68.6",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-1.4200000539422035",
+        "Rounds": "4"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-3.45333331823349",
+        "Rounds": "6"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:24:25.561Z",
+    "ok": true
+  }
+}

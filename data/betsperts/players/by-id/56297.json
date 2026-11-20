@@ -1,0 +1,242 @@
+{
+  "playerId": "56297",
+  "playerName": "John Somers",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "John Somers",
+    "BirthPlace": "Elon, North Carolina",
+    "BirthDate": "May 15, 1991",
+    "Age": "35",
+    "Height": "6ft 0in",
+    "Weight": "190 lbs",
+    "Nationality": "United States",
+    "Residence": "Lutz, Florida",
+    "ProWins": null,
+    "TurnedPro": "2014",
+    "PGAWins": null,
+    "College": "Elon University 2014, Sport and Event Management"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "John Somers",
+        "player_num": "56297",
+        "Year": "2025",
+        "Rounds": "2",
+        "SG:TOT": "-2.91",
+        "SG:T2G": "-3.50",
+        "SG:OTT": "0.05",
+        "SG:APP": "-1.19",
+        "SG:BS": "-1.14",
+        "SG:ARG": "-2.36",
+        "SG:P": "0.59",
+        "Dr Distance": "308.2",
+        "Dr Accuracy %": "53.6",
+        "Ball Speed": "183.71"
+      },
+      {
+        "playerName": "John Somers",
+        "player_num": "56297",
+        "Year": "2024",
+        "Rounds": "2",
+        "SG:TOT": "-2.83",
+        "SG:T2G": "-1.54",
+        "SG:OTT": "-0.88",
+        "SG:APP": "-0.68",
+        "SG:BS": "-1.56",
+        "SG:ARG": "0.01",
+        "SG:P": "-1.29",
+        "Dr Distance": "294.1",
+        "Dr Accuracy %": "60.7",
+        "Ball Speed": "186.95"
+      },
+      {
+        "playerName": "John Somers",
+        "player_num": "56297",
+        "Year": "2023",
+        "Rounds": "2",
+        "SG:TOT": "-4.75",
+        "SG:T2G": "-4.64",
+        "SG:OTT": "-0.80",
+        "SG:APP": "-0.97",
+        "SG:BS": "-1.77",
+        "SG:ARG": "-2.88",
+        "SG:P": "-0.11",
+        "Dr Distance": "292.0",
+        "Dr Accuracy %": "28.6",
+        "Ball Speed": "188.74"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2025-05-18",
+        "position": "CUT",
+        "roundPosition": "T124",
+        "TournamentName": "PGA Championship",
+        "is_major": "1",
+        "playerName": "John Somers",
+        "player_num": "56297",
+        "Rounds": "2",
+        "CourseID": "241",
+        "Course": "Quail Hollow Club",
+        "ShotLink": "2",
+        "SG:TOT": "-2.91",
+        "SG:T2G": "-3.50",
+        "SG:OTT": "0.05",
+        "SG:APP": "-1.19",
+        "SG:BS": "-1.14",
+        "SG:ARG": "-2.36",
+        "SG:P": "0.59",
+        "SG:SG": "-1.77"
+      },
+      {
+        "Date": "2024-05-19",
+        "position": "CUT",
+        "roundPosition": "T69",
+        "TournamentName": "PGA Championship",
+        "is_major": "1",
+        "playerName": "John Somers",
+        "player_num": "56297",
+        "Rounds": "2",
+        "CourseID": "671",
+        "Course": "Valhalla Golf Club",
+        "ShotLink": "2",
+        "SG:TOT": "-2.83",
+        "SG:T2G": "-1.54",
+        "SG:OTT": "-0.88",
+        "SG:APP": "-0.68",
+        "SG:BS": "-1.56",
+        "SG:ARG": "0.01",
+        "SG:P": "-1.29",
+        "SG:SG": "-1.28"
+      },
+      {
+        "Date": "2023-05-21",
+        "position": "CUT",
+        "roundPosition": "T146",
+        "TournamentName": "PGA Championship",
+        "is_major": "1",
+        "playerName": "John Somers",
+        "player_num": "56297",
+        "Rounds": "2",
+        "CourseID": "514",
+        "Course": "Oak Hill CC",
+        "ShotLink": "2",
+        "SG:TOT": "-4.75",
+        "SG:T2G": "-4.64",
+        "SG:OTT": "-0.80",
+        "SG:APP": "-0.97",
+        "SG:BS": "-1.77",
+        "SG:ARG": "-2.88",
+        "SG:P": "-0.11",
+        "SG:SG": "-2.99"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "6"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.6987499892711639",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa Trivialis",
+        "StrokesGainedAverage": "0.5905000045895576",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-3.0933332443237305",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-3.9033332467079163",
+        "Rounds": "3"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-7.179999828338623",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-2.7619999289512633",
+        "Rounds": "5"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-2.8349998891353607",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-3.5799999237060547",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-3.913333257039388",
+        "Rounds": "3"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-3.4983332455158234",
+        "Rounds": "6"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "75.66666666666667",
+        "PM": "76",
+        "Rounds": "6"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "6",
+        "50-100": "21.7",
+        "100-150": "30",
+        "150-200": "37.3",
+        "200+": "58.5",
+        "200-250": "51.9",
+        "250+": "79"
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-3.4983332455158234",
+        "Rounds": "6"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:57.381Z",
+    "ok": true
+  }
+}

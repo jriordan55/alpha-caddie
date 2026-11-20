@@ -1,0 +1,243 @@
+{
+  "playerId": "48102",
+  "playerName": "Carson Schaake",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Carson Schaake",
+    "BirthPlace": "Waterloo, Iowa",
+    "BirthDate": "September 21, 1994",
+    "Age": "32",
+    "Height": "5ft 9in",
+    "Weight": "170 lbs",
+    "Nationality": "United States",
+    "Residence": "Omaha, Nebraska",
+    "ProWins": "0",
+    "TurnedPro": "2017",
+    "PGAWins": "0",
+    "College": "University of Iowa "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Carson Schaake",
+        "player_num": "48102",
+        "Year": "2024",
+        "Rounds": "2",
+        "SG:TOT": "-4.42",
+        "SG:T2G": "-3.13",
+        "SG:OTT": "-2.16",
+        "SG:APP": "-0.69",
+        "SG:BS": "-2.84",
+        "SG:ARG": "-0.29",
+        "SG:P": "-1.29",
+        "Dr Distance": "274.1",
+        "Dr Accuracy %": "53.6",
+        "Ball Speed": "168.04"
+      },
+      {
+        "playerName": "Carson Schaake",
+        "player_num": "48102",
+        "Year": "2021",
+        "Rounds": "2",
+        "SG:TOT": "-3.75",
+        "SG:T2G": "-4.17",
+        "SG:OTT": "-1.06",
+        "SG:APP": "-2.64",
+        "SG:BS": "-3.70",
+        "SG:ARG": "-0.48",
+        "SG:P": "0.42",
+        "Dr Distance": "282.1",
+        "Dr Accuracy %": "17.9",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Carson Schaake",
+        "player_num": "48102",
+        "Year": "2015",
+        "Rounds": "2",
+        "SG:TOT": "-4.81",
+        "SG:T2G": "-2.02",
+        "SG:OTT": "-0.25",
+        "SG:APP": "-1.02",
+        "SG:BS": "-1.27",
+        "SG:ARG": "-0.75",
+        "SG:P": "-2.79",
+        "Dr Distance": "286.6",
+        "Dr Accuracy %": "67.9",
+        "Ball Speed": "177.51"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2024-06-16",
+        "position": "CUT",
+        "roundPosition": "T149",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Carson Schaake",
+        "player_num": "48102",
+        "Rounds": "2",
+        "CourseID": "528",
+        "Course": "Pinehurst No. 2",
+        "ShotLink": "2",
+        "SG:TOT": "-4.42",
+        "SG:T2G": "-3.13",
+        "SG:OTT": "-2.16",
+        "SG:APP": "-0.69",
+        "SG:BS": "-2.84",
+        "SG:ARG": "-0.29",
+        "SG:P": "-1.29",
+        "SG:SG": "-1.57"
+      },
+      {
+        "Date": "2021-06-20",
+        "position": "CUT",
+        "roundPosition": null,
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Carson Schaake",
+        "player_num": "48102",
+        "Rounds": "2",
+        "CourseID": "744",
+        "Course": "Torrey Pines GC (South)",
+        "ShotLink": "2",
+        "SG:TOT": "-3.75",
+        "SG:T2G": "-4.17",
+        "SG:OTT": "-1.06",
+        "SG:APP": "-2.64",
+        "SG:BS": "-3.70",
+        "SG:ARG": "-0.48",
+        "SG:P": "0.42",
+        "SG:SG": "-0.06"
+      },
+      {
+        "Date": "2015-07-12",
+        "position": "CUT",
+        "roundPosition": "153",
+        "TournamentName": "John Deere Classic",
+        "is_major": "0",
+        "playerName": "Carson Schaake",
+        "player_num": "48102",
+        "Rounds": "2",
+        "CourseID": "669",
+        "Course": "TPC Deere Run",
+        "ShotLink": "2",
+        "SG:TOT": "-4.81",
+        "SG:T2G": "-2.02",
+        "SG:OTT": "-0.25",
+        "SG:APP": "-1.02",
+        "SG:BS": "-1.27",
+        "SG:ARG": "-0.75",
+        "SG:P": "-2.79",
+        "SG:SG": "-3.54"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "6"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-2.7864999175071716",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-1.2875000312924385",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "0.42249998450279236",
+        "Rounds": "2"
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-4.513333241144816",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-4.136666615804036",
+        "Rounds": "3"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-4.809999942779541",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-4.082499921321869",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-4.082499921321869",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-4.809999942779541",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-4.082499921321869",
+        "Rounds": "4"
+      },
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-4.809999942779541",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "77.33333333333333",
+        "PM": "75.66666666666667",
+        "Rounds": "6"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "6",
+        "50-100": null,
+        "100-150": "32.7",
+        "150-200": "47.6",
+        "200+": "52.8",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-4.324999928474426",
+        "Rounds": "6"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:20:06.451Z",
+    "ok": true
+  }
+}

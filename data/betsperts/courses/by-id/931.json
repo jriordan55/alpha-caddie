@@ -1,0 +1,107 @@
+{
+  "courseNum": "931",
+  "courseName": "Tahoe Mountain Club (Old Greenwood)",
+  "list": {
+    "CourseName": "Tahoe Mountain Club (Old Greenwood)",
+    "CourseNum": "931",
+    "CourseNums": [
+      931,
+      890
+    ]
+  },
+  "details": {
+    "CourseName": "Tahoe Mountain Club (Old Greenwood)",
+    "CourseNum": "931",
+    "Locations": [
+      "West",
+      "California"
+    ],
+    "SeasonHeld": "Summer",
+    "CourseTypes": [
+      "Mountain",
+      "Parkland",
+      "Resort"
+    ],
+    "ParScore": "71",
+    "Yards": "7480",
+    "AVG": "105.4",
+    "CourseLength": "Long",
+    "Architects": [
+      "Jack Nicklaus"
+    ],
+    "RedesignArchitects": [],
+    "Elevation": "5926",
+    "CourseElevation": "High",
+    "Bunkers": "95",
+    "BunkersRank": "High",
+    "WaterHoles": "6",
+    "WaterDanger": "Average",
+    "ScoreRTP": "0",
+    "Difficulty": "Very Easy",
+    "FwyGrass": "Bent",
+    "FwyWidth": "0",
+    "GreenSqFt": "5300",
+    "GreenSize": "Small",
+    "GreenGrass": "Bent/Poa",
+    "GreenStimp": "11",
+    "GreenSpeed": "Slow",
+    "RoughType": "Bluegrass",
+    "RoughGrass": "Bluegrass",
+    "RoughLengthInc": "2.5",
+    "RoughLength": "Average",
+    "EventTypes": [
+      "36-Hole Cut"
+    ],
+    "Tournaments": [
+      {
+        "Year": "2020-2025",
+        "Tournament": "Barracuda Championship"
+      }
+    ],
+    "CorrelatedCourse": [],
+    "FieldSize": "Full Field",
+    "FieldStrength": "Very Weak",
+    "OTTClub": "Driver Heavy",
+    "FwyPct": "0",
+    "FwyAccuracy": "Easy",
+    "GainOTT": "Easy",
+    "MissedFairwayPenalty": "Average",
+    "RoughPenalty": "Low",
+    "GIRAccuracy": "Average",
+    "GIRPct": "0",
+    "GainAPP": "Easy",
+    "ScramblingFromRough": "Easy",
+    "ScramblingFromShortGrass": "Easy",
+    "SandSaves": "Average",
+    "GainARG": "Very Easy",
+    "GainingPuttingInside15": "Difficult",
+    "GainingPuttingOutside15": "Average",
+    "3PuttAVD": "Average",
+    "GainPutting": "Average",
+    "Par3Scoring": "Average",
+    "Par4Scoring": "Average",
+    "Par5Scoring": "Easy",
+    "ShotLink": "1"
+  },
+  "tournaments": [
+    {
+      "CourseNum": "931",
+      "TNum": "472",
+      "TourneyName": "Barracuda Championship"
+    }
+  ],
+  "_meta": {
+    "pulledAt": "2026-11-20T22:18:26.060Z",
+    "detailStatus": 200,
+    "tournamentsStatus": 200
+  },
+  "auth": {
+    "holeBreakdown": [],
+    "correlated": [],
+    "_meta": {
+      "pulledAt": "2026-11-20T22:52:52.714Z",
+      "holeStatus": 200,
+      "correlatedStatus": 200
+    }
+  }
+}

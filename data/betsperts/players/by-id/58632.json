@@ -1,0 +1,152 @@
+{
+  "playerId": "58632",
+  "playerName": "Siyan Liu",
+  "flag": null,
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Siyan Liu",
+    "BirthPlace": null,
+    "BirthDate": "",
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "People’s Rep of Chin",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Siyan Liu",
+        "player_num": "58632",
+        "Year": "2026",
+        "Rounds": "2",
+        "SG:TOT": "-2.68",
+        "SG:T2G": "-3.18",
+        "SG:OTT": "-0.27",
+        "SG:APP": "-1.40",
+        "SG:BS": "-1.66",
+        "SG:ARG": "-1.52",
+        "SG:P": "0.51",
+        "Dr Distance": "287.8",
+        "Dr Accuracy %": "64.3",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Siyan Liu",
+        "player_num": "58632",
+        "Rounds": "2",
+        "SG:TOT": "-2.68",
+        "SG:T2G": "-3.18",
+        "SG:OTT": "-0.27",
+        "SG:APP": "-1.40",
+        "SG:BS": "-1.66",
+        "SG:ARG": "-1.52",
+        "SG:P": "0.51",
+        "SG:SG": "-1.01"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-07-19",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "Corales Puntacana Championship",
+        "is_major": "0",
+        "playerName": "Siyan Liu",
+        "player_num": "58632",
+        "Rounds": "2",
+        "CourseID": "244",
+        "Course": "Corales Golf Course",
+        "ShotLink": "2",
+        "SG:TOT": "-2.68",
+        "SG:T2G": "-3.18",
+        "SG:OTT": "-0.27",
+        "SG:APP": "-1.40",
+        "SG:BS": "-1.66",
+        "SG:ARG": "-1.52",
+        "SG:P": "0.51",
+        "SG:SG": "-1.01"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-5.090000152587891",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.25999999046325684",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-2.6750000715255737",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-2.6750000715255737",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-2.6750000715255737",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "71",
+        "PM": "76",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "35.7",
+        "200+": "68",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-2.6750000715255737",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:38.949Z",
+    "ok": true
+  }
+}

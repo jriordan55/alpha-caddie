@@ -1,0 +1,138 @@
+{
+  "playerId": "45862",
+  "playerName": "Jean-Philip Cornellier",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ca-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Jean-Philip Cornellier",
+    "BirthPlace": "Granby, Quebec, Canada",
+    "BirthDate": "September 21, 1990",
+    "Age": "36",
+    "Height": "6ft 0in",
+    "Weight": "165 lbs",
+    "Nationality": "Canada",
+    "Residence": "Granby, Quebec, Canada",
+    "ProWins": null,
+    "TurnedPro": "2014",
+    "PGAWins": null,
+    "College": "(Kinesiology) "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Jean-Philip Cornellier",
+        "player_num": "45862",
+        "Year": "2015",
+        "Rounds": "2",
+        "SG:TOT": "-2.94",
+        "SG:T2G": "-1.42",
+        "SG:OTT": "-0.47",
+        "SG:APP": "-0.67",
+        "SG:BS": "-1.15",
+        "SG:ARG": "-0.27",
+        "SG:P": "-1.52",
+        "Dr Distance": "291.0",
+        "Dr Accuracy %": "57.1",
+        "Ball Speed": "173.13"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2015-06-28",
+        "position": "CUT",
+        "roundPosition": "T140",
+        "TournamentName": "Travelers Championship",
+        "is_major": "0",
+        "playerName": "Jean-Philip Cornellier",
+        "player_num": "45862",
+        "Rounds": "2",
+        "CourseID": "503",
+        "Course": "TPC River Highlands",
+        "ShotLink": "2",
+        "SG:TOT": "-2.94",
+        "SG:T2G": "-1.42",
+        "SG:OTT": "-0.47",
+        "SG:APP": "-0.67",
+        "SG:BS": "-1.15",
+        "SG:ARG": "-0.27",
+        "SG:P": "-1.52",
+        "SG:SG": "-1.79"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-2.9200000762939453",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-2.950000047683716",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-2.9350000619888306",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-2.9350000619888306",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-2.9350000619888306",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "72",
+        "PM": "73",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "35.3",
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-2.9350000619888306",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:34.477Z",
+    "ok": true
+  }
+}

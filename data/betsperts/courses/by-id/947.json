@@ -1,0 +1,164 @@
+{
+  "courseNum": "947",
+  "courseName": "Detroit GC",
+  "list": {
+    "CourseName": "Detroit GC",
+    "CourseNum": "947",
+    "CourseNums": [
+      947,
+      876
+    ]
+  },
+  "details": {
+    "CourseName": "Detroit GC",
+    "CourseNum": "947",
+    "Locations": [
+      "Midwest",
+      "Michigan"
+    ],
+    "SeasonHeld": "Summer",
+    "CourseTypes": [
+      "Parkland"
+    ],
+    "ParScore": "70",
+    "Yards": "7328",
+    "AVG": "104.7",
+    "CourseLength": "Long",
+    "Architects": [
+      "Donald Ross"
+    ],
+    "RedesignArchitects": [
+      "Tom Doak",
+      "Tyler Rae"
+    ],
+    "Elevation": "656",
+    "CourseElevation": "Average",
+    "Bunkers": "91",
+    "BunkersRank": "High",
+    "WaterHoles": "0",
+    "WaterDanger": "Low",
+    "ScoreRTP": "-1.92",
+    "Difficulty": "Easy",
+    "FwyGrass": "Bent",
+    "FwyWidth": "0",
+    "GreenSqFt": "6700",
+    "GreenSize": "Average",
+    "GreenGrass": "Bent",
+    "GreenStimp": "12",
+    "GreenSpeed": "Average",
+    "RoughType": "Bluegrass Mix",
+    "RoughGrass": "Bluegrass",
+    "RoughLengthInc": "3.5",
+    "RoughLength": "Long",
+    "EventTypes": [
+      "36-Hole Cut"
+    ],
+    "Tournaments": [
+      {
+        "Year": "2019-2025",
+        "Tournament": "Rocket Classic"
+      }
+    ],
+    "CorrelatedCourse": [
+      "TPC Toronto at Osprey Valley (North)",
+      "TPC River Highlands",
+      "TPC Deere Run",
+      "TPC Twin Cities",
+      "Sedgefield CC",
+      "Oakdale Golf & Country Club",
+      "Colonial CC",
+      "Aronimink GC",
+      "Torrey Pines GC (North)"
+    ],
+    "FieldSize": "Full Field",
+    "FieldStrength": "Weak",
+    "OTTClub": "Driver Heavy",
+    "FwyPct": "64.9",
+    "FwyAccuracy": "Average",
+    "GainOTT": "Easy",
+    "MissedFairwayPenalty": "Low",
+    "RoughPenalty": "Average",
+    "GIRAccuracy": "Easy",
+    "GIRPct": "72.5",
+    "GainAPP": "Easy",
+    "ScramblingFromRough": "Average",
+    "ScramblingFromShortGrass": "Easy",
+    "SandSaves": "Average",
+    "GainARG": "Easy",
+    "GainingPuttingInside15": "Average",
+    "GainingPuttingOutside15": "Average",
+    "3PuttAVD": "Average",
+    "GainPutting": "Average",
+    "Par3Scoring": "Easy",
+    "Par4Scoring": "Easy",
+    "Par5Scoring": "Easy",
+    "ShotLink": "1"
+  },
+  "tournaments": [
+    {
+      "CourseNum": "947",
+      "TNum": "524",
+      "TourneyName": "Rocket Classic"
+    }
+  ],
+  "_meta": {
+    "pulledAt": "2026-11-20T22:18:24.978Z",
+    "detailStatus": 200,
+    "tournamentsStatus": 200
+  },
+  "auth": {
+    "holeBreakdown": [],
+    "correlated": [
+      {
+        "CourseNum": "21",
+        "CourseName": "Colonial CC",
+        "CourseNums": "[21]"
+      },
+      {
+        "CourseNum": "104",
+        "CourseName": "Torrey Pines GC (North)",
+        "CourseNums": "[104]"
+      },
+      {
+        "CourseNum": "503",
+        "CourseName": "TPC River Highlands",
+        "CourseNums": "[503]"
+      },
+      {
+        "CourseNum": "669",
+        "CourseName": "TPC Deere Run",
+        "CourseNums": "[669]"
+      },
+      {
+        "CourseNum": "752",
+        "CourseName": "Sedgefield CC",
+        "CourseNums": "[752]"
+      },
+      {
+        "CourseNum": "773",
+        "CourseName": "Aronimink GC",
+        "CourseNums": "[773]"
+      },
+      {
+        "CourseNum": "883",
+        "CourseName": "TPC Twin Cities",
+        "CourseNums": "[883]"
+      },
+      {
+        "CourseNum": "908",
+        "CourseName": "Oakdale Golf & Country Club",
+        "CourseNums": "[908]"
+      },
+      {
+        "CourseNum": "935",
+        "CourseName": "TPC Toronto at Osprey Valley (North)",
+        "CourseNums": "[935]"
+      }
+    ],
+    "_meta": {
+      "pulledAt": "2026-11-20T22:52:51.768Z",
+      "holeStatus": 200,
+      "correlatedStatus": 200
+    }
+  }
+}

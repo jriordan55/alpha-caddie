@@ -1,0 +1,105 @@
+{
+  "courseNum": "649",
+  "courseName": "PGA West (Palmer)",
+  "list": {
+    "CourseName": "PGA West (Palmer)",
+    "CourseNum": "649",
+    "CourseNums": [
+      649
+    ]
+  },
+  "details": {
+    "CourseName": "PGA West (Palmer)",
+    "CourseNum": "649",
+    "Locations": [
+      "West",
+      "California"
+    ],
+    "SeasonHeld": "",
+    "CourseTypes": [
+      "Desert",
+      "Resort"
+    ],
+    "ParScore": "72",
+    "Yards": "6950",
+    "AVG": "96.5",
+    "CourseLength": "Very Short",
+    "Architects": [
+      "Arnold Palmer"
+    ],
+    "RedesignArchitects": [],
+    "Elevation": "135",
+    "CourseElevation": "Average",
+    "Bunkers": "100",
+    "BunkersRank": "High",
+    "WaterHoles": "5",
+    "WaterDanger": "Average",
+    "ScoreRTP": "0",
+    "Difficulty": "Very Easy",
+    "FwyGrass": "Rye",
+    "FwyWidth": "0",
+    "GreenSqFt": "6260",
+    "GreenSize": "Average",
+    "GreenGrass": "Poa Trivialis",
+    "GreenStimp": "11",
+    "GreenSpeed": "Slow",
+    "RoughType": "",
+    "RoughGrass": "Rye",
+    "RoughLengthInc": "2",
+    "RoughLength": "Short",
+    "EventTypes": [
+      "54-Hole Cut"
+    ],
+    "Tournaments": [
+      {
+        "Year": "2015",
+        "Tournament": "Humana Challenge"
+      }
+    ],
+    "CorrelatedCourse": [],
+    "FieldSize": "Full Field",
+    "FieldStrength": "",
+    "OTTClub": "",
+    "FwyPct": "0",
+    "FwyAccuracy": "",
+    "GainOTT": "",
+    "MissedFairwayPenalty": "",
+    "RoughPenalty": "",
+    "GIRAccuracy": "",
+    "GIRPct": "0",
+    "GainAPP": "",
+    "ScramblingFromRough": "",
+    "ScramblingFromShortGrass": "",
+    "SandSaves": "",
+    "GainARG": "",
+    "GainingPuttingInside15": "",
+    "GainingPuttingOutside15": "",
+    "3PuttAVD": "",
+    "GainPutting": "",
+    "Par3Scoring": "",
+    "Par4Scoring": "",
+    "Par5Scoring": "",
+    "ShotLink": "1"
+  },
+  "tournaments": [
+    {
+      "CourseNum": "649",
+      "TNum": "2",
+      "TourneyName": "Humana Challenge in partnership with the Clinton Founda"
+    }
+  ],
+  "_meta": {
+    "pulledAt": "2026-11-20T22:18:25.669Z",
+    "detailStatus": 200,
+    "tournamentsStatus": 200
+  },
+  "auth": {
+    "holeBreakdown": [],
+    "correlated": [],
+    "_meta": {
+      "pulledAt": "2026-11-20T22:52:52.325Z",
+      "holeStatus": 200,
+      "correlatedStatus": 200
+    }
+  }
+}

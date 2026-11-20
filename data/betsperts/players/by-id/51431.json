@@ -1,0 +1,213 @@
+{
+  "playerId": "51431",
+  "playerName": "John Daly II",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "John Daly II",
+    "BirthPlace": null,
+    "BirthDate": "July 23, 2003",
+    "Age": "23",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "John Daly II",
+        "player_num": "51431",
+        "Year": "2026",
+        "Rounds": "8",
+        "SG:TOT": "0.24",
+        "SG:T2G": "-0.43",
+        "SG:OTT": "-0.02",
+        "SG:APP": "-0.83",
+        "SG:BS": "-0.85",
+        "SG:ARG": "0.42",
+        "SG:P": "0.29",
+        "Dr Distance": "295.0",
+        "Dr Accuracy %": "68.5",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "John Daly II",
+        "player_num": "51431",
+        "Rounds": "8",
+        "SG:TOT": "0.24",
+        "SG:T2G": "-0.43",
+        "SG:OTT": "-0.02",
+        "SG:APP": "-0.83",
+        "SG:BS": "-0.85",
+        "SG:ARG": "0.42",
+        "SG:P": "0.29",
+        "SG:SG": "0.71"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-11-01",
+        "position": "T48",
+        "roundPosition": "T48",
+        "TournamentName": "Mexico Open at Vidanta",
+        "is_major": "0",
+        "playerName": "John Daly II",
+        "player_num": "51431",
+        "Rounds": "4",
+        "CourseID": "978",
+        "Course": "Vidanta Vallarta",
+        "ShotLink": "4",
+        "SG:TOT": "-0.14",
+        "SG:T2G": "-0.43",
+        "SG:OTT": "-0.02",
+        "SG:APP": "-0.83",
+        "SG:BS": "-0.85",
+        "SG:ARG": "0.42",
+        "SG:P": "0.29",
+        "SG:SG": "0.71"
+      },
+      {
+        "Date": "2026-03-08",
+        "position": "T37",
+        "roundPosition": "T37",
+        "TournamentName": "Puerto Rico Open",
+        "is_major": "0",
+        "playerName": "John Daly II",
+        "player_num": "51431",
+        "Rounds": "4",
+        "CourseID": "940",
+        "Course": "Grand Reserve GC",
+        "ShotLink": "0",
+        "SG:TOT": "0.61",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "37.5",
+        "SG TOT 2+": "25.0",
+        "SG TOT 3+": "12.5",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "8"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "0.6449999809265137",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "2.5949999690055847",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-0.09000000357627869",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-2.2049999833106995",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-0.6850000023841858",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "0.614999994635582",
+        "Rounds": "4"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "0.3999999761581421",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "2.0399999618530273",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "2.104999989271164",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-0.872000002861023",
+        "Rounds": "5"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "0.614999994635582",
+        "Rounds": "4"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-0.14250001311302185",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "70",
+        "PM": "69.5",
+        "Rounds": "8"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "8",
+        "50-100": null,
+        "100-150": "24.2",
+        "150-200": null,
+        "200+": "77.2",
+        "200-250": "64.9",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-0.14250001311302185",
+        "Rounds": "4"
+      },
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "0.614999994635582",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:52.885Z",
+    "ok": true
+  }
+}

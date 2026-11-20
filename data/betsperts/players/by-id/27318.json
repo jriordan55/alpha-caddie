@@ -1,0 +1,148 @@
+{
+  "playerId": "27318",
+  "playerName": "Ted Brown",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ca-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Ted Brown",
+    "BirthPlace": "Calgary, Alberta, Canada",
+    "BirthDate": "May 09, 1979",
+    "Age": "47",
+    "Height": "5ft 11in",
+    "Weight": "190 lbs",
+    "Nationality": "Canada",
+    "Residence": "Richmond, Virginia",
+    "ProWins": null,
+    "TurnedPro": "2003",
+    "PGAWins": null,
+    "College": "Virginia Commonwealth University  (2003, Finance) "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Ted Brown",
+        "player_num": "27318",
+        "Year": "2015",
+        "Rounds": "2",
+        "SG:TOT": "-2.54",
+        "SG:T2G": "-0.40",
+        "SG:OTT": "-0.50",
+        "SG:APP": "0.14",
+        "SG:BS": "-0.36",
+        "SG:ARG": "-0.03",
+        "SG:P": "-2.15",
+        "Dr Distance": "280.0",
+        "Dr Accuracy %": "53.6",
+        "Ball Speed": "165.34"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2015-08-23",
+        "position": "CUT",
+        "roundPosition": "T133",
+        "TournamentName": "Wyndham Championship",
+        "is_major": "0",
+        "playerName": "Ted Brown",
+        "player_num": "27318",
+        "Rounds": "2",
+        "CourseID": "752",
+        "Course": "Sedgefield CC",
+        "ShotLink": "2",
+        "SG:TOT": "-2.54",
+        "SG:T2G": "-0.40",
+        "SG:OTT": "-0.50",
+        "SG:APP": "0.14",
+        "SG:BS": "-0.36",
+        "SG:ARG": "-0.03",
+        "SG:P": "-2.15",
+        "SG:SG": "-2.18"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-2.147000014781952",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.4699999988079071",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-4.619999885559082",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-2.5449999421834946",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-2.5449999421834946",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-2.5449999421834946",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74",
+        "PM": "69",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "19.6",
+        "150-200": null,
+        "200+": "54.6",
+        "200-250": "53.6",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-2.5449999421834946",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:56.501Z",
+    "ok": true
+  }
+}

@@ -1,0 +1,143 @@
+{
+  "playerId": "57504",
+  "playerName": "Sampson Zheng",
+  "flag": null,
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Sampson Zheng",
+    "BirthPlace": null,
+    "BirthDate": "July 16, 2001",
+    "Age": "25",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "People’s Rep of Chin",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Sampson Zheng",
+        "player_num": "57504",
+        "Year": "2025",
+        "Rounds": "2",
+        "SG:TOT": "-2.78",
+        "SG:T2G": "-1.73",
+        "SG:OTT": "-0.29",
+        "SG:APP": "-1.44",
+        "SG:BS": "-1.73",
+        "SG:ARG": "0.01",
+        "SG:P": "-1.05",
+        "Dr Distance": null,
+        "Dr Accuracy %": "50.0",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2025-07-20",
+        "position": "CUT",
+        "roundPosition": null,
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Sampson Zheng",
+        "player_num": "57504",
+        "Rounds": "2",
+        "CourseID": "885",
+        "Course": "Royal Portrush GC",
+        "ShotLink": "2",
+        "SG:TOT": "-2.78",
+        "SG:T2G": "-1.73",
+        "SG:OTT": "-0.29",
+        "SG:APP": "-1.44",
+        "SG:BS": "-1.73",
+        "SG:ARG": "0.01",
+        "SG:P": "-1.05",
+        "SG:SG": "-1.04"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-3.9600000381469727",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.590000033378601",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-2.775000035762787",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-1.590000033378601",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-3.9600000381469727",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-2.775000035762787",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "77",
+        "PM": "73",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-2.775000035762787",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:23.874Z",
+    "ok": true
+  }
+}

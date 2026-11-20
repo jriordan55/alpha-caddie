@@ -1,0 +1,105 @@
+{
+  "courseNum": "527",
+  "courseName": "Crooked Stick GC",
+  "list": {
+    "CourseName": "Crooked Stick GC",
+    "CourseNum": "527",
+    "CourseNums": [
+      527
+    ]
+  },
+  "details": {
+    "CourseName": "Crooked Stick GC",
+    "CourseNum": "527",
+    "Locations": [
+      "Midwest",
+      "Indiana"
+    ],
+    "SeasonHeld": "Playoffs",
+    "CourseTypes": [
+      "Parkland"
+    ],
+    "ParScore": "72",
+    "Yards": "7567",
+    "AVG": "105.1",
+    "CourseLength": "Long",
+    "Architects": [
+      "Pete Dye"
+    ],
+    "RedesignArchitects": [],
+    "Elevation": "873",
+    "CourseElevation": "Average",
+    "Bunkers": "89",
+    "BunkersRank": "Average",
+    "WaterHoles": "7",
+    "WaterDanger": "Average",
+    "ScoreRTP": "-1.17",
+    "Difficulty": "Easy",
+    "FwyGrass": "Bent",
+    "FwyWidth": "0",
+    "GreenSqFt": "5000",
+    "GreenSize": "Small",
+    "GreenGrass": "Bent",
+    "GreenStimp": "12.5",
+    "GreenSpeed": "Average",
+    "RoughType": "Kentucky Blue/Rye/Fescue",
+    "RoughGrass": "Bluegrass",
+    "RoughLengthInc": "3.5",
+    "RoughLength": "Long",
+    "EventTypes": [
+      "No-Cut",
+      "Fed-Ex Cup Playoff"
+    ],
+    "Tournaments": [
+      {
+        "Year": "2016",
+        "Tournament": "BMW Championship"
+      }
+    ],
+    "CorrelatedCourse": [],
+    "FieldSize": "Small Field",
+    "FieldStrength": "Strong",
+    "OTTClub": "Mixed",
+    "FwyPct": "66.1",
+    "FwyAccuracy": "Easy",
+    "GainOTT": "Average",
+    "MissedFairwayPenalty": "Average",
+    "RoughPenalty": "Low",
+    "GIRAccuracy": "Average",
+    "GIRPct": "66.6",
+    "GainAPP": "Easy",
+    "ScramblingFromRough": "Average",
+    "ScramblingFromShortGrass": "Average",
+    "SandSaves": "Average",
+    "GainARG": "Average",
+    "GainingPuttingInside15": "Easy",
+    "GainingPuttingOutside15": "Average",
+    "3PuttAVD": "Easy",
+    "GainPutting": "Easy",
+    "Par3Scoring": "Difficult",
+    "Par4Scoring": "Average",
+    "Par5Scoring": "Average",
+    "ShotLink": "1"
+  },
+  "tournaments": [
+    {
+      "CourseNum": "527",
+      "TNum": "28",
+      "TourneyName": "BMW Championship"
+    }
+  ],
+  "_meta": {
+    "pulledAt": "2026-11-20T22:18:24.931Z",
+    "detailStatus": 200,
+    "tournamentsStatus": 200
+  },
+  "auth": {
+    "holeBreakdown": [],
+    "correlated": [],
+    "_meta": {
+      "pulledAt": "2026-11-20T22:52:51.765Z",
+      "holeStatus": 200,
+      "correlatedStatus": 200
+    }
+  }
+}

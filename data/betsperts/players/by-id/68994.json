@@ -1,0 +1,177 @@
+{
+  "playerId": "68994",
+  "playerName": "Ryan Voois",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Ryan Voois",
+    "BirthPlace": null,
+    "BirthDate": "",
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Ryan Voois",
+        "player_num": "68994",
+        "Year": "2026",
+        "Rounds": "4",
+        "SG:TOT": "-1.78",
+        "SG:T2G": "-1.81",
+        "SG:OTT": "-0.64",
+        "SG:APP": "-1.02",
+        "SG:BS": "-1.66",
+        "SG:ARG": "-0.15",
+        "SG:P": "0.04",
+        "Dr Distance": "291.6",
+        "Dr Accuracy %": "57.1",
+        "Ball Speed": "178.26"
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Ryan Voois",
+        "player_num": "68994",
+        "Rounds": "4",
+        "SG:TOT": "-1.78",
+        "SG:T2G": "-1.81",
+        "SG:OTT": "-0.64",
+        "SG:APP": "-1.02",
+        "SG:BS": "-1.66",
+        "SG:ARG": "-0.15",
+        "SG:P": "0.04",
+        "SG:SG": "-0.11"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-07-05",
+        "position": "77",
+        "roundPosition": "77",
+        "TournamentName": "John Deere Classic",
+        "is_major": "0",
+        "playerName": "Ryan Voois",
+        "player_num": "68994",
+        "Rounds": "4",
+        "CourseID": "669",
+        "Course": "TPC Deere Run",
+        "ShotLink": "4",
+        "SG:TOT": "-1.78",
+        "SG:T2G": "-1.81",
+        "SG:OTT": "-0.64",
+        "SG:APP": "-1.02",
+        "SG:BS": "-1.66",
+        "SG:ARG": "-0.15",
+        "SG:P": "0.04",
+        "SG:SG": "-0.11"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "25.0",
+        "SG TOT 1+": "25.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "0.03850000025704503",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "1.7999999523162842",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.6399999856948853",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-2.940000057220459",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-5.320000171661377",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-1.7750000655651093",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "1.7999999523162842",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-2.9666667381922402",
+        "Rounds": "3"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-1.7750000655651093",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "72",
+        "PM": "68",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": "23.4",
+        "150-200": "30.9",
+        "200+": "43.3",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-1.7750000655651093",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:18.459Z",
+    "ok": true
+  }
+}

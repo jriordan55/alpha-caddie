@@ -1,0 +1,210 @@
+{
+  "playerId": "49091",
+  "playerName": "David Solomon",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "David Solomon",
+    "BirthPlace": "",
+    "BirthDate": "June 27, 1976",
+    "Age": "50",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "United States",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "David Solomon",
+        "player_num": "49091",
+        "Year": "2018",
+        "Rounds": "3",
+        "SG:TOT": "-6.41",
+        "SG:T2G": "-0.98",
+        "SG:OTT": "1.09",
+        "SG:APP": "-1.83",
+        "SG:BS": "-0.74",
+        "SG:ARG": "-0.24",
+        "SG:P": "-5.62",
+        "Dr Distance": "276.9",
+        "Dr Accuracy %": "75.6",
+        "Ball Speed": "164.70"
+      },
+      {
+        "playerName": "David Solomon",
+        "player_num": "49091",
+        "Year": "2015",
+        "Rounds": "2",
+        "SG:TOT": "-4.71",
+        "SG:T2G": "-4.11",
+        "SG:OTT": "-0.26",
+        "SG:APP": "-2.96",
+        "SG:BS": "-3.21",
+        "SG:ARG": "-0.90",
+        "SG:P": "-0.59",
+        "Dr Distance": "283.9",
+        "Dr Accuracy %": "32.1",
+        "Ball Speed": "165.35"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2018-02-11",
+        "position": "CUT",
+        "roundPosition": "153",
+        "TournamentName": "AT&T Pebble Beach Pro-Am",
+        "is_major": "0",
+        "playerName": "David Solomon",
+        "player_num": "49091",
+        "Rounds": "3",
+        "CourseID": "205",
+        "Course": "Spyglass Hill",
+        "ShotLink": "1",
+        "SG:TOT": "-6.41",
+        "SG:T2G": "-0.98",
+        "SG:OTT": "1.09",
+        "SG:APP": "-1.83",
+        "SG:BS": "-0.74",
+        "SG:ARG": "-0.24",
+        "SG:P": "-5.62",
+        "SG:SG": "-5.86"
+      },
+      {
+        "Date": "2015-10-18",
+        "position": "CUT",
+        "roundPosition": "T139",
+        "TournamentName": "Frys.com Open",
+        "is_major": "0",
+        "playerName": "David Solomon",
+        "player_num": "49091",
+        "Rounds": "2",
+        "CourseID": "552",
+        "Course": "Silverado Resort (North)",
+        "ShotLink": "2",
+        "SG:TOT": "-4.71",
+        "SG:T2G": "-4.11",
+        "SG:OTT": "-0.26",
+        "SG:APP": "-2.96",
+        "SG:BS": "-3.21",
+        "SG:ARG": "-0.90",
+        "SG:P": "-0.59",
+        "SG:SG": "-1.49"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "5"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "-5.619999885559082",
+        "Rounds": "3"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-3.850000023841858",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-6.375",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-8.199999809265137",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-4.705000042915344",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-6.413333257039388",
+        "Rounds": "3"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-7.3999998569488525",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-4.616666714350383",
+        "Rounds": "3"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-6.413333257039388",
+        "Rounds": "3"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-4.705000042915344",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "79.5",
+        "PM": "75.66666666666667",
+        "Rounds": "5"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "5",
+        "50-100": null,
+        "100-150": "34.6",
+        "150-200": "48.9",
+        "200+": "73.4",
+        "200-250": "68.6",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-4.705000042915344",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "West Coast",
+        "StrokesGainedAverage": "-6.413333257039388",
+        "Rounds": "3"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:21:07.297Z",
+    "ok": true
+  }
+}

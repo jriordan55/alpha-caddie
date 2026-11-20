@@ -1,0 +1,138 @@
+{
+  "playerId": "45858",
+  "playerName": "Russell Budd",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ca-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Russell Budd",
+    "BirthPlace": "Toronto, Ontario, Canada",
+    "BirthDate": "April 18, 1991",
+    "Age": "35",
+    "Height": "5ft 9in",
+    "Weight": "160 lbs",
+    "Nationality": "Canada",
+    "Residence": "Toronto, Ontario, Canada",
+    "ProWins": "0",
+    "TurnedPro": "2015",
+    "PGAWins": "0",
+    "College": "DePaul University "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Russell Budd",
+        "player_num": "45858",
+        "Year": "2018",
+        "Rounds": "2",
+        "SG:TOT": "-2.90",
+        "SG:T2G": "-3.03",
+        "SG:OTT": "-0.60",
+        "SG:APP": "-2.36",
+        "SG:BS": "-2.95",
+        "SG:ARG": "-0.08",
+        "SG:P": "0.14",
+        "Dr Distance": "283.6",
+        "Dr Accuracy %": "42.9",
+        "Ball Speed": "166.81"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2018-07-29",
+        "position": "CUT",
+        "roundPosition": "T133",
+        "TournamentName": "RBC Canadian Open",
+        "is_major": "0",
+        "playerName": "Russell Budd",
+        "player_num": "45858",
+        "Rounds": "2",
+        "CourseID": "32",
+        "Course": "Glen Abbey GC",
+        "ShotLink": "2",
+        "SG:TOT": "-2.90",
+        "SG:T2G": "-3.03",
+        "SG:OTT": "-0.60",
+        "SG:APP": "-2.36",
+        "SG:BS": "-2.95",
+        "SG:ARG": "-0.08",
+        "SG:P": "0.14",
+        "SG:SG": "0.06"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-4.619999885559082",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.1799999475479126",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-2.8999999165534973",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-2.8999999165534973",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-2.8999999165534973",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "75",
+        "PM": "72",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "30.4",
+        "150-200": "23.6",
+        "200+": "50.6",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-2.8999999165534973",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:13.590Z",
+    "ok": true
+  }
+}

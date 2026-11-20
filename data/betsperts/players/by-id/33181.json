@@ -1,0 +1,242 @@
+{
+  "playerId": "33181",
+  "playerName": "Charles Frost",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "0",
+    "Name": "Charles Frost",
+    "BirthPlace": "Gainesville, Georgia",
+    "BirthDate": "July 26, 1976",
+    "Age": "50",
+    "Height": "6ft 3in",
+    "Weight": "200 lbs",
+    "Nationality": "United States",
+    "Residence": "Kiawah Island, South Carolina",
+    "ProWins": "0",
+    "TurnedPro": "2000",
+    "PGAWins": "0",
+    "College": "Emory University "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Charles Frost",
+        "player_num": "33181",
+        "Year": "2018",
+        "Rounds": "4",
+        "SG:TOT": "-6.32",
+        "SG:T2G": "-4.74",
+        "SG:OTT": "-0.36",
+        "SG:APP": "-3.03",
+        "SG:BS": "-3.39",
+        "SG:ARG": "-1.35",
+        "SG:P": "-1.58",
+        "Dr Distance": "290.1",
+        "Dr Accuracy %": "46.4",
+        "Ball Speed": "165.89"
+      },
+      {
+        "playerName": "Charles Frost",
+        "player_num": "33181",
+        "Year": "2015",
+        "Rounds": "2",
+        "SG:TOT": "-5.96",
+        "SG:T2G": "-5.16",
+        "SG:OTT": "-1.00",
+        "SG:APP": "-2.36",
+        "SG:BS": "-3.37",
+        "SG:ARG": "-1.79",
+        "SG:P": "-0.80",
+        "Dr Distance": "275.5",
+        "Dr Accuracy %": "67.9",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2018-08-19",
+        "position": "CUT",
+        "roundPosition": "T154",
+        "TournamentName": "Wyndham Championship",
+        "is_major": "0",
+        "playerName": "Charles Frost",
+        "player_num": "33181",
+        "Rounds": "2",
+        "CourseID": "752",
+        "Course": "Sedgefield CC",
+        "ShotLink": "2",
+        "SG:TOT": "-5.81",
+        "SG:T2G": "-4.08",
+        "SG:OTT": "1.17",
+        "SG:APP": "-3.79",
+        "SG:BS": "-2.62",
+        "SG:ARG": "-1.46",
+        "SG:P": "-1.73",
+        "SG:SG": "-3.18"
+      },
+      {
+        "Date": "2018-05-06",
+        "position": "CUT",
+        "roundPosition": "T150",
+        "TournamentName": "Wells Fargo Championship",
+        "is_major": "0",
+        "playerName": "Charles Frost",
+        "player_num": "33181",
+        "Rounds": "2",
+        "CourseID": "872",
+        "Course": "Quail Hollow Club",
+        "ShotLink": "2",
+        "SG:TOT": "-6.84",
+        "SG:T2G": "-5.41",
+        "SG:OTT": "-1.89",
+        "SG:APP": "-2.27",
+        "SG:BS": "-4.16",
+        "SG:ARG": "-1.25",
+        "SG:P": "-1.42",
+        "SG:SG": "-2.67"
+      },
+      {
+        "Date": "2015-08-16",
+        "position": "CUT",
+        "roundPosition": "T144",
+        "TournamentName": "PGA Championship",
+        "is_major": "1",
+        "playerName": "Charles Frost",
+        "player_num": "33181",
+        "Rounds": "2",
+        "CourseID": "706",
+        "Course": "Whistling Straits",
+        "ShotLink": "2",
+        "SG:TOT": "-5.96",
+        "SG:T2G": "-5.16",
+        "SG:OTT": "-1.00",
+        "SG:APP": "-2.36",
+        "SG:BS": "-3.37",
+        "SG:ARG": "-1.79",
+        "SG:P": "-0.80",
+        "SG:SG": "-2.59"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "6"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.8020000159740448",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-1.727999985218048",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa Trivialis",
+        "StrokesGainedAverage": "-1.4229999780654907",
+        "Rounds": "2"
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-5.770000020662944",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-6.626666863759358",
+        "Rounds": "3"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-5.955000221729279",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-5.805000066757202",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-6.835000038146973",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-6.395000129938126",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-5.805000066757202",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Strong",
+        "StrokesGainedAverage": "-6.835000038146973",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-5.955000221729279",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-5.805000066757202",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "80",
+        "PM": "76",
+        "Rounds": "6"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "6",
+        "50-100": "28.1",
+        "100-150": "32.1",
+        "150-200": "43",
+        "200+": "53.6",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-6.835000038146973",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-5.88000014424324",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:20:11.615Z",
+    "ok": true
+  }
+}

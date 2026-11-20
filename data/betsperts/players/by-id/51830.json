@@ -1,0 +1,200 @@
+{
+  "playerId": "51830",
+  "playerName": "Taylor Funk",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Taylor Funk",
+    "BirthPlace": "Ponte Vedra Beach, Florida",
+    "BirthDate": "October 30, 1995",
+    "Age": "31",
+    "Height": "5ft 10in",
+    "Weight": "160 lbs",
+    "Nationality": "United States",
+    "Residence": "Jupiter, Florida",
+    "ProWins": "0",
+    "TurnedPro": "2017",
+    "PGAWins": "0",
+    "College": "University of Texas 2017, Finance"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Taylor Funk",
+        "player_num": "51830",
+        "Year": "2020",
+        "Rounds": "2",
+        "SG:TOT": "-5.20",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "35.7",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Taylor Funk",
+        "player_num": "51830",
+        "Year": "2019",
+        "Rounds": "2",
+        "SG:TOT": "-5.23",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "32.1",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2020-11-01",
+        "position": "CUT",
+        "roundPosition": "128",
+        "TournamentName": "Bermuda Championship",
+        "is_major": "0",
+        "playerName": "Taylor Funk",
+        "player_num": "51830",
+        "Rounds": "2",
+        "CourseID": "765",
+        "Course": "Port Royal GC",
+        "ShotLink": "0",
+        "SG:TOT": "-5.20",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2019-11-03",
+        "position": "CUT",
+        "roundPosition": "T114",
+        "TournamentName": "Bermuda Championship",
+        "is_major": "0",
+        "playerName": "Taylor Funk",
+        "player_num": "51830",
+        "Rounds": "2",
+        "CourseID": "765",
+        "Course": "Port Royal GC",
+        "ShotLink": "0",
+        "SG:TOT": "-5.23",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "8"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": null,
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-4.864999890327454",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-5.565000057220459",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": null,
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": null,
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-5.214999973773956",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-4.499999920527141",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-7.360000133514404",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-5.214999973773956",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "79",
+        "PM": "73.5",
+        "Rounds": "8"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "8",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-5.214999973773956",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:56.020Z",
+    "ok": true
+  }
+}

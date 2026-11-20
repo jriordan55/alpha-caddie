@@ -1,0 +1,163 @@
+{
+  "playerId": "54608",
+  "playerName": "Dillon Board",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Dillon Board",
+    "BirthPlace": "Jacksonville, Florida",
+    "BirthDate": "November 11, 1993",
+    "Age": "33",
+    "Height": "6ft 1in",
+    "Weight": "185 lbs",
+    "Nationality": "United States",
+    "Residence": "Jacksonville, Florida",
+    "ProWins": null,
+    "TurnedPro": "2016",
+    "PGAWins": null,
+    "College": "College of Coastal Georgia "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Dillon Board",
+        "player_num": "54608",
+        "Year": "2025",
+        "Rounds": "2",
+        "SG:TOT": "-3.69",
+        "SG:T2G": "-2.91",
+        "SG:OTT": "-0.45",
+        "SG:APP": "-1.74",
+        "SG:BS": "-2.19",
+        "SG:ARG": "-0.72",
+        "SG:P": "-0.78",
+        "Dr Distance": "301.8",
+        "Dr Accuracy %": "39.3",
+        "Ball Speed": "180.49"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2025-05-11",
+        "position": "CUT",
+        "roundPosition": "T124",
+        "TournamentName": "Myrtle Beach Classic",
+        "is_major": "0",
+        "playerName": "Dillon Board",
+        "player_num": "54608",
+        "Rounds": "2",
+        "CourseID": "925",
+        "Course": "Dunes Golf & Beach Club",
+        "ShotLink": "2",
+        "SG:TOT": "-3.69",
+        "SG:T2G": "-2.91",
+        "SG:OTT": "-0.45",
+        "SG:APP": "-1.74",
+        "SG:BS": "-2.19",
+        "SG:ARG": "-0.72",
+        "SG:P": "-0.78",
+        "SG:SG": "-1.50"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "6"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-0.7820000052452087",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-3.9800000190734863",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-3.390000104904175",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": null,
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": null,
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-3.6850000619888306",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-3.390000104904175",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-3.9800000190734863",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-3.6850000619888306",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74",
+        "PM": "74",
+        "Rounds": "6"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "6",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-3.6850000619888306",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:21:14.192Z",
+    "ok": true
+  }
+}

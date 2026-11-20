@@ -1,0 +1,158 @@
+{
+  "playerId": "45534",
+  "playerName": "Jimmy Gunn",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/04/Flag_of_Scotland.svg_.png",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Jimmy Gunn",
+    "BirthPlace": "Dornoch, Scotland",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "6ft 0in",
+    "Weight": "165 lbs",
+    "Nationality": "Scotland",
+    "Residence": "Mesa, Arizona",
+    "ProWins": null,
+    "TurnedPro": "2007",
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Jimmy Gunn",
+        "player_num": "45534",
+        "Year": "2015",
+        "Rounds": "4",
+        "SG:TOT": "1.40",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "69.6",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2015-06-21",
+        "position": "T27",
+        "roundPosition": "T27",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Jimmy Gunn",
+        "player_num": "45534",
+        "Rounds": "4",
+        "CourseID": "818",
+        "Course": "Chambers Bay GC",
+        "ShotLink": "0",
+        "SG:TOT": "1.40",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "100.0",
+        "SG TOT 1+": "50.0",
+        "SG TOT 2+": "25.0",
+        "SG TOT 3+": "25.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": null,
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "0.7200000286102295",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "0.44999998807907104",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "3.130000114440918",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "1.2899999618530273",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "1.3975000232458115",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "1.3975000232458115",
+        "Rounds": "4"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "1.3975000232458115",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "71.5",
+        "PM": "71",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "1.3975000232458115",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:46.217Z",
+    "ok": true
+  }
+}

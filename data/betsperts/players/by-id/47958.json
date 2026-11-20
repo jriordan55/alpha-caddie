@@ -1,0 +1,185 @@
+{
+  "playerId": "47958",
+  "playerName": "Sam O'Dell",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Sam O'Dell",
+    "BirthPlace": "",
+    "BirthDate": "March 17, 1978",
+    "Age": "48",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "United States",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Sam ODell",
+        "player_num": "47958",
+        "Year": "2018",
+        "Rounds": "2",
+        "SG:TOT": "-4.51",
+        "SG:T2G": "-3.44",
+        "SG:OTT": "0.30",
+        "SG:APP": "-1.64",
+        "SG:BS": "-1.34",
+        "SG:ARG": "-2.11",
+        "SG:P": "-1.07",
+        "Dr Distance": "292.8",
+        "Dr Accuracy %": "60.7",
+        "Ball Speed": "165.61"
+      },
+      {
+        "playerName": "Sam ODell",
+        "player_num": "47958",
+        "Year": "2015",
+        "Rounds": "2",
+        "SG:TOT": "-0.67",
+        "SG:T2G": "-0.76",
+        "SG:OTT": "-0.51",
+        "SG:APP": "-0.09",
+        "SG:BS": "-0.60",
+        "SG:ARG": "-0.16",
+        "SG:P": "0.09",
+        "Dr Distance": "265.7",
+        "Dr Accuracy %": "60.7",
+        "Ball Speed": "164.57"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2018-07-08",
+        "position": "CUT",
+        "roundPosition": "T149",
+        "TournamentName": "A Military Tribute at The Greenbrier",
+        "is_major": "0",
+        "playerName": "Sam ODell",
+        "player_num": "47958",
+        "Rounds": "2",
+        "CourseID": "771",
+        "Course": "The Old White TPC",
+        "ShotLink": "2",
+        "SG:TOT": "-4.51",
+        "SG:T2G": "-3.44",
+        "SG:OTT": "0.30",
+        "SG:APP": "-1.64",
+        "SG:BS": "-1.34",
+        "SG:ARG": "-2.11",
+        "SG:P": "-1.07",
+        "SG:SG": "-3.18"
+      },
+      {
+        "Date": "2015-07-05",
+        "position": "CUT",
+        "roundPosition": "T93",
+        "TournamentName": "The Greenbrier Classic",
+        "is_major": "0",
+        "playerName": "Sam ODell",
+        "player_num": "47958",
+        "Rounds": "2",
+        "CourseID": "771",
+        "Course": "The Old White TPC",
+        "ShotLink": "2",
+        "SG:TOT": "-0.67",
+        "SG:T2G": "-0.76",
+        "SG:OTT": "-0.51",
+        "SG:APP": "-0.09",
+        "SG:BS": "-0.60",
+        "SG:ARG": "-0.16",
+        "SG:P": "0.09",
+        "SG:SG": "-0.07"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "25.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.49000000208616257",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.8950000405311584",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-4.2850000858306885",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-2.5900000631809235",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-2.5900000631809235",
+        "Rounds": "4"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-2.5900000631809235",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "72",
+        "PM": "71.5",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": "23.4",
+        "150-200": "31.4",
+        "200+": "50.5",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-2.5900000631809235",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:22.747Z",
+    "ok": true
+  }
+}

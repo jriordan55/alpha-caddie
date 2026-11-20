@@ -1,0 +1,234 @@
+{
+  "playerId": "36964",
+  "playerName": "Francisco Bidé",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/ar-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Francisco Bidé",
+    "BirthPlace": null,
+    "BirthDate": "July 06, 1987",
+    "Age": "39",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "Argentina",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Francisco Bidé",
+        "player_num": "36964",
+        "Year": "2026",
+        "Rounds": "2",
+        "SG:TOT": "-5.06",
+        "SG:T2G": "-2.64",
+        "SG:OTT": "-0.58",
+        "SG:APP": "-1.65",
+        "SG:BS": "-2.23",
+        "SG:ARG": "-0.41",
+        "SG:P": "-2.43",
+        "Dr Distance": "282.5",
+        "Dr Accuracy %": "53.6",
+        "Ball Speed": "170.46"
+      },
+      {
+        "playerName": "Francisco Bidé",
+        "player_num": "36964",
+        "Year": "2024",
+        "Rounds": "2",
+        "SG:TOT": "-7.09",
+        "SG:T2G": "-5.65",
+        "SG:OTT": "-0.77",
+        "SG:APP": "-5.05",
+        "SG:BS": "-5.82",
+        "SG:ARG": "0.17",
+        "SG:P": "-1.11",
+        "Dr Distance": "273.9",
+        "Dr Accuracy %": "57.1",
+        "Ball Speed": "165.15"
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Francisco Bidé",
+        "player_num": "36964",
+        "Rounds": "2",
+        "SG:TOT": "-5.06",
+        "SG:T2G": "-2.64",
+        "SG:OTT": "-0.58",
+        "SG:APP": "-1.65",
+        "SG:BS": "-2.23",
+        "SG:ARG": "-0.41",
+        "SG:P": "-2.43",
+        "SG:SG": "-2.84"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-05-17",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "PGA Championship",
+        "is_major": "1",
+        "playerName": "Francisco Bidé",
+        "player_num": "36964",
+        "Rounds": "2",
+        "CourseID": "773",
+        "Course": "Aronimink Golf Club",
+        "ShotLink": "2",
+        "SG:TOT": "-5.06",
+        "SG:T2G": "-2.64",
+        "SG:OTT": "-0.58",
+        "SG:APP": "-1.65",
+        "SG:BS": "-2.23",
+        "SG:ARG": "-0.41",
+        "SG:P": "-2.43",
+        "SG:SG": "-2.84"
+      },
+      {
+        "Date": "2024-11-24",
+        "position": "CUT",
+        "roundPosition": "153",
+        "TournamentName": "The RSM Classic",
+        "is_major": "0",
+        "playerName": "Francisco Bidé",
+        "player_num": "36964",
+        "Rounds": "2",
+        "CourseID": "889",
+        "Course": "Sea Island GC (Plantation)",
+        "ShotLink": "1",
+        "SG:TOT": "-7.09",
+        "SG:T2G": "-5.65",
+        "SG:OTT": "-0.77",
+        "SG:APP": "-5.05",
+        "SG:BS": "-5.82",
+        "SG:ARG": "0.17",
+        "SG:P": "-1.11",
+        "SG:SG": "-0.94"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-2.4255000352859497",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-1.1100000143051147",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-5.2500001192092896",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-6.9049999713897705",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-6.389999866485596",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-3.740000009536743",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-7.090000152587891",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-6.760000228881836",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-7.420000076293945",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-5.064999938011169",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-5.064999938011169",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-7.090000152587891",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "77",
+        "PM": "78",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": "33.8",
+        "150-200": "50.1",
+        "200+": "80.4",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-7.090000152587891",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-5.064999938011169",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:21:36.515Z",
+    "ok": true
+  }
+}

@@ -1,0 +1,175 @@
+{
+  "courseNum": "945",
+  "courseName": "The Renaissance Club",
+  "list": {
+    "CourseName": "The Renaissance Club",
+    "CourseNum": "945",
+    "CourseNums": [
+      945,
+      977
+    ]
+  },
+  "details": {
+    "CourseName": "The Renaissance Club",
+    "CourseNum": "945",
+    "Locations": [
+      "UK/Ireland",
+      "International"
+    ],
+    "SeasonHeld": "Summer",
+    "CourseTypes": [
+      "Coastal",
+      "Parkland",
+      "Links"
+    ],
+    "ParScore": "70",
+    "Yards": "7282",
+    "AVG": "104",
+    "CourseLength": "Average",
+    "Architects": [
+      "Tom Doak"
+    ],
+    "RedesignArchitects": [],
+    "Elevation": "89",
+    "CourseElevation": "Sea Level",
+    "Bunkers": "83",
+    "BunkersRank": "Average",
+    "WaterHoles": "0",
+    "WaterDanger": "Low",
+    "ScoreRTP": "0.04",
+    "Difficulty": "Average",
+    "FwyGrass": "Fescue Mix",
+    "FwyWidth": "0",
+    "GreenSqFt": "7000",
+    "GreenSize": "Large",
+    "GreenGrass": "Native",
+    "GreenStimp": "10",
+    "GreenSpeed": "Slow",
+    "RoughType": "Fescue",
+    "RoughGrass": "Fescue",
+    "RoughLengthInc": "4",
+    "RoughLength": "Long",
+    "EventTypes": [
+      "36-Hole Cut"
+    ],
+    "Tournaments": [
+      {
+        "Year": "2022-2025",
+        "Tournament": "Scottish Open"
+      }
+    ],
+    "CorrelatedCourse": [
+      "Royal Portrush GC",
+      "Royal Birkdale GC",
+      "Royal St. Georges GC",
+      "Royal Troon",
+      "St. Andrews GC (Old Course)",
+      "Shinnecock Hills GC",
+      "Royal Liverpool",
+      "Los Angeles CC (North)",
+      "Memorial Park Golf Course",
+      "Ocean Course at Kiawah Island",
+      "Erin Hills"
+    ],
+    "FieldSize": "Full Field",
+    "FieldStrength": "Strong",
+    "OTTClub": "Mixed",
+    "FwyPct": "48.8",
+    "FwyAccuracy": "Difficult",
+    "GainOTT": "Average",
+    "MissedFairwayPenalty": "Low",
+    "RoughPenalty": "Low",
+    "GIRAccuracy": "Average",
+    "GIRPct": "59.3",
+    "GainAPP": "Average",
+    "ScramblingFromRough": "Easy",
+    "ScramblingFromShortGrass": "Easy",
+    "SandSaves": "Difficult",
+    "GainARG": "Very Easy",
+    "GainingPuttingInside15": "Difficult",
+    "GainingPuttingOutside15": "Easy",
+    "3PuttAVD": "Difficult",
+    "GainPutting": "Very Difficult",
+    "Par3Scoring": "Average",
+    "Par4Scoring": "Average",
+    "Par5Scoring": "Average",
+    "ShotLink": "1"
+  },
+  "tournaments": [
+    {
+      "CourseNum": "945",
+      "TNum": "541",
+      "TourneyName": "Genesis Scottish Open"
+    }
+  ],
+  "_meta": {
+    "pulledAt": "2026-11-20T22:18:28.757Z",
+    "detailStatus": 200,
+    "tournamentsStatus": 200
+  },
+  "auth": {
+    "holeBreakdown": [],
+    "correlated": [
+      {
+        "CourseNum": "43",
+        "CourseName": "Los Angeles CC (North)",
+        "CourseNums": "[43]"
+      },
+      {
+        "CourseNum": "236",
+        "CourseName": "Erin Hills",
+        "CourseNums": "[236]"
+      },
+      {
+        "CourseNum": "541",
+        "CourseName": "Royal Birkdale GC",
+        "CourseNums": "[541]"
+      },
+      {
+        "CourseNum": "618",
+        "CourseName": "Shinnecock Hills GC",
+        "CourseNums": "[618]"
+      },
+      {
+        "CourseNum": "668",
+        "CourseName": "St. Andrews GC (Old Course)",
+        "CourseNums": "[668]"
+      },
+      {
+        "CourseNum": "697",
+        "CourseName": "Ocean Course at Kiawah Island",
+        "CourseNums": "[697]"
+      },
+      {
+        "CourseNum": "709",
+        "CourseName": "Royal Troon",
+        "CourseNums": "[709]"
+      },
+      {
+        "CourseNum": "778",
+        "CourseName": "Royal St. Georges GC",
+        "CourseNums": "[778]"
+      },
+      {
+        "CourseNum": "885",
+        "CourseName": "Royal Portrush GC",
+        "CourseNums": "[885]"
+      },
+      {
+        "CourseNum": "897",
+        "CourseName": "Memorial Park Golf Course",
+        "CourseNums": "[897]"
+      },
+      {
+        "CourseNum": "923",
+        "CourseName": "Royal Liverpool",
+        "CourseNums": "[923, 724]"
+      }
+    ],
+    "_meta": {
+      "pulledAt": "2026-11-20T22:52:52.811Z",
+      "holeStatus": 200,
+      "correlatedStatus": 200
+    }
+  }
+}

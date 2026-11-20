@@ -1,0 +1,225 @@
+{
+  "playerId": "24399",
+  "playerName": "Scott Gardiner",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/as-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Scott Gardiner",
+    "BirthPlace": "Liverpool, New South Wales, Australia",
+    "BirthDate": "March 22, 1976",
+    "Age": "50",
+    "Height": "5ft 11in",
+    "Weight": "182 lbs",
+    "Nationality": "Australia",
+    "Residence": "Farmington, Arkansas",
+    "ProWins": null,
+    "TurnedPro": "2000",
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Scott Gardiner",
+        "player_num": "24399",
+        "Year": "2015",
+        "Rounds": "7",
+        "SG:TOT": "-3.28",
+        "SG:T2G": "-2.56",
+        "SG:OTT": "0.19",
+        "SG:APP": "-2.36",
+        "SG:BS": "-2.17",
+        "SG:ARG": "-0.39",
+        "SG:P": "-0.55",
+        "Dr Distance": "274.7",
+        "Dr Accuracy %": "66.0",
+        "Ball Speed": "166.95"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2015-08-23",
+        "position": "CUT",
+        "roundPosition": "T108",
+        "TournamentName": "Wyndham Championship",
+        "is_major": "0",
+        "playerName": "Scott Gardiner",
+        "player_num": "24399",
+        "Rounds": "2",
+        "CourseID": "752",
+        "Course": "Sedgefield CC",
+        "ShotLink": "2",
+        "SG:TOT": "-1.04",
+        "SG:T2G": "-2.04",
+        "SG:OTT": "0.11",
+        "SG:APP": "-2.08",
+        "SG:BS": "-1.97",
+        "SG:ARG": "-0.07",
+        "SG:P": "1.00",
+        "SG:SG": "0.93"
+      },
+      {
+        "Date": "2015-04-26",
+        "position": "CUT",
+        "roundPosition": "149",
+        "TournamentName": "Zurich Classic",
+        "is_major": "0",
+        "playerName": "Scott Gardiner",
+        "player_num": "24399",
+        "Rounds": "2",
+        "CourseID": "714",
+        "Course": "TPC Louisiana",
+        "ShotLink": "2",
+        "SG:TOT": "-6.75",
+        "SG:T2G": "-3.61",
+        "SG:OTT": "-0.01",
+        "SG:APP": "-2.72",
+        "SG:BS": "-2.73",
+        "SG:ARG": "-0.88",
+        "SG:P": "-3.15",
+        "SG:SG": "-4.03"
+      },
+      {
+        "Date": "2015-02-15",
+        "position": "CUT",
+        "roundPosition": "T139",
+        "TournamentName": "AT&T Pebble Beach Pro-Am",
+        "is_major": "0",
+        "playerName": "Scott Gardiner",
+        "player_num": "24399",
+        "Rounds": "3",
+        "CourseID": "205",
+        "Course": "Spyglass Hill",
+        "ShotLink": "1",
+        "SG:TOT": "-2.46",
+        "SG:T2G": "-1.50",
+        "SG:OTT": "0.75",
+        "SG:APP": "-2.21",
+        "SG:BS": "-1.46",
+        "SG:ARG": "-0.04",
+        "SG:P": "1.56",
+        "SG:SG": "1.52"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "28.6",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "7"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-1.0750000700354576",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "1.555999994277954",
+        "Rounds": "3"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-2.83999989554286",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-2.950000007947286",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-5.610000133514404",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-6.754999876022339",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-1.0449999570846558",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-2.460000059256951",
+        "Rounds": "3"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-2.5666666825612388",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-3.8199999490752816",
+        "Rounds": "4"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-3.2828571205692634",
+        "Rounds": "7"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "71",
+        "PM": "74.75",
+        "Rounds": "7"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "7",
+        "50-100": null,
+        "100-150": "24.4",
+        "150-200": "39.2",
+        "200+": "66.2",
+        "200-250": null,
+        "250+": "85.4"
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-6.754999876022339",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-1.0449999570846558",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "West Coast",
+        "StrokesGainedAverage": "-2.460000059256951",
+        "Rounds": "3"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:27.299Z",
+    "ok": true
+  }
+}

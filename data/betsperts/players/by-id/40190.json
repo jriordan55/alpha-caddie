@@ -1,0 +1,148 @@
+{
+  "playerId": "40190",
+  "playerName": "Ryan Polzin",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Ryan Polzin",
+    "BirthPlace": null,
+    "BirthDate": "March 06, 1980",
+    "Age": "46",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Ryan Polzin",
+        "player_num": "40190",
+        "Year": "2015",
+        "Rounds": "2",
+        "SG:TOT": "-5.97",
+        "SG:T2G": "-5.09",
+        "SG:OTT": "-1.83",
+        "SG:APP": "-0.21",
+        "SG:BS": "-2.04",
+        "SG:ARG": "-3.05",
+        "SG:P": "-0.88",
+        "Dr Distance": "271.5",
+        "Dr Accuracy %": "50.0",
+        "Ball Speed": "164.76"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2015-03-29",
+        "position": "CUT",
+        "roundPosition": "T133",
+        "TournamentName": "Valero Texas Open",
+        "is_major": "0",
+        "playerName": "Ryan Polzin",
+        "player_num": "40190",
+        "Rounds": "2",
+        "CourseID": "770",
+        "Course": "TPC San Antonio (Oaks)",
+        "ShotLink": "2",
+        "SG:TOT": "-5.97",
+        "SG:T2G": "-5.09",
+        "SG:OTT": "-1.83",
+        "SG:APP": "-0.21",
+        "SG:BS": "-2.04",
+        "SG:ARG": "-3.05",
+        "SG:P": "-0.88",
+        "SG:SG": "-3.92"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Poa Trivialis",
+        "StrokesGainedAverage": "-0.8765000104904175",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-11.300000190734863",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.6299999952316284",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-5.965000092983246",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-5.965000092983246",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-5.965000092983246",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "88",
+        "PM": "74",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": "62.3",
+        "200-250": "67.9",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-5.965000092983246",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:17.577Z",
+    "ok": true
+  }
+}

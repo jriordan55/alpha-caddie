@@ -1,0 +1,184 @@
+{
+  "playerId": "51921",
+  "playerName": "Jannik De Bruyn",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_gm-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Jannik De Bruyn",
+    "BirthPlace": null,
+    "BirthDate": "August 30, 1999",
+    "Age": "27",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "Germany",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Jannik De Bruyn",
+        "player_num": "51921",
+        "Year": "2025",
+        "Rounds": "4",
+        "SG:TOT": "-0.98",
+        "SG:T2G": "-1.99",
+        "SG:OTT": "-0.58",
+        "SG:APP": "0.33",
+        "SG:BS": "-0.25",
+        "SG:ARG": "-1.74",
+        "SG:P": "0.70",
+        "Dr Distance": "298.0",
+        "Dr Accuracy %": "42.9",
+        "Ball Speed": "176.52"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2025-07-20",
+        "position": "CUT",
+        "roundPosition": null,
+        "TournamentName": "Barracuda Championship",
+        "is_major": null,
+        "playerName": "Jannik De Bruyn",
+        "player_num": "51921",
+        "Rounds": "2",
+        "CourseID": "931",
+        "Course": "Tahoe Mountain Club (Old Greenwood)",
+        "ShotLink": "0",
+        "SG:TOT": "-0.67",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2025-07-13",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "ISCO Championship",
+        "is_major": "0",
+        "playerName": "Jannik De Bruyn",
+        "player_num": "51921",
+        "Rounds": "2",
+        "CourseID": "934",
+        "Course": "Hurstbourne CC",
+        "ShotLink": "2",
+        "SG:TOT": "-1.29",
+        "SG:T2G": "-1.99",
+        "SG:OTT": "-0.58",
+        "SG:APP": "0.33",
+        "SG:BS": "-0.25",
+        "SG:ARG": "-1.74",
+        "SG:P": "0.70",
+        "SG:SG": "-1.04"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "25.0",
+        "SG TOT 1+": "25.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "0.6985000297427177",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-2.4399999380111694",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "0.47999998927116394",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-0.6699999868869781",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-1.2899999618530273",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-1.0299999713897705",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-1.2899999618530273",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-0.3100000023841858",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-0.9799999743700027",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "70",
+        "PM": "75",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": "30.5",
+        "150-200": null,
+        "200+": "49.9",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-0.9799999743700027",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:23.874Z",
+    "ok": true
+  }
+}

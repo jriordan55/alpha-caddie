@@ -1,0 +1,148 @@
+{
+  "playerId": "57003",
+  "playerName": "Matthew Naumec",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Matthew Naumec",
+    "BirthPlace": "Wilbraham, Massachusetts",
+    "BirthDate": "September 06, 1996",
+    "Age": "30",
+    "Height": "5ft 11in",
+    "Weight": "175 lbs",
+    "Nationality": "United States",
+    "Residence": "Wilbraham, Massachusetts",
+    "ProWins": "0",
+    "TurnedPro": "2019",
+    "PGAWins": "0",
+    "College": "Boston College 2019, Economics"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Matthew Naumec",
+        "player_num": "57003",
+        "Year": "2019",
+        "Rounds": "2",
+        "SG:TOT": "-3.87",
+        "SG:T2G": "-3.18",
+        "SG:OTT": "-0.53",
+        "SG:APP": "-0.56",
+        "SG:BS": "-1.09",
+        "SG:ARG": "-2.09",
+        "SG:P": "-0.70",
+        "Dr Distance": "273.3",
+        "Dr Accuracy %": "60.7",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2019-06-16",
+        "position": "CUT",
+        "roundPosition": "T145",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Matthew Naumec",
+        "player_num": "57003",
+        "Rounds": "2",
+        "CourseID": "666",
+        "Course": "Pebble Beach Golf Links",
+        "ShotLink": "2",
+        "SG:TOT": "-3.87",
+        "SG:T2G": "-3.18",
+        "SG:OTT": "-0.53",
+        "SG:APP": "-0.56",
+        "SG:BS": "-1.09",
+        "SG:ARG": "-2.09",
+        "SG:P": "-0.70",
+        "SG:SG": "-2.78"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "-0.695000022649765",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.309999942779541",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-6.429999828338623",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-3.869999885559082",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-3.869999885559082",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-3.869999885559082",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74",
+        "PM": "79",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "36.7",
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-3.869999885559082",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:24:01.814Z",
+    "ok": true
+  }
+}

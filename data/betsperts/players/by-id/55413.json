@@ -1,0 +1,237 @@
+{
+  "playerId": "55413",
+  "playerName": "Luis Gagne",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_cs-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Luis Gagne",
+    "BirthPlace": "San Jose, Costa Rica",
+    "BirthDate": "August 27, 1997",
+    "Age": "29",
+    "Height": "5ft 9in",
+    "Weight": "165 lbs",
+    "Nationality": "Costa Rica",
+    "Residence": "Orlando, Florida",
+    "ProWins": "0",
+    "TurnedPro": "2019",
+    "PGAWins": "0",
+    "College": "Louisiana State University 2019, Sports Administration"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Luis Gagne",
+        "player_num": "55413",
+        "Year": "2021",
+        "Rounds": "2",
+        "SG:TOT": "-1.25",
+        "SG:T2G": "-1.49",
+        "SG:OTT": "-0.56",
+        "SG:APP": "-2.51",
+        "SG:BS": "-3.06",
+        "SG:ARG": "1.57",
+        "SG:P": "0.24",
+        "Dr Distance": "291.9",
+        "Dr Accuracy %": "39.3",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Luis Gagne",
+        "player_num": "55413",
+        "Year": "2019",
+        "Rounds": "2",
+        "SG:TOT": "-1.87",
+        "SG:T2G": "-1.99",
+        "SG:OTT": "-0.62",
+        "SG:APP": "0.22",
+        "SG:BS": "-0.41",
+        "SG:ARG": "-1.59",
+        "SG:P": "0.12",
+        "Dr Distance": "260.4",
+        "Dr Accuracy %": "64.3",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Luis Gagne",
+        "player_num": "55413",
+        "Year": "2018",
+        "Rounds": "4",
+        "SG:TOT": "0.39",
+        "SG:T2G": "-1.43",
+        "SG:OTT": "-0.89",
+        "SG:APP": "-1.14",
+        "SG:BS": "-2.03",
+        "SG:ARG": "0.60",
+        "SG:P": "1.83",
+        "Dr Distance": "282.0",
+        "Dr Accuracy %": "75.0",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2021-06-20",
+        "position": "CUT",
+        "roundPosition": null,
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Luis Gagne",
+        "player_num": "55413",
+        "Rounds": "2",
+        "CourseID": "744",
+        "Course": "Torrey Pines GC (South)",
+        "ShotLink": "2",
+        "SG:TOT": "-1.25",
+        "SG:T2G": "-1.49",
+        "SG:OTT": "-0.56",
+        "SG:APP": "-2.51",
+        "SG:BS": "-3.06",
+        "SG:ARG": "1.57",
+        "SG:P": "0.24",
+        "SG:SG": "1.81"
+      },
+      {
+        "Date": "2019-06-16",
+        "position": "CUT",
+        "roundPosition": "T118",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Luis Gagne",
+        "player_num": "55413",
+        "Rounds": "2",
+        "CourseID": "666",
+        "Course": "Pebble Beach Golf Links",
+        "ShotLink": "2",
+        "SG:TOT": "-1.87",
+        "SG:T2G": "-1.99",
+        "SG:OTT": "-0.62",
+        "SG:APP": "0.22",
+        "SG:BS": "-0.41",
+        "SG:ARG": "-1.59",
+        "SG:P": "0.12",
+        "SG:SG": "-1.47"
+      },
+      {
+        "Date": "2018-06-17",
+        "position": "T48",
+        "roundPosition": "T48",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Luis Gagne",
+        "player_num": "55413",
+        "Rounds": "4",
+        "CourseID": "618",
+        "Course": "Shinnecock Hills GC",
+        "ShotLink": "4",
+        "SG:TOT": "0.39",
+        "SG:T2G": "-1.43",
+        "SG:OTT": "-0.89",
+        "SG:APP": "-1.14",
+        "SG:BS": "-2.03",
+        "SG:ARG": "0.60",
+        "SG:P": "1.83",
+        "SG:SG": "2.43"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "37.5",
+        "SG TOT 1+": "25.0",
+        "SG TOT 2+": "12.5",
+        "SG TOT 3+": "12.5",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "8"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "0.18000003322958946",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "1.293333371480306",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-2.346666624148687",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "0.33000001311302185",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-1.8200000524520874",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-1.869999885559082",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-0.15166667103767395",
+        "Rounds": "6"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-0.581249974668026",
+        "Rounds": "8"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-0.581249974668026",
+        "Rounds": "8"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74.33333333333333",
+        "PM": "74.5",
+        "Rounds": "8"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "8",
+        "50-100": null,
+        "100-150": "32.1",
+        "150-200": "42",
+        "200+": "63.6",
+        "200-250": "59.2",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-0.581249974668026",
+        "Rounds": "8"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:40.409Z",
+    "ok": true
+  }
+}

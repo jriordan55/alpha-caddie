@@ -1,0 +1,148 @@
+{
+  "playerId": "29639",
+  "playerName": "Jesse Hutchins",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Jesse Hutchins",
+    "BirthPlace": null,
+    "BirthDate": "August 16, 1981",
+    "Age": "45",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Jesse Hutchins",
+        "player_num": "29639",
+        "Year": "2016",
+        "Rounds": "2",
+        "SG:TOT": "-2.15",
+        "SG:T2G": "-1.90",
+        "SG:OTT": "0.31",
+        "SG:APP": "-1.55",
+        "SG:BS": "-1.24",
+        "SG:ARG": "-0.66",
+        "SG:P": "-0.25",
+        "Dr Distance": "282.1",
+        "Dr Accuracy %": "60.7",
+        "Ball Speed": "168.79"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2016-08-21",
+        "position": "CUT",
+        "roundPosition": "T129",
+        "TournamentName": "Wyndham Championship",
+        "is_major": "0",
+        "playerName": "Jesse Hutchins",
+        "player_num": "29639",
+        "Rounds": "2",
+        "CourseID": "752",
+        "Course": "Sedgefield CC",
+        "ShotLink": "2",
+        "SG:TOT": "-2.15",
+        "SG:T2G": "-1.90",
+        "SG:OTT": "0.31",
+        "SG:APP": "-1.55",
+        "SG:BS": "-1.24",
+        "SG:ARG": "-0.66",
+        "SG:P": "-0.25",
+        "SG:SG": "-0.92"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-0.2540000081062317",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-5.260000228881836",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "0.9599999785423279",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-2.150000125169754",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-2.150000125169754",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-2.150000125169754",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "68",
+        "PM": "75",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "30.6",
+        "150-200": "33.4",
+        "200+": "42.5",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-2.150000125169754",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:43.326Z",
+    "ok": true
+  }
+}

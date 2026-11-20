@@ -1,0 +1,200 @@
+{
+  "playerId": "40226",
+  "playerName": "Andreas Halvorsen",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_no-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Andreas Halvorsen",
+    "BirthPlace": "Larvik, Vestfold, Norway",
+    "BirthDate": "December 09, 1996",
+    "Age": "29",
+    "Height": "6ft 3in",
+    "Weight": "180 lbs",
+    "Nationality": "Norway",
+    "Residence": "Palm Beach, Florida",
+    "ProWins": "0",
+    "TurnedPro": "2016",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Andreas Halvorsen",
+        "player_num": "40226",
+        "Year": "2025",
+        "Rounds": "2",
+        "SG:TOT": "-0.79",
+        "SG:T2G": "-0.27",
+        "SG:OTT": "0.57",
+        "SG:APP": "0.37",
+        "SG:BS": "0.94",
+        "SG:ARG": "-1.21",
+        "SG:P": "-0.51",
+        "Dr Distance": "307.1",
+        "Dr Accuracy %": "46.4",
+        "Ball Speed": "182.68"
+      },
+      {
+        "playerName": "Andreas Halvorsen",
+        "player_num": "40226",
+        "Year": "2019",
+        "Rounds": "2",
+        "SG:TOT": "-5.37",
+        "SG:T2G": "-6.83",
+        "SG:OTT": "0.04",
+        "SG:APP": "-4.27",
+        "SG:BS": "-4.23",
+        "SG:ARG": "-2.61",
+        "SG:P": "1.46",
+        "Dr Distance": "272.5",
+        "Dr Accuracy %": "46.4",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2025-07-13",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "ISCO Championship",
+        "is_major": "0",
+        "playerName": "Andreas Halvorsen",
+        "player_num": "40226",
+        "Rounds": "2",
+        "CourseID": "934",
+        "Course": "Hurstbourne CC",
+        "ShotLink": "2",
+        "SG:TOT": "-0.79",
+        "SG:T2G": "-0.27",
+        "SG:OTT": "0.57",
+        "SG:APP": "0.37",
+        "SG:BS": "0.94",
+        "SG:ARG": "-1.21",
+        "SG:P": "-0.51",
+        "SG:SG": "-1.73"
+      },
+      {
+        "Date": "2019-06-16",
+        "position": "CUT",
+        "roundPosition": "153",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Andreas Halvorsen",
+        "player_num": "40226",
+        "Rounds": "2",
+        "CourseID": "666",
+        "Course": "Pebble Beach Golf Links",
+        "ShotLink": "2",
+        "SG:TOT": "-5.37",
+        "SG:T2G": "-6.83",
+        "SG:OTT": "0.04",
+        "SG:APP": "-4.27",
+        "SG:BS": "-4.23",
+        "SG:ARG": "-2.61",
+        "SG:P": "1.46",
+        "SG:SG": "-1.14"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "25.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.5130000114440918",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "1.4625000357627869",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.5799999684095383",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-5.580000162124634",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-3.080000065267086",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-0.7900000065565109",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-5.370000123977661",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-5.370000123977661",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-0.7900000065565109",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "72.5",
+        "PM": "77.5",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": "23.4",
+        "100-150": "34.8",
+        "150-200": "48.2",
+        "200+": "53.1",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-3.080000065267086",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:18:58.795Z",
+    "ok": true
+  }
+}

@@ -1,0 +1,148 @@
+{
+  "playerId": "48126",
+  "playerName": "Calum Hill",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/04/Flag_of_Scotland.svg_.png",
+  "profile": {
+    "ProfileImage": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/07/Calum.jpg",
+    "Name": "Calum Hill",
+    "BirthPlace": "Kirkcaldy, Scotland",
+    "BirthDate": "November 03, 1994",
+    "Age": "32",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "Scotland",
+    "Residence": "Kinross, Scotland",
+    "ProWins": "1",
+    "TurnedPro": "2017",
+    "PGAWins": "0",
+    "College": "Western New Mexico University (2016, Accounting/Masters, Information Systems)"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Calum Hill",
+        "player_num": "48126",
+        "Year": "2018",
+        "Rounds": "4",
+        "SG:TOT": "-0.11",
+        "SG:T2G": "-0.36",
+        "SG:OTT": "0.05",
+        "SG:APP": "-0.41",
+        "SG:BS": "-0.36",
+        "SG:ARG": "-0.00",
+        "SG:P": "0.25",
+        "Dr Distance": "290.5",
+        "Dr Accuracy %": "76.8",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2018-06-17",
+        "position": "61",
+        "roundPosition": "61",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Calum Hill",
+        "player_num": "48126",
+        "Rounds": "4",
+        "CourseID": "618",
+        "Course": "Shinnecock Hills GC",
+        "ShotLink": "4",
+        "SG:TOT": "-0.11",
+        "SG:T2G": "-0.36",
+        "SG:OTT": "0.05",
+        "SG:APP": "-0.41",
+        "SG:BS": "-0.36",
+        "SG:ARG": "-0.00",
+        "SG:P": "0.25",
+        "SG:SG": "0.25"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "50.0",
+        "SG TOT 2+": "25.0",
+        "SG TOT 3+": "25.0",
+        "SG TOT 4+": "25.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "1.4700000286102295",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "4.599999904632568",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-5.670000076293945",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-0.8199999928474426",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-0.10500003397464752",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-0.10500003397464752",
+        "Rounds": "4"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-0.10500003397464752",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74",
+        "PM": "75",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": "30.2",
+        "150-200": "49.1",
+        "200+": "61.1",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-0.10500003397464752",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:59.999Z",
+    "ok": true
+  }
+}

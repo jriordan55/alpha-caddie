@@ -1,0 +1,214 @@
+{
+  "playerId": "60547",
+  "playerName": "Tommy Kuhl",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Tommy Kuhl",
+    "BirthPlace": "Morton, Illinois",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "6ft 0in",
+    "Weight": "170 lbs",
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": "2023",
+    "PGAWins": null,
+    "College": "University of Illinois "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Tommy Kuhl",
+        "player_num": "60547",
+        "Year": "2026",
+        "Rounds": "2",
+        "SG:TOT": "-0.45",
+        "SG:T2G": "0.79",
+        "SG:OTT": "1.16",
+        "SG:APP": "0.41",
+        "SG:BS": "1.57",
+        "SG:ARG": "-0.78",
+        "SG:P": "-1.24",
+        "Dr Distance": "297.4",
+        "Dr Accuracy %": "64.3",
+        "Ball Speed": "179.00"
+      },
+      {
+        "playerName": "Tommy Kuhl",
+        "player_num": "60547",
+        "Year": "2023",
+        "Rounds": "2",
+        "SG:TOT": "-0.74",
+        "SG:T2G": "0.36",
+        "SG:OTT": "0.12",
+        "SG:APP": "1.49",
+        "SG:BS": "1.61",
+        "SG:ARG": "-1.26",
+        "SG:P": "-1.10",
+        "Dr Distance": "306.4",
+        "Dr Accuracy %": "64.3",
+        "Ball Speed": "181.94"
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Tommy Kuhl",
+        "player_num": "60547",
+        "Rounds": "2",
+        "SG:TOT": "-0.45",
+        "SG:T2G": "0.79",
+        "SG:OTT": "1.16",
+        "SG:APP": "0.41",
+        "SG:BS": "1.57",
+        "SG:ARG": "-0.78",
+        "SG:P": "-1.24",
+        "SG:SG": "-2.01"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-07-12",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "ISCO Championship",
+        "is_major": "0",
+        "playerName": "Tommy Kuhl",
+        "player_num": "60547",
+        "Rounds": "2",
+        "CourseID": "934",
+        "Course": "Hurstbourne CC",
+        "ShotLink": "2",
+        "SG:TOT": "-0.45",
+        "SG:T2G": "0.79",
+        "SG:OTT": "1.16",
+        "SG:APP": "0.41",
+        "SG:BS": "1.57",
+        "SG:ARG": "-0.78",
+        "SG:P": "-1.24",
+        "SG:SG": "-2.01"
+      },
+      {
+        "Date": "2023-07-09",
+        "position": "CUT",
+        "roundPosition": "T98",
+        "TournamentName": "John Deere Classic",
+        "is_major": "0",
+        "playerName": "Tommy Kuhl",
+        "player_num": "60547",
+        "Rounds": "2",
+        "CourseID": "669",
+        "Course": "TPC Deere Run",
+        "ShotLink": "2",
+        "SG:TOT": "-0.74",
+        "SG:T2G": "0.36",
+        "SG:OTT": "0.12",
+        "SG:APP": "1.49",
+        "SG:BS": "1.61",
+        "SG:ARG": "-1.26",
+        "SG:P": "-1.10",
+        "SG:SG": "-2.36"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-1.167749971151352",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "0.18000000715255737",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.3650000095367432",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-0.7399999797344208",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-0.445000022649765",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-0.445000022649765",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-0.7399999797344208",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-0.445000022649765",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-0.7399999797344208",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "70",
+        "PM": "70",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": "24.5",
+        "150-200": null,
+        "200+": "43.7",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-0.5925000011920929",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:26:10.044Z",
+    "ok": true
+  }
+}

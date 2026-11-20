@@ -1,0 +1,138 @@
+{
+  "playerId": "35820",
+  "playerName": "Erik Flores",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Erik Flores",
+    "BirthPlace": "Panorama City, California",
+    "BirthDate": "April 05, 1987",
+    "Age": "39",
+    "Height": "6ft 0in",
+    "Weight": "180 lbs",
+    "Nationality": "United States",
+    "Residence": "Cornelius, North Carolina",
+    "ProWins": "0",
+    "TurnedPro": "2009",
+    "PGAWins": "0",
+    "College": "UCLA 2009, History"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Erik Flores",
+        "player_num": "35820",
+        "Year": "2022",
+        "Rounds": "2",
+        "SG:TOT": "-1.63",
+        "SG:T2G": "-2.46",
+        "SG:OTT": "0.00",
+        "SG:APP": "-1.76",
+        "SG:BS": "-1.76",
+        "SG:ARG": "-0.70",
+        "SG:P": "0.83",
+        "Dr Distance": "303.3",
+        "Dr Accuracy %": "53.6",
+        "Ball Speed": "170.52"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2022-07-31",
+        "position": "CUT",
+        "roundPosition": "T118",
+        "TournamentName": "Rocket Mortgage Classic",
+        "is_major": "0",
+        "playerName": "Erik Flores",
+        "player_num": "35820",
+        "Rounds": "2",
+        "CourseID": "876",
+        "Course": "Detroit GC",
+        "ShotLink": "2",
+        "SG:TOT": "-1.63",
+        "SG:T2G": "-2.46",
+        "SG:OTT": "0.00",
+        "SG:APP": "-1.76",
+        "SG:BS": "-1.76",
+        "SG:ARG": "-0.70",
+        "SG:P": "0.83",
+        "SG:SG": "0.12"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.3199999928474426",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-2.940000057220459",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-1.6300000250339508",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-1.6300000250339508",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-1.6300000250339508",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "71",
+        "PM": "74",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": "22.5",
+        "100-150": "27",
+        "150-200": "49.5",
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-1.6300000250339508",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:21:30.249Z",
+    "ok": true
+  }
+}

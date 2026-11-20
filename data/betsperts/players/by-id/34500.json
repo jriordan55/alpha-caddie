@@ -1,0 +1,386 @@
+{
+  "playerId": "34500",
+  "playerName": "Ryosuke Kinoshita",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ja-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Ryosuke Kinoshita",
+    "BirthPlace": "",
+    "BirthDate": "July 16, 1991",
+    "Age": "35",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "Japan",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Ryosuke Kinoshita",
+        "player_num": "34500",
+        "Year": "2024",
+        "Rounds": "6",
+        "SG:TOT": "-0.11",
+        "SG:T2G": "-0.45",
+        "SG:OTT": "0.00",
+        "SG:APP": "-0.01",
+        "SG:BS": "-0.01",
+        "SG:ARG": "-0.44",
+        "SG:P": "0.34",
+        "Dr Distance": "274.3",
+        "Dr Accuracy %": "61.3",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Ryosuke Kinoshita",
+        "player_num": "34500",
+        "Year": "2022",
+        "Rounds": "2",
+        "SG:TOT": "-2.79",
+        "SG:T2G": "-0.97",
+        "SG:OTT": "-0.58",
+        "SG:APP": "-0.63",
+        "SG:BS": "-1.21",
+        "SG:ARG": "0.23",
+        "SG:P": "-1.81",
+        "Dr Distance": "289.3",
+        "Dr Accuracy %": "64.3",
+        "Ball Speed": "166.86"
+      },
+      {
+        "playerName": "Ryosuke Kinoshita",
+        "player_num": "34500",
+        "Year": "2021",
+        "Rounds": "16",
+        "SG:TOT": "-0.82",
+        "SG:T2G": "-1.00",
+        "SG:OTT": "-0.62",
+        "SG:APP": "-0.26",
+        "SG:BS": "-0.88",
+        "SG:ARG": "-0.12",
+        "SG:P": "0.28",
+        "Dr Distance": "283.8",
+        "Dr Accuracy %": "61.4",
+        "Ball Speed": "168.22"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2024-10-27",
+        "position": "T27",
+        "roundPosition": "T27",
+        "TournamentName": "ZOZO Championship",
+        "is_major": "0",
+        "playerName": "Ryosuke Kinoshita",
+        "player_num": "34500",
+        "Rounds": "4",
+        "CourseID": "875",
+        "Course": "Accordia Golf Narashino CC",
+        "ShotLink": "4",
+        "SG:TOT": "0.64",
+        "SG:T2G": "-0.14",
+        "SG:OTT": "-0.53",
+        "SG:APP": "0.41",
+        "SG:BS": "-0.12",
+        "SG:ARG": "-0.01",
+        "SG:P": "0.77",
+        "SG:SG": "0.76"
+      },
+      {
+        "Date": "2024-07-21",
+        "position": "CUT",
+        "roundPosition": null,
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Ryosuke Kinoshita",
+        "player_num": "34500",
+        "Rounds": "2",
+        "CourseID": "709",
+        "Course": "Royal Troon",
+        "ShotLink": "2",
+        "SG:TOT": "-1.60",
+        "SG:T2G": "-1.07",
+        "SG:OTT": "1.08",
+        "SG:APP": "-0.85",
+        "SG:BS": "0.23",
+        "SG:ARG": "-1.30",
+        "SG:P": "-0.53",
+        "SG:SG": "-1.83"
+      },
+      {
+        "Date": "2022-05-22",
+        "position": "CUT",
+        "roundPosition": "T123",
+        "TournamentName": "PGA Championship",
+        "is_major": "1",
+        "playerName": "Ryosuke Kinoshita",
+        "player_num": "34500",
+        "Rounds": "2",
+        "CourseID": "611",
+        "Course": "Southern Hills CC",
+        "ShotLink": "2",
+        "SG:TOT": "-2.79",
+        "SG:T2G": "-0.97",
+        "SG:OTT": "-0.58",
+        "SG:APP": "-0.63",
+        "SG:BS": "-1.21",
+        "SG:ARG": "0.23",
+        "SG:P": "-1.81",
+        "SG:SG": "-1.57"
+      },
+      {
+        "Date": "2021-10-24",
+        "position": "T66",
+        "roundPosition": "T66",
+        "TournamentName": "ZOZO Championship",
+        "is_major": "0",
+        "playerName": "Ryosuke Kinoshita",
+        "player_num": "34500",
+        "Rounds": "4",
+        "CourseID": "875",
+        "Course": "Accordia Golf Narashino CC",
+        "ShotLink": "0",
+        "SG:TOT": "-1.77",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2021-08-08",
+        "position": "T43",
+        "roundPosition": "T43",
+        "TournamentName": "WGC - FedEx St. Jude Invitational",
+        "is_major": "0",
+        "playerName": "Ryosuke Kinoshita",
+        "player_num": "34500",
+        "Rounds": "4",
+        "CourseID": "513",
+        "Course": "TPC Southwind",
+        "ShotLink": "4",
+        "SG:TOT": "-0.70",
+        "SG:T2G": "-0.27",
+        "SG:OTT": "-1.14",
+        "SG:APP": "0.71",
+        "SG:BS": "-0.43",
+        "SG:ARG": "0.16",
+        "SG:P": "-0.43",
+        "SG:SG": "-0.26"
+      },
+      {
+        "Date": "2021-07-18",
+        "position": "T59",
+        "roundPosition": null,
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Ryosuke Kinoshita",
+        "player_num": "34500",
+        "Rounds": "4",
+        "CourseID": "778",
+        "Course": "Royal St. Georges GC",
+        "ShotLink": "0",
+        "SG:TOT": "-0.05",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2021-01-17",
+        "position": "T67",
+        "roundPosition": "T67",
+        "TournamentName": "Sony Open",
+        "is_major": "0",
+        "playerName": "Ryosuke Kinoshita",
+        "player_num": "34500",
+        "Rounds": "4",
+        "CourseID": "6",
+        "Course": "Waialae CC",
+        "ShotLink": "4",
+        "SG:TOT": "-0.75",
+        "SG:T2G": "-1.73",
+        "SG:OTT": "-0.09",
+        "SG:APP": "-1.23",
+        "SG:BS": "-1.32",
+        "SG:ARG": "-0.41",
+        "SG:P": "0.98",
+        "SG:SG": "0.57"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "41.7",
+        "SG TOT 1+": "20.8",
+        "SG TOT 2+": "12.5",
+        "SG TOT 3+": "8.3",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "24"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.08633337914943695",
+        "Rounds": "10"
+      },
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "0.2775000063702464",
+        "Rounds": "8"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.9442857333592006",
+        "Rounds": "7"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.32428575307130814",
+        "Rounds": "7"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-1.7219999790191651",
+        "Rounds": "5"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-0.35600000619888306",
+        "Rounds": "5"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-0.6999999965940203",
+        "Rounds": "7"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-1.6000000536441803",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-0.4307692457850163",
+        "Rounds": "13"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-2.7850000262260437",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-1.300000011920929",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-0.39142862388065885",
+        "Rounds": "7"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "0.5675000417977571",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-2.192500039935112",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-1.0614285639354162",
+        "Rounds": "7"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-0.7474999725818634",
+        "Rounds": "4"
+      },
+      {
+        "FieldStrength": "Strong",
+        "StrokesGainedAverage": "-0.6975000202655792",
+        "Rounds": "4"
+      },
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-1.1200000122189522",
+        "Rounds": "8"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-0.5662500327453017",
+        "Rounds": "8"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "70.5625",
+        "PM": "71.25",
+        "Rounds": "24"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "24",
+        "50-100": null,
+        "100-150": "25.6",
+        "150-200": "29.7",
+        "200+": "56.6",
+        "200-250": "51.9",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Aloha",
+        "StrokesGainedAverage": "-0.7474999725818634",
+        "Rounds": "4"
+      },
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-0.5662500327453017",
+        "Rounds": "8"
+      },
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-2.7850000262260437",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-0.6180000126361846",
+        "Rounds": "10"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:19.392Z",
+    "ok": true
+  }
+}

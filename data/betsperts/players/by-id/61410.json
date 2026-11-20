@@ -1,0 +1,162 @@
+{
+  "playerId": "61410",
+  "playerName": "Virgilio Paz",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ve-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Virgilio Paz",
+    "BirthPlace": null,
+    "BirthDate": "",
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "Venezuela",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Virgilio Paz",
+        "player_num": "61410",
+        "Year": "2026",
+        "Rounds": "2",
+        "SG:TOT": "-6.92",
+        "SG:T2G": "-4.67",
+        "SG:OTT": "-2.95",
+        "SG:APP": "-1.69",
+        "SG:BS": "-4.65",
+        "SG:ARG": "-0.02",
+        "SG:P": "-2.25",
+        "Dr Distance": "273.8",
+        "Dr Accuracy %": "39.3",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Virgilio Paz",
+        "player_num": "61410",
+        "Rounds": "2",
+        "SG:TOT": "-6.92",
+        "SG:T2G": "-4.67",
+        "SG:OTT": "-2.95",
+        "SG:APP": "-1.69",
+        "SG:BS": "-4.65",
+        "SG:ARG": "-0.02",
+        "SG:P": "-2.25",
+        "SG:SG": "-2.28"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-10-25",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "Butterfield Bermuda Championship",
+        "is_major": "0",
+        "playerName": "Virgilio Paz",
+        "player_num": "61410",
+        "Rounds": "2",
+        "CourseID": "765",
+        "Course": "Port Royal Golf Course",
+        "ShotLink": "2",
+        "SG:TOT": "-6.92",
+        "SG:T2G": "-4.67",
+        "SG:OTT": "-2.95",
+        "SG:APP": "-1.69",
+        "SG:BS": "-4.65",
+        "SG:ARG": "-0.02",
+        "SG:P": "-2.25",
+        "SG:SG": "-2.28"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-2.25450000166893",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-9.520000457763672",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-4.320000171661377",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-6.920000314712524",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-6.920000314712524",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-6.920000314712524",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "73",
+        "PM": "78",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "25.3",
+        "150-200": "36",
+        "200+": "43.9",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-6.920000314712524",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:26:22.539Z",
+    "ok": true
+  }
+}

@@ -1,0 +1,148 @@
+{
+  "playerId": "47516",
+  "playerName": "James Beale",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_nz-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "James Beale",
+    "BirthPlace": null,
+    "BirthDate": null,
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "New Zealand",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "James Beale",
+        "player_num": "47516",
+        "Year": "2015",
+        "Rounds": "2",
+        "SG:TOT": "-3.82",
+        "SG:T2G": "-2.57",
+        "SG:OTT": "-0.04",
+        "SG:APP": "-2.31",
+        "SG:BS": "-2.35",
+        "SG:ARG": "-0.21",
+        "SG:P": "-1.25",
+        "Dr Distance": "292.8",
+        "Dr Accuracy %": "53.6",
+        "Ball Speed": "158.96"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2015-07-26",
+        "position": "CUT",
+        "roundPosition": "T141",
+        "TournamentName": "RBC Canadian Open",
+        "is_major": "0",
+        "playerName": "James Beale",
+        "player_num": "47516",
+        "Rounds": "2",
+        "CourseID": "32",
+        "Course": "Glen Abbey GC",
+        "ShotLink": "2",
+        "SG:TOT": "-3.82",
+        "SG:T2G": "-2.57",
+        "SG:OTT": "-0.04",
+        "SG:APP": "-2.31",
+        "SG:BS": "-2.35",
+        "SG:ARG": "-0.21",
+        "SG:P": "-1.25",
+        "SG:SG": "-1.47"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-1.2519999891519547",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-3.869999885559082",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-3.7699999809265137",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-3.819999933242798",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-3.819999933242798",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-3.819999933242798",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "75",
+        "PM": "75",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": "14.4",
+        "100-150": "23",
+        "150-200": null,
+        "200+": "66.8",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-3.819999933242798",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:18.959Z",
+    "ok": true
+  }
+}

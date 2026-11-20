@@ -1,0 +1,187 @@
+{
+  "playerId": "56165",
+  "playerName": "Yusaku Hosono",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ja-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Yusaku Hosono",
+    "BirthPlace": null,
+    "BirthDate": "January 09, 2003",
+    "Age": "23",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "Japan",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Yusaku Hosono",
+        "player_num": "56165",
+        "Year": "2026",
+        "Rounds": "4",
+        "SG:TOT": "0.05",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "70.0",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Yusaku Hosono",
+        "player_num": "56165",
+        "Rounds": "4",
+        "SG:TOT": "0.05",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-10-11",
+        "position": "T33",
+        "roundPosition": "T33",
+        "TournamentName": "Baycurrent Classic",
+        "is_major": "0",
+        "playerName": "Yusaku Hosono",
+        "player_num": "56165",
+        "Rounds": "4",
+        "CourseID": "936",
+        "Course": "Yokohama Country Club (West)",
+        "ShotLink": "0",
+        "SG:TOT": "0.05",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "25.0",
+        "SG TOT 2+": "25.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": null,
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-2.259999990463257",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "0.5600000023841858",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "2.809999942779541",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-0.8999999761581421",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "0.2749999761581421",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-0.8999999761581421",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Shot",
+        "StrokesGainedAverage": "0.5600000023841858",
+        "Rounds": "1"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "0.3699999849001567",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-0.8999999761581421",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "0.05249999463558197",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "68.66666666666667",
+        "PM": "72",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "0.05249999463558197",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:26:33.395Z",
+    "ok": true
+  }
+}

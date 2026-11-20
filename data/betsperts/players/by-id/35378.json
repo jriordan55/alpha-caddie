@@ -1,0 +1,138 @@
+{
+  "playerId": "35378",
+  "playerName": "Jun Hak Lee",
+  "flag": null,
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Jun Hak Lee",
+    "BirthPlace": "Republic of Korea",
+    "BirthDate": "June 12, 1986",
+    "Age": "40",
+    "Height": "6ft 0in",
+    "Weight": "190 lbs",
+    "Nationality": "Republic of Korea",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": "2007",
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Jun Hak Lee",
+        "player_num": "35378",
+        "Year": "2015",
+        "Rounds": "2",
+        "SG:TOT": "-5.93",
+        "SG:T2G": "-3.96",
+        "SG:OTT": "-0.65",
+        "SG:APP": "-2.63",
+        "SG:BS": "-3.28",
+        "SG:ARG": "-0.68",
+        "SG:P": "-1.97",
+        "Dr Distance": "271.2",
+        "Dr Accuracy %": "78.6",
+        "Ball Speed": "162.18"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2015-06-28",
+        "position": "CUT",
+        "roundPosition": "153",
+        "TournamentName": "Travelers Championship",
+        "is_major": "0",
+        "playerName": "Jun Hak Lee",
+        "player_num": "35378",
+        "Rounds": "2",
+        "CourseID": "503",
+        "Course": "TPC River Highlands",
+        "ShotLink": "2",
+        "SG:TOT": "-5.93",
+        "SG:T2G": "-3.96",
+        "SG:OTT": "-0.65",
+        "SG:APP": "-2.63",
+        "SG:BS": "-3.28",
+        "SG:ARG": "-0.68",
+        "SG:P": "-1.97",
+        "SG:SG": "-2.65"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-5.920000076293945",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-5.949999809265137",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-5.934999942779541",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-5.934999942779541",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-5.934999942779541",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "76",
+        "PM": "75",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "28.2",
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-5.934999942779541",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:10.391Z",
+    "ok": true
+  }
+}

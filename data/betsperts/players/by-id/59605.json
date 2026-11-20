@@ -1,0 +1,148 @@
+{
+  "playerId": "59605",
+  "playerName": "Tae Hoon Kim",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ks-flag-1.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Tae Hoon Kim",
+    "BirthPlace": "",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "South Korea",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Tae Hoon Kim",
+        "player_num": "59605",
+        "Year": "2021",
+        "Rounds": "2",
+        "SG:TOT": "-0.94",
+        "SG:T2G": "-0.88",
+        "SG:OTT": "-0.38",
+        "SG:APP": "0.23",
+        "SG:BS": "-0.16",
+        "SG:ARG": "-0.72",
+        "SG:P": "-0.06",
+        "Dr Distance": "291.0",
+        "Dr Accuracy %": "50.0",
+        "Ball Speed": "174.16"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2021-02-21",
+        "position": "CUT",
+        "roundPosition": "T84",
+        "TournamentName": "The Genesis Invitational",
+        "is_major": "0",
+        "playerName": "Tae Hoon Kim",
+        "player_num": "59605",
+        "Rounds": "2",
+        "CourseID": "500",
+        "Course": "Riviera CC",
+        "ShotLink": "2",
+        "SG:TOT": "-0.94",
+        "SG:T2G": "-0.88",
+        "SG:OTT": "-0.38",
+        "SG:APP": "0.23",
+        "SG:BS": "-0.16",
+        "SG:ARG": "-0.72",
+        "SG:P": "-0.06",
+        "SG:SG": "-0.78"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "50.0",
+        "SG TOT 2+": "50.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "-0.06499999761581421",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "2.2100000381469727",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-4.090000152587891",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-0.940000057220459",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-0.940000057220459",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-0.940000057220459",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "75",
+        "PM": "69",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": "69.7",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "West Coast",
+        "StrokesGainedAverage": "-0.940000057220459",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:52.668Z",
+    "ok": true
+  }
+}

@@ -1,0 +1,224 @@
+{
+  "playerId": "57864",
+  "playerName": "Jackson Van Paris",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Jackson Van Paris",
+    "BirthPlace": "Lake Forest, Illinois",
+    "BirthDate": "August 23, 2003",
+    "Age": "23",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": "Pinehurst, North Carolina",
+    "ProWins": null,
+    "TurnedPro": "2025",
+    "PGAWins": null,
+    "College": "Vanderbilt University "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Jackson Van Paris",
+        "player_num": "57864",
+        "Year": "2026",
+        "Rounds": "4",
+        "SG:TOT": "-0.11",
+        "SG:T2G": "-0.63",
+        "SG:OTT": "-0.25",
+        "SG:APP": "-0.99",
+        "SG:BS": "-1.24",
+        "SG:ARG": "0.62",
+        "SG:P": "0.51",
+        "Dr Distance": "294.4",
+        "Dr Accuracy %": "75.0",
+        "Ball Speed": "178.59"
+      },
+      {
+        "playerName": "Jackson Van Paris",
+        "player_num": "57864",
+        "Year": "2024",
+        "Rounds": "4",
+        "SG:TOT": "1.78",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "51.8",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Jackson Van Paris",
+        "player_num": "57864",
+        "Rounds": "4",
+        "SG:TOT": "-0.11",
+        "SG:T2G": "-0.63",
+        "SG:OTT": "-0.25",
+        "SG:APP": "-0.99",
+        "SG:BS": "-1.24",
+        "SG:ARG": "0.62",
+        "SG:P": "0.51",
+        "SG:SG": "1.13"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-06-21",
+        "position": "T61",
+        "roundPosition": "T61",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Jackson Van Paris",
+        "player_num": "57864",
+        "Rounds": "4",
+        "CourseID": "618",
+        "Course": "Shinnecock Hills GC",
+        "ShotLink": "4",
+        "SG:TOT": "-0.11",
+        "SG:T2G": "-0.63",
+        "SG:OTT": "-0.25",
+        "SG:APP": "-0.99",
+        "SG:BS": "-1.24",
+        "SG:ARG": "0.62",
+        "SG:P": "0.51",
+        "SG:SG": "1.13"
+      },
+      {
+        "Date": "2024-03-10",
+        "position": "T10",
+        "roundPosition": "T10",
+        "TournamentName": "Puerto Rico Open",
+        "is_major": "0",
+        "playerName": "Jackson Van Paris",
+        "player_num": "57864",
+        "Rounds": "3",
+        "CourseID": "742",
+        "Course": "Grand Reserve GC",
+        "ShotLink": "0",
+        "SG:TOT": "2.37",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "62.5",
+        "SG TOT 1+": "25.0",
+        "SG TOT 2+": "25.0",
+        "SG TOT 3+": "25.0",
+        "SG TOT 4+": "12.5",
+        "SG TOT 5+": "12.5",
+        "Rounds": "8"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "1.814999982714653",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "0.125",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-0.8699999451637268",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "2.2600000500679016",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "1.7775000259280205",
+        "Rounds": "4"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-0.11249998211860657",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-1.6100000143051147",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "0.3866666952768962",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "1.7775000259280205",
+        "Rounds": "4"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-0.11249998211860657",
+        "Rounds": "4"
+      },
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "1.7775000259280205",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "69.6",
+        "PM": "72",
+        "Rounds": "8"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "8",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": "62.6",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "1.7775000259280205",
+        "Rounds": "4"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-0.11249998211860657",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:14.419Z",
+    "ok": true
+  }
+}

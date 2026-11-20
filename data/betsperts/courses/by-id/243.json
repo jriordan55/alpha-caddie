@@ -1,0 +1,104 @@
+{
+  "courseNum": "243",
+  "courseName": "Trinity Forest Golf Club",
+  "list": {
+    "CourseName": "Trinity Forest Golf Club",
+    "CourseNum": "243",
+    "CourseNums": [
+      243
+    ]
+  },
+  "details": {
+    "CourseName": "Trinity Forest Golf Club",
+    "CourseNum": "243",
+    "Locations": [
+      "South",
+      "Texas"
+    ],
+    "SeasonHeld": "Spring",
+    "CourseTypes": [
+      "Hybrid Links"
+    ],
+    "ParScore": "71",
+    "Yards": "7380",
+    "AVG": "103.9",
+    "CourseLength": "Long",
+    "Architects": [
+      "Coore/Crenshaw"
+    ],
+    "RedesignArchitects": [],
+    "Elevation": "430",
+    "CourseElevation": "Average",
+    "Bunkers": "88",
+    "BunkersRank": "Average",
+    "WaterHoles": "0",
+    "WaterDanger": "Low",
+    "ScoreRTP": "-0.46",
+    "Difficulty": "Average",
+    "FwyGrass": "Zoysia",
+    "FwyWidth": "0",
+    "GreenSqFt": "13000",
+    "GreenSize": "Large",
+    "GreenGrass": "Bermuda",
+    "GreenStimp": "11",
+    "GreenSpeed": "Slow",
+    "RoughType": "(none)",
+    "RoughGrass": "Fescue",
+    "RoughLengthInc": "0",
+    "RoughLength": "Long",
+    "EventTypes": [
+      "36-Hole Cut"
+    ],
+    "Tournaments": [
+      {
+        "Year": "2018-2019",
+        "Tournament": "The Byron Nelson"
+      }
+    ],
+    "CorrelatedCourse": [],
+    "FieldSize": "Full Field",
+    "FieldStrength": "Weak",
+    "OTTClub": "Mixed",
+    "FwyPct": "80.9",
+    "FwyAccuracy": "Easy",
+    "GainOTT": "Very Easy",
+    "MissedFairwayPenalty": "Average",
+    "RoughPenalty": "Low",
+    "GIRAccuracy": "Easy",
+    "GIRPct": "75.6",
+    "GainAPP": "Very Easy",
+    "ScramblingFromRough": "Easy",
+    "ScramblingFromShortGrass": "Average",
+    "SandSaves": "Difficult",
+    "GainARG": "Average",
+    "GainingPuttingInside15": "Difficult",
+    "GainingPuttingOutside15": "Average",
+    "3PuttAVD": "Difficult",
+    "GainPutting": "Average",
+    "Par3Scoring": "Easy",
+    "Par4Scoring": "Easy",
+    "Par5Scoring": "Easy",
+    "ShotLink": "1"
+  },
+  "tournaments": [
+    {
+      "CourseNum": "243",
+      "TNum": "19",
+      "TourneyName": "AT&T Byron Nelson"
+    }
+  ],
+  "_meta": {
+    "pulledAt": "2026-11-20T22:18:26.465Z",
+    "detailStatus": 200,
+    "tournamentsStatus": 200
+  },
+  "auth": {
+    "holeBreakdown": [],
+    "correlated": [],
+    "_meta": {
+      "pulledAt": "2026-11-20T22:52:53.087Z",
+      "holeStatus": 200,
+      "correlatedStatus": 200
+    }
+  }
+}

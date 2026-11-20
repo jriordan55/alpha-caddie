@@ -1,0 +1,148 @@
+{
+  "playerId": "49869",
+  "playerName": "Branson Ferrier",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ca-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Branson Ferrier",
+    "BirthPlace": "Barie, Ontario, Canada",
+    "BirthDate": "December 30, 1993",
+    "Age": "32",
+    "Height": "6ft 1in",
+    "Weight": "165 lbs",
+    "Nationality": "Canada",
+    "Residence": "Barie, Ontario, Canada",
+    "ProWins": null,
+    "TurnedPro": "2016",
+    "PGAWins": null,
+    "College": "Alabama State University 2016, Communications"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Branson Ferrier",
+        "player_num": "49869",
+        "Year": "2016",
+        "Rounds": "2",
+        "SG:TOT": "-2.67",
+        "SG:T2G": "-2.15",
+        "SG:OTT": "-0.09",
+        "SG:APP": "-1.03",
+        "SG:BS": "-1.12",
+        "SG:ARG": "-1.03",
+        "SG:P": "-0.51",
+        "Dr Distance": "310.4",
+        "Dr Accuracy %": "46.4",
+        "Ball Speed": "176.03"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2016-07-24",
+        "position": "CUT",
+        "roundPosition": "T131",
+        "TournamentName": "RBC Canadian Open",
+        "is_major": "0",
+        "playerName": "Branson Ferrier",
+        "player_num": "49869",
+        "Rounds": "2",
+        "CourseID": "32",
+        "Course": "Glen Abbey GC",
+        "ShotLink": "2",
+        "SG:TOT": "-2.67",
+        "SG:T2G": "-2.15",
+        "SG:OTT": "-0.09",
+        "SG:APP": "-1.03",
+        "SG:BS": "-1.12",
+        "SG:ARG": "-1.03",
+        "SG:P": "-0.51",
+        "SG:SG": "-1.54"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.5134999752044678",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-4.550000190734863",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.7799999713897705",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-2.665000081062317",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-2.665000081062317",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-2.665000081062317",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "78",
+        "PM": "74",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "30.7",
+        "150-200": "36.9",
+        "200+": "62",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-2.665000081062317",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:42.435Z",
+    "ok": true
+  }
+}

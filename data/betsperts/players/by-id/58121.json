@@ -1,0 +1,190 @@
+{
+  "playerId": "58121",
+  "playerName": "Jarryd Dillas",
+  "flag": null,
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Jarryd Dillas",
+    "BirthPlace": "",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "Bermuda",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Jarryd Dillas",
+        "player_num": "58121",
+        "Year": "2022",
+        "Rounds": "2",
+        "SG:TOT": "-4.08",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "57.1",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Jarryd Dillas",
+        "player_num": "58121",
+        "Year": "2019",
+        "Rounds": "2",
+        "SG:TOT": "-4.23",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "39.3",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2022-10-30",
+        "position": "CUT",
+        "roundPosition": "T125",
+        "TournamentName": "Butterfield Bermuda Championship",
+        "is_major": "0",
+        "playerName": "Jarryd Dillas",
+        "player_num": "58121",
+        "Rounds": "2",
+        "CourseID": "765",
+        "Course": "Port Royal GC",
+        "ShotLink": "0",
+        "SG:TOT": "-4.08",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2019-11-03",
+        "position": "CUT",
+        "roundPosition": "T112",
+        "TournamentName": "Bermuda Championship",
+        "is_major": "0",
+        "playerName": "Jarryd Dillas",
+        "player_num": "58121",
+        "Rounds": "2",
+        "CourseID": "765",
+        "Course": "Port Royal GC",
+        "ShotLink": "0",
+        "SG:TOT": "-4.23",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": null,
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-3.459999918937683",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-4.859999895095825",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-4.159999907016754",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-4.234999895095825",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-4.084999918937683",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-4.159999907016754",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "71",
+        "PM": "76",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-4.159999907016754",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:25.080Z",
+    "ok": true
+  }
+}

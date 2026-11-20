@@ -1,0 +1,148 @@
+{
+  "playerId": "32331",
+  "playerName": "Mark Blakefield",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Mark Blakefield",
+    "BirthPlace": "Maysville, Kentucky",
+    "BirthDate": "August 03, 1982",
+    "Age": "44",
+    "Height": "6ft 1in",
+    "Weight": "240 lbs",
+    "Nationality": "United States",
+    "Residence": "Ponte Vedra Beach, Florida",
+    "ProWins": null,
+    "TurnedPro": "2006",
+    "PGAWins": null,
+    "College": "University of Kentucky 2005, Sociology"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Mark Blakefield",
+        "player_num": "32331",
+        "Year": "2016",
+        "Rounds": "2",
+        "SG:TOT": "-6.00",
+        "SG:T2G": "-3.01",
+        "SG:OTT": "-0.82",
+        "SG:APP": "-1.69",
+        "SG:BS": "-2.51",
+        "SG:ARG": "-0.49",
+        "SG:P": "-3.00",
+        "Dr Distance": "275.3",
+        "Dr Accuracy %": "39.3",
+        "Ball Speed": "174.59"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2016-02-28",
+        "position": "CUT",
+        "roundPosition": "140",
+        "TournamentName": "The Honda Classic",
+        "is_major": "0",
+        "playerName": "Mark Blakefield",
+        "player_num": "32331",
+        "Rounds": "2",
+        "CourseID": "734",
+        "Course": "PGA National (Champion)",
+        "ShotLink": "2",
+        "SG:TOT": "-6.00",
+        "SG:T2G": "-3.01",
+        "SG:OTT": "-0.82",
+        "SG:APP": "-1.69",
+        "SG:BS": "-2.51",
+        "SG:ARG": "-0.49",
+        "SG:P": "-3.00",
+        "SG:SG": "-3.50"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-3.0015000104904175",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-8.670000076293945",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-3.3399999141693115",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-6.004999995231628",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-6.004999995231628",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Strong",
+        "StrokesGainedAverage": "-6.004999995231628",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "75",
+        "PM": "81",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "28.6",
+        "150-200": "46",
+        "200+": "92.4",
+        "200-250": "92.4",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Florida",
+        "StrokesGainedAverage": "-6.004999995231628",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:48.598Z",
+    "ok": true
+  }
+}

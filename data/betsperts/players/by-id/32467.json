@@ -1,0 +1,219 @@
+{
+  "playerId": "32467",
+  "playerName": "Garrett Sapp",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Garrett Sapp",
+    "BirthPlace": "Long Beach, California",
+    "BirthDate": "February 21, 1986",
+    "Age": "40",
+    "Height": "6ft 0in",
+    "Weight": "175 lbs",
+    "Nationality": "United States",
+    "Residence": "Long Beach, California",
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": "University of California-Irvine "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Garrett Sapp",
+        "player_num": "32467",
+        "Year": "2026",
+        "Rounds": "2",
+        "SG:TOT": "-2.06",
+        "SG:T2G": "-2.75",
+        "SG:OTT": "-1.60",
+        "SG:APP": "-1.06",
+        "SG:BS": "-2.66",
+        "SG:ARG": "-0.10",
+        "SG:P": "0.69",
+        "Dr Distance": "272.9",
+        "Dr Accuracy %": "57.1",
+        "Ball Speed": "160.84"
+      },
+      {
+        "playerName": "Garrett Sapp",
+        "player_num": "32467",
+        "Year": "2025",
+        "Rounds": "2",
+        "SG:TOT": "-5.32",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "89.3",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Garrett Sapp",
+        "player_num": "32467",
+        "Rounds": "2",
+        "SG:TOT": "-2.06",
+        "SG:T2G": "-2.75",
+        "SG:OTT": "-1.60",
+        "SG:APP": "-1.06",
+        "SG:BS": "-2.66",
+        "SG:ARG": "-0.10",
+        "SG:P": "0.69",
+        "SG:SG": "0.59"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-05-17",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "PGA Championship",
+        "is_major": "1",
+        "playerName": "Garrett Sapp",
+        "player_num": "32467",
+        "Rounds": "2",
+        "CourseID": "773",
+        "Course": "Aronimink Golf Club",
+        "ShotLink": "2",
+        "SG:TOT": "-2.06",
+        "SG:T2G": "-2.75",
+        "SG:OTT": "-1.60",
+        "SG:APP": "-1.06",
+        "SG:BS": "-2.66",
+        "SG:ARG": "-0.10",
+        "SG:P": "0.69",
+        "SG:SG": "0.59"
+      },
+      {
+        "Date": "2025-11-09",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "World Wide Technology Championship",
+        "is_major": "0",
+        "playerName": "Garrett Sapp",
+        "player_num": "32467",
+        "Rounds": "2",
+        "CourseID": "919",
+        "Course": "El Cardonal at Diamante",
+        "ShotLink": "0",
+        "SG:TOT": "-5.32",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "0.6884999945759773",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-4.084999918937683",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-3.304999887943268",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-4.013333201408386",
+        "Rounds": "3"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-2.740000009536743",
+        "Rounds": "1"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-2.064999997615814",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-5.324999809265137",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-2.064999997615814",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-5.324999809265137",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74.5",
+        "PM": "74.5",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": "28.1",
+        "150-200": null,
+        "200+": "61",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-5.324999809265137",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-2.064999997615814",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:21:41.300Z",
+    "ok": true
+  }
+}

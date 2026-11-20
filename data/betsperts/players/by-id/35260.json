@@ -1,0 +1,189 @@
+{
+  "playerId": "35260",
+  "playerName": "Kelvin Day",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/St_Georges_Cross.svg_.png",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Kelvin Day",
+    "BirthPlace": "Surrey, England",
+    "BirthDate": "December 30, 1987",
+    "Age": "38",
+    "Height": "6ft 1in",
+    "Weight": "175 lbs",
+    "Nationality": "England",
+    "Residence": "Charlotte, North Carolina",
+    "ProWins": null,
+    "TurnedPro": "2011",
+    "PGAWins": null,
+    "College": "Charleston Southern University  (2010, Kinesiology) "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Kelvin Day",
+        "player_num": "35260",
+        "Year": "2015",
+        "Rounds": "6",
+        "SG:TOT": "-0.42",
+        "SG:T2G": "-0.37",
+        "SG:OTT": "0.19",
+        "SG:APP": "-0.47",
+        "SG:BS": "-0.28",
+        "SG:ARG": "-0.09",
+        "SG:P": "-0.04",
+        "Dr Distance": "288.5",
+        "Dr Accuracy %": "56.0",
+        "Ball Speed": "174.91"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2015-05-17",
+        "position": "CUT",
+        "roundPosition": "T129",
+        "TournamentName": "Wells Fargo Championship",
+        "is_major": "0",
+        "playerName": "Kelvin Day",
+        "player_num": "35260",
+        "Rounds": "2",
+        "CourseID": "698",
+        "Course": "Quail Hollow Club",
+        "ShotLink": "2",
+        "SG:TOT": "-2.29",
+        "SG:T2G": "-1.27",
+        "SG:OTT": "-0.21",
+        "SG:APP": "-0.86",
+        "SG:BS": "-1.07",
+        "SG:ARG": "-0.20",
+        "SG:P": "-1.02",
+        "SG:SG": "-1.22"
+      },
+      {
+        "Date": "2015-04-05",
+        "position": "T42",
+        "roundPosition": "T42",
+        "TournamentName": "Houston Open",
+        "is_major": "0",
+        "playerName": "Kelvin Day",
+        "player_num": "35260",
+        "Rounds": "4",
+        "CourseID": "729",
+        "Course": "GC of Houston",
+        "ShotLink": "4",
+        "SG:TOT": "0.52",
+        "SG:T2G": "0.08",
+        "SG:OTT": "0.39",
+        "SG:APP": "-0.27",
+        "SG:BS": "0.11",
+        "SG:ARG": "-0.04",
+        "SG:P": "0.44",
+        "SG:SG": "0.40"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "50.0",
+        "SG TOT 2+": "33.3",
+        "SG TOT 3+": "16.7",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "6"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Poa Trivialis",
+        "StrokesGainedAverage": "-0.04433332880338033",
+        "Rounds": "6"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "1.0850000381469727",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.3499999642372131",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "3.7799999713897705",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-5.760000228881836",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "0.5199999511241913",
+        "Rounds": "4"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-2.2949999570846558",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-2.2949999570846558",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "0.5199999511241913",
+        "Rounds": "4"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-0.41833335161209106",
+        "Rounds": "6"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "70",
+        "PM": "73.66666666666667",
+        "Rounds": "6"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "6",
+        "50-100": null,
+        "100-150": "25.5",
+        "150-200": "38.4",
+        "200+": "62.5",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-0.41833335161209106",
+        "Rounds": "6"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:17.973Z",
+    "ok": true
+  }
+}

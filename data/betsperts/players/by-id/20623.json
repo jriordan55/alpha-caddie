@@ -1,0 +1,210 @@
+{
+  "playerId": "20623",
+  "playerName": "Gavin Coles",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/as-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Gavin Coles",
+    "BirthPlace": "Bathurst, New South Wales, Australia",
+    "BirthDate": "October 19, 1968",
+    "Age": "58",
+    "Height": "5ft 5in",
+    "Weight": "160 lbs",
+    "Nationality": "Australia",
+    "Residence": "Winter Garden, Florida",
+    "ProWins": null,
+    "TurnedPro": "1992",
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Gavin Coles",
+        "player_num": "20623",
+        "Year": "2016",
+        "Rounds": "2",
+        "SG:TOT": "-0.83",
+        "SG:T2G": "0.71",
+        "SG:OTT": "-0.79",
+        "SG:APP": "1.22",
+        "SG:BS": "0.43",
+        "SG:ARG": "0.28",
+        "SG:P": "-1.54",
+        "Dr Distance": "250.4",
+        "Dr Accuracy %": "75.0",
+        "Ball Speed": "146.07"
+      },
+      {
+        "playerName": "Gavin Coles",
+        "player_num": "20623",
+        "Year": "2015",
+        "Rounds": "2",
+        "SG:TOT": "-2.30",
+        "SG:T2G": "-0.55",
+        "SG:OTT": "-0.92",
+        "SG:APP": "-0.23",
+        "SG:BS": "-1.15",
+        "SG:ARG": "0.60",
+        "SG:P": "-2.81",
+        "Dr Distance": "245.0",
+        "Dr Accuracy %": "82.1",
+        "Ball Speed": "149.13"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2016-08-14",
+        "position": "CUT",
+        "roundPosition": "T100",
+        "TournamentName": "John Deere Classic",
+        "is_major": "0",
+        "playerName": "Gavin Coles",
+        "player_num": "20623",
+        "Rounds": "2",
+        "CourseID": "669",
+        "Course": "TPC Deere Run",
+        "ShotLink": "2",
+        "SG:TOT": "-0.83",
+        "SG:T2G": "0.71",
+        "SG:OTT": "-0.79",
+        "SG:APP": "1.22",
+        "SG:BS": "0.43",
+        "SG:ARG": "0.28",
+        "SG:P": "-1.54",
+        "SG:SG": "-1.26"
+      },
+      {
+        "Date": "2015-11-22",
+        "position": "CUT",
+        "roundPosition": "T133",
+        "TournamentName": "The RSM Classic",
+        "is_major": "0",
+        "playerName": "Gavin Coles",
+        "player_num": "20623",
+        "Rounds": "2",
+        "CourseID": "776",
+        "Course": "Sea Island GC (Seaside)",
+        "ShotLink": "1",
+        "SG:TOT": "-2.30",
+        "SG:T2G": "-0.55",
+        "SG:OTT": "-0.92",
+        "SG:APP": "-0.23",
+        "SG:BS": "-1.15",
+        "SG:ARG": "0.60",
+        "SG:P": "-2.81",
+        "SG:SG": "-2.21"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-1.5434999465942383",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-2.808000087738037",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.399999976158142",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.7349999472498894",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-1.67666661242644",
+        "Rounds": "3"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-1.2400000095367432",
+        "Rounds": "1"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-2.299999952316284",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-0.8349999710917473",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-0.8349999710917473",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-2.299999952316284",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "71",
+        "PM": "72",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": "44.7",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-2.299999952316284",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-0.8349999710917473",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:21:43.828Z",
+    "ok": true
+  }
+}

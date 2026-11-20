@@ -1,0 +1,279 @@
+{
+  "playerId": "12309",
+  "playerName": "Bob Sowards",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "0",
+    "Name": "Bob Sowards",
+    "BirthPlace": "Portsmouth, Ohio",
+    "BirthDate": "June 09, 1968",
+    "Age": "58",
+    "Height": "6ft 1in",
+    "Weight": "230 lbs",
+    "Nationality": "United States",
+    "Residence": "Dublin, Ohio",
+    "ProWins": "11",
+    "TurnedPro": "1990",
+    "PGAWins": "0",
+    "College": "Glenville State College (1990, Business Managment) "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Bob Sowards",
+        "player_num": "12309",
+        "Year": "2025",
+        "Rounds": "2",
+        "SG:TOT": "-3.41",
+        "SG:T2G": "-3.91",
+        "SG:OTT": "-1.97",
+        "SG:APP": "-2.34",
+        "SG:BS": "-4.31",
+        "SG:ARG": "0.41",
+        "SG:P": "0.50",
+        "Dr Distance": "276.4",
+        "Dr Accuracy %": "64.3",
+        "Ball Speed": "164.51"
+      },
+      {
+        "playerName": "Bob Sowards",
+        "player_num": "12309",
+        "Year": "2020",
+        "Rounds": "2",
+        "SG:TOT": "-1.78",
+        "SG:T2G": "-0.79",
+        "SG:OTT": "-1.68",
+        "SG:APP": "1.44",
+        "SG:BS": "-0.24",
+        "SG:ARG": "-0.55",
+        "SG:P": "-0.99",
+        "Dr Distance": "277.9",
+        "Dr Accuracy %": "39.3",
+        "Ball Speed": "164.99"
+      },
+      {
+        "playerName": "Bob Sowards",
+        "player_num": "12309",
+        "Year": "2018",
+        "Rounds": "2",
+        "SG:TOT": "-7.01",
+        "SG:T2G": "-4.68",
+        "SG:OTT": "-1.02",
+        "SG:APP": "-3.96",
+        "SG:BS": "-4.98",
+        "SG:ARG": "0.29",
+        "SG:P": "-2.33",
+        "Dr Distance": "279.5",
+        "Dr Accuracy %": "50.0",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Bob Sowards",
+        "player_num": "12309",
+        "Year": "2015",
+        "Rounds": "2",
+        "SG:TOT": "-1.95",
+        "SG:T2G": "-3.79",
+        "SG:OTT": "-0.70",
+        "SG:APP": "-0.90",
+        "SG:BS": "-1.61",
+        "SG:ARG": "-2.18",
+        "SG:P": "1.83",
+        "Dr Distance": "277.7",
+        "Dr Accuracy %": "46.4",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2025-05-18",
+        "position": "CUT",
+        "roundPosition": "T132",
+        "TournamentName": "PGA Championship",
+        "is_major": "1",
+        "playerName": "Bob Sowards",
+        "player_num": "12309",
+        "Rounds": "2",
+        "CourseID": "241",
+        "Course": "Quail Hollow Club",
+        "ShotLink": "2",
+        "SG:TOT": "-3.41",
+        "SG:T2G": "-3.91",
+        "SG:OTT": "-1.97",
+        "SG:APP": "-2.34",
+        "SG:BS": "-4.31",
+        "SG:ARG": "0.41",
+        "SG:P": "0.50",
+        "SG:SG": "0.90"
+      },
+      {
+        "Date": "2020-08-09",
+        "position": "CUT",
+        "roundPosition": "T121",
+        "TournamentName": "PGA Championship",
+        "is_major": "1",
+        "playerName": "Bob Sowards",
+        "player_num": "12309",
+        "Rounds": "2",
+        "CourseID": "895",
+        "Course": "TPC Harding Park",
+        "ShotLink": "2",
+        "SG:TOT": "-1.78",
+        "SG:T2G": "-0.79",
+        "SG:OTT": "-1.68",
+        "SG:APP": "1.44",
+        "SG:BS": "-0.24",
+        "SG:ARG": "-0.55",
+        "SG:P": "-0.99",
+        "SG:SG": "-1.54"
+      },
+      {
+        "Date": "2018-08-12",
+        "position": "CUT",
+        "roundPosition": "155",
+        "TournamentName": "PGA Championship",
+        "is_major": "1",
+        "playerName": "Bob Sowards",
+        "player_num": "12309",
+        "Rounds": "2",
+        "CourseID": "534",
+        "Course": "Bellerive CC",
+        "ShotLink": "2",
+        "SG:TOT": "-7.01",
+        "SG:T2G": "-4.68",
+        "SG:OTT": "-1.02",
+        "SG:APP": "-3.96",
+        "SG:BS": "-4.98",
+        "SG:ARG": "0.29",
+        "SG:P": "-2.33",
+        "SG:SG": "-2.04"
+      },
+      {
+        "Date": "2015-08-16",
+        "position": "CUT",
+        "roundPosition": "T118",
+        "TournamentName": "PGA Championship",
+        "is_major": "1",
+        "playerName": "Bob Sowards",
+        "player_num": "12309",
+        "Rounds": "2",
+        "CourseID": "706",
+        "Course": "Whistling Straits",
+        "ShotLink": "2",
+        "SG:TOT": "-1.95",
+        "SG:T2G": "-3.79",
+        "SG:OTT": "-0.70",
+        "SG:APP": "-0.90",
+        "SG:BS": "-1.61",
+        "SG:ARG": "-2.18",
+        "SG:P": "1.83",
+        "SG:SG": "-0.35"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "12.5",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "8"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "0.4180000275373459",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa Trivialis",
+        "StrokesGainedAverage": "0.4959999918937683",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-3.6474999208003283",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-3.429999977350235",
+        "Rounds": "4"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-3.5816666297614574",
+        "Rounds": "6"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-3.409999907016754",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-3.2957142602120126",
+        "Rounds": "7"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-5.239999771118164",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-3.5387499490752816",
+        "Rounds": "8"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "76.25",
+        "PM": "74.75",
+        "Rounds": "8"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "8",
+        "50-100": "20.6",
+        "100-150": "35",
+        "150-200": "46.9",
+        "200+": "63",
+        "200-250": "58.9",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-3.409999907016754",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-3.5816666297614574",
+        "Rounds": "6"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:32.527Z",
+    "ok": true
+  }
+}

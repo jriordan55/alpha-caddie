@@ -216,6 +216,19 @@ run(
   softOpt,
 );
 
+// Betsperts Rabbit Hole player + course DB (data/betsperts). Soft: never block 9pm publish.
+// Uses alpha-caddie-web/betsperts.local.json sessionKey when present for gated hole/RH pulls.
+if (!envTruthy("GOLF_SKIP_BETSPERTS", false)) {
+  run(
+    "fetch-betsperts-db.mjs",
+    "Betsperts player + course DB (force refresh → data/betsperts)",
+    { GOLF_BETSPERTS_FORCE: "1", GOLF_BETSPERTS_WITH_AUTH: "1" },
+    softOpt,
+  );
+} else {
+  console.log("[refresh:live] Skipping Betsperts pull (GOLF_SKIP_BETSPERTS=1).\n");
+}
+
 await mirrorPublishArtifacts();
 
 console.log("\n[refresh:live] Done — projections, sportsbook odds, and prior-round tab data updated.");

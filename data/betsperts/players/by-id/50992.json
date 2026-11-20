@@ -1,0 +1,292 @@
+{
+  "playerId": "50992",
+  "playerName": "Brett White",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Brett White",
+    "BirthPlace": "Grand Rapids, Michigan",
+    "BirthDate": "April 28, 1993",
+    "Age": "33",
+    "Height": "5ft 11in",
+    "Weight": "225 lbs",
+    "Nationality": "United States",
+    "Residence": "Houston, Texas",
+    "ProWins": "2",
+    "TurnedPro": "2016",
+    "PGAWins": "0",
+    "College": "Eastern Michigan University 2016, Supply Chain Management"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Brett White",
+        "player_num": "50992",
+        "Year": "2025",
+        "Rounds": "6",
+        "SG:TOT": "-0.70",
+        "SG:T2G": "-0.62",
+        "SG:OTT": "-0.17",
+        "SG:APP": "-0.33",
+        "SG:BS": "-0.50",
+        "SG:ARG": "-0.12",
+        "SG:P": "0.30",
+        "Dr Distance": "309.2",
+        "Dr Accuracy %": "53.6",
+        "Ball Speed": "178.74"
+      },
+      {
+        "playerName": "Brett White",
+        "player_num": "50992",
+        "Year": "2023",
+        "Rounds": "6",
+        "SG:TOT": "0.11",
+        "SG:T2G": "-0.45",
+        "SG:OTT": "0.46",
+        "SG:APP": "-0.34",
+        "SG:BS": "0.12",
+        "SG:ARG": "-0.57",
+        "SG:P": "0.56",
+        "Dr Distance": "309.1",
+        "Dr Accuracy %": "41.7",
+        "Ball Speed": "180.81"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2025-06-29",
+        "position": "T67",
+        "roundPosition": "T66",
+        "TournamentName": "Rocket Classic",
+        "is_major": "0",
+        "playerName": "Brett White",
+        "player_num": "50992",
+        "Rounds": "4",
+        "CourseID": "876",
+        "Course": "Detroit GC",
+        "ShotLink": "4",
+        "SG:TOT": "-0.32",
+        "SG:T2G": "-0.62",
+        "SG:OTT": "-0.17",
+        "SG:APP": "-0.33",
+        "SG:BS": "-0.50",
+        "SG:ARG": "-0.12",
+        "SG:P": "0.30",
+        "SG:SG": "0.18"
+      },
+      {
+        "Date": "2025-03-09",
+        "position": "CUT",
+        "roundPosition": "T97",
+        "TournamentName": "Puerto Rico Open",
+        "is_major": "0",
+        "playerName": "Brett White",
+        "player_num": "50992",
+        "Rounds": "2",
+        "CourseID": "940",
+        "Course": "Grand Reserve GC",
+        "ShotLink": "0",
+        "SG:TOT": "-1.47",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2023-10-08",
+        "position": "T13",
+        "roundPosition": "T13",
+        "TournamentName": "Sanderson Farms Championship",
+        "is_major": "0",
+        "playerName": "Brett White",
+        "player_num": "50992",
+        "Rounds": "4",
+        "CourseID": "746",
+        "Course": "The Country Club of Jackson",
+        "ShotLink": "4",
+        "SG:TOT": "1.68",
+        "SG:T2G": "0.63",
+        "SG:OTT": "0.60",
+        "SG:APP": "0.31",
+        "SG:BS": "0.91",
+        "SG:ARG": "-0.29",
+        "SG:P": "1.06",
+        "SG:SG": "0.77"
+      },
+      {
+        "Date": "2023-02-12",
+        "position": "CUT",
+        "roundPosition": "T117",
+        "TournamentName": "WM Phoenix Open",
+        "is_major": "0",
+        "playerName": "Brett White",
+        "player_num": "50992",
+        "Rounds": "2",
+        "CourseID": "510",
+        "Course": "TPC Scottsdale",
+        "ShotLink": "2",
+        "SG:TOT": "-3.03",
+        "SG:T2G": "-2.60",
+        "SG:OTT": "0.17",
+        "SG:APP": "-1.64",
+        "SG:BS": "-1.47",
+        "SG:ARG": "-1.13",
+        "SG:P": "-0.43",
+        "SG:SG": "-1.56"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "33.3",
+        "SG TOT 2+": "25.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "12"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "1.0567500293254852",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa Trivialis",
+        "StrokesGainedAverage": "-0.43299998342990875",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.6275000274181366",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.5425000190734863",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "1.0750000178813934",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-0.5099999904632568",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-0.7371428949492318",
+        "Rounds": "7"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-1.4699999690055847",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "1.5166666905085247",
+        "Rounds": "3"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-3.430000066757202",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-2.630000114440918",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "2.565000057220459",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-0.32750000804662704",
+        "Rounds": "8"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-0.3200000375509262",
+        "Rounds": "4"
+      },
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-3.03000009059906",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "0.6316667000452677",
+        "Rounds": "6"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "70.83333333333333",
+        "PM": "70.16666666666667",
+        "Rounds": "12"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "12",
+        "50-100": "19.8",
+        "100-150": "24.7",
+        "150-200": "37.7",
+        "200+": "60.8",
+        "200-250": "55.6",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "1.682500034570694",
+        "Rounds": "4"
+      },
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-1.4699999690055847",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-0.3200000375509262",
+        "Rounds": "4"
+      },
+      {
+        "SeasonHeld": "West Coast",
+        "StrokesGainedAverage": "-3.03000009059906",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:47.053Z",
+    "ok": true
+  }
+}

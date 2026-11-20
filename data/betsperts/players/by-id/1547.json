@@ -1,0 +1,148 @@
+{
+  "playerId": "1547",
+  "playerName": "Reed Hughes",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Reed Hughes",
+    "BirthPlace": null,
+    "BirthDate": "August 08, 1953",
+    "Age": "73",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Reed Hughes",
+        "player_num": "1547",
+        "Year": "2024",
+        "Rounds": "2",
+        "SG:TOT": "-7.49",
+        "SG:T2G": "-4.12",
+        "SG:OTT": "-1.32",
+        "SG:APP": "-2.42",
+        "SG:BS": "-3.74",
+        "SG:ARG": "-0.38",
+        "SG:P": "-3.38",
+        "Dr Distance": "274.2",
+        "Dr Accuracy %": "57.1",
+        "Ball Speed": "156.95"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2024-10-06",
+        "position": "CUT",
+        "roundPosition": "128",
+        "TournamentName": "Sanderson Farms Championship",
+        "is_major": "0",
+        "playerName": "Reed Hughes",
+        "player_num": "1547",
+        "Rounds": "2",
+        "CourseID": "746",
+        "Course": "The Country Club of Jackson",
+        "ShotLink": "2",
+        "SG:TOT": "-7.49",
+        "SG:T2G": "-4.12",
+        "SG:OTT": "-1.32",
+        "SG:APP": "-2.42",
+        "SG:BS": "-3.74",
+        "SG:ARG": "-0.38",
+        "SG:P": "-3.38",
+        "SG:SG": "-3.76"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-3.3780000805854797",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-6.829999923706055",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-8.15999984741211",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-7.494999885559082",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-7.494999885559082",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-7.494999885559082",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "78",
+        "PM": "76",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "24.5",
+        "150-200": "50.4",
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-7.494999885559082",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:24:56.142Z",
+    "ok": true
+  }
+}

@@ -1,0 +1,231 @@
+{
+  "playerId": "26497",
+  "playerName": "Casey Wittenberg",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Casey Wittenberg",
+    "BirthPlace": "Memphis, Tennessee",
+    "BirthDate": "November 30, 1984",
+    "Age": "41",
+    "Height": "5ft 8in",
+    "Weight": "158 lbs",
+    "Nationality": "United States",
+    "Residence": "Memphis, Tennessee",
+    "ProWins": "0",
+    "TurnedPro": "2004",
+    "PGAWins": "0",
+    "College": "Oklahoma State University "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Casey Wittenberg",
+        "player_num": "26497",
+        "Year": "2018",
+        "Rounds": "4",
+        "SG:TOT": "-1.55",
+        "SG:T2G": "-2.60",
+        "SG:OTT": "-1.39",
+        "SG:APP": "-1.58",
+        "SG:BS": "-2.98",
+        "SG:ARG": "0.38",
+        "SG:P": "1.04",
+        "Dr Distance": "276.2",
+        "Dr Accuracy %": "44.6",
+        "Ball Speed": "163.53"
+      },
+      {
+        "playerName": "Casey Wittenberg",
+        "player_num": "26497",
+        "Year": "2016",
+        "Rounds": "2",
+        "SG:TOT": "-2.84",
+        "SG:T2G": "-2.62",
+        "SG:OTT": "-0.38",
+        "SG:APP": "-2.03",
+        "SG:BS": "-2.41",
+        "SG:ARG": "-0.21",
+        "SG:P": "-1.02",
+        "Dr Distance": "284.4",
+        "Dr Accuracy %": "39.3",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2018-06-10",
+        "position": "69",
+        "roundPosition": "69",
+        "TournamentName": "FedEx St. Jude Classic",
+        "is_major": "0",
+        "playerName": "Casey Wittenberg",
+        "player_num": "26497",
+        "Rounds": "4",
+        "CourseID": "513",
+        "Course": "TPC Southwind",
+        "ShotLink": "4",
+        "SG:TOT": "-1.55",
+        "SG:T2G": "-2.60",
+        "SG:OTT": "-1.39",
+        "SG:APP": "-1.58",
+        "SG:BS": "-2.98",
+        "SG:ARG": "0.38",
+        "SG:P": "1.04",
+        "SG:SG": "1.42"
+      },
+      {
+        "Date": "2016-01-31",
+        "position": "CUT",
+        "roundPosition": "T134",
+        "TournamentName": "Farmers Insurance Open",
+        "is_major": "0",
+        "playerName": "Casey Wittenberg",
+        "player_num": "26497",
+        "Rounds": "2",
+        "CourseID": "104",
+        "Course": "Torrey Pines GC (North)",
+        "ShotLink": "1",
+        "SG:TOT": "-2.84",
+        "SG:T2G": "-2.62",
+        "SG:OTT": "-0.38",
+        "SG:APP": "-2.03",
+        "SG:BS": "-2.41",
+        "SG:ARG": "-0.21",
+        "SG:P": "-1.02",
+        "SG:SG": "-1.23"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "16.7",
+        "SG TOT 1+": "16.7",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "6"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": null,
+        "Rounds": "1"
+      },
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "1.0447499603033066",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "-1.0169999599456787",
+        "Rounds": "1"
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.9350000619888306",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.2549999803304672",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-1.5299999713897705",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-5.989999771118164",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-1.554999940097332",
+        "Rounds": "4"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-2.0399999618530273",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-3.640000104904175",
+        "Rounds": "1"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-1.554999940097332",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-2.0399999618530273",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-3.640000104904175",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-2.840000033378601",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-1.554999940097332",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74",
+        "PM": "71",
+        "Rounds": "6"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "6",
+        "50-100": "18.3",
+        "100-150": "34.2",
+        "150-200": "34.5",
+        "200+": "54.6",
+        "200-250": "56.7",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-1.554999940097332",
+        "Rounds": "4"
+      },
+      {
+        "SeasonHeld": "West Coast",
+        "StrokesGainedAverage": "-2.840000033378601",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:20:08.126Z",
+    "ok": true
+  }
+}

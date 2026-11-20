@@ -1,0 +1,190 @@
+{
+  "playerId": "35709",
+  "playerName": "Jeff Winther",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/da-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Jeff Winther",
+    "BirthPlace": "",
+    "BirthDate": "March 30, 1988",
+    "Age": "38",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "Denmark",
+    "Residence": "",
+    "ProWins": "1",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Jeff Winther",
+        "player_num": "35709",
+        "Year": "2024",
+        "Rounds": "2",
+        "SG:TOT": "-1.66",
+        "SG:T2G": "0.48",
+        "SG:OTT": "-0.38",
+        "SG:APP": "-0.21",
+        "SG:BS": "-0.59",
+        "SG:ARG": "1.07",
+        "SG:P": "-2.14",
+        "Dr Distance": "275.3",
+        "Dr Accuracy %": "80.8",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Jeff Winther",
+        "player_num": "35709",
+        "Year": "2022",
+        "Rounds": "2",
+        "SG:TOT": "-0.74",
+        "SG:T2G": "-0.77",
+        "SG:OTT": "0.15",
+        "SG:APP": "0.39",
+        "SG:BS": "0.54",
+        "SG:ARG": "-1.31",
+        "SG:P": "0.05",
+        "Dr Distance": null,
+        "Dr Accuracy %": "53.8",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2024-07-14",
+        "position": "CUT",
+        "roundPosition": "T118",
+        "TournamentName": "Genesis Scottish Open",
+        "is_major": "0",
+        "playerName": "Jeff Winther",
+        "player_num": "35709",
+        "Rounds": "2",
+        "CourseID": "977",
+        "Course": "The Renaissance Club",
+        "ShotLink": "2",
+        "SG:TOT": "-1.66",
+        "SG:T2G": "0.48",
+        "SG:OTT": "-0.38",
+        "SG:APP": "-0.21",
+        "SG:BS": "-0.59",
+        "SG:ARG": "1.07",
+        "SG:P": "-2.14",
+        "SG:SG": "-1.07"
+      },
+      {
+        "Date": "2022-07-10",
+        "position": "CUT",
+        "roundPosition": "T100",
+        "TournamentName": "Genesis Scottish Open",
+        "is_major": "0",
+        "playerName": "Jeff Winther",
+        "player_num": "35709",
+        "Rounds": "2",
+        "CourseID": "977",
+        "Course": "The Renaissance Club",
+        "ShotLink": "2",
+        "SG:TOT": "-0.74",
+        "SG:T2G": "-0.77",
+        "SG:OTT": "0.15",
+        "SG:APP": "0.39",
+        "SG:BS": "0.54",
+        "SG:ARG": "-1.31",
+        "SG:P": "0.05",
+        "SG:SG": "-1.26"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.6549999760463834",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.7450000140815973",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-1.1099999838819106",
+        "Rounds": "3"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-1.4700000286102295",
+        "Rounds": "1"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-1.6599999759346247",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-0.740000014193356",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Strong",
+        "StrokesGainedAverage": "-1.6599999759346247",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-0.740000014193356",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "73",
+        "PM": "70.5",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": "45.4",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-1.1999999950639904",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:38.961Z",
+    "ok": true
+  }
+}

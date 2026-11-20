@@ -1,0 +1,93 @@
+{
+  "tournamentActive": {
+    "service_name": "",
+    "message": "",
+    "global_error": "",
+    "error": [],
+    "data": [
+      {
+        "TNum": "493",
+        "TourneyName": "The RSM Classic",
+        "Year": "2026",
+        "CourseID": "776",
+        "SlugName": "",
+        "CurrentActive": "480",
+        "UniqueTournamentID": "2026_493",
+        "CourseName": "Sea Island GC (Seaside)"
+      },
+      {
+        "TNum": "558",
+        "TourneyName": "Austin Championship presented by Compliance Solutions",
+        "Year": "2026",
+        "CourseID": "943",
+        "SlugName": "",
+        "CurrentActive": "470",
+        "UniqueTournamentID": "2026_558",
+        "CourseName": "Fazio Canyons"
+      },
+      {
+        "TNum": "457",
+        "TourneyName": "World Wide Technology Championship",
+        "Year": "2026",
+        "CourseID": "919",
+        "SlugName": "",
+        "CurrentActive": "460",
+        "UniqueTournamentID": "2026_457",
+        "CourseName": "El Cardonal at Diamante"
+      }
+    ],
+    "response_code": 200
+  },
+  "simulatorActive": {
+    "service_name": "get_active_tournament",
+    "message": "",
+    "global_error": "",
+    "error": [],
+    "data": [
+      {
+        "TNum": "493",
+        "TourneyName": "The RSM Classic",
+        "Year": "2026",
+        "CourseID": "776",
+        "SlugName": "",
+        "CurrentActive": "480"
+      },
+      {
+        "TNum": "558",
+        "TourneyName": "Austin Championship presented by Compliance Solutions",
+        "Year": "2026",
+        "CourseID": "943",
+        "SlugName": "",
+        "CurrentActive": "470"
+      },
+      {
+        "TNum": "457",
+        "TourneyName": "World Wide Technology Championship",
+        "Year": "2026",
+        "CourseID": "919",
+        "SlugName": "",
+        "CurrentActive": "460"
+      }
+    ],
+    "response_code": 200
+  },
+  "courseActive": {
+    "service_name": "",
+    "message": "",
+    "global_error": "",
+    "error": [],
+    "data": {
+      "TNum": "493",
+      "Year": "2026",
+      "TourneyName": "The RSM Classic",
+      "CurrentActive": "480",
+      "courses": [
+        {
+          "CourseNum": 776,
+          "CourseName": "Sea Island GC (Seaside)"
+        }
+      ]
+    },
+    "response_code": 200
+  }
+}

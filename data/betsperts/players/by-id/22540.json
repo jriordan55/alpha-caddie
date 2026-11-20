@@ -1,0 +1,200 @@
+{
+  "playerId": "22540",
+  "playerName": "Anthony Wall",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/St_Georges_Cross.svg_.png",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Anthony Wall",
+    "BirthPlace": null,
+    "BirthDate": "May 29, 1975",
+    "Age": "51",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "England",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Anthony Wall",
+        "player_num": "22540",
+        "Year": "2016",
+        "Rounds": "2",
+        "SG:TOT": "-1.30",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "67.9",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Anthony Wall",
+        "player_num": "22540",
+        "Year": "2015",
+        "Rounds": "4",
+        "SG:TOT": "1.69",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "82.8",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2016-07-17",
+        "position": "CUT",
+        "roundPosition": "T101",
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Anthony Wall",
+        "player_num": "22540",
+        "Rounds": "2",
+        "CourseID": "709",
+        "Course": "Royal Troon",
+        "ShotLink": "0",
+        "SG:TOT": "-1.30",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2015-07-19",
+        "position": "T12",
+        "roundPosition": "T12",
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Anthony Wall",
+        "player_num": "22540",
+        "Rounds": "4",
+        "CourseID": "668",
+        "Course": "St. Andrews GC (Old Course)",
+        "ShotLink": "0",
+        "SG:TOT": "1.69",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "83.3",
+        "SG TOT 1+": "83.3",
+        "SG TOT 2+": "16.7",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "6"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": null,
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.8650000095367432",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "1.3700000047683716",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "1.7100000381469727",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "1.440000057220459",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "0.6933333476384481",
+        "Rounds": "6"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "1.6875000298023224",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-1.2950000166893005",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "0.6933333476384481",
+        "Rounds": "6"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "71.5",
+        "PM": "71.25",
+        "Rounds": "6"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "6",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "0.6933333476384481",
+        "Rounds": "6"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:10.761Z",
+    "ok": true
+  }
+}

@@ -1,0 +1,148 @@
+{
+  "playerId": "36755",
+  "playerName": "Zechariah Potter",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Zechariah Potter",
+    "BirthPlace": "Cheney, Kansas",
+    "BirthDate": "August 22, 1986",
+    "Age": "40",
+    "Height": "6ft 2in",
+    "Weight": "185 lbs",
+    "Nationality": "United States",
+    "Residence": "Andover, Kansas",
+    "ProWins": null,
+    "TurnedPro": "2011",
+    "PGAWins": null,
+    "College": "Wichita State University  (2010, Business Administration) "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Zechariah Potter",
+        "player_num": "36755",
+        "Year": "2015",
+        "Rounds": "2",
+        "SG:TOT": "-3.25",
+        "SG:T2G": "-3.22",
+        "SG:OTT": "-2.31",
+        "SG:APP": "-1.33",
+        "SG:BS": "-3.64",
+        "SG:ARG": "0.41",
+        "SG:P": "-0.03",
+        "Dr Distance": "270.7",
+        "Dr Accuracy %": "57.1",
+        "Ball Speed": "167.16"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2015-04-26",
+        "position": "CUT",
+        "roundPosition": "T139",
+        "TournamentName": "Zurich Classic",
+        "is_major": "0",
+        "playerName": "Zechariah Potter",
+        "player_num": "36755",
+        "Rounds": "2",
+        "CourseID": "714",
+        "Course": "TPC Louisiana",
+        "ShotLink": "2",
+        "SG:TOT": "-3.25",
+        "SG:T2G": "-3.22",
+        "SG:OTT": "-2.31",
+        "SG:APP": "-1.33",
+        "SG:BS": "-3.64",
+        "SG:ARG": "0.41",
+        "SG:P": "-0.03",
+        "SG:SG": "0.38"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-0.03350000083446503",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-3.109999895095825",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-3.4000000953674316",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-3.2549999952316284",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-3.2549999952316284",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-3.2549999952316284",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "73",
+        "PM": "74",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": "66.1",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-3.2549999952316284",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:26:37.227Z",
+    "ok": true
+  }
+}

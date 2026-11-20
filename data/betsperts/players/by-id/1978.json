@@ -1,0 +1,148 @@
+{
+  "playerId": "1978",
+  "playerName": "Fran Quinn",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Fran Quinn",
+    "BirthPlace": "Worcester, Massachusetts",
+    "BirthDate": "March 11, 1965",
+    "Age": "61",
+    "Height": "6ft 0in",
+    "Weight": "175 lbs",
+    "Nationality": "United States",
+    "Residence": "Holden, Massachusetts",
+    "ProWins": "4",
+    "TurnedPro": "1988",
+    "PGAWins": "0",
+    "College": "Northwestern University 1987, Economics"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Fran Quinn",
+        "player_num": "1978",
+        "Year": "2022",
+        "Rounds": "2",
+        "SG:TOT": "-4.12",
+        "SG:T2G": "-2.93",
+        "SG:OTT": "-0.61",
+        "SG:APP": "-0.98",
+        "SG:BS": "-1.59",
+        "SG:ARG": "-1.34",
+        "SG:P": "-1.19",
+        "Dr Distance": "277.0",
+        "Dr Accuracy %": "60.7",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2022-06-19",
+        "position": "CUT",
+        "roundPosition": "T144",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Fran Quinn",
+        "player_num": "1978",
+        "Rounds": "2",
+        "CourseID": "654",
+        "Course": "The Country Club",
+        "ShotLink": "2",
+        "SG:TOT": "-4.12",
+        "SG:T2G": "-2.93",
+        "SG:OTT": "-0.61",
+        "SG:APP": "-0.98",
+        "SG:BS": "-1.59",
+        "SG:ARG": "-1.34",
+        "SG:P": "-1.19",
+        "SG:SG": "-2.53"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "-1.190999984741211",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-3.2300000190734863",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-5.010000228881836",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-4.120000123977661",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-4.120000123977661",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-4.120000123977661",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "76",
+        "PM": "77",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "42.6",
+        "200+": "57",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-4.120000123977661",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:21:36.260Z",
+    "ok": true
+  }
+}

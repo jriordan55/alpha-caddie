@@ -1,0 +1,152 @@
+{
+  "playerId": "46944",
+  "playerName": "Jorge Villar",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_mx-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Jorge Villar",
+    "BirthPlace": "Miami, Florida",
+    "BirthDate": "April 22, 1998",
+    "Age": "28",
+    "Height": "6ft in",
+    "Weight": "167 lbs",
+    "Nationality": "Mexico",
+    "Residence": "Miami, Florida",
+    "ProWins": null,
+    "TurnedPro": "2021",
+    "PGAWins": null,
+    "College": "Lynn University "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Jorge Villar",
+        "player_num": "46944",
+        "Year": "2026",
+        "Rounds": "2",
+        "SG:TOT": "-18.67",
+        "SG:T2G": "-13.36",
+        "SG:OTT": "-6.10",
+        "SG:APP": "-6.70",
+        "SG:BS": "-12.80",
+        "SG:ARG": "-0.55",
+        "SG:P": "-5.32",
+        "Dr Distance": "272.4",
+        "Dr Accuracy %": "57.1",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Jorge Villar",
+        "player_num": "46944",
+        "Rounds": "2",
+        "SG:TOT": "-18.67",
+        "SG:T2G": "-13.36",
+        "SG:OTT": "-6.10",
+        "SG:APP": "-6.70",
+        "SG:BS": "-12.80",
+        "SG:ARG": "-0.55",
+        "SG:P": "-5.32",
+        "SG:SG": "-5.87"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-11-08",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "World Wide Technology Championship",
+        "is_major": "0",
+        "playerName": "Jorge Villar",
+        "player_num": "46944",
+        "Rounds": "2",
+        "CourseID": "919",
+        "Course": "El Cardonal at Diamante",
+        "ShotLink": "2",
+        "SG:TOT": "-18.67",
+        "SG:T2G": "-13.36",
+        "SG:OTT": "-6.10",
+        "SG:APP": "-6.70",
+        "SG:BS": "-12.80",
+        "SG:ARG": "-0.55",
+        "SG:P": "-5.32",
+        "SG:SG": "-5.87"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-17.420000076293945",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-19.920000076293945",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-18.670000076293945",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-18.670000076293945",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-18.670000076293945",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "87",
+        "PM": "90",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-18.670000076293945",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:03.314Z",
+    "ok": true
+  }
+}

@@ -1,0 +1,200 @@
+{
+  "playerId": "30826",
+  "playerName": "John O'Leary",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "John O'Leary",
+    "BirthPlace": "",
+    "BirthDate": "December 18, 1974",
+    "Age": "51",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "United States",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "John OLeary",
+        "player_num": "30826",
+        "Year": "2020",
+        "Rounds": "2",
+        "SG:TOT": "-2.78",
+        "SG:T2G": "-2.03",
+        "SG:OTT": "-1.31",
+        "SG:APP": "0.73",
+        "SG:BS": "-0.58",
+        "SG:ARG": "-1.45",
+        "SG:P": "-0.75",
+        "Dr Distance": "280.7",
+        "Dr Accuracy %": "35.7",
+        "Ball Speed": "160.29"
+      },
+      {
+        "playerName": "John OLeary",
+        "player_num": "30826",
+        "Year": "2019",
+        "Rounds": "2",
+        "SG:TOT": "-6.14",
+        "SG:T2G": "-6.69",
+        "SG:OTT": "-1.95",
+        "SG:APP": "-2.91",
+        "SG:BS": "-4.86",
+        "SG:ARG": "-1.83",
+        "SG:P": "0.55",
+        "Dr Distance": "268.7",
+        "Dr Accuracy %": "46.4",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2020-08-09",
+        "position": "CUT",
+        "roundPosition": "T132",
+        "TournamentName": "PGA Championship",
+        "is_major": "1",
+        "playerName": "John OLeary",
+        "player_num": "30826",
+        "Rounds": "2",
+        "CourseID": "895",
+        "Course": "TPC Harding Park",
+        "ShotLink": "2",
+        "SG:TOT": "-2.78",
+        "SG:T2G": "-2.03",
+        "SG:OTT": "-1.31",
+        "SG:APP": "0.73",
+        "SG:BS": "-0.58",
+        "SG:ARG": "-1.45",
+        "SG:P": "-0.75",
+        "SG:SG": "-2.20"
+      },
+      {
+        "Date": "2019-05-19",
+        "position": "CUT",
+        "roundPosition": "150",
+        "TournamentName": "PGA Championship",
+        "is_major": "1",
+        "playerName": "John OLeary",
+        "player_num": "30826",
+        "Rounds": "2",
+        "CourseID": "880",
+        "Course": "Bethpage State Park (Black)",
+        "ShotLink": "2",
+        "SG:TOT": "-6.14",
+        "SG:T2G": "-6.69",
+        "SG:OTT": "-1.95",
+        "SG:APP": "-2.91",
+        "SG:BS": "-4.86",
+        "SG:ARG": "-1.83",
+        "SG:P": "0.55",
+        "SG:SG": "-1.29"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.7494999766349792",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-4.9100000858306885",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-4.009999930858612",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-2.775000035762787",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-6.144999980926514",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-2.775000035762787",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-6.144999980926514",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-4.46000000834465",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "77",
+        "PM": "75.5",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": "32.9",
+        "150-200": "45.1",
+        "200+": "65",
+        "200-250": "61.5",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-6.144999980926514",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-2.775000035762787",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:56.291Z",
+    "ok": true
+  }
+}

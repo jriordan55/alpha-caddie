@@ -1,0 +1,148 @@
+{
+  "playerId": "39075",
+  "playerName": "Armando Villarreal",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_mx-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Armando Villarreal",
+    "BirthPlace": "Los Mochis, Sinaloa, Mexico",
+    "BirthDate": "December 24, 1988",
+    "Age": "37",
+    "Height": "5ft 9in",
+    "Weight": "157 lbs",
+    "Nationality": "Mexico",
+    "Residence": "Los Mochis, Sinaloa, Mexico",
+    "ProWins": null,
+    "TurnedPro": "2011",
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Armando Villarreal",
+        "player_num": "39075",
+        "Year": "2016",
+        "Rounds": "2",
+        "SG:TOT": "-0.34",
+        "SG:T2G": "-0.33",
+        "SG:OTT": "-1.23",
+        "SG:APP": "1.14",
+        "SG:BS": "-0.09",
+        "SG:ARG": "-0.24",
+        "SG:P": "-0.01",
+        "Dr Distance": "259.2",
+        "Dr Accuracy %": "60.7",
+        "Ball Speed": "148.76"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2016-08-14",
+        "position": "CUT",
+        "roundPosition": "T89",
+        "TournamentName": "John Deere Classic",
+        "is_major": "0",
+        "playerName": "Armando Villarreal",
+        "player_num": "39075",
+        "Rounds": "2",
+        "CourseID": "669",
+        "Course": "TPC Deere Run",
+        "ShotLink": "2",
+        "SG:TOT": "-0.34",
+        "SG:T2G": "-0.33",
+        "SG:OTT": "-1.23",
+        "SG:APP": "1.14",
+        "SG:BS": "-0.09",
+        "SG:ARG": "-0.24",
+        "SG:P": "-0.01",
+        "SG:SG": "-0.25"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.010500013828277588",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.5600000023841858",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.10999999940395355",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-0.33500000089406967",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-0.33500000089406967",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-0.33500000089406967",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": null,
+        "PM": "70.5",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "18.6",
+        "150-200": "34.3",
+        "200+": "44.2",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-0.33500000089406967",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:13.002Z",
+    "ok": true
+  }
+}

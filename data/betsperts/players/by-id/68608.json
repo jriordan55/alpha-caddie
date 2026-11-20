@@ -1,0 +1,199 @@
+{
+  "playerId": "68608",
+  "playerName": "Bryan Lee",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Bryan Lee",
+    "BirthPlace": null,
+    "BirthDate": "",
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Bryan Lee",
+        "player_num": "68608",
+        "Year": "2026",
+        "Rounds": "2",
+        "SG:TOT": "-0.73",
+        "SG:T2G": "0.13",
+        "SG:OTT": "0.12",
+        "SG:APP": "-0.86",
+        "SG:BS": "-0.73",
+        "SG:ARG": "0.86",
+        "SG:P": "-0.86",
+        "Dr Distance": "297.0",
+        "Dr Accuracy %": "75.0",
+        "Ball Speed": "169.90"
+      },
+      {
+        "playerName": "Bryan Lee",
+        "player_num": "68608",
+        "Year": "2025",
+        "Rounds": "2",
+        "SG:TOT": "-3.29",
+        "SG:T2G": "-4.32",
+        "SG:OTT": "-2.76",
+        "SG:APP": "-1.06",
+        "SG:BS": "-3.82",
+        "SG:ARG": "-0.50",
+        "SG:P": "1.03",
+        "Dr Distance": "266.9",
+        "Dr Accuracy %": "42.9",
+        "Ball Speed": "166.31"
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Bryan Lee",
+        "player_num": "68608",
+        "Rounds": "2",
+        "SG:TOT": "-0.73",
+        "SG:T2G": "0.13",
+        "SG:OTT": "0.12",
+        "SG:APP": "-0.86",
+        "SG:BS": "-0.73",
+        "SG:ARG": "0.86",
+        "SG:P": "-0.86",
+        "SG:SG": "-0.00"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-06-21",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Bryan Lee",
+        "player_num": "68608",
+        "Rounds": "2",
+        "CourseID": "618",
+        "Course": "Shinnecock Hills GC",
+        "ShotLink": "2",
+        "SG:TOT": "-0.73",
+        "SG:T2G": "0.13",
+        "SG:OTT": "0.12",
+        "SG:APP": "-0.86",
+        "SG:BS": "-0.73",
+        "SG:ARG": "0.86",
+        "SG:P": "-0.86",
+        "SG:SG": "-0.00"
+      },
+      {
+        "Date": "2025-06-15",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Bryan Lee",
+        "player_num": "68608",
+        "Rounds": "2",
+        "CourseID": "608",
+        "Course": "Oakmont CC",
+        "ShotLink": "2",
+        "SG:TOT": "-3.29",
+        "SG:T2G": "-4.32",
+        "SG:OTT": "-2.76",
+        "SG:APP": "-1.06",
+        "SG:BS": "-3.82",
+        "SG:ARG": "-0.50",
+        "SG:P": "1.03",
+        "SG:SG": "0.52"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "25.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "1.0270000100135803",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.5399999469518661",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-2.4850000143051147",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-2.0124999806284904",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-2.0124999806284904",
+        "Rounds": "4"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-2.0124999806284904",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "76",
+        "PM": "75.5",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": "26.1",
+        "100-150": null,
+        "150-200": "45.7",
+        "200+": "68.2",
+        "200-250": "66.4",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-2.0124999806284904",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:54.950Z",
+    "ok": true
+  }
+}

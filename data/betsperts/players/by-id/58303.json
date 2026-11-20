@@ -1,0 +1,219 @@
+{
+  "playerId": "58303",
+  "playerName": "Ryan Celano",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Ryan Celano",
+    "BirthPlace": "Chapel Hill, North Carolina",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "5ft 10in",
+    "Weight": "180 lbs",
+    "Nationality": "United States",
+    "Residence": "Naples, Florida",
+    "ProWins": null,
+    "TurnedPro": "2019",
+    "PGAWins": null,
+    "College": "University of Florida 2019, Advertising"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Ryan Celano",
+        "player_num": "58303",
+        "Year": "2026",
+        "Rounds": "2",
+        "SG:TOT": "-3.80",
+        "SG:T2G": "-2.14",
+        "SG:OTT": "-0.07",
+        "SG:APP": "-1.89",
+        "SG:BS": "-1.95",
+        "SG:ARG": "-0.19",
+        "SG:P": "-1.67",
+        "Dr Distance": "295.2",
+        "Dr Accuracy %": "60.7",
+        "Ball Speed": "176.31"
+      },
+      {
+        "playerName": "Ryan Celano",
+        "player_num": "58303",
+        "Year": "2024",
+        "Rounds": "2",
+        "SG:TOT": "-0.55",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "78.6",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Ryan Celano",
+        "player_num": "58303",
+        "Rounds": "2",
+        "SG:TOT": "-3.80",
+        "SG:T2G": "-2.14",
+        "SG:OTT": "-0.07",
+        "SG:APP": "-1.89",
+        "SG:BS": "-1.95",
+        "SG:ARG": "-0.19",
+        "SG:P": "-1.67",
+        "SG:SG": "-1.85"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-08-02",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "Rocket Classic",
+        "is_major": "0",
+        "playerName": "Ryan Celano",
+        "player_num": "58303",
+        "Rounds": "2",
+        "CourseID": "947",
+        "Course": "Detroit GC",
+        "ShotLink": "2",
+        "SG:TOT": "-3.80",
+        "SG:T2G": "-2.14",
+        "SG:OTT": "-0.07",
+        "SG:APP": "-1.89",
+        "SG:BS": "-1.95",
+        "SG:ARG": "-0.19",
+        "SG:P": "-1.67",
+        "SG:SG": "-1.85"
+      },
+      {
+        "Date": "2024-04-21",
+        "position": "CUT",
+        "roundPosition": "T81",
+        "TournamentName": "Corales Puntacana Championship",
+        "is_major": "0",
+        "playerName": "Ryan Celano",
+        "player_num": "58303",
+        "Rounds": "2",
+        "CourseID": "244",
+        "Course": "Corales Golf Course",
+        "ShotLink": "0",
+        "SG:TOT": "-0.55",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-1.6660000085830688",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-2.0999999791383743",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-2.254999965429306",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-3.8049999475479126",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-0.5499999970197678",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-2.669999967018763",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-0.699999988079071",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-3.8049999475479126",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-0.5499999970197678",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "72",
+        "PM": "72",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": "36.6",
+        "150-200": null,
+        "200+": "55.6",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-0.5499999970197678",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-3.8049999475479126",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:14.804Z",
+    "ok": true
+  }
+}

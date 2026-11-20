@@ -1,0 +1,203 @@
+{
+  "playerId": "71668",
+  "playerName": "Jay Leng",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Jay Leng",
+    "BirthPlace": null,
+    "BirthDate": "",
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Jay Leng",
+        "player_num": "71668",
+        "Year": "2026",
+        "Rounds": "6",
+        "SG:TOT": "-0.03",
+        "SG:T2G": "0.72",
+        "SG:OTT": "0.42",
+        "SG:APP": "0.17",
+        "SG:BS": "0.59",
+        "SG:ARG": "0.14",
+        "SG:P": "-0.76",
+        "Dr Distance": "286.7",
+        "Dr Accuracy %": "82.1",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Jay Leng",
+        "player_num": "71668",
+        "Rounds": "6",
+        "SG:TOT": "-0.03",
+        "SG:T2G": "0.72",
+        "SG:OTT": "0.42",
+        "SG:APP": "0.17",
+        "SG:BS": "0.59",
+        "SG:ARG": "0.14",
+        "SG:P": "-0.76",
+        "SG:SG": "-0.62"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-11-08",
+        "position": "T12",
+        "roundPosition": "T12",
+        "TournamentName": "World Wide Technology Championship",
+        "is_major": "0",
+        "playerName": "Jay Leng",
+        "player_num": "71668",
+        "Rounds": "4",
+        "CourseID": "919",
+        "Course": "El Cardonal at Diamante",
+        "ShotLink": "4",
+        "SG:TOT": "1.91",
+        "SG:T2G": "2.10",
+        "SG:OTT": "0.52",
+        "SG:APP": "0.84",
+        "SG:BS": "1.36",
+        "SG:ARG": "0.74",
+        "SG:P": "-0.19",
+        "SG:SG": "0.55"
+      },
+      {
+        "Date": "2026-10-25",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "Butterfield Bermuda Championship",
+        "is_major": "0",
+        "playerName": "Jay Leng",
+        "player_num": "71668",
+        "Rounds": "2",
+        "CourseID": "765",
+        "Course": "Port Royal Golf Course",
+        "ShotLink": "2",
+        "SG:TOT": "-3.92",
+        "SG:T2G": "-2.04",
+        "SG:OTT": "0.22",
+        "SG:APP": "-1.19",
+        "SG:BS": "-0.97",
+        "SG:ARG": "-1.07",
+        "SG:P": "-1.89",
+        "SG:SG": "-2.95"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "66.7",
+        "SG TOT 1+": "50.0",
+        "SG TOT 2+": "33.3",
+        "SG TOT 3+": "16.7",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "6"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-1.8865000158548355",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "0.029999971389770508",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-2.620000086724758",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "3.309999942779541",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "1.690000057220459",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "1.9149999804794788",
+        "Rounds": "4"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-3.9200000762939453",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-0.03000003844499588",
+        "Rounds": "6"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-3.9200000762939453",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "1.9149999804794788",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "70.33333333333333",
+        "PM": "68.33333333333333",
+        "Rounds": "6"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "6",
+        "50-100": "35.6",
+        "100-150": "26.5",
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-0.03000003844499588",
+        "Rounds": "6"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:30.929Z",
+    "ok": true
+  }
+}

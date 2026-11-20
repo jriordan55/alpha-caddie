@@ -1,0 +1,157 @@
+{
+  "playerId": "51174",
+  "playerName": "Stuart Grehan",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ei-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Stuart Grehan",
+    "BirthPlace": null,
+    "BirthDate": "December 30, 1992",
+    "Age": "33",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "Ireland",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Stuart Grehan",
+        "player_num": "51174",
+        "Year": "2026",
+        "Rounds": "2",
+        "SG:TOT": "-2.10",
+        "SG:T2G": "-0.98",
+        "SG:OTT": "-0.84",
+        "SG:APP": "0.21",
+        "SG:BS": "-0.63",
+        "SG:ARG": "-0.35",
+        "SG:P": "-1.13",
+        "Dr Distance": null,
+        "Dr Accuracy %": "42.9",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Stuart Grehan",
+        "player_num": "51174",
+        "Rounds": "2",
+        "SG:TOT": "-2.10",
+        "SG:T2G": "-0.98",
+        "SG:OTT": "-0.84",
+        "SG:APP": "0.21",
+        "SG:BS": "-0.63",
+        "SG:ARG": "-0.35",
+        "SG:P": "-1.13",
+        "SG:SG": "-1.48"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-07-19",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Stuart Grehan",
+        "player_num": "51174",
+        "Rounds": "2",
+        "CourseID": "541",
+        "Course": "Royal Birkdale GC",
+        "ShotLink": "2",
+        "SG:TOT": "-2.10",
+        "SG:T2G": "-0.98",
+        "SG:OTT": "-0.84",
+        "SG:APP": "0.21",
+        "SG:BS": "-0.63",
+        "SG:ARG": "-0.35",
+        "SG:P": "-1.13",
+        "SG:SG": "-1.48"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "50.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-5.559999942779541",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "1.350000023841858",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-2.1049999594688416",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "1.350000023841858",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-5.559999942779541",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-2.1049999594688416",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "69",
+        "PM": "77",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-2.1049999594688416",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:50.162Z",
+    "ok": true
+  }
+}

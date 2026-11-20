@@ -1,0 +1,157 @@
+{
+  "playerId": "63223",
+  "playerName": "Alejandro De Castro Piera",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_sp-flag-1.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Alejandro De Castro Piera",
+    "BirthPlace": null,
+    "BirthDate": "",
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "Spain",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Alejandro De Castro Piera",
+        "player_num": "63223",
+        "Year": "2026",
+        "Rounds": "2",
+        "SG:TOT": "-2.11",
+        "SG:T2G": "-1.81",
+        "SG:OTT": "0.39",
+        "SG:APP": "-2.36",
+        "SG:BS": "-1.97",
+        "SG:ARG": "0.16",
+        "SG:P": "-0.29",
+        "Dr Distance": null,
+        "Dr Accuracy %": "39.3",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Alejandro De Castro Piera",
+        "player_num": "63223",
+        "Rounds": "2",
+        "SG:TOT": "-2.11",
+        "SG:T2G": "-1.81",
+        "SG:OTT": "0.39",
+        "SG:APP": "-2.36",
+        "SG:BS": "-1.97",
+        "SG:ARG": "0.16",
+        "SG:P": "-0.29",
+        "SG:SG": "-0.13"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-07-19",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Alejandro De Castro Piera",
+        "player_num": "63223",
+        "Rounds": "2",
+        "CourseID": "541",
+        "Course": "Royal Birkdale GC",
+        "ShotLink": "2",
+        "SG:TOT": "-2.11",
+        "SG:T2G": "-1.81",
+        "SG:OTT": "0.39",
+        "SG:APP": "-2.36",
+        "SG:BS": "-1.97",
+        "SG:ARG": "0.16",
+        "SG:P": "-0.29",
+        "SG:SG": "-0.13"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.559999942779541",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-2.6500000953674316",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-2.1050000190734863",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-2.6500000953674316",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-1.559999942779541",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-2.1050000190734863",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "73",
+        "PM": "73",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-2.1050000190734863",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:18:49.726Z",
+    "ok": true
+  }
+}

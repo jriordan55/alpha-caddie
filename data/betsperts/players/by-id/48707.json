@@ -1,0 +1,153 @@
+{
+  "playerId": "48707",
+  "playerName": "Scott Wolfes",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Scott Wolfes",
+    "BirthPlace": "Atlanta, Georgia",
+    "BirthDate": "September 20, 1992",
+    "Age": "34",
+    "Height": "6ft 1in",
+    "Weight": "195 lbs",
+    "Nationality": "United States",
+    "Residence": "St. Simons Island, Georgia",
+    "ProWins": null,
+    "TurnedPro": "2015",
+    "PGAWins": null,
+    "College": "Georgia Southern University "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Scott Wolfes",
+        "player_num": "48707",
+        "Year": "2015",
+        "Rounds": "2",
+        "SG:TOT": "-1.80",
+        "SG:T2G": "-1.34",
+        "SG:OTT": "1.19",
+        "SG:APP": "-1.53",
+        "SG:BS": "-0.35",
+        "SG:ARG": "-1.00",
+        "SG:P": "-2.02",
+        "Dr Distance": "280.4",
+        "Dr Accuracy %": "64.3",
+        "Ball Speed": "164.94"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2015-11-22",
+        "position": "CUT",
+        "roundPosition": "T120",
+        "TournamentName": "The RSM Classic",
+        "is_major": "0",
+        "playerName": "Scott Wolfes",
+        "player_num": "48707",
+        "Rounds": "2",
+        "CourseID": "776",
+        "Course": "Sea Island GC (Seaside)",
+        "ShotLink": "1",
+        "SG:TOT": "-1.80",
+        "SG:T2G": "-1.34",
+        "SG:OTT": "1.19",
+        "SG:APP": "-1.53",
+        "SG:BS": "-0.35",
+        "SG:ARG": "-1.00",
+        "SG:P": "-2.02",
+        "SG:SG": "-3.01"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-2.0160000324249268",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.23999999463558197",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-3.359999895095825",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-3.359999895095825",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-0.23999999463558197",
+        "Rounds": "1"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-1.7999999448657036",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-1.7999999448657036",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "70",
+        "PM": "74",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-1.7999999448657036",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:30.818Z",
+    "ok": true
+  }
+}

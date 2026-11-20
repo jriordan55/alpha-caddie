@@ -1,0 +1,247 @@
+{
+  "playerId": "59548",
+  "playerName": "Matt Sharpstene",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Matt Sharpstene",
+    "BirthPlace": "",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "United States",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Matt Sharpstene",
+        "player_num": "59548",
+        "Year": "2024",
+        "Rounds": "2",
+        "SG:TOT": "-1.90",
+        "SG:T2G": "-1.55",
+        "SG:OTT": "0.75",
+        "SG:APP": "-1.26",
+        "SG:BS": "-0.51",
+        "SG:ARG": "-1.05",
+        "SG:P": "-0.35",
+        "Dr Distance": "308.4",
+        "Dr Accuracy %": "50.0",
+        "Ball Speed": "180.76"
+      },
+      {
+        "playerName": "Matt Sharpstene",
+        "player_num": "59548",
+        "Year": "2023",
+        "Rounds": "2",
+        "SG:TOT": "-1.56",
+        "SG:T2G": "-1.24",
+        "SG:OTT": "0.48",
+        "SG:APP": "-1.03",
+        "SG:BS": "-0.55",
+        "SG:ARG": "-0.69",
+        "SG:P": "-0.32",
+        "Dr Distance": "312.2",
+        "Dr Accuracy %": "42.9",
+        "Ball Speed": "181.25"
+      },
+      {
+        "playerName": "Matt Sharpstene",
+        "player_num": "59548",
+        "Year": "2021",
+        "Rounds": "2",
+        "SG:TOT": "-1.75",
+        "SG:T2G": "-2.70",
+        "SG:OTT": "0.86",
+        "SG:APP": "-1.70",
+        "SG:BS": "-0.84",
+        "SG:ARG": "-1.86",
+        "SG:P": "0.95",
+        "Dr Distance": "313.6",
+        "Dr Accuracy %": "53.6",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2024-07-14",
+        "position": "CUT",
+        "roundPosition": "T120",
+        "TournamentName": "ISCO Championship",
+        "is_major": "0",
+        "playerName": "Matt Sharpstene",
+        "player_num": "59548",
+        "Rounds": "2",
+        "CourseID": "884",
+        "Course": "Keene Trace GC",
+        "ShotLink": "2",
+        "SG:TOT": "-1.90",
+        "SG:T2G": "-1.55",
+        "SG:OTT": "0.75",
+        "SG:APP": "-1.26",
+        "SG:BS": "-0.51",
+        "SG:ARG": "-1.05",
+        "SG:P": "-0.35",
+        "SG:SG": "-1.39"
+      },
+      {
+        "Date": "2023-07-16",
+        "position": "CUT",
+        "roundPosition": "T117",
+        "TournamentName": "Barbasol Championship",
+        "is_major": "0",
+        "playerName": "Matt Sharpstene",
+        "player_num": "59548",
+        "Rounds": "2",
+        "CourseID": "884",
+        "Course": "Keene Trace GC",
+        "ShotLink": "2",
+        "SG:TOT": "-1.56",
+        "SG:T2G": "-1.24",
+        "SG:OTT": "0.48",
+        "SG:APP": "-1.03",
+        "SG:BS": "-0.55",
+        "SG:ARG": "-0.69",
+        "SG:P": "-0.32",
+        "SG:SG": "-1.00"
+      },
+      {
+        "Date": "2021-06-20",
+        "position": "CUT",
+        "roundPosition": null,
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Matt Sharpstene",
+        "player_num": "59548",
+        "Rounds": "2",
+        "CourseID": "744",
+        "Course": "Torrey Pines GC (South)",
+        "ShotLink": "2",
+        "SG:TOT": "-1.75",
+        "SG:T2G": "-2.70",
+        "SG:OTT": "0.86",
+        "SG:APP": "-1.70",
+        "SG:BS": "-0.84",
+        "SG:ARG": "-1.86",
+        "SG:P": "0.95",
+        "SG:SG": "-0.92"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "6"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.33125001238659024",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "0.9484999924898148",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.030000001192093",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-2.4333333571751914",
+        "Rounds": "3"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-1.7250000089406967",
+        "Rounds": "4"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-1.7450000196695328",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-1.5550000071525574",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-1.7450000196695328",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-1.895000010728836",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-1.7450000196695328",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-1.7250000089406967",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "72.66666666666667",
+        "PM": "73.33333333333333",
+        "Rounds": "6"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "6",
+        "50-100": "29.5",
+        "100-150": "28",
+        "150-200": "35.8",
+        "200+": "63.6",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-1.7316666791836421",
+        "Rounds": "6"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:58.160Z",
+    "ok": true
+  }
+}

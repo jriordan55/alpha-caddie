@@ -1,0 +1,138 @@
+{
+  "playerId": "60215",
+  "playerName": "Alex Lee",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Alex Lee",
+    "BirthPlace": "San Francisco, California",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "6ft 1in",
+    "Weight": "190 lbs",
+    "Nationality": "United States",
+    "Residence": "Sacramento, California",
+    "ProWins": "0",
+    "TurnedPro": "2019",
+    "PGAWins": "0",
+    "College": "Fresno State University 2019, Communications"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Alex Lee",
+        "player_num": "60215",
+        "Year": "2022",
+        "Rounds": "2",
+        "SG:TOT": "-3.86",
+        "SG:T2G": "-1.59",
+        "SG:OTT": "1.09",
+        "SG:APP": "-2.51",
+        "SG:BS": "-1.42",
+        "SG:ARG": "-0.16",
+        "SG:P": "-2.28",
+        "Dr Distance": "298.7",
+        "Dr Accuracy %": "67.9",
+        "Ball Speed": "168.50"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2022-09-18",
+        "position": "CUT",
+        "roundPosition": "T145",
+        "TournamentName": "Fortinet Championship",
+        "is_major": "0",
+        "playerName": "Alex Lee",
+        "player_num": "60215",
+        "Rounds": "2",
+        "CourseID": "552",
+        "Course": "Silverado Resort (North)",
+        "ShotLink": "2",
+        "SG:TOT": "-3.86",
+        "SG:T2G": "-1.59",
+        "SG:OTT": "1.09",
+        "SG:APP": "-2.51",
+        "SG:BS": "-1.42",
+        "SG:ARG": "-0.16",
+        "SG:P": "-2.28",
+        "SG:SG": "-2.44"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-5.619999885559082",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-2.109999895095825",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-3.8649998903274536",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-3.8649998903274536",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-3.8649998903274536",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "77",
+        "PM": "74",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "28.7",
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-3.8649998903274536",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:18:52.963Z",
+    "ok": true
+  }
+}

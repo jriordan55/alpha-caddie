@@ -1,0 +1,195 @@
+{
+  "playerId": "25052",
+  "playerName": "Derek Gillespie",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ca-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Derek Gillespie",
+    "BirthPlace": "Oshawa, Ontario, Canada",
+    "BirthDate": "July 06, 1978",
+    "Age": "48",
+    "Height": "5ft 8in",
+    "Weight": "175 lbs",
+    "Nationality": "Canada",
+    "Residence": "Oshawa, Ontario, Canada",
+    "ProWins": "2",
+    "TurnedPro": "2000",
+    "PGAWins": "0",
+    "College": "University of Arizona 2000, Communications"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Derek Gillespie",
+        "player_num": "25052",
+        "Year": "2020",
+        "Rounds": "2",
+        "SG:TOT": "-2.91",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "60.7",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Derek Gillespie",
+        "player_num": "25052",
+        "Year": "2016",
+        "Rounds": "2",
+        "SG:TOT": "-0.85",
+        "SG:T2G": "-2.59",
+        "SG:OTT": "-1.95",
+        "SG:APP": "-0.58",
+        "SG:BS": "-2.54",
+        "SG:ARG": "-0.06",
+        "SG:P": "1.74",
+        "Dr Distance": "287.9",
+        "Dr Accuracy %": "42.9",
+        "Ball Speed": "172.91"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2020-02-23",
+        "position": "CUT",
+        "roundPosition": "T104",
+        "TournamentName": "Puerto Rico Open",
+        "is_major": "0",
+        "playerName": "Derek Gillespie",
+        "player_num": "25052",
+        "Rounds": "2",
+        "CourseID": "742",
+        "Course": "Grand Reserve GC",
+        "ShotLink": "0",
+        "SG:TOT": "-2.91",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2016-08-07",
+        "position": "CUT",
+        "roundPosition": "T104",
+        "TournamentName": "Travelers Championship",
+        "is_major": "0",
+        "playerName": "Derek Gillespie",
+        "player_num": "25052",
+        "Rounds": "2",
+        "CourseID": "503",
+        "Course": "TPC River Highlands",
+        "ShotLink": "2",
+        "SG:TOT": "-0.85",
+        "SG:T2G": "-2.59",
+        "SG:OTT": "-1.95",
+        "SG:APP": "-0.58",
+        "SG:BS": "-2.54",
+        "SG:ARG": "-0.06",
+        "SG:P": "1.74",
+        "SG:SG": "1.68"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "25.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-2.834999978542328",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.9349999651312828",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-2.9149999618530273",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-0.8549999818205833",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-0.8549999818205833",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-2.9149999618530273",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-0.8549999818205833",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-2.9149999618530273",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "72.5",
+        "PM": "72.5",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": "43.9",
+        "150-200": null,
+        "200+": "78.7",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-2.9149999618530273",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-0.8549999818205833",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:21:12.273Z",
+    "ok": true
+  }
+}

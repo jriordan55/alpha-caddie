@@ -1,0 +1,158 @@
+{
+  "playerId": "51865",
+  "playerName": "Jonathan Grey",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/St_Georges_Cross.svg_.png",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Jonathan Grey",
+    "BirthPlace": "London, England",
+    "BirthDate": "March 13, 1993",
+    "Age": "33",
+    "Height": "6ft 4in",
+    "Weight": "240 lbs",
+    "Nationality": "England",
+    "Residence": "Atlanta, Georgia",
+    "ProWins": null,
+    "TurnedPro": "2016",
+    "PGAWins": null,
+    "College": "Georgia State University 2016, Psychology"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Jonathan Grey",
+        "player_num": "51865",
+        "Year": "2023",
+        "Rounds": "2",
+        "SG:TOT": "-0.20",
+        "SG:T2G": "-2.84",
+        "SG:OTT": "-0.88",
+        "SG:APP": "-1.36",
+        "SG:BS": "-2.24",
+        "SG:ARG": "-0.60",
+        "SG:P": "2.64",
+        "Dr Distance": "298.5",
+        "Dr Accuracy %": "50.0",
+        "Ball Speed": "179.00"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2023-06-18",
+        "position": "CUT",
+        "roundPosition": "T80",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Jonathan Grey",
+        "player_num": "51865",
+        "Rounds": "2",
+        "CourseID": "43",
+        "Course": "Los Angeles CC (North)",
+        "ShotLink": "2",
+        "SG:TOT": "-0.20",
+        "SG:T2G": "-2.84",
+        "SG:OTT": "-0.88",
+        "SG:APP": "-1.36",
+        "SG:BS": "-2.24",
+        "SG:ARG": "-0.60",
+        "SG:P": "2.64",
+        "SG:SG": "2.03"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "2.635499954223633",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "0.3799999952316284",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.7799999713897705",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "0.3799999952316284",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-0.7799999713897705",
+        "Rounds": "1"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "0.3799999952316284",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-0.7799999713897705",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-0.19999998807907104",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "73",
+        "PM": "71",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "41.2",
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-0.19999998807907104",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:01.064Z",
+    "ok": true
+  }
+}

@@ -1,0 +1,163 @@
+{
+  "playerId": "56353",
+  "playerName": "Callum McNeill",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/04/Flag_of_Scotland.svg_.png",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Callum McNeill",
+    "BirthPlace": "Edinburgh, Scotland",
+    "BirthDate": "November 17, 1993",
+    "Age": "33",
+    "Height": "5ft 10in",
+    "Weight": "160 lbs",
+    "Nationality": "Scotland",
+    "Residence": "Hockley, Texas",
+    "ProWins": null,
+    "TurnedPro": "2016",
+    "PGAWins": null,
+    "College": "University of Highlands and Islands 2015, Golf Management"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Callum McNeill",
+        "player_num": "56353",
+        "Year": "2024",
+        "Rounds": "2",
+        "SG:TOT": "-0.10",
+        "SG:T2G": "-1.75",
+        "SG:OTT": "-1.07",
+        "SG:APP": "-0.74",
+        "SG:BS": "-1.82",
+        "SG:ARG": "0.07",
+        "SG:P": "1.64",
+        "Dr Distance": "291.5",
+        "Dr Accuracy %": "38.5",
+        "Ball Speed": "168.54"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2024-03-31",
+        "position": "CUT",
+        "roundPosition": "T84",
+        "TournamentName": "Texas Childrens Houston Open",
+        "is_major": "0",
+        "playerName": "Callum McNeill",
+        "player_num": "56353",
+        "Rounds": "2",
+        "CourseID": "897",
+        "Course": "Memorial Park Golf Course",
+        "ShotLink": "2",
+        "SG:TOT": "-0.10",
+        "SG:T2G": "-1.75",
+        "SG:OTT": "-1.07",
+        "SG:APP": "-0.74",
+        "SG:BS": "-1.82",
+        "SG:ARG": "0.07",
+        "SG:P": "1.64",
+        "SG:SG": "1.71"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "6"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Poa Trivialis",
+        "StrokesGainedAverage": "1.6424999833106995",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "0.4300000071525574",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.6399999856948853",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": null,
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": null,
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-0.6399999856948853",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "0.4300000071525574",
+        "Rounds": "1"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-0.10499998927116394",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-0.10499998927116394",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "72",
+        "PM": "70",
+        "Rounds": "6"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "6",
+        "50-100": null,
+        "100-150": "45.4",
+        "150-200": "39.6",
+        "200+": "57.6",
+        "200-250": "52.7",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-0.10499998927116394",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:59.839Z",
+    "ok": true
+  }
+}

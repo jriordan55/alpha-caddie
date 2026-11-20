@@ -1,0 +1,195 @@
+{
+  "playerId": "32508",
+  "playerName": "Chad Proehl",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Chad Proehl",
+    "BirthPlace": "",
+    "BirthDate": "September 29, 1967",
+    "Age": "59",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "United States",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Chad Proehl",
+        "player_num": "32508",
+        "Year": "2021",
+        "Rounds": "2",
+        "SG:TOT": "-7.07",
+        "SG:T2G": "-6.80",
+        "SG:OTT": "-3.48",
+        "SG:APP": "-2.24",
+        "SG:BS": "-5.72",
+        "SG:ARG": "-1.08",
+        "SG:P": "-0.26",
+        "Dr Distance": "264.6",
+        "Dr Accuracy %": "39.3",
+        "Ball Speed": "158.86"
+      },
+      {
+        "playerName": "Chad Proehl",
+        "player_num": "32508",
+        "Year": "2018",
+        "Rounds": "2",
+        "SG:TOT": "-5.75",
+        "SG:T2G": "-6.98",
+        "SG:OTT": "-1.95",
+        "SG:APP": "-3.96",
+        "SG:BS": "-5.92",
+        "SG:ARG": "-1.07",
+        "SG:P": "1.23",
+        "Dr Distance": "267.1",
+        "Dr Accuracy %": "67.9",
+        "Ball Speed": "156.83"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2021-07-11",
+        "position": "CUT",
+        "roundPosition": "150",
+        "TournamentName": "John Deere Classic",
+        "is_major": "0",
+        "playerName": "Chad Proehl",
+        "player_num": "32508",
+        "Rounds": "2",
+        "CourseID": "669",
+        "Course": "TPC Deere Run",
+        "ShotLink": "2",
+        "SG:TOT": "-7.07",
+        "SG:T2G": "-6.80",
+        "SG:OTT": "-3.48",
+        "SG:APP": "-2.24",
+        "SG:BS": "-5.72",
+        "SG:ARG": "-1.08",
+        "SG:P": "-0.26",
+        "SG:SG": "-1.35"
+      },
+      {
+        "Date": "2018-07-15",
+        "position": "CUT",
+        "roundPosition": "T143",
+        "TournamentName": "John Deere Classic",
+        "is_major": "0",
+        "playerName": "Chad Proehl",
+        "player_num": "32508",
+        "Rounds": "2",
+        "CourseID": "669",
+        "Course": "TPC Deere Run",
+        "ShotLink": "2",
+        "SG:TOT": "-5.75",
+        "SG:T2G": "-6.98",
+        "SG:OTT": "-1.95",
+        "SG:APP": "-3.96",
+        "SG:BS": "-5.92",
+        "SG:ARG": "-1.07",
+        "SG:P": "1.23",
+        "SG:SG": "0.17"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "0.48375000059604645",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-3.7299998998641968",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-9.085000038146973",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-6.407499969005585",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-4.119999885559082",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-7.169999996821086",
+        "Rounds": "3"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-5.7499998807907104",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-7.065000057220459",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "73.5",
+        "PM": "78.5",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": "28.1",
+        "150-200": "47.4",
+        "200+": "53",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-6.407499969005585",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:20:09.337Z",
+    "ok": true
+  }
+}

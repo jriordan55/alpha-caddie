@@ -1,0 +1,220 @@
+{
+  "playerId": "52091",
+  "playerName": "Blake Kennedy",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Blake Kennedy",
+    "BirthPlace": "Greenville, South Carolina",
+    "BirthDate": "March 13, 1994",
+    "Age": "32",
+    "Height": "5ft 11in",
+    "Weight": "180 lbs",
+    "Nationality": "United States",
+    "Residence": "Atlanta, Georgia",
+    "ProWins": "0",
+    "TurnedPro": "2016",
+    "PGAWins": "0",
+    "College": "Clemson University 2016, B.S. Economics"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Blake Kennedy",
+        "player_num": "52091",
+        "Year": "2022",
+        "Rounds": "4",
+        "SG:TOT": "-1.50",
+        "SG:T2G": "-2.02",
+        "SG:OTT": "-0.62",
+        "SG:APP": "-1.40",
+        "SG:BS": "-2.02",
+        "SG:ARG": "-0.00",
+        "SG:P": "0.51",
+        "Dr Distance": "281.2",
+        "Dr Accuracy %": "42.3",
+        "Ball Speed": "174.74"
+      },
+      {
+        "playerName": "Blake Kennedy",
+        "player_num": "52091",
+        "Year": "2017",
+        "Rounds": "2",
+        "SG:TOT": "-5.41",
+        "SG:T2G": "-2.79",
+        "SG:OTT": "-0.50",
+        "SG:APP": "-0.89",
+        "SG:BS": "-1.39",
+        "SG:ARG": "-1.40",
+        "SG:P": "-2.62",
+        "Dr Distance": "286.1",
+        "Dr Accuracy %": "42.9",
+        "Ball Speed": "175.10"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2022-03-20",
+        "position": "72",
+        "roundPosition": "72",
+        "TournamentName": "Valspar Championship",
+        "is_major": "0",
+        "playerName": "Blake Kennedy",
+        "player_num": "52091",
+        "Rounds": "4",
+        "CourseID": "665",
+        "Course": "Innisbrook Resort (Copperhead)",
+        "ShotLink": "4",
+        "SG:TOT": "-1.50",
+        "SG:T2G": "-2.02",
+        "SG:OTT": "-0.62",
+        "SG:APP": "-1.40",
+        "SG:BS": "-2.02",
+        "SG:ARG": "-0.00",
+        "SG:P": "0.51",
+        "SG:SG": "0.51"
+      },
+      {
+        "Date": "2017-05-07",
+        "position": "CUT",
+        "roundPosition": "151",
+        "TournamentName": "Wells Fargo Championship",
+        "is_major": "0",
+        "playerName": "Blake Kennedy",
+        "player_num": "52091",
+        "Rounds": "2",
+        "CourseID": "235",
+        "Course": "Eagle Point GC",
+        "ShotLink": "2",
+        "SG:TOT": "-5.41",
+        "SG:T2G": "-2.79",
+        "SG:OTT": "-0.50",
+        "SG:APP": "-0.89",
+        "SG:BS": "-1.39",
+        "SG:ARG": "-1.40",
+        "SG:P": "-2.62",
+        "SG:SG": "-4.02"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "16.7",
+        "SG TOT 1+": "16.7",
+        "SG TOT 2+": "16.7",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "6"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-2.623999997973442",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa Trivialis",
+        "StrokesGainedAverage": "0.5144999623298645",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-3.164999842643738",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.5450000166893005",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-2.3299999237060547",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-5.099999904632568",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-5.414999902248383",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-1.5049999356269836",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-3.299999952316284",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-5.414999902248383",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "0.2900000810623169",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-2.8083332578341165",
+        "Rounds": "6"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "72.5",
+        "PM": "77",
+        "Rounds": "6"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "6",
+        "50-100": "28",
+        "100-150": "30",
+        "150-200": "40.9",
+        "200+": "55.7",
+        "200-250": "51.5",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Florida",
+        "StrokesGainedAverage": "-1.5049999356269836",
+        "Rounds": "4"
+      },
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-5.414999902248383",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:30.264Z",
+    "ok": true
+  }
+}

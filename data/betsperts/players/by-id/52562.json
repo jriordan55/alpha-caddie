@@ -1,0 +1,148 @@
+{
+  "playerId": "52562",
+  "playerName": "Kurt Slattery",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Kurt Slattery",
+    "BirthPlace": null,
+    "BirthDate": "February 13, 1990",
+    "Age": "36",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Kurt Slattery",
+        "player_num": "52562",
+        "Year": "2017",
+        "Rounds": "2",
+        "SG:TOT": "-3.26",
+        "SG:T2G": "-1.84",
+        "SG:OTT": "-0.10",
+        "SG:APP": "-0.82",
+        "SG:BS": "-0.91",
+        "SG:ARG": "-0.92",
+        "SG:P": "-1.42",
+        "Dr Distance": "288.0",
+        "Dr Accuracy %": "53.6",
+        "Ball Speed": "175.54"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2017-07-16",
+        "position": "CUT",
+        "roundPosition": "T140",
+        "TournamentName": "John Deere Classic",
+        "is_major": "0",
+        "playerName": "Kurt Slattery",
+        "player_num": "52562",
+        "Rounds": "2",
+        "CourseID": "669",
+        "Course": "TPC Deere Run",
+        "ShotLink": "2",
+        "SG:TOT": "-3.26",
+        "SG:T2G": "-1.84",
+        "SG:OTT": "-0.10",
+        "SG:APP": "-0.82",
+        "SG:BS": "-0.91",
+        "SG:ARG": "-0.92",
+        "SG:P": "-1.42",
+        "SG:SG": "-2.34"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-1.418999969959259",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.2800000011920929",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-6.230000019073486",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-3.2550000101327896",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-3.2550000101327896",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-3.2550000101327896",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "76",
+        "PM": "71",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "32.7",
+        "200+": "67.2",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-3.2550000101327896",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:27.823Z",
+    "ok": true
+  }
+}

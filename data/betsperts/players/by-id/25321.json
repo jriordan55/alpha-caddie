@@ -1,0 +1,200 @@
+{
+  "playerId": "25321",
+  "playerName": "Lee Slattery",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/St_Georges_Cross.svg_.png",
+  "profile": {
+    "ProfileImage": "0",
+    "Name": "Lee Slattery",
+    "BirthPlace": "Southport, Lancashire, England",
+    "BirthDate": "August 03, 1978",
+    "Age": "48",
+    "Height": "5ft 11in",
+    "Weight": "174 lbs",
+    "Nationality": "England",
+    "Residence": "Alderley Edge, England",
+    "ProWins": "4",
+    "TurnedPro": "1998",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Lee Slattery",
+        "player_num": "25321",
+        "Year": "2019",
+        "Rounds": "2",
+        "SG:TOT": "0.13",
+        "SG:T2G": "-0.31",
+        "SG:OTT": "-2.20",
+        "SG:APP": "1.11",
+        "SG:BS": "-1.09",
+        "SG:ARG": "0.78",
+        "SG:P": "0.44",
+        "Dr Distance": "258.3",
+        "Dr Accuracy %": "60.7",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Lee Slattery",
+        "player_num": "25321",
+        "Year": "2016",
+        "Rounds": "4",
+        "SG:TOT": "-0.17",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "67.9",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2019-06-16",
+        "position": "CUT",
+        "roundPosition": "T80",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Lee Slattery",
+        "player_num": "25321",
+        "Rounds": "2",
+        "CourseID": "666",
+        "Course": "Pebble Beach Golf Links",
+        "ShotLink": "2",
+        "SG:TOT": "0.13",
+        "SG:T2G": "-0.31",
+        "SG:OTT": "-2.20",
+        "SG:APP": "1.11",
+        "SG:BS": "-1.09",
+        "SG:ARG": "0.78",
+        "SG:P": "0.44",
+        "SG:SG": "1.22"
+      },
+      {
+        "Date": "2016-06-19",
+        "position": "T57",
+        "roundPosition": "T57",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Lee Slattery",
+        "player_num": "25321",
+        "Rounds": "4",
+        "CourseID": "608",
+        "Course": "Oakmont CC",
+        "ShotLink": "0",
+        "SG:TOT": "-0.17",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "33.3",
+        "SG TOT 2+": "33.3",
+        "SG TOT 3+": "16.7",
+        "SG TOT 4+": "16.7",
+        "SG TOT 5+": "16.7",
+        "Rounds": "6"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "0.43700000643730164",
+        "Rounds": "6"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "0.9600000083446503",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "3.0849999487400055",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-5.96999979019165",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-2.5399999618530273",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-0.16999995708465576",
+        "Rounds": "4"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "0.12999999523162842",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-0.0699999729792277",
+        "Rounds": "6"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-0.0699999729792277",
+        "Rounds": "6"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "73.33333333333333",
+        "PM": "73",
+        "Rounds": "6"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "6",
+        "50-100": null,
+        "100-150": "32.7",
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-0.0699999729792277",
+        "Rounds": "6"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:34.944Z",
+    "ok": true
+  }
+}

@@ -1,0 +1,148 @@
+{
+  "playerId": "35213",
+  "playerName": "Andrés Echavarría",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_co-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Andrés Echavarría",
+    "BirthPlace": "Medellin, Colombia",
+    "BirthDate": "February 08, 1988",
+    "Age": "38",
+    "Height": "5ft 10in",
+    "Weight": "165 lbs",
+    "Nationality": "Colombia",
+    "Residence": "Medellin, Colombia",
+    "ProWins": null,
+    "TurnedPro": "2011",
+    "PGAWins": null,
+    "College": "University of Florida  (2011, Economics) "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Andrés Echavarría",
+        "player_num": "35213",
+        "Year": "2015",
+        "Rounds": "2",
+        "SG:TOT": "-0.80",
+        "SG:T2G": "-0.76",
+        "SG:OTT": "0.17",
+        "SG:APP": "-0.49",
+        "SG:BS": "-0.32",
+        "SG:ARG": "-0.45",
+        "SG:P": "-0.03",
+        "Dr Distance": "284.9",
+        "Dr Accuracy %": "42.9",
+        "Ball Speed": "168.10"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2015-05-17",
+        "position": "CUT",
+        "roundPosition": "T93",
+        "TournamentName": "Wells Fargo Championship",
+        "is_major": "0",
+        "playerName": "Andrés Echavarría",
+        "player_num": "35213",
+        "Rounds": "2",
+        "CourseID": "698",
+        "Course": "Quail Hollow Club",
+        "ShotLink": "2",
+        "SG:TOT": "-0.80",
+        "SG:T2G": "-0.76",
+        "SG:OTT": "0.17",
+        "SG:APP": "-0.49",
+        "SG:BS": "-0.32",
+        "SG:ARG": "-0.45",
+        "SG:P": "-0.03",
+        "SG:SG": "-0.47"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "50.0",
+        "SG TOT 2+": "50.0",
+        "SG TOT 3+": "50.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Poa Trivialis",
+        "StrokesGainedAverage": "-0.027500033378601074",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-4.78000020980835",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "3.190000057220459",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-0.7950000762939453",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-0.7950000762939453",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-0.7950000762939453",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "69",
+        "PM": "77",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "24.6",
+        "150-200": "35",
+        "200+": "68.8",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-0.7950000762939453",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:18:59.505Z",
+    "ok": true
+  }
+}

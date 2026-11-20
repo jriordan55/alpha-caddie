@@ -1,0 +1,148 @@
+{
+  "playerId": "40028",
+  "playerName": "Justin Shin",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ca-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Justin Shin",
+    "BirthPlace": "Seoul, South Korea",
+    "BirthDate": "October 05, 1991",
+    "Age": "35",
+    "Height": "5ft 10in",
+    "Weight": "171 lbs",
+    "Nationality": "Canada",
+    "Residence": "Pitt Meadows, British Columbia, Canada",
+    "ProWins": null,
+    "TurnedPro": "2013",
+    "PGAWins": null,
+    "College": "New Mexico State University  (2013, Sociology) "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Justin Shin",
+        "player_num": "40028",
+        "Year": "2015",
+        "Rounds": "2",
+        "SG:TOT": "-0.32",
+        "SG:T2G": "-1.02",
+        "SG:OTT": "1.38",
+        "SG:APP": "-1.58",
+        "SG:BS": "-0.20",
+        "SG:ARG": "-0.82",
+        "SG:P": "0.70",
+        "Dr Distance": "306.4",
+        "Dr Accuracy %": "42.9",
+        "Ball Speed": "168.99"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2015-07-26",
+        "position": "CUT",
+        "roundPosition": "T92",
+        "TournamentName": "RBC Canadian Open",
+        "is_major": "0",
+        "playerName": "Justin Shin",
+        "player_num": "40028",
+        "Rounds": "2",
+        "CourseID": "32",
+        "Course": "Glen Abbey GC",
+        "ShotLink": "2",
+        "SG:TOT": "-0.32",
+        "SG:T2G": "-1.02",
+        "SG:OTT": "1.38",
+        "SG:APP": "-1.58",
+        "SG:BS": "-0.20",
+        "SG:ARG": "-0.82",
+        "SG:P": "0.70",
+        "SG:SG": "-0.12"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "50.0",
+        "SG TOT 2+": "50.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "0.7025000154972076",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-2.869999885559082",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "2.2300000190734863",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-0.31999993324279785",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-0.31999993324279785",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-0.31999993324279785",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "69",
+        "PM": "74",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "23.5",
+        "150-200": null,
+        "200+": "61.4",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-0.31999993324279785",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:13.018Z",
+    "ok": true
+  }
+}

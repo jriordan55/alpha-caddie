@@ -1,0 +1,148 @@
+{
+  "playerId": "29377",
+  "playerName": "Tatsuya Kodai",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ja-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Tatsuya Kodai",
+    "BirthPlace": "",
+    "BirthDate": "February 01, 1990",
+    "Age": "36",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "Japan",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Tatsuya Kodai",
+        "player_num": "29377",
+        "Year": "2018",
+        "Rounds": "2",
+        "SG:TOT": "-2.78",
+        "SG:T2G": "-0.12",
+        "SG:OTT": "-1.50",
+        "SG:APP": "0.83",
+        "SG:BS": "-0.67",
+        "SG:ARG": "0.55",
+        "SG:P": "-2.66",
+        "Dr Distance": "280.8",
+        "Dr Accuracy %": "28.6",
+        "Ball Speed": "162.41"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2018-01-14",
+        "position": "CUT",
+        "roundPosition": "T125",
+        "TournamentName": "Sony Open",
+        "is_major": "0",
+        "playerName": "Tatsuya Kodai",
+        "player_num": "29377",
+        "Rounds": "2",
+        "CourseID": "6",
+        "Course": "Waialae CC",
+        "ShotLink": "2",
+        "SG:TOT": "-2.78",
+        "SG:T2G": "-0.12",
+        "SG:OTT": "-1.50",
+        "SG:APP": "0.83",
+        "SG:BS": "-0.67",
+        "SG:ARG": "0.55",
+        "SG:P": "-2.66",
+        "SG:SG": "-2.11"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-2.6610000133514404",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-5.789999961853027",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "0.2199999988079071",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-2.78499998152256",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-2.78499998152256",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-2.78499998152256",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "75",
+        "PM": "69",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "40.5",
+        "200+": "42.6",
+        "200-250": "42.6",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Aloha",
+        "StrokesGainedAverage": "-2.78499998152256",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:55.582Z",
+    "ok": true
+  }
+}

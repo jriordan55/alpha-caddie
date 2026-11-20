@@ -1,0 +1,167 @@
+{
+  "playerId": "70036",
+  "playerName": "Anson Cabello",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Anson Cabello",
+    "BirthPlace": null,
+    "BirthDate": "",
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Anson Cabello",
+        "player_num": "70036",
+        "Year": "2026",
+        "Rounds": "2",
+        "SG:TOT": "-4.60",
+        "SG:T2G": "-4.76",
+        "SG:OTT": "-1.82",
+        "SG:APP": "-2.45",
+        "SG:BS": "-4.27",
+        "SG:ARG": "-0.49",
+        "SG:P": "0.17",
+        "Dr Distance": "275.5",
+        "Dr Accuracy %": "50.0",
+        "Ball Speed": "162.79"
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Anson Cabello",
+        "player_num": "70036",
+        "Rounds": "2",
+        "SG:TOT": "-4.60",
+        "SG:T2G": "-4.76",
+        "SG:OTT": "-1.82",
+        "SG:APP": "-2.45",
+        "SG:BS": "-4.27",
+        "SG:ARG": "-0.49",
+        "SG:P": "0.17",
+        "SG:SG": "-0.32"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-01-18",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "Sony Open",
+        "is_major": "0",
+        "playerName": "Anson Cabello",
+        "player_num": "70036",
+        "Rounds": "2",
+        "CourseID": "6",
+        "Course": "Waialae CC",
+        "ShotLink": "2",
+        "SG:TOT": "-4.60",
+        "SG:T2G": "-4.76",
+        "SG:OTT": "-1.82",
+        "SG:APP": "-2.45",
+        "SG:BS": "-4.27",
+        "SG:ARG": "-0.49",
+        "SG:P": "0.17",
+        "SG:SG": "-0.32"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "0.17350000701844692",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-8.220000267028809",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.9700000286102295",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-4.595000147819519",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-0.9700000286102295",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-8.220000267028809",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-4.595000147819519",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "77",
+        "PM": "71",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "52.9",
+        "200+": "52.2",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Aloha",
+        "StrokesGainedAverage": "-4.595000147819519",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:09.250Z",
+    "ok": true
+  }
+}

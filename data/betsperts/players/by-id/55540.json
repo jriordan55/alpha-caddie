@@ -1,0 +1,138 @@
+{
+  "playerId": "55540",
+  "playerName": "Thomas DeMarco",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ca-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Thomas DeMarco",
+    "BirthPlace": "",
+    "BirthDate": "February 21, 1997",
+    "Age": "29",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "Canada",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Thomas DeMarco",
+        "player_num": "55540",
+        "Year": "2019",
+        "Rounds": "2",
+        "SG:TOT": "-4.02",
+        "SG:T2G": "-2.44",
+        "SG:OTT": "-0.68",
+        "SG:APP": "-0.79",
+        "SG:BS": "-1.47",
+        "SG:ARG": "-0.97",
+        "SG:P": "-1.58",
+        "Dr Distance": "285.7",
+        "Dr Accuracy %": "32.1",
+        "Ball Speed": "170.77"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2019-06-09",
+        "position": "CUT",
+        "roundPosition": "T149",
+        "TournamentName": "RBC Canadian Open",
+        "is_major": "0",
+        "playerName": "Thomas DeMarco",
+        "player_num": "55540",
+        "Rounds": "2",
+        "CourseID": "874",
+        "Course": "Hamilton Golf & Country Club",
+        "ShotLink": "2",
+        "SG:TOT": "-4.02",
+        "SG:T2G": "-2.44",
+        "SG:OTT": "-0.68",
+        "SG:APP": "-0.79",
+        "SG:BS": "-1.47",
+        "SG:ARG": "-0.97",
+        "SG:P": "-1.58",
+        "SG:SG": "-2.55"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.590000033378601",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-6.449999809265137",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-4.019999921321869",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-4.019999921321869",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-4.019999921321869",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "76",
+        "PM": "71",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "28.5",
+        "150-200": "49",
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-4.019999921321869",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:58.793Z",
+    "ok": true
+  }
+}

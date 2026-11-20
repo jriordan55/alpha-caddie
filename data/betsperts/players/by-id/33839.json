@@ -1,0 +1,148 @@
+{
+  "playerId": "33839",
+  "playerName": "CJ Gatto",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "CJ Gatto",
+    "BirthPlace": null,
+    "BirthDate": "June 10, 1985",
+    "Age": "41",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "CJ Gatto",
+        "player_num": "33839",
+        "Year": "2015",
+        "Rounds": "2",
+        "SG:TOT": "-9.44",
+        "SG:T2G": "-9.50",
+        "SG:OTT": "-1.75",
+        "SG:APP": "-5.56",
+        "SG:BS": "-7.31",
+        "SG:ARG": "-2.18",
+        "SG:P": "0.06",
+        "Dr Distance": "258.7",
+        "Dr Accuracy %": "57.1",
+        "Ball Speed": "158.46"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2015-07-19",
+        "position": "CUT",
+        "roundPosition": "T126",
+        "TournamentName": "Barbasol Championship",
+        "is_major": "0",
+        "playerName": "CJ Gatto",
+        "player_num": "33839",
+        "Rounds": "2",
+        "CourseID": "819",
+        "Course": "RTJ Trail (Grand National)",
+        "ShotLink": "2",
+        "SG:TOT": "-9.44",
+        "SG:T2G": "-9.50",
+        "SG:OTT": "-1.75",
+        "SG:APP": "-5.56",
+        "SG:BS": "-7.31",
+        "SG:ARG": "-2.18",
+        "SG:P": "0.06",
+        "SG:SG": "-2.13"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "0.056999996304512024",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-13.239999771118164",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-5.639999866485596",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-9.43999981880188",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-9.43999981880188",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-9.43999981880188",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "84",
+        "PM": "76",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "35",
+        "150-200": "61.5",
+        "200+": "64.5",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-9.43999981880188",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:20:28.791Z",
+    "ok": true
+  }
+}

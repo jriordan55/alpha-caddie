@@ -1,0 +1,153 @@
+{
+  "playerId": "65562",
+  "playerName": "Randall Hudson",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Randall Hudson",
+    "BirthPlace": null,
+    "BirthDate": "",
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Randall Hudson",
+        "player_num": "65562",
+        "Year": "2025",
+        "Rounds": "2",
+        "SG:TOT": "-3.68",
+        "SG:T2G": "-1.89",
+        "SG:OTT": "-0.86",
+        "SG:APP": "-0.70",
+        "SG:BS": "-1.57",
+        "SG:ARG": "-0.33",
+        "SG:P": "-1.80",
+        "Dr Distance": "279.2",
+        "Dr Accuracy %": "53.6",
+        "Ball Speed": "168.26"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2025-05-11",
+        "position": "CUT",
+        "roundPosition": "T124",
+        "TournamentName": "Myrtle Beach Classic",
+        "is_major": "0",
+        "playerName": "Randall Hudson",
+        "player_num": "65562",
+        "Rounds": "2",
+        "CourseID": "925",
+        "Course": "Dunes Golf & Beach Club",
+        "ShotLink": "2",
+        "SG:TOT": "-3.68",
+        "SG:T2G": "-1.89",
+        "SG:OTT": "-0.86",
+        "SG:APP": "-0.70",
+        "SG:BS": "-1.57",
+        "SG:ARG": "-0.33",
+        "SG:P": "-1.80",
+        "SG:SG": "-2.12"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-1.796000063419342",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-2.9800000190734863",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-4.389999866485596",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-3.684999942779541",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-4.389999866485596",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-2.9800000190734863",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-3.684999942779541",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "75",
+        "PM": "73",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "33.8",
+        "200+": "53.4",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-3.684999942779541",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:24:54.360Z",
+    "ok": true
+  }
+}

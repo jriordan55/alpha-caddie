@@ -1,0 +1,215 @@
+{
+  "playerId": "27081",
+  "playerName": "Seunghyuk Kim",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ks-flag-1.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Seunghyuk Kim",
+    "BirthPlace": "",
+    "BirthDate": "April 05, 1986",
+    "Age": "40",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "South Korea",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Seunghyuk Kim",
+        "player_num": "27081",
+        "Year": "2018",
+        "Rounds": "2",
+        "SG:TOT": "-2.83",
+        "SG:T2G": "-1.53",
+        "SG:OTT": "-1.53",
+        "SG:APP": "0.39",
+        "SG:BS": "-1.13",
+        "SG:ARG": "-0.40",
+        "SG:P": "-1.30",
+        "Dr Distance": "279.8",
+        "Dr Accuracy %": "42.9",
+        "Ball Speed": "164.35"
+      },
+      {
+        "playerName": "Seunghyuk Kim",
+        "player_num": "27081",
+        "Year": "2017",
+        "Rounds": "4",
+        "SG:TOT": "-1.06",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "69.6",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2018-02-18",
+        "position": "CUT",
+        "roundPosition": "T130",
+        "TournamentName": "The Genesis Invitational",
+        "is_major": "0",
+        "playerName": "Seunghyuk Kim",
+        "player_num": "27081",
+        "Rounds": "2",
+        "CourseID": "500",
+        "Course": "Riviera CC",
+        "ShotLink": "2",
+        "SG:TOT": "-2.83",
+        "SG:T2G": "-1.53",
+        "SG:OTT": "-1.53",
+        "SG:APP": "0.39",
+        "SG:BS": "-1.13",
+        "SG:ARG": "-0.40",
+        "SG:P": "-1.30",
+        "SG:SG": "-1.70"
+      },
+      {
+        "Date": "2017-10-22",
+        "position": "T58",
+        "roundPosition": "T58",
+        "TournamentName": "The CJ CUP at Nine Bridges",
+        "is_major": "0",
+        "playerName": "Seunghyuk Kim",
+        "player_num": "27081",
+        "Rounds": "4",
+        "CourseID": "242",
+        "Course": "Nine Bridges",
+        "ShotLink": "0",
+        "SG:TOT": "-1.06",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "66.7",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "6"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": null,
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "-1.29749995470047",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-5.925000190734863",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "0.24499999731779099",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "0.7900000214576721",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "0.6899999976158142",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-2.8300000950694084",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-1.0550000444054604",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-1.6466667279601097",
+        "Rounds": "6"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-1.0550000444054604",
+        "Rounds": "4"
+      },
+      {
+        "FieldStrength": "Strong",
+        "StrokesGainedAverage": "-2.8300000950694084",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74",
+        "PM": "75",
+        "Rounds": "6"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "6",
+        "50-100": null,
+        "100-150": "24.5",
+        "150-200": "34.7",
+        "200+": "77.4",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-1.0550000444054604",
+        "Rounds": "4"
+      },
+      {
+        "SeasonHeld": "West Coast",
+        "StrokesGainedAverage": "-2.8300000950694084",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:34.669Z",
+    "ok": true
+  }
+}

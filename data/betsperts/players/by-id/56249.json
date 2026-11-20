@@ -1,0 +1,190 @@
+{
+  "playerId": "56249",
+  "playerName": "Peter Jung",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Peter Jung",
+    "BirthPlace": "",
+    "BirthDate": "September 25, 2002",
+    "Age": "24",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "United States",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Peter Jung",
+        "player_num": "56249",
+        "Year": "2022",
+        "Rounds": "2",
+        "SG:TOT": "-0.38",
+        "SG:T2G": "-2.32",
+        "SG:OTT": "0.39",
+        "SG:APP": "-1.38",
+        "SG:BS": "-0.99",
+        "SG:ARG": "-1.33",
+        "SG:P": "1.95",
+        "Dr Distance": "295.8",
+        "Dr Accuracy %": "57.1",
+        "Ball Speed": "166.13"
+      },
+      {
+        "playerName": "Peter Jung",
+        "player_num": "56249",
+        "Year": "2019",
+        "Rounds": "2",
+        "SG:TOT": "-11.73",
+        "SG:T2G": "-9.87",
+        "SG:OTT": "-4.18",
+        "SG:APP": "-3.42",
+        "SG:BS": "-7.60",
+        "SG:ARG": "-2.26",
+        "SG:P": "-1.86",
+        "Dr Distance": "271.8",
+        "Dr Accuracy %": "28.6",
+        "Ball Speed": "157.56"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2022-01-16",
+        "position": "CUT",
+        "roundPosition": "T79",
+        "TournamentName": "Sony Open",
+        "is_major": "0",
+        "playerName": "Peter Jung",
+        "player_num": "56249",
+        "Rounds": "2",
+        "CourseID": "6",
+        "Course": "Waialae CC",
+        "ShotLink": "2",
+        "SG:TOT": "-0.38",
+        "SG:T2G": "-2.32",
+        "SG:OTT": "0.39",
+        "SG:APP": "-1.38",
+        "SG:BS": "-0.99",
+        "SG:ARG": "-1.33",
+        "SG:P": "1.95",
+        "SG:SG": "0.61"
+      },
+      {
+        "Date": "2019-01-13",
+        "position": "CUT",
+        "roundPosition": "144",
+        "TournamentName": "Sony Open",
+        "is_major": "0",
+        "playerName": "Peter Jung",
+        "player_num": "56249",
+        "Rounds": "2",
+        "CourseID": "6",
+        "Course": "Waialae CC",
+        "ShotLink": "2",
+        "SG:TOT": "-11.73",
+        "SG:T2G": "-9.87",
+        "SG:OTT": "-4.18",
+        "SG:APP": "-3.42",
+        "SG:BS": "-7.60",
+        "SG:ARG": "-2.26",
+        "SG:P": "-1.86",
+        "SG:SG": "-4.13"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "25.0",
+        "SG TOT 1+": "25.0",
+        "SG TOT 2+": "25.0",
+        "SG TOT 3+": "25.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "0.041749998927116394",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-9.169999837875366",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-2.93500018119812",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-6.052500009536743",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-11.730000019073486",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-0.375",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-6.052500009536743",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "78",
+        "PM": "71.5",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": "32.3",
+        "150-200": "43.5",
+        "200+": "61.1",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Aloha",
+        "StrokesGainedAverage": "-6.052500009536743",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:24:47.917Z",
+    "ok": true
+  }
+}

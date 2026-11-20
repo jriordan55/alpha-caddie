@@ -1,0 +1,138 @@
+{
+  "playerId": "49149",
+  "playerName": "Dino Giacomazzi",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Dino Giacomazzi",
+    "BirthPlace": "",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "United States",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Dino Giacomazzi",
+        "player_num": "49149",
+        "Year": "2017",
+        "Rounds": "2",
+        "SG:TOT": "-2.00",
+        "SG:T2G": "-0.20",
+        "SG:OTT": "-0.07",
+        "SG:APP": "-0.37",
+        "SG:BS": "-0.45",
+        "SG:ARG": "0.24",
+        "SG:P": "-1.80",
+        "Dr Distance": "289.5",
+        "Dr Accuracy %": "46.4",
+        "Ball Speed": "165.35"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2017-10-08",
+        "position": "CUT",
+        "roundPosition": "T112",
+        "TournamentName": "Safeway Open",
+        "is_major": "0",
+        "playerName": "Dino Giacomazzi",
+        "player_num": "49149",
+        "Rounds": "2",
+        "CourseID": "552",
+        "Course": "Silverado Resort (North)",
+        "ShotLink": "2",
+        "SG:TOT": "-2.00",
+        "SG:T2G": "-0.20",
+        "SG:OTT": "-0.07",
+        "SG:APP": "-0.37",
+        "SG:BS": "-0.45",
+        "SG:ARG": "0.24",
+        "SG:P": "-1.80",
+        "SG:SG": "-1.55"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.0299999713897705",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-2.9600000381469727",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-1.9950000047683716",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-1.9950000047683716",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-1.9950000047683716",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74",
+        "PM": "73",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": "17.7",
+        "100-150": "42.7",
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-1.9950000047683716",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:21:14.382Z",
+    "ok": true
+  }
+}

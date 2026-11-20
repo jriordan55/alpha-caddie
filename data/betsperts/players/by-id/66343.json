@@ -1,0 +1,148 @@
+{
+  "playerId": "66343",
+  "playerName": "Alex Welch",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Alex Welch",
+    "BirthPlace": null,
+    "BirthDate": "",
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Alex Welch",
+        "player_num": "66343",
+        "Year": "2024",
+        "Rounds": "2",
+        "SG:TOT": "-3.98",
+        "SG:T2G": "-3.58",
+        "SG:OTT": "-0.79",
+        "SG:APP": "-2.63",
+        "SG:BS": "-3.43",
+        "SG:ARG": "-0.15",
+        "SG:P": "-0.39",
+        "Dr Distance": "294.5",
+        "Dr Accuracy %": "39.3",
+        "Ball Speed": "173.97"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2024-04-07",
+        "position": "CUT",
+        "roundPosition": "T146",
+        "TournamentName": "Valero Texas Open",
+        "is_major": "0",
+        "playerName": "Alex Welch",
+        "player_num": "66343",
+        "Rounds": "2",
+        "CourseID": "770",
+        "Course": "TPC San Antonio (Oaks)",
+        "ShotLink": "2",
+        "SG:TOT": "-3.98",
+        "SG:T2G": "-3.58",
+        "SG:OTT": "-0.79",
+        "SG:APP": "-2.63",
+        "SG:BS": "-3.43",
+        "SG:ARG": "-0.15",
+        "SG:P": "-0.39",
+        "SG:SG": "-0.54"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Poa Trivialis",
+        "StrokesGainedAverage": "-0.3934999704360962",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-5.150000095367432",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-2.799999952316284",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-3.975000023841858",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-3.975000023841858",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-3.975000023841858",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "78",
+        "PM": "76",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "30.5",
+        "150-200": "58.9",
+        "200+": "71.1",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-3.975000023841858",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:18:54.333Z",
+    "ok": true
+  }
+}

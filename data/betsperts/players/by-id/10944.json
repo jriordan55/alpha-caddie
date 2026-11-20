@@ -1,0 +1,361 @@
+{
+  "playerId": "10944",
+  "playerName": "Thomas Bjørn",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/da-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Thomas Bjørn",
+    "BirthPlace": "Silkeborg, Denmark",
+    "BirthDate": "February 18, 1971",
+    "Age": "55",
+    "Height": "6ft 2in",
+    "Weight": "194 lbs",
+    "Nationality": "Denmark",
+    "Residence": "Silkeborg, Denmark; Gothenburg, Sweden",
+    "ProWins": "19",
+    "TurnedPro": "1993",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Thomas Bjørn",
+        "player_num": "10944",
+        "Year": "2022",
+        "Rounds": "1",
+        "SG:TOT": "-3.01",
+        "SG:T2G": "-1.58",
+        "SG:OTT": "-1.15",
+        "SG:APP": "-0.72",
+        "SG:BS": "-1.87",
+        "SG:ARG": "0.29",
+        "SG:P": "-1.42",
+        "Dr Distance": null,
+        "Dr Accuracy %": "38.5",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Thomas Bjørn",
+        "player_num": "10944",
+        "Year": "2017",
+        "Rounds": "2",
+        "SG:TOT": "-3.83",
+        "SG:T2G": "-2.49",
+        "SG:OTT": "-1.67",
+        "SG:APP": "-1.51",
+        "SG:BS": "-3.18",
+        "SG:ARG": "0.69",
+        "SG:P": "-1.34",
+        "Dr Distance": "280.8",
+        "Dr Accuracy %": "53.6",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Thomas Bjørn",
+        "player_num": "10944",
+        "Year": "2015",
+        "Rounds": "14",
+        "SG:TOT": "-1.37",
+        "SG:T2G": "-0.62",
+        "SG:OTT": "-0.94",
+        "SG:APP": "-0.30",
+        "SG:BS": "-1.24",
+        "SG:ARG": "0.62",
+        "SG:P": "-0.38",
+        "Dr Distance": "281.4",
+        "Dr Accuracy %": "54.0",
+        "Ball Speed": "162.98"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2022-07-10",
+        "position": "DQ",
+        "roundPosition": "T128",
+        "TournamentName": "Genesis Scottish Open",
+        "is_major": "0",
+        "playerName": "Thomas Bjørn",
+        "player_num": "10944",
+        "Rounds": "1",
+        "CourseID": "977",
+        "Course": "The Renaissance Club",
+        "ShotLink": "1",
+        "SG:TOT": "-3.01",
+        "SG:T2G": "-1.58",
+        "SG:OTT": "-1.15",
+        "SG:APP": "-0.72",
+        "SG:BS": "-1.87",
+        "SG:ARG": "0.29",
+        "SG:P": "-1.42",
+        "SG:SG": "-1.14"
+      },
+      {
+        "Date": "2017-08-13",
+        "position": "CUT",
+        "roundPosition": "T133",
+        "TournamentName": "PGA Championship",
+        "is_major": "1",
+        "playerName": "Thomas Bjørn",
+        "player_num": "10944",
+        "Rounds": "2",
+        "CourseID": "241",
+        "Course": "Quail Hollow Club",
+        "ShotLink": "2",
+        "SG:TOT": "-3.83",
+        "SG:T2G": "-2.49",
+        "SG:OTT": "-1.67",
+        "SG:APP": "-1.51",
+        "SG:BS": "-3.18",
+        "SG:ARG": "0.69",
+        "SG:P": "-1.34",
+        "SG:SG": "-0.65"
+      },
+      {
+        "Date": "2015-08-16",
+        "position": "T48",
+        "roundPosition": "T48",
+        "TournamentName": "PGA Championship",
+        "is_major": "1",
+        "playerName": "Thomas Bjørn",
+        "player_num": "10944",
+        "Rounds": "4",
+        "CourseID": "706",
+        "Course": "Whistling Straits",
+        "ShotLink": "4",
+        "SG:TOT": "0.61",
+        "SG:T2G": "0.99",
+        "SG:OTT": "-1.00",
+        "SG:APP": "1.14",
+        "SG:BS": "0.14",
+        "SG:ARG": "0.85",
+        "SG:P": "-0.38",
+        "SG:SG": "0.47"
+      },
+      {
+        "Date": "2015-08-09",
+        "position": "69",
+        "roundPosition": "69",
+        "TournamentName": "WGC - Bridgestone Invitational",
+        "is_major": "0",
+        "playerName": "Thomas Bjørn",
+        "player_num": "10944",
+        "Rounds": "4",
+        "CourseID": "36",
+        "Course": "Firestone CC (South)",
+        "ShotLink": "4",
+        "SG:TOT": "-2.28",
+        "SG:T2G": "-2.23",
+        "SG:OTT": "-1.11",
+        "SG:APP": "-0.97",
+        "SG:BS": "-2.08",
+        "SG:ARG": "-0.14",
+        "SG:P": "-0.06",
+        "SG:SG": "-0.20"
+      },
+      {
+        "Date": "2015-07-19",
+        "position": "CUT",
+        "roundPosition": "T127",
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Thomas Bjørn",
+        "player_num": "10944",
+        "Rounds": "2",
+        "CourseID": "668",
+        "Course": "St. Andrews GC (Old Course)",
+        "ShotLink": "0",
+        "SG:TOT": "-2.20",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2015-04-12",
+        "position": "CUT",
+        "roundPosition": "T80",
+        "TournamentName": "Masters Tournament",
+        "is_major": "1",
+        "playerName": "Thomas Bjørn",
+        "player_num": "10944",
+        "Rounds": "2",
+        "CourseID": "14",
+        "Course": "Augusta National GC",
+        "ShotLink": "0",
+        "SG:TOT": "-2.40",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2015-03-01",
+        "position": "CUT",
+        "roundPosition": "T106",
+        "TournamentName": "The Honda Classic",
+        "is_major": "0",
+        "playerName": "Thomas Bjørn",
+        "player_num": "10944",
+        "Rounds": "2",
+        "CourseID": "734",
+        "Course": "PGA National (Champion)",
+        "ShotLink": "2",
+        "SG:TOT": "-1.66",
+        "SG:T2G": "-0.63",
+        "SG:OTT": "-0.50",
+        "SG:APP": "-1.84",
+        "SG:BS": "-2.34",
+        "SG:ARG": "1.71",
+        "SG:P": "-1.03",
+        "SG:SG": "0.68"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "42.9",
+        "SG TOT 1+": "33.3",
+        "SG TOT 2+": "14.3",
+        "SG TOT 3+": "4.8",
+        "SG TOT 4+": "4.8",
+        "SG TOT 5+": "4.8",
+        "Rounds": "21"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.3800000250339508",
+        "Rounds": "8"
+      },
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-1.1852500010281801",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "0.8099999725818634",
+        "Rounds": "8"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-4.364285673413958",
+        "Rounds": "7"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-0.0033333500226338706",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-1.9700000584125519",
+        "Rounds": "3"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-3.009999990463257",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-0.39333327611287433",
+        "Rounds": "6"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-1.9299999475479126",
+        "Rounds": "4"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-2.798333466053009",
+        "Rounds": "6"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-2.1999999284744263",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-0.39333327611287433",
+        "Rounds": "6"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-2.5688889688915677",
+        "Rounds": "9"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Strong",
+        "StrokesGainedAverage": "-1.659999966621399",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-1.7706666866938272",
+        "Rounds": "15"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "72.6923076923077",
+        "PM": "75.625",
+        "Rounds": "21"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "21",
+        "50-100": "24.4",
+        "100-150": "26",
+        "150-200": "46.4",
+        "200+": "53.2",
+        "200-250": "49.9",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Florida",
+        "StrokesGainedAverage": "-1.659999966621399",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-2.3999999165534973",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-1.6738461897923396",
+        "Rounds": "13"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:58.419Z",
+    "ok": true
+  }
+}

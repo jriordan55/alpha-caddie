@@ -1,0 +1,210 @@
+{
+  "playerId": "29275",
+  "playerName": "Naoto Nakanishi",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ja-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Naoto Nakanishi",
+    "BirthPlace": "",
+    "BirthDate": "August 11, 1988",
+    "Age": "38",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "Japan",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Naoto Nakanishi",
+        "player_num": "29275",
+        "Year": "2025",
+        "Rounds": "4",
+        "SG:TOT": "-3.21",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "70.0",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Naoto Nakanishi",
+        "player_num": "29275",
+        "Year": "2021",
+        "Rounds": "4",
+        "SG:TOT": "0.48",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "40.4",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2025-10-12",
+        "position": "76",
+        "roundPosition": "76",
+        "TournamentName": "Baycurrent Classic",
+        "is_major": "0",
+        "playerName": "Naoto Nakanishi",
+        "player_num": "29275",
+        "Rounds": "4",
+        "CourseID": "936",
+        "Course": "Yokohama Country Club (West)",
+        "ShotLink": "0",
+        "SG:TOT": "-3.21",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2021-10-24",
+        "position": "T28",
+        "roundPosition": "T28",
+        "TournamentName": "ZOZO Championship",
+        "is_major": "0",
+        "playerName": "Naoto Nakanishi",
+        "player_num": "29275",
+        "Rounds": "4",
+        "CourseID": "875",
+        "Course": "Accordia Golf Narashino CC",
+        "ShotLink": "0",
+        "SG:TOT": "0.48",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "12.5",
+        "SG TOT 1+": "12.5",
+        "SG TOT 2+": "12.5",
+        "SG TOT 3+": "12.5",
+        "SG TOT 4+": "12.5",
+        "SG TOT 5+": "12.5",
+        "Rounds": "8"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": null,
+        "Rounds": "8"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.8149999976158142",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-5.135000109672546",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-2.244999945163727",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "2.7500001192092896",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-4.645000100135803",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-0.26666661103566486",
+        "Rounds": "6"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "6.78000020980835",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-1.6759999752044679",
+        "Rounds": "5"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-4.645000100135803",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-1.3612499833106995",
+        "Rounds": "8"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74",
+        "PM": "69.25",
+        "Rounds": "8"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "8",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-1.3612499833106995",
+        "Rounds": "8"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:24:21.347Z",
+    "ok": true
+  }
+}

@@ -1,0 +1,210 @@
+{
+  "playerId": "24179",
+  "playerName": "David Drysdale",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/04/Flag_of_Scotland.svg_.png",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "David Drysdale",
+    "BirthPlace": "",
+    "BirthDate": "March 19, 1975",
+    "Age": "51",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "Scotland",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "David Drysdale",
+        "player_num": "24179",
+        "Year": "2022",
+        "Rounds": "1",
+        "SG:TOT": "-5.13",
+        "SG:T2G": "-3.36",
+        "SG:OTT": "-0.62",
+        "SG:APP": "-1.99",
+        "SG:BS": "-2.60",
+        "SG:ARG": "-0.75",
+        "SG:P": "-1.77",
+        "Dr Distance": "270.6",
+        "Dr Accuracy %": "57.1",
+        "Ball Speed": "158.95"
+      },
+      {
+        "playerName": "David Drysdale",
+        "player_num": "24179",
+        "Year": "2017",
+        "Rounds": "4",
+        "SG:TOT": "1.03",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "53.6",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2022-07-10",
+        "position": "W/D",
+        "roundPosition": "T144",
+        "TournamentName": "Barbasol Championship",
+        "is_major": "0",
+        "playerName": "David Drysdale",
+        "player_num": "24179",
+        "Rounds": "1",
+        "CourseID": "884",
+        "Course": "Keene Trace GC",
+        "ShotLink": "1",
+        "SG:TOT": "-5.13",
+        "SG:T2G": "-3.36",
+        "SG:OTT": "-0.62",
+        "SG:APP": "-1.99",
+        "SG:BS": "-2.60",
+        "SG:ARG": "-0.75",
+        "SG:P": "-1.77",
+        "SG:SG": "-2.53"
+      },
+      {
+        "Date": "2017-07-23",
+        "position": "T27",
+        "roundPosition": "T27",
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "David Drysdale",
+        "player_num": "24179",
+        "Rounds": "4",
+        "CourseID": "541",
+        "Course": "Royal Birkdale GC",
+        "ShotLink": "0",
+        "SG:TOT": "1.03",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "60.0",
+        "SG TOT 1+": "40.0",
+        "SG TOT 2+": "20.0",
+        "SG TOT 3+": "20.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "5"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-1.774999976158142",
+        "Rounds": "1"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-2.6050000563263893",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "1.0299999713897705",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "3.0299999713897705",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "0.12999999523162842",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "1.0274999849498272",
+        "Rounds": "4"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-5.130000114440918",
+        "Rounds": "1"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "1.0274999849498272",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-5.130000114440918",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "1.0274999849498272",
+        "Rounds": "4"
+      },
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-5.130000114440918",
+        "Rounds": "1"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "71.33333333333333",
+        "PM": "71",
+        "Rounds": "5"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "5",
+        "50-100": null,
+        "100-150": "18.6",
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-0.20400003492832183",
+        "Rounds": "5"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:20:59.405Z",
+    "ok": true
+  }
+}

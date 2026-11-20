@@ -1,0 +1,138 @@
+{
+  "playerId": "46128",
+  "playerName": "Mitchell Sutton",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ca-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Mitchell Sutton",
+    "BirthPlace": "",
+    "BirthDate": "August 28, 1991",
+    "Age": "35",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "Canada",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Mitchell Sutton",
+        "player_num": "46128",
+        "Year": "2018",
+        "Rounds": "2",
+        "SG:TOT": "-6.40",
+        "SG:T2G": "-5.53",
+        "SG:OTT": "-0.77",
+        "SG:APP": "-2.32",
+        "SG:BS": "-3.09",
+        "SG:ARG": "-2.44",
+        "SG:P": "-0.86",
+        "Dr Distance": "286.6",
+        "Dr Accuracy %": "28.6",
+        "Ball Speed": "164.44"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2018-07-29",
+        "position": "CUT",
+        "roundPosition": "152",
+        "TournamentName": "RBC Canadian Open",
+        "is_major": "0",
+        "playerName": "Mitchell Sutton",
+        "player_num": "46128",
+        "Rounds": "2",
+        "CourseID": "32",
+        "Course": "Glen Abbey GC",
+        "ShotLink": "2",
+        "SG:TOT": "-6.40",
+        "SG:T2G": "-5.53",
+        "SG:OTT": "-0.77",
+        "SG:APP": "-2.32",
+        "SG:BS": "-3.09",
+        "SG:ARG": "-2.44",
+        "SG:P": "-0.86",
+        "SG:SG": "-3.30"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-3.619999885559082",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-9.180000305175781",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-6.400000095367432",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-6.400000095367432",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-6.400000095367432",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74",
+        "PM": "80",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "30.6",
+        "150-200": "29.4",
+        "200+": "45.9",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-6.400000095367432",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:24:19.405Z",
+    "ok": true
+  }
+}

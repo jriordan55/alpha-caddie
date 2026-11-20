@@ -1,0 +1,210 @@
+{
+  "playerId": "60895",
+  "playerName": "Kris Kim",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/St_Georges_Cross.svg_.png",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Kris Kim",
+    "BirthPlace": null,
+    "BirthDate": "",
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "England",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Kris Kim",
+        "player_num": "60895",
+        "Year": "2025",
+        "Rounds": "2",
+        "SG:TOT": "-6.20",
+        "SG:T2G": "-6.88",
+        "SG:OTT": "-3.15",
+        "SG:APP": "-2.62",
+        "SG:BS": "-5.77",
+        "SG:ARG": "-1.11",
+        "SG:P": "0.67",
+        "Dr Distance": "285.2",
+        "Dr Accuracy %": "50.0",
+        "Ball Speed": "168.04"
+      },
+      {
+        "playerName": "Kris Kim",
+        "player_num": "60895",
+        "Year": "2024",
+        "Rounds": "4",
+        "SG:TOT": "-1.14",
+        "SG:T2G": "-0.32",
+        "SG:OTT": "-0.77",
+        "SG:APP": "-0.69",
+        "SG:BS": "-1.46",
+        "SG:ARG": "1.15",
+        "SG:P": "-0.83",
+        "Dr Distance": "281.0",
+        "Dr Accuracy %": "62.5",
+        "Ball Speed": "166.75"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2025-05-04",
+        "position": "CUT",
+        "roundPosition": "154",
+        "TournamentName": "The CJ CUP Byron Nelson",
+        "is_major": "0",
+        "playerName": "Kris Kim",
+        "player_num": "60895",
+        "Rounds": "2",
+        "CourseID": "921",
+        "Course": "TPC Craig Ranch",
+        "ShotLink": "2",
+        "SG:TOT": "-6.20",
+        "SG:T2G": "-6.88",
+        "SG:OTT": "-3.15",
+        "SG:APP": "-2.62",
+        "SG:BS": "-5.77",
+        "SG:ARG": "-1.11",
+        "SG:P": "0.67",
+        "SG:SG": "-0.44"
+      },
+      {
+        "Date": "2024-05-05",
+        "position": "65",
+        "roundPosition": "65",
+        "TournamentName": "The CJ CUP Byron Nelson",
+        "is_major": "0",
+        "playerName": "Kris Kim",
+        "player_num": "60895",
+        "Rounds": "4",
+        "CourseID": "921",
+        "Course": "TPC Craig Ranch",
+        "ShotLink": "4",
+        "SG:TOT": "-1.14",
+        "SG:T2G": "-0.32",
+        "SG:OTT": "-0.77",
+        "SG:APP": "-0.69",
+        "SG:BS": "-1.46",
+        "SG:ARG": "1.15",
+        "SG:P": "-0.83",
+        "SG:SG": "0.32"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "33.3",
+        "SG TOT 1+": "16.7",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "6"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.3269999995827675",
+        "Rounds": "6"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.7349999845027924",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-3.269999921321869",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-1.4800000190734863",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-5.480000019073486",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-1.1400000005960464",
+        "Rounds": "4"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-6.204999923706055",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-8.119999885559082",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-1.7699999928474426",
+        "Rounds": "5"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-6.204999923706055",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-1.1400000005960464",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "72.25",
+        "PM": "70",
+        "Rounds": "6"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "6",
+        "50-100": "18",
+        "100-150": null,
+        "150-200": "38.7",
+        "200+": "58.3",
+        "200-250": "56.2",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-2.8283333082993827",
+        "Rounds": "6"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:26.879Z",
+    "ok": true
+  }
+}

@@ -1,0 +1,158 @@
+{
+  "playerId": "53912",
+  "playerName": "Danny List",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/as-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Danny List",
+    "BirthPlace": "Macon, Georgia",
+    "BirthDate": "June 09, 1998",
+    "Age": "28",
+    "Height": "6ft 0in",
+    "Weight": "175 lbs",
+    "Nationality": "Australia",
+    "Residence": "San Diego, California",
+    "ProWins": null,
+    "TurnedPro": "2018",
+    "PGAWins": null,
+    "College": "University of Washington "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Danny List",
+        "player_num": "53912",
+        "Year": "2025",
+        "Rounds": "2",
+        "SG:TOT": "-2.46",
+        "SG:T2G": "-2.40",
+        "SG:OTT": "-0.31",
+        "SG:APP": "-1.00",
+        "SG:BS": "-1.31",
+        "SG:ARG": "-1.10",
+        "SG:P": "-0.06",
+        "Dr Distance": "293.1",
+        "Dr Accuracy %": "50.0",
+        "Ball Speed": "175.74"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2025-02-16",
+        "position": "CUT",
+        "roundPosition": "T63",
+        "TournamentName": "The Genesis Invitational",
+        "is_major": "0",
+        "playerName": "Danny List",
+        "player_num": "53912",
+        "Rounds": "2",
+        "CourseID": "939",
+        "Course": "Torrey Pines GC (South)",
+        "ShotLink": "2",
+        "SG:TOT": "-2.46",
+        "SG:T2G": "-2.40",
+        "SG:OTT": "-0.31",
+        "SG:APP": "-1.00",
+        "SG:BS": "-1.31",
+        "SG:ARG": "-1.10",
+        "SG:P": "-0.06",
+        "SG:SG": "-1.16"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "-0.06150001287460327",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-4.71999979019165",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.20999999344348907",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-0.20999999344348907",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-4.71999979019165",
+        "Rounds": "1"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-0.20999999344348907",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-4.71999979019165",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Strong",
+        "StrokesGainedAverage": "-2.4649998918175697",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "72",
+        "PM": "79",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "47.2",
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "West Coast",
+        "StrokesGainedAverage": "-2.4649998918175697",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:20:53.369Z",
+    "ok": true
+  }
+}

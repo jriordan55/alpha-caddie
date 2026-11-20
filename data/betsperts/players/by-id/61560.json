@@ -1,0 +1,245 @@
+{
+  "playerId": "61560",
+  "playerName": "Aaron Jarvis",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/Flag_of_the_Cayman_Islands.svg-1.png",
+  "profile": {
+    "ProfileImage": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/07/images-2.jpg",
+    "Name": "Aaron Jarvis",
+    "BirthPlace": "George Town, Cayman Islands",
+    "BirthDate": "December 08, 2002",
+    "Age": "23",
+    "Height": "6ft 0in",
+    "Weight": "161 lbs",
+    "Nationality": "Cayman Islands",
+    "Residence": "Grand Cayman, Cayman Islands",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": "Southern Methodist University (2025, Hospitality)"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Aaron Jarvis",
+        "player_num": "61560",
+        "Year": "2022",
+        "Rounds": "8",
+        "SG:TOT": "-1.54",
+        "SG:T2G": "-2.33",
+        "SG:OTT": "-1.52",
+        "SG:APP": "-0.52",
+        "SG:BS": "-2.03",
+        "SG:ARG": "-0.30",
+        "SG:P": "0.64",
+        "Dr Distance": null,
+        "Dr Accuracy %": "60.0",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2022-10-30",
+        "position": "CUT",
+        "roundPosition": "T93",
+        "TournamentName": "Butterfield Bermuda Championship",
+        "is_major": "0",
+        "playerName": "Aaron Jarvis",
+        "player_num": "61560",
+        "Rounds": "2",
+        "CourseID": "765",
+        "Course": "Port Royal GC",
+        "ShotLink": "0",
+        "SG:TOT": "-1.09",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2022-07-17",
+        "position": "T76",
+        "roundPosition": null,
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Aaron Jarvis",
+        "player_num": "61560",
+        "Rounds": "4",
+        "CourseID": "668",
+        "Course": "St. Andrews GC (Old Course)",
+        "ShotLink": "4",
+        "SG:TOT": "-0.89",
+        "SG:T2G": "-1.82",
+        "SG:OTT": "-1.52",
+        "SG:APP": "-0.61",
+        "SG:BS": "-2.13",
+        "SG:ARG": "0.32",
+        "SG:P": "0.92",
+        "SG:SG": "1.24"
+      },
+      {
+        "Date": "2022-04-10",
+        "position": "CUT",
+        "roundPosition": "T78",
+        "TournamentName": "Masters Tournament",
+        "is_major": "1",
+        "playerName": "Aaron Jarvis",
+        "player_num": "61560",
+        "Rounds": "2",
+        "CourseID": "14",
+        "Course": "Augusta National GC",
+        "ShotLink": "2",
+        "SG:TOT": "-3.28",
+        "SG:T2G": "-3.35",
+        "SG:OTT": "-1.51",
+        "SG:APP": "-0.32",
+        "SG:BS": "-1.83",
+        "SG:ARG": "-1.52",
+        "SG:P": "0.07",
+        "SG:SG": "-1.45"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "37.5",
+        "SG TOT 1+": "12.5",
+        "SG TOT 2+": "12.5",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "8"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "0.6406666537125906",
+        "Rounds": "6"
+      },
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": null,
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-2.896666685740153",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "0.12666666507720947",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-0.6600000262260437",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-3.319999933242798",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-3.293333331743876",
+        "Rounds": "3"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-0.07999998331069946",
+        "Rounds": "3"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-1.0850000381469727",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "1.030000001192093",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-2.299999952316284",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-3.2800000309944153",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-1.8300000031789143",
+        "Rounds": "3"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-1.6866666575272877",
+        "Rounds": "6"
+      },
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-1.0850000381469727",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "72.4",
+        "PM": "73.66666666666667",
+        "Rounds": "8"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "8",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-1.0850000381469727",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-3.2800000309944153",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-0.8899999707937241",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:18:42.563Z",
+    "ok": true
+  }
+}

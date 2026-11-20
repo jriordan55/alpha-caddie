@@ -1,0 +1,158 @@
+{
+  "playerId": "35986",
+  "playerName": "Todd Sinnott",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/as-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Todd Sinnott",
+    "BirthPlace": "",
+    "BirthDate": "February 19, 1992",
+    "Age": "34",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "Australia",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Todd Sinnott",
+        "player_num": "35986",
+        "Year": "2022",
+        "Rounds": "4",
+        "SG:TOT": "1.09",
+        "SG:T2G": "0.37",
+        "SG:OTT": "-0.77",
+        "SG:APP": "0.97",
+        "SG:BS": "0.20",
+        "SG:ARG": "0.17",
+        "SG:P": "0.73",
+        "Dr Distance": "277.4",
+        "Dr Accuracy %": "50.0",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2022-06-19",
+        "position": "T31",
+        "roundPosition": "T31",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Todd Sinnott",
+        "player_num": "35986",
+        "Rounds": "4",
+        "CourseID": "654",
+        "Course": "The Country Club",
+        "ShotLink": "4",
+        "SG:TOT": "1.09",
+        "SG:T2G": "0.37",
+        "SG:OTT": "-0.77",
+        "SG:APP": "0.97",
+        "SG:BS": "0.20",
+        "SG:ARG": "0.17",
+        "SG:P": "0.73",
+        "SG:SG": "0.90"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "75.0",
+        "SG TOT 1+": "50.0",
+        "SG TOT 2+": "25.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "0.7282500118017197",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "1.7699999809265137",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "0.9900000095367432",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-0.4699999988079071",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "2.0899999141693115",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "1.0949999764561653",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "1.0949999764561653",
+        "Rounds": "4"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "1.0949999764561653",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "72",
+        "PM": "71",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "37.5",
+        "200+": "45.1",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "1.0949999764561653",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:26:06.392Z",
+    "ok": true
+  }
+}

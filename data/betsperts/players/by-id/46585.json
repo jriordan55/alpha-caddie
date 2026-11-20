@@ -1,0 +1,200 @@
+{
+  "playerId": "46585",
+  "playerName": "Brian Norman",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Brian Norman",
+    "BirthPlace": "",
+    "BirthDate": "May 29, 1982",
+    "Age": "44",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "United States",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Brian Norman",
+        "player_num": "46585",
+        "Year": "2018",
+        "Rounds": "2",
+        "SG:TOT": "-6.12",
+        "SG:T2G": "-3.06",
+        "SG:OTT": "0.07",
+        "SG:APP": "-2.17",
+        "SG:BS": "-2.10",
+        "SG:ARG": "-0.96",
+        "SG:P": "-3.06",
+        "Dr Distance": "281.9",
+        "Dr Accuracy %": "89.3",
+        "Ball Speed": "157.61"
+      },
+      {
+        "playerName": "Brian Norman",
+        "player_num": "46585",
+        "Year": "2016",
+        "Rounds": "2",
+        "SG:TOT": "-2.42",
+        "SG:T2G": "-4.18",
+        "SG:OTT": "-1.45",
+        "SG:APP": "-1.92",
+        "SG:BS": "-3.37",
+        "SG:ARG": "-0.81",
+        "SG:P": "1.76",
+        "Dr Distance": "261.5",
+        "Dr Accuracy %": "42.9",
+        "Ball Speed": "156.65"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2018-05-20",
+        "position": "CUT",
+        "roundPosition": "153",
+        "TournamentName": "AT&T Byron Nelson",
+        "is_major": "0",
+        "playerName": "Brian Norman",
+        "player_num": "46585",
+        "Rounds": "2",
+        "CourseID": "243",
+        "Course": "Trinity Forest Golf Club",
+        "ShotLink": "2",
+        "SG:TOT": "-6.12",
+        "SG:T2G": "-3.06",
+        "SG:OTT": "0.07",
+        "SG:APP": "-2.17",
+        "SG:BS": "-2.10",
+        "SG:ARG": "-0.96",
+        "SG:P": "-3.06",
+        "SG:SG": "-4.02"
+      },
+      {
+        "Date": "2016-05-22",
+        "position": "CUT",
+        "roundPosition": "T134",
+        "TournamentName": "AT&T Byron Nelson",
+        "is_major": "0",
+        "playerName": "Brian Norman",
+        "player_num": "46585",
+        "Rounds": "2",
+        "CourseID": "19",
+        "Course": "TPC Four Seasons Resort",
+        "ShotLink": "2",
+        "SG:TOT": "-2.42",
+        "SG:T2G": "-4.18",
+        "SG:OTT": "-1.45",
+        "SG:APP": "-1.92",
+        "SG:BS": "-3.37",
+        "SG:ARG": "-0.81",
+        "SG:P": "1.76",
+        "SG:SG": "0.95"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "1.762000024318695",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-3.0619999170303345",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-3.570000022649765",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-4.9700000286102295",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-2.4150000512599945",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-6.125",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-2.4150000512599945",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-6.125",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-4.270000025629997",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74",
+        "PM": "73",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "46.9",
+        "200+": "64.3",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-4.270000025629997",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:50.744Z",
+    "ok": true
+  }
+}

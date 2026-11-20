@@ -1,0 +1,162 @@
+{
+  "playerId": "70415",
+  "playerName": "William Jennings",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "William Jennings",
+    "BirthPlace": null,
+    "BirthDate": "",
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "William Jennings",
+        "player_num": "70415",
+        "Year": "2026",
+        "Rounds": "2",
+        "SG:TOT": "0.20",
+        "SG:T2G": "0.16",
+        "SG:OTT": "-0.58",
+        "SG:APP": "0.59",
+        "SG:BS": "0.01",
+        "SG:ARG": "0.15",
+        "SG:P": "0.04",
+        "Dr Distance": "290.8",
+        "Dr Accuracy %": "67.9",
+        "Ball Speed": "181.90"
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "William Jennings",
+        "player_num": "70415",
+        "Rounds": "2",
+        "SG:TOT": "0.20",
+        "SG:T2G": "0.16",
+        "SG:OTT": "-0.58",
+        "SG:APP": "0.59",
+        "SG:BS": "0.01",
+        "SG:ARG": "0.15",
+        "SG:P": "0.04",
+        "SG:SG": "0.19"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-08-02",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "Rocket Classic",
+        "is_major": "0",
+        "playerName": "William Jennings",
+        "player_num": "70415",
+        "Rounds": "2",
+        "CourseID": "947",
+        "Course": "Detroit GC",
+        "ShotLink": "2",
+        "SG:TOT": "0.20",
+        "SG:T2G": "0.16",
+        "SG:OTT": "-0.58",
+        "SG:APP": "0.59",
+        "SG:BS": "0.01",
+        "SG:ARG": "0.15",
+        "SG:P": "0.04",
+        "SG:SG": "0.19"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "50.0",
+        "SG TOT 2+": "50.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "0.035500019788742065",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "2.200000047683716",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.809999942779541",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "0.1950000524520874",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "0.1950000524520874",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "0.1950000524520874",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "71",
+        "PM": "67",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "24.7",
+        "200+": "50.2",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "0.1950000524520874",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:26:28.198Z",
+    "ok": true
+  }
+}

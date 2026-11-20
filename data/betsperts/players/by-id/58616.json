@@ -1,0 +1,148 @@
+{
+  "playerId": "58616",
+  "playerName": "James Hervol",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "James Hervol",
+    "BirthPlace": "Pittsburgh, Pennsylvania",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "6ft 4in",
+    "Weight": "190 lbs",
+    "Nationality": "United States",
+    "Residence": "Pam Beach Gardens, Florida",
+    "ProWins": "0",
+    "TurnedPro": "2019",
+    "PGAWins": "0",
+    "College": "University of Connecticut 2019, Finance"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Jimmy Hervol",
+        "player_num": "58616",
+        "Year": "2021",
+        "Rounds": "2",
+        "SG:TOT": "-6.25",
+        "SG:T2G": "-4.72",
+        "SG:OTT": "0.20",
+        "SG:APP": "-3.07",
+        "SG:BS": "-2.87",
+        "SG:ARG": "-1.85",
+        "SG:P": "-1.53",
+        "Dr Distance": "306.1",
+        "Dr Accuracy %": "46.4",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2021-06-20",
+        "position": "CUT",
+        "roundPosition": null,
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Jimmy Hervol",
+        "player_num": "58616",
+        "Rounds": "2",
+        "CourseID": "744",
+        "Course": "Torrey Pines GC (South)",
+        "ShotLink": "2",
+        "SG:TOT": "-6.25",
+        "SG:T2G": "-4.72",
+        "SG:OTT": "0.20",
+        "SG:APP": "-3.07",
+        "SG:BS": "-2.87",
+        "SG:ARG": "-1.85",
+        "SG:P": "-1.53",
+        "SG:SG": "-3.38"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "-1.5300000309944153",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-5.28000020980835",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-7.210000038146973",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-6.245000123977661",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-6.245000123977661",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-6.245000123977661",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "79",
+        "PM": "81",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "39.9",
+        "150-200": "41.1",
+        "200+": "81.2",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-6.245000123977661",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:19.831Z",
+    "ok": true
+  }
+}

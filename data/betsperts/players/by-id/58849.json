@@ -1,0 +1,256 @@
+{
+  "playerId": "58849",
+  "playerName": "Turk Pettit",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Turk Pettit",
+    "BirthPlace": "Opelika, Alabama",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "6ft 1in",
+    "Weight": "175 lbs",
+    "Nationality": "United States",
+    "Residence": "Seneca, South Carolina",
+    "ProWins": "0",
+    "TurnedPro": "2021",
+    "PGAWins": "0",
+    "College": "Clemson University 2021"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Turk Pettit",
+        "player_num": "58849",
+        "Year": "2022",
+        "Rounds": "8",
+        "SG:TOT": "0.85",
+        "SG:T2G": "-0.30",
+        "SG:OTT": "-0.30",
+        "SG:APP": "-0.46",
+        "SG:BS": "-0.76",
+        "SG:ARG": "0.46",
+        "SG:P": "1.16",
+        "Dr Distance": "288.4",
+        "Dr Accuracy %": "57.4",
+        "Ball Speed": "177.76"
+      },
+      {
+        "playerName": "Turk Pettit",
+        "player_num": "58849",
+        "Year": "2021",
+        "Rounds": "2",
+        "SG:TOT": "-0.28",
+        "SG:T2G": "-0.74",
+        "SG:OTT": "0.86",
+        "SG:APP": "-1.14",
+        "SG:BS": "-0.28",
+        "SG:ARG": "-0.46",
+        "SG:P": "0.45",
+        "Dr Distance": "300.0",
+        "Dr Accuracy %": "46.4",
+        "Ball Speed": "178.40"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2022-05-08",
+        "position": "T31",
+        "roundPosition": "T31",
+        "TournamentName": "Wells Fargo Championship",
+        "is_major": "0",
+        "playerName": "Turk Pettit",
+        "player_num": "58849",
+        "Rounds": "4",
+        "CourseID": "237",
+        "Course": "TPC Potomac at Avenel Farm",
+        "ShotLink": "4",
+        "SG:TOT": "1.26",
+        "SG:T2G": "-0.78",
+        "SG:OTT": "-1.35",
+        "SG:APP": "0.23",
+        "SG:BS": "-1.11",
+        "SG:ARG": "0.34",
+        "SG:P": "2.04",
+        "SG:SG": "2.37"
+      },
+      {
+        "Date": "2022-05-01",
+        "position": "T51",
+        "roundPosition": "T51",
+        "TournamentName": "Mexico Open at Vidanta",
+        "is_major": "0",
+        "playerName": "Turk Pettit",
+        "player_num": "58849",
+        "Rounds": "4",
+        "CourseID": "978",
+        "Course": "Vidanta Vallarta",
+        "ShotLink": "4",
+        "SG:TOT": "0.45",
+        "SG:T2G": "0.17",
+        "SG:OTT": "0.74",
+        "SG:APP": "-1.15",
+        "SG:BS": "-0.40",
+        "SG:ARG": "0.57",
+        "SG:P": "0.28",
+        "SG:SG": "0.85"
+      },
+      {
+        "Date": "2021-09-19",
+        "position": "CUT",
+        "roundPosition": "T88",
+        "TournamentName": "Fortinet Championship",
+        "is_major": "0",
+        "playerName": "Turk Pettit",
+        "player_num": "58849",
+        "Rounds": "2",
+        "CourseID": "552",
+        "Course": "Silverado Resort (North)",
+        "ShotLink": "2",
+        "SG:TOT": "-0.28",
+        "SG:T2G": "-0.74",
+        "SG:OTT": "0.86",
+        "SG:APP": "-1.14",
+        "SG:BS": "-0.28",
+        "SG:ARG": "-0.46",
+        "SG:P": "0.45",
+        "SG:SG": "-0.00"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "30.0",
+        "SG TOT 2+": "30.0",
+        "SG TOT 3+": "10.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "10"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "2.0350000262260437",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "0.2733332924544811",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "1.3200000325838726",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "1.3650000430643559",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-0.6199999898672104",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "0.7333333020408949",
+        "Rounds": "3"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "1.0850000381469727",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "0.8200000325838724",
+        "Rounds": "3"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-0.27999999932944775",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "1.9900000095367432",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-0.7799999713897705",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-0.5400000112131238",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "1.620000034570694",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "1.2625000029802322",
+        "Rounds": "4"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "0.2033333449314038",
+        "Rounds": "6"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "70.33333333333333",
+        "PM": "70.5",
+        "Rounds": "10"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "10",
+        "50-100": null,
+        "100-150": "24.9",
+        "150-200": "35.9",
+        "200+": "66.4",
+        "200-250": "60.7",
+        "250+": "88.5"
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-0.27999999932944775",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "0.8537500100210309",
+        "Rounds": "8"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:26:16.104Z",
+    "ok": true
+  }
+}

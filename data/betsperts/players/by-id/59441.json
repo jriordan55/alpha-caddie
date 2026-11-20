@@ -1,0 +1,241 @@
+{
+  "playerId": "59441",
+  "playerName": "Joe Long",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/St_Georges_Cross.svg_.png",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Joe Long",
+    "BirthPlace": "",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "England",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Joe Long",
+        "player_num": "59441",
+        "Year": "2021",
+        "Rounds": "8",
+        "SG:TOT": "-3.09",
+        "SG:T2G": "-1.51",
+        "SG:OTT": "-0.39",
+        "SG:APP": "-1.14",
+        "SG:BS": "-1.53",
+        "SG:ARG": "0.02",
+        "SG:P": "-1.82",
+        "Dr Distance": "289.7",
+        "Dr Accuracy %": "66.1",
+        "Ball Speed": "168.80"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2021-07-18",
+        "position": "CUT",
+        "roundPosition": null,
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Joe Long",
+        "player_num": "59441",
+        "Rounds": "2",
+        "CourseID": "778",
+        "Course": "Royal St. Georges GC",
+        "ShotLink": "0",
+        "SG:TOT": "-2.32",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2021-06-20",
+        "position": "CUT",
+        "roundPosition": null,
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Joe Long",
+        "player_num": "59441",
+        "Rounds": "2",
+        "CourseID": "744",
+        "Course": "Torrey Pines GC (South)",
+        "ShotLink": "2",
+        "SG:TOT": "-2.75",
+        "SG:T2G": "-0.20",
+        "SG:OTT": "-0.29",
+        "SG:APP": "-0.96",
+        "SG:BS": "-1.25",
+        "SG:ARG": "1.05",
+        "SG:P": "-2.55",
+        "SG:SG": "-1.50"
+      },
+      {
+        "Date": "2021-06-06",
+        "position": "CUT",
+        "roundPosition": "T105",
+        "TournamentName": "the Memorial Tournament",
+        "is_major": "0",
+        "playerName": "Joe Long",
+        "player_num": "59441",
+        "Rounds": "2",
+        "CourseID": "23",
+        "Course": "Muirfield Village GC",
+        "ShotLink": "2",
+        "SG:TOT": "-3.69",
+        "SG:T2G": "-2.16",
+        "SG:OTT": "-0.28",
+        "SG:APP": "-1.37",
+        "SG:BS": "-1.64",
+        "SG:ARG": "-0.51",
+        "SG:P": "-1.54",
+        "SG:SG": "-2.05"
+      },
+      {
+        "Date": "2021-04-11",
+        "position": "CUT",
+        "roundPosition": null,
+        "TournamentName": "Masters Tournament",
+        "is_major": "1",
+        "playerName": "Joe Long",
+        "player_num": "59441",
+        "Rounds": "2",
+        "CourseID": "14",
+        "Course": "Augusta National GC",
+        "ShotLink": "2",
+        "SG:TOT": "-3.62",
+        "SG:T2G": "-2.19",
+        "SG:OTT": "-0.62",
+        "SG:APP": "-1.09",
+        "SG:BS": "-1.70",
+        "SG:ARG": "-0.49",
+        "SG:P": "-1.38",
+        "SG:SG": "-1.87"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "25.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "8"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-1.461500033736229",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "-2.550499975681305",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-5.182499945163727",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.0074999779462814",
+        "Rounds": "4"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-1.466666618982951",
+        "Rounds": "3"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-4.956666608651479",
+        "Rounds": "3"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-2.7450000047683716",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-2.357999932765961",
+        "Rounds": "5"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-4.323333342870076",
+        "Rounds": "3"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Strong",
+        "StrokesGainedAverage": "-3.6949999034404755",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-2.8949999809265137",
+        "Rounds": "6"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "76",
+        "PM": "75.5",
+        "Rounds": "8"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "8",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "41.7",
+        "200+": "63.2",
+        "200-250": "60.2",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-3.6549999564886093",
+        "Rounds": "4"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-2.534999966621399",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:48.925Z",
+    "ok": true
+  }
+}

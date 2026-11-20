@@ -1,0 +1,262 @@
+{
+  "playerId": "35490",
+  "playerName": "Wilson Bateman",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ca-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Wilson Bateman",
+    "BirthPlace": "Edmonton, Alberta, Canada",
+    "BirthDate": "September 08, 1993",
+    "Age": "33",
+    "Height": "5ft 8in",
+    "Weight": "180 lbs",
+    "Nationality": "Canada",
+    "Residence": "Scottsdale, Arizona",
+    "ProWins": null,
+    "TurnedPro": "2012",
+    "PGAWins": null,
+    "College": "San Diego State University "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Wilson Bateman",
+        "player_num": "35490",
+        "Year": "2024",
+        "Rounds": "4",
+        "SG:TOT": "-0.53",
+        "SG:T2G": "-0.79",
+        "SG:OTT": "-0.70",
+        "SG:APP": "-0.04",
+        "SG:BS": "-0.74",
+        "SG:ARG": "-0.05",
+        "SG:P": "0.26",
+        "Dr Distance": "284.2",
+        "Dr Accuracy %": "53.6",
+        "Ball Speed": "175.44"
+      },
+      {
+        "playerName": "Wilson Bateman",
+        "player_num": "35490",
+        "Year": "2023",
+        "Rounds": "4",
+        "SG:TOT": "-0.72",
+        "SG:T2G": "-0.49",
+        "SG:OTT": "0.00",
+        "SG:APP": "-0.48",
+        "SG:BS": "-0.48",
+        "SG:ARG": "-0.00",
+        "SG:P": "-0.23",
+        "Dr Distance": "277.4",
+        "Dr Accuracy %": "56.7",
+        "Ball Speed": "177.03"
+      },
+      {
+        "playerName": "Wilson Bateman",
+        "player_num": "35490",
+        "Year": "2016",
+        "Rounds": "2",
+        "SG:TOT": "-1.15",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "53.6",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2024-06-02",
+        "position": "T62",
+        "roundPosition": "T62",
+        "TournamentName": "RBC Canadian Open",
+        "is_major": "0",
+        "playerName": "Wilson Bateman",
+        "player_num": "35490",
+        "Rounds": "4",
+        "CourseID": "874",
+        "Course": "Hamilton Golf & Country Club",
+        "ShotLink": "4",
+        "SG:TOT": "-0.53",
+        "SG:T2G": "-0.79",
+        "SG:OTT": "-0.70",
+        "SG:APP": "-0.04",
+        "SG:BS": "-0.74",
+        "SG:ARG": "-0.05",
+        "SG:P": "0.26",
+        "SG:SG": "0.21"
+      },
+      {
+        "Date": "2023-06-11",
+        "position": "T68",
+        "roundPosition": "T68",
+        "TournamentName": "RBC Canadian Open",
+        "is_major": "0",
+        "playerName": "Wilson Bateman",
+        "player_num": "35490",
+        "Rounds": "4",
+        "CourseID": "908",
+        "Course": "Oakdale Golf & Country Club",
+        "ShotLink": "4",
+        "SG:TOT": "-0.72",
+        "SG:T2G": "-0.49",
+        "SG:OTT": "0.00",
+        "SG:APP": "-0.48",
+        "SG:BS": "-0.48",
+        "SG:ARG": "-0.00",
+        "SG:P": "-0.23",
+        "SG:SG": "-0.24"
+      },
+      {
+        "Date": "2016-03-27",
+        "position": "CUT",
+        "roundPosition": "T87",
+        "TournamentName": "Puerto Rico Open",
+        "is_major": "0",
+        "playerName": "Wilson Bateman",
+        "player_num": "35490",
+        "Rounds": "2",
+        "CourseID": "742",
+        "Course": "Grand Reserve GC",
+        "ShotLink": "0",
+        "SG:TOT": "-1.15",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "40.0",
+        "SG TOT 1+": "20.0",
+        "SG TOT 2+": "20.0",
+        "SG TOT 3+": "20.0",
+        "SG TOT 4+": "20.0",
+        "SG TOT 5+": "10.0",
+        "Rounds": "10"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "0.25724995136260986",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.1800000071525574",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "3.743333329757055",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-3.215000033378601",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-4.274999976158142",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-1.1499999910593033",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-0.6237500086426735",
+        "Rounds": "8"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "0.035000018775463104",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "1.3433333039283752",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-3.8600000143051147",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-3.740000009536743",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-0.7175000011920929",
+        "Rounds": "4"
+      },
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-1.1499999910593033",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-0.5300000160932541",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "71.2",
+        "PM": "72.2",
+        "Rounds": "10"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "10",
+        "50-100": null,
+        "100-150": "20.4",
+        "150-200": "38.2",
+        "200+": "59.5",
+        "200-250": "51.4",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-0.7290000051259995",
+        "Rounds": "10"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:26:29.536Z",
+    "ok": true
+  }
+}

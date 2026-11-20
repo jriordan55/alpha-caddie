@@ -1,0 +1,273 @@
+{
+  "playerId": "27652",
+  "playerName": "Johan Kok",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_sf-flag.gif",
+  "profile": {
+    "ProfileImage": "0",
+    "Name": "Johan Kok",
+    "BirthPlace": "Nelspruit, South Africa",
+    "BirthDate": "March 19, 1980",
+    "Age": "46",
+    "Height": "6ft 2in",
+    "Weight": "210 lbs",
+    "Nationality": "South Africa",
+    "Residence": "Brentwood, Tennessee",
+    "ProWins": "0",
+    "TurnedPro": "2003",
+    "PGAWins": "0",
+    "College": "University of South Carolina "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Johan Kok",
+        "player_num": "27652",
+        "Year": "2018",
+        "Rounds": "4",
+        "SG:TOT": "-6.43",
+        "SG:T2G": "-5.87",
+        "SG:OTT": "-0.96",
+        "SG:APP": "-3.36",
+        "SG:BS": "-4.32",
+        "SG:ARG": "-1.54",
+        "SG:P": "-0.56",
+        "Dr Distance": "279.5",
+        "Dr Accuracy %": "50.0",
+        "Ball Speed": "173.59"
+      },
+      {
+        "playerName": "Johan Kok",
+        "player_num": "27652",
+        "Year": "2016",
+        "Rounds": "2",
+        "SG:TOT": "-2.81",
+        "SG:T2G": "-3.32",
+        "SG:OTT": "-1.07",
+        "SG:APP": "-1.97",
+        "SG:BS": "-3.04",
+        "SG:ARG": "-0.28",
+        "SG:P": "0.51",
+        "Dr Distance": "277.6",
+        "Dr Accuracy %": "42.9",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Johan Kok",
+        "player_num": "27652",
+        "Year": "2015",
+        "Rounds": "2",
+        "SG:TOT": "-3.45",
+        "SG:T2G": "-2.99",
+        "SG:OTT": "-0.95",
+        "SG:APP": "-0.12",
+        "SG:BS": "-1.07",
+        "SG:ARG": "-1.92",
+        "SG:P": "-0.47",
+        "Dr Distance": "286.9",
+        "Dr Accuracy %": "50.0",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2018-08-12",
+        "position": "CUT",
+        "roundPosition": "T151",
+        "TournamentName": "PGA Championship",
+        "is_major": "1",
+        "playerName": "Johan Kok",
+        "player_num": "27652",
+        "Rounds": "2",
+        "CourseID": "534",
+        "Course": "Bellerive CC",
+        "ShotLink": "2",
+        "SG:TOT": "-5.01",
+        "SG:T2G": "-3.10",
+        "SG:OTT": "-0.57",
+        "SG:APP": "-2.35",
+        "SG:BS": "-2.92",
+        "SG:ARG": "-0.18",
+        "SG:P": "-1.92",
+        "SG:SG": "-2.09"
+      },
+      {
+        "Date": "2018-06-10",
+        "position": "CUT",
+        "roundPosition": "153",
+        "TournamentName": "FedEx St. Jude Classic",
+        "is_major": "0",
+        "playerName": "Johan Kok",
+        "player_num": "27652",
+        "Rounds": "2",
+        "CourseID": "513",
+        "Course": "TPC Southwind",
+        "ShotLink": "2",
+        "SG:TOT": "-7.85",
+        "SG:T2G": "-8.64",
+        "SG:OTT": "-1.36",
+        "SG:APP": "-4.38",
+        "SG:BS": "-5.73",
+        "SG:ARG": "-2.91",
+        "SG:P": "0.79",
+        "SG:SG": "-2.12"
+      },
+      {
+        "Date": "2016-07-31",
+        "position": "CUT",
+        "roundPosition": "T133",
+        "TournamentName": "PGA Championship",
+        "is_major": "1",
+        "playerName": "Johan Kok",
+        "player_num": "27652",
+        "Rounds": "2",
+        "CourseID": "715",
+        "Course": "Baltusrol GC",
+        "ShotLink": "2",
+        "SG:TOT": "-2.81",
+        "SG:T2G": "-3.32",
+        "SG:OTT": "-1.07",
+        "SG:APP": "-1.97",
+        "SG:BS": "-3.04",
+        "SG:ARG": "-0.28",
+        "SG:P": "0.51",
+        "SG:SG": "0.23"
+      },
+      {
+        "Date": "2015-08-16",
+        "position": "CUT",
+        "roundPosition": "T136",
+        "TournamentName": "PGA Championship",
+        "is_major": "1",
+        "playerName": "Johan Kok",
+        "player_num": "27652",
+        "Rounds": "2",
+        "CourseID": "706",
+        "Course": "Whistling Straits",
+        "ShotLink": "2",
+        "SG:TOT": "-3.45",
+        "SG:T2G": "-2.99",
+        "SG:OTT": "-0.95",
+        "SG:APP": "-0.12",
+        "SG:BS": "-1.07",
+        "SG:ARG": "-1.92",
+        "SG:P": "-0.47",
+        "SG:SG": "-2.38"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "8"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.4690000116825104",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "0.7870000153779984",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-4.002499952912331",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-5.562500059604645",
+        "Rounds": "4"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-7.8500001430511475",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-4.23499995470047",
+        "Rounds": "4"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-2.8099999725818634",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-7.8500001430511475",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-3.7599999606609344",
+        "Rounds": "6"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-3.7599999606609344",
+        "Rounds": "6"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-7.8500001430511475",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "76.5",
+        "PM": "76",
+        "Rounds": "8"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "8",
+        "50-100": null,
+        "100-150": "30.6",
+        "150-200": "48.4",
+        "200+": "55.4",
+        "200-250": "53.6",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-7.8500001430511475",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-3.7599999606609344",
+        "Rounds": "6"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:51.749Z",
+    "ok": true
+  }
+}

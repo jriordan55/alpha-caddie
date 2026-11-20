@@ -1,0 +1,162 @@
+{
+  "playerId": "50706",
+  "playerName": "Ashton Van Horne",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Ashton Van Horne",
+    "BirthPlace": "Litchfield, Connecticut",
+    "BirthDate": "March 29, 1994",
+    "Age": "32",
+    "Height": "6ft 6in",
+    "Weight": "195 lbs",
+    "Nationality": "United States",
+    "Residence": "Georgetown, Kentucky",
+    "ProWins": null,
+    "TurnedPro": "2016",
+    "PGAWins": null,
+    "College": "Belmont University 2016, Finance"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Ashton Van Horne",
+        "player_num": "50706",
+        "Year": "2026",
+        "Rounds": "2",
+        "SG:TOT": "-7.94",
+        "SG:T2G": "-6.92",
+        "SG:OTT": "-1.44",
+        "SG:APP": "-2.19",
+        "SG:BS": "-3.63",
+        "SG:ARG": "-3.29",
+        "SG:P": "-1.03",
+        "Dr Distance": "291.5",
+        "Dr Accuracy %": "60.7",
+        "Ball Speed": "178.56"
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Ashton Van Horne",
+        "player_num": "50706",
+        "Rounds": "2",
+        "SG:TOT": "-7.94",
+        "SG:T2G": "-6.92",
+        "SG:OTT": "-1.44",
+        "SG:APP": "-2.19",
+        "SG:BS": "-3.63",
+        "SG:ARG": "-3.29",
+        "SG:P": "-1.03",
+        "SG:SG": "-4.31"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-07-12",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "ISCO Championship",
+        "is_major": "0",
+        "playerName": "Ashton Van Horne",
+        "player_num": "50706",
+        "Rounds": "2",
+        "CourseID": "934",
+        "Course": "Hurstbourne CC",
+        "ShotLink": "2",
+        "SG:TOT": "-7.94",
+        "SG:T2G": "-6.92",
+        "SG:OTT": "-1.44",
+        "SG:APP": "-2.19",
+        "SG:BS": "-3.63",
+        "SG:ARG": "-3.29",
+        "SG:P": "-1.03",
+        "SG:SG": "-4.31"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-1.0255000442266464",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-2.819999933242798",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-13.069999694824219",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-7.944999814033508",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-7.944999814033508",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-7.944999814033508",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "72",
+        "PM": "82",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "56.5",
+        "200+": "61.1",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-7.944999814033508",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:14.073Z",
+    "ok": true
+  }
+}

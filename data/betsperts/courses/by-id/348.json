@@ -1,0 +1,153 @@
+{
+  "courseNum": "348",
+  "courseName": "Medinah CC (No. 3)",
+  "list": {
+    "CourseName": "Medinah CC (No. 3)",
+    "CourseNum": "348",
+    "CourseNums": [
+      348,
+      659
+    ]
+  },
+  "details": {
+    "CourseName": "Medinah CC (No. 3)",
+    "CourseNum": "348",
+    "Locations": [
+      "Midwest",
+      "Illinois"
+    ],
+    "SeasonHeld": "Playoffs",
+    "CourseTypes": [
+      "Parkland"
+    ],
+    "ParScore": "70",
+    "Yards": "7548",
+    "AVG": "107.8",
+    "CourseLength": "Very Long",
+    "Architects": [
+      "Tom Bendelow"
+    ],
+    "RedesignArchitects": [
+      "Rees Jones",
+      "OCM Golf"
+    ],
+    "Elevation": "743",
+    "CourseElevation": "Average",
+    "Bunkers": "118",
+    "BunkersRank": "High",
+    "WaterHoles": "5",
+    "WaterDanger": "Average",
+    "ScoreRTP": "-2.07",
+    "Difficulty": "",
+    "FwyGrass": "Bent",
+    "FwyWidth": "0",
+    "GreenSqFt": "6974",
+    "GreenSize": "Large",
+    "GreenGrass": "Bent",
+    "GreenStimp": "12.5",
+    "GreenSpeed": "Average",
+    "RoughType": "Bluegrass/Rye/Fescue",
+    "RoughGrass": "Bluegrass",
+    "RoughLengthInc": "5",
+    "RoughLength": "Long",
+    "EventTypes": [
+      "No-Cut",
+      "Fed-Ex Cup Playoff"
+    ],
+    "Tournaments": [
+      {
+        "Year": "2019",
+        "Tournament": "BMW Championship"
+      }
+    ],
+    "CorrelatedCourse": [
+      "Pinehurst No. 2",
+      "Riviera CC",
+      "East Lake GC",
+      "Aronimink GC",
+      "Muirfield Village GC",
+      "Los Angeles CC (North)",
+      "Southern Hills CC"
+    ],
+    "FieldSize": "Small Field",
+    "FieldStrength": "Strong",
+    "OTTClub": "Driver Heavy",
+    "FwyPct": "64.1",
+    "FwyAccuracy": "",
+    "GainOTT": "",
+    "MissedFairwayPenalty": "",
+    "RoughPenalty": "",
+    "GIRAccuracy": "",
+    "GIRPct": "69.7",
+    "GainAPP": "",
+    "ScramblingFromRough": "",
+    "ScramblingFromShortGrass": "",
+    "SandSaves": "",
+    "GainARG": "",
+    "GainingPuttingInside15": "",
+    "GainingPuttingOutside15": "",
+    "3PuttAVD": "",
+    "GainPutting": "",
+    "Par3Scoring": "",
+    "Par4Scoring": "",
+    "Par5Scoring": "",
+    "ShotLink": "1"
+  },
+  "tournaments": [
+    {
+      "CourseNum": "348",
+      "TNum": "500",
+      "TourneyName": "Presidents Cup"
+    }
+  ],
+  "_meta": {
+    "pulledAt": "2026-11-20T22:18:25.401Z",
+    "detailStatus": 200,
+    "tournamentsStatus": 200
+  },
+  "auth": {
+    "holeBreakdown": [],
+    "correlated": [
+      {
+        "CourseNum": "23",
+        "CourseName": "Muirfield Village GC",
+        "CourseNums": "[23, 893]"
+      },
+      {
+        "CourseNum": "43",
+        "CourseName": "Los Angeles CC (North)",
+        "CourseNums": "[43]"
+      },
+      {
+        "CourseNum": "500",
+        "CourseName": "Riviera CC",
+        "CourseNums": "[500]"
+      },
+      {
+        "CourseNum": "528",
+        "CourseName": "Pinehurst No. 2",
+        "CourseNums": "[528]"
+      },
+      {
+        "CourseNum": "611",
+        "CourseName": "Southern Hills CC",
+        "CourseNums": "[611]"
+      },
+      {
+        "CourseNum": "688",
+        "CourseName": "East Lake GC",
+        "CourseNums": "[688, 933]"
+      },
+      {
+        "CourseNum": "773",
+        "CourseName": "Aronimink GC",
+        "CourseNums": "[773]"
+      }
+    ],
+    "_meta": {
+      "pulledAt": "2026-11-20T22:52:52.113Z",
+      "holeStatus": 200,
+      "correlatedStatus": 200
+    }
+  }
+}

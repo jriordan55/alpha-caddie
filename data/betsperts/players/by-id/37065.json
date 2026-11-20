@@ -1,0 +1,148 @@
+{
+  "playerId": "37065",
+  "playerName": "Devin Gee",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Devin Gee",
+    "BirthPlace": "",
+    "BirthDate": "March 11, 1986",
+    "Age": "40",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "United States",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Devin Gee",
+        "player_num": "37065",
+        "Year": "2018",
+        "Rounds": "2",
+        "SG:TOT": "-6.51",
+        "SG:T2G": "-3.50",
+        "SG:OTT": "-2.21",
+        "SG:APP": "-1.43",
+        "SG:BS": "-3.64",
+        "SG:ARG": "0.14",
+        "SG:P": "-3.01",
+        "Dr Distance": "273.0",
+        "Dr Accuracy %": "53.6",
+        "Ball Speed": "158.36"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2018-07-08",
+        "position": "CUT",
+        "roundPosition": "154",
+        "TournamentName": "A Military Tribute at The Greenbrier",
+        "is_major": "0",
+        "playerName": "Devin Gee",
+        "player_num": "37065",
+        "Rounds": "2",
+        "CourseID": "771",
+        "Course": "The Old White TPC",
+        "ShotLink": "2",
+        "SG:TOT": "-6.51",
+        "SG:T2G": "-3.50",
+        "SG:OTT": "-2.21",
+        "SG:APP": "-1.43",
+        "SG:BS": "-3.64",
+        "SG:ARG": "0.14",
+        "SG:P": "-3.01",
+        "SG:SG": "-2.87"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-3.0119999647140503",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-4.659999847412109",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-8.359999656677246",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-6.509999752044678",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-6.509999752044678",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-6.509999752044678",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "77",
+        "PM": "74",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "49.7",
+        "200+": "50.6",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-6.509999752044678",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:21:13.331Z",
+    "ok": true
+  }
+}

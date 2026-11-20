@@ -1,0 +1,148 @@
+{
+  "playerId": "34357",
+  "playerName": "Jeff Olson",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Jeff Olson",
+    "BirthPlace": "Minneapolis, Minnestoa",
+    "BirthDate": "August 29, 1978",
+    "Age": "48",
+    "Height": "6ft 2in",
+    "Weight": "235 lbs",
+    "Nationality": "United States",
+    "Residence": "Delaware, Ohio",
+    "ProWins": null,
+    "TurnedPro": "2002",
+    "PGAWins": null,
+    "College": "Ohio State University "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Jeff Olson",
+        "player_num": "34357",
+        "Year": "2015",
+        "Rounds": "2",
+        "SG:TOT": "-6.96",
+        "SG:T2G": "-4.70",
+        "SG:OTT": "-0.87",
+        "SG:APP": "-2.36",
+        "SG:BS": "-3.23",
+        "SG:ARG": "-1.47",
+        "SG:P": "-2.26",
+        "Dr Distance": "270.5",
+        "Dr Accuracy %": "42.9",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2015-08-16",
+        "position": "CUT",
+        "roundPosition": "148",
+        "TournamentName": "PGA Championship",
+        "is_major": "1",
+        "playerName": "Jeff Olson",
+        "player_num": "34357",
+        "Rounds": "2",
+        "CourseID": "706",
+        "Course": "Whistling Straits",
+        "ShotLink": "2",
+        "SG:TOT": "-6.96",
+        "SG:T2G": "-4.70",
+        "SG:OTT": "-0.87",
+        "SG:APP": "-2.36",
+        "SG:BS": "-3.23",
+        "SG:ARG": "-1.47",
+        "SG:P": "-2.26",
+        "SG:SG": "-3.72"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-2.25600004196167",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-4.849999904632568",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-9.0600004196167",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-6.955000162124634",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-6.955000162124634",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-6.955000162124634",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "79",
+        "PM": "82",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": "27.5",
+        "100-150": null,
+        "150-200": "56.2",
+        "200+": "58.2",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-6.955000162124634",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:37.143Z",
+    "ok": true
+  }
+}

@@ -1,0 +1,195 @@
+{
+  "playerId": "50666",
+  "playerName": "Matt Gilchrest",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Matt Gilchrest",
+    "BirthPlace": "Greenwich, Connecticut",
+    "BirthDate": "February 07, 1995",
+    "Age": "31",
+    "Height": "6ft 0in",
+    "Weight": "190 lbs",
+    "Nationality": "United States",
+    "Residence": "Southlake, Texas",
+    "ProWins": null,
+    "TurnedPro": "2017",
+    "PGAWins": null,
+    "College": "Auburn University 2017, Finance"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Matt Gilchrest",
+        "player_num": "50666",
+        "Year": "2017",
+        "Rounds": "4",
+        "SG:TOT": "0.64",
+        "SG:T2G": "-0.51",
+        "SG:OTT": "-0.76",
+        "SG:APP": "0.32",
+        "SG:BS": "-0.44",
+        "SG:ARG": "-0.07",
+        "SG:P": "1.15",
+        "Dr Distance": "279.1",
+        "Dr Accuracy %": "58.9",
+        "Ball Speed": "164.32"
+      },
+      {
+        "playerName": "Matt Gilchrest",
+        "player_num": "50666",
+        "Year": "2016",
+        "Rounds": "2",
+        "SG:TOT": "-0.63",
+        "SG:T2G": "-0.19",
+        "SG:OTT": "-0.90",
+        "SG:APP": "-0.18",
+        "SG:BS": "-1.09",
+        "SG:ARG": "0.89",
+        "SG:P": "-0.43",
+        "Dr Distance": "287.0",
+        "Dr Accuracy %": "39.3",
+        "Ball Speed": "168.53"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2017-07-23",
+        "position": "T42",
+        "roundPosition": "T42",
+        "TournamentName": "Barbasol Championship",
+        "is_major": "0",
+        "playerName": "Matt Gilchrest",
+        "player_num": "50666",
+        "Rounds": "4",
+        "CourseID": "819",
+        "Course": "RTJ Trail (Grand National)",
+        "ShotLink": "4",
+        "SG:TOT": "0.64",
+        "SG:T2G": "-0.51",
+        "SG:OTT": "-0.76",
+        "SG:APP": "0.32",
+        "SG:BS": "-0.44",
+        "SG:ARG": "-0.07",
+        "SG:P": "1.15",
+        "SG:SG": "1.08"
+      },
+      {
+        "Date": "2016-07-17",
+        "position": "CUT",
+        "roundPosition": "T83",
+        "TournamentName": "Barbasol Championship",
+        "is_major": "0",
+        "playerName": "Matt Gilchrest",
+        "player_num": "50666",
+        "Rounds": "2",
+        "CourseID": "819",
+        "Course": "RTJ Trail (Grand National)",
+        "ShotLink": "2",
+        "SG:TOT": "-0.63",
+        "SG:T2G": "-0.19",
+        "SG:OTT": "-0.90",
+        "SG:APP": "-0.18",
+        "SG:BS": "-1.09",
+        "SG:ARG": "0.89",
+        "SG:P": "-0.43",
+        "SG:SG": "0.46"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "33.3",
+        "SG TOT 2+": "16.7",
+        "SG TOT 3+": "16.7",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "6"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "0.6195000049968561",
+        "Rounds": "6"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "0.864999994635582",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.8000000165775418",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-2.0799999237060547",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "3.240000009536743",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "0.21500000699112812",
+        "Rounds": "6"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "0.21500000699112812",
+        "Rounds": "6"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "0.21500000699112812",
+        "Rounds": "6"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "70",
+        "PM": "68.33333333333333",
+        "Rounds": "6"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "6",
+        "50-100": null,
+        "100-150": "22.6",
+        "150-200": "28.4",
+        "200+": "50.2",
+        "200-250": "49.7",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "0.21500000699112812",
+        "Rounds": "6"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:56.022Z",
+    "ok": true
+  }
+}

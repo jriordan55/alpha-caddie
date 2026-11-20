@@ -1,0 +1,148 @@
+{
+  "playerId": "35552",
+  "playerName": "Billy Kennerly",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Billy Kennerly",
+    "BirthPlace": "Seattle, Washington",
+    "BirthDate": "September 05, 1992",
+    "Age": "34",
+    "Height": "5ft 11in",
+    "Weight": "170 lbs",
+    "Nationality": "United States",
+    "Residence": "Stuart, Florida",
+    "ProWins": null,
+    "TurnedPro": "2015",
+    "PGAWins": null,
+    "College": "Clemson University 2015, Business Management"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Billy Kennerly",
+        "player_num": "35552",
+        "Year": "2016",
+        "Rounds": "2",
+        "SG:TOT": "-1.66",
+        "SG:T2G": "-0.54",
+        "SG:OTT": "-0.33",
+        "SG:APP": "-0.46",
+        "SG:BS": "-0.79",
+        "SG:ARG": "0.26",
+        "SG:P": "-1.12",
+        "Dr Distance": "291.2",
+        "Dr Accuracy %": "50.0",
+        "Ball Speed": "155.78"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2016-07-24",
+        "position": "CUT",
+        "roundPosition": "T118",
+        "TournamentName": "RBC Canadian Open",
+        "is_major": "0",
+        "playerName": "Billy Kennerly",
+        "player_num": "35552",
+        "Rounds": "2",
+        "CourseID": "32",
+        "Course": "Glen Abbey GC",
+        "ShotLink": "2",
+        "SG:TOT": "-1.66",
+        "SG:T2G": "-0.54",
+        "SG:OTT": "-0.33",
+        "SG:APP": "-0.46",
+        "SG:BS": "-0.79",
+        "SG:ARG": "0.26",
+        "SG:P": "-1.12",
+        "SG:SG": "-0.87"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-1.125",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-2.549999952316284",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.7799999713897705",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-1.6649999618530273",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-1.6649999618530273",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-1.6649999618530273",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74",
+        "PM": "76",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "22.6",
+        "150-200": "47.1",
+        "200+": "92",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-1.6649999618530273",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:28.479Z",
+    "ok": true
+  }
+}

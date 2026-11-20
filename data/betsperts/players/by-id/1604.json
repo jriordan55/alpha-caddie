@@ -1,0 +1,148 @@
+{
+  "playerId": "1604",
+  "playerName": "Steve Jurgensen",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Steve Jurgensen",
+    "BirthPlace": null,
+    "BirthDate": "October 27, 1961",
+    "Age": "65",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Steve Jurgensen",
+        "player_num": "1604",
+        "Year": "2023",
+        "Rounds": "2",
+        "SG:TOT": "-7.52",
+        "SG:T2G": "-5.72",
+        "SG:OTT": "-0.50",
+        "SG:APP": "-3.23",
+        "SG:BS": "-3.73",
+        "SG:ARG": "-1.99",
+        "SG:P": "-1.80",
+        "Dr Distance": "273.2",
+        "Dr Accuracy %": "69.2",
+        "Ball Speed": "154.80"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2023-04-30",
+        "position": "CUT",
+        "roundPosition": "144",
+        "TournamentName": "Mexico Open at Vidanta",
+        "is_major": "0",
+        "playerName": "Steve Jurgensen",
+        "player_num": "1604",
+        "Rounds": "2",
+        "CourseID": "978",
+        "Course": "Vidanta Vallarta",
+        "ShotLink": "2",
+        "SG:TOT": "-7.52",
+        "SG:T2G": "-5.72",
+        "SG:OTT": "-0.50",
+        "SG:APP": "-3.23",
+        "SG:BS": "-3.73",
+        "SG:ARG": "-1.99",
+        "SG:P": "-1.80",
+        "SG:SG": "-3.79"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-8.800000190734863",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-6.239999771118164",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-6.239999771118164",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-8.800000190734863",
+        "Rounds": "1"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-6.239999771118164",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-8.800000190734863",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-7.519999980926514",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "79",
+        "PM": "77",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": "62",
+        "200-250": "62.8",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-7.519999980926514",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:46.029Z",
+    "ok": true
+  }
+}

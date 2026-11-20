@@ -1,0 +1,230 @@
+{
+  "playerId": "55670",
+  "playerName": "Alex Schaake",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Alex Schaake",
+    "BirthPlace": "Omaha, Nebraska",
+    "BirthDate": "November 22, 1997",
+    "Age": "28",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "United States",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "2021",
+    "PGAWins": "0",
+    "College": "University of Iowa "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Alex Schaake",
+        "player_num": "55670",
+        "Year": "2023",
+        "Rounds": "2",
+        "SG:TOT": "-3.70",
+        "SG:T2G": "-3.38",
+        "SG:OTT": "-2.00",
+        "SG:APP": "-1.70",
+        "SG:BS": "-3.70",
+        "SG:ARG": "0.31",
+        "SG:P": "-0.32",
+        "Dr Distance": "290.7",
+        "Dr Accuracy %": "38.5",
+        "Ball Speed": "170.62"
+      },
+      {
+        "playerName": "Alex Schaake",
+        "player_num": "55670",
+        "Year": "2021",
+        "Rounds": "2",
+        "SG:TOT": "-4.07",
+        "SG:T2G": "-3.78",
+        "SG:OTT": "-0.27",
+        "SG:APP": "-2.33",
+        "SG:BS": "-2.60",
+        "SG:ARG": "-1.18",
+        "SG:P": "-0.29",
+        "Dr Distance": "308.4",
+        "Dr Accuracy %": "42.9",
+        "Ball Speed": "174.35"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2023-06-18",
+        "position": "CUT",
+        "roundPosition": "T144",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Alex Schaake",
+        "player_num": "55670",
+        "Rounds": "2",
+        "CourseID": "43",
+        "Course": "Los Angeles CC (North)",
+        "ShotLink": "2",
+        "SG:TOT": "-3.70",
+        "SG:T2G": "-3.38",
+        "SG:OTT": "-2.00",
+        "SG:APP": "-1.70",
+        "SG:BS": "-3.70",
+        "SG:ARG": "0.31",
+        "SG:P": "-0.32",
+        "SG:SG": "-0.01"
+      },
+      {
+        "Date": "2021-07-11",
+        "position": "CUT",
+        "roundPosition": "T140",
+        "TournamentName": "John Deere Classic",
+        "is_major": "0",
+        "playerName": "Alex Schaake",
+        "player_num": "55670",
+        "Rounds": "2",
+        "CourseID": "669",
+        "Course": "TPC Deere Run",
+        "ShotLink": "2",
+        "SG:TOT": "-4.07",
+        "SG:T2G": "-3.78",
+        "SG:OTT": "-0.27",
+        "SG:APP": "-2.33",
+        "SG:BS": "-2.60",
+        "SG:ARG": "-1.18",
+        "SG:P": "-0.29",
+        "SG:SG": "-1.46"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "8"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.28849999606609344",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-0.3214999735355377",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-3.869999885559082",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-3.8950001001358032",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": null,
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": null,
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-5.619999885559082",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-4.065000057220459",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-1.7799999713897705",
+        "Rounds": "1"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-5.619999885559082",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-2.119999885559082",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-1.7799999713897705",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-6.010000228881836",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-3.6999999284744263",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-4.065000057220459",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "73",
+        "PM": "76",
+        "Rounds": "8"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "8",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "50.1",
+        "200+": "67.6",
+        "200-250": "53.8",
+        "250+": "101.2"
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-3.8824999928474426",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:18:54.275Z",
+    "ok": true
+  }
+}

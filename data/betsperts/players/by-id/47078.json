@@ -1,0 +1,245 @@
+{
+  "playerId": "47078",
+  "playerName": "Travis Smyth",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/as-flag.gif",
+  "profile": {
+    "ProfileImage": "0",
+    "Name": "Travis Smyth",
+    "BirthPlace": null,
+    "BirthDate": "December 29, 1994",
+    "Age": "31",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "Australia",
+    "Residence": null,
+    "ProWins": "0",
+    "TurnedPro": null,
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Travis Smyth",
+        "player_num": "47078",
+        "Year": "2026",
+        "Rounds": "4",
+        "SG:TOT": "-0.83",
+        "SG:T2G": "-0.94",
+        "SG:OTT": "-1.28",
+        "SG:APP": "-0.10",
+        "SG:BS": "-1.38",
+        "SG:ARG": "0.45",
+        "SG:P": "0.10",
+        "Dr Distance": "293.9",
+        "Dr Accuracy %": "37.5",
+        "Ball Speed": "168.97"
+      },
+      {
+        "playerName": "Travis Smyth",
+        "player_num": "47078",
+        "Year": "2023",
+        "Rounds": "2",
+        "SG:TOT": "-1.65",
+        "SG:T2G": "-1.00",
+        "SG:OTT": "-0.54",
+        "SG:APP": "-0.22",
+        "SG:BS": "-0.75",
+        "SG:ARG": "-0.24",
+        "SG:P": "-1.77",
+        "Dr Distance": null,
+        "Dr Accuracy %": "25.0",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Travis Smyth",
+        "player_num": "47078",
+        "Rounds": "4",
+        "SG:TOT": "-0.83",
+        "SG:T2G": "-0.94",
+        "SG:OTT": "-1.28",
+        "SG:APP": "-0.10",
+        "SG:BS": "-1.38",
+        "SG:ARG": "0.45",
+        "SG:P": "0.10",
+        "SG:SG": "0.55"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-07-19",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Travis Smyth",
+        "player_num": "47078",
+        "Rounds": "2",
+        "CourseID": "541",
+        "Course": "Royal Birkdale GC",
+        "ShotLink": "2",
+        "SG:TOT": "-0.60",
+        "SG:T2G": "-0.56",
+        "SG:OTT": "-1.02",
+        "SG:APP": "-0.09",
+        "SG:BS": "-1.11",
+        "SG:ARG": "0.56",
+        "SG:P": "-0.05",
+        "SG:SG": "0.50"
+      },
+      {
+        "Date": "2026-05-17",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "PGA Championship",
+        "is_major": "1",
+        "playerName": "Travis Smyth",
+        "player_num": "47078",
+        "Rounds": "2",
+        "CourseID": "773",
+        "Course": "Aronimink Golf Club",
+        "ShotLink": "2",
+        "SG:TOT": "-1.06",
+        "SG:T2G": "-1.32",
+        "SG:OTT": "-1.54",
+        "SG:APP": "-0.11",
+        "SG:BS": "-1.65",
+        "SG:ARG": "0.34",
+        "SG:P": "0.26",
+        "SG:SG": "0.59"
+      },
+      {
+        "Date": "2023-07-23",
+        "position": "CUT",
+        "roundPosition": null,
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Travis Smyth",
+        "player_num": "47078",
+        "Rounds": "2",
+        "CourseID": "923",
+        "Course": "Royal Liverpool",
+        "ShotLink": "2",
+        "SG:TOT": "-1.65",
+        "SG:T2G": "-1.00",
+        "SG:OTT": "-0.54",
+        "SG:APP": "-0.22",
+        "SG:BS": "-0.75",
+        "SG:ARG": "-0.24",
+        "SG:P": "-1.77",
+        "SG:SG": "-2.01"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "33.3",
+        "SG TOT 1+": "16.7",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "6"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.7570000141859055",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-2.01666667064031",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.19666663805643717",
+        "Rounds": "3"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-0.5333333214124044",
+        "Rounds": "3"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-1.7400000095367432",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-1.649999976158142",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-1.649999976158142",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "0.4399999976158142",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-1.3574999868869781",
+        "Rounds": "4"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-1.1066666543483734",
+        "Rounds": "6"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "72",
+        "PM": "74.66666666666667",
+        "Rounds": "6"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "6",
+        "50-100": null,
+        "100-150": "29.2",
+        "150-200": "37.9",
+        "200+": "51.1",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-1.0649999976158142",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-1.127499982714653",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:26:13.247Z",
+    "ok": true
+  }
+}

@@ -1,0 +1,148 @@
+{
+  "playerId": "63544",
+  "playerName": "Patrick Sheehan",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Patrick Sheehan",
+    "BirthPlace": "Doylestown, PA",
+    "BirthDate": "February 15, 2001",
+    "Age": "25",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": "Doylestown, PA",
+    "ProWins": null,
+    "TurnedPro": "2023",
+    "PGAWins": null,
+    "College": "Penn State University "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Patrick Sheehan",
+        "player_num": "63544",
+        "Year": "2025",
+        "Rounds": "2",
+        "SG:TOT": "-1.44",
+        "SG:T2G": "0.60",
+        "SG:OTT": "0.12",
+        "SG:APP": "0.41",
+        "SG:BS": "0.53",
+        "SG:ARG": "0.07",
+        "SG:P": "-2.05",
+        "Dr Distance": "298.6",
+        "Dr Accuracy %": "53.6",
+        "Ball Speed": "189.65"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2025-03-02",
+        "position": "CUT",
+        "roundPosition": "T111",
+        "TournamentName": "Cognizant Classic in the Palm Beaches",
+        "is_major": "0",
+        "playerName": "Patrick Sheehan",
+        "player_num": "63544",
+        "Rounds": "2",
+        "CourseID": "928",
+        "Course": "PGA National (Champion)",
+        "ShotLink": "2",
+        "SG:TOT": "-1.44",
+        "SG:T2G": "0.60",
+        "SG:OTT": "0.12",
+        "SG:APP": "0.41",
+        "SG:BS": "0.53",
+        "SG:ARG": "0.07",
+        "SG:P": "-2.05",
+        "SG:SG": "-1.98"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-2.0509999692440033",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.3700000047683716",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.5199999809265137",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-1.4449999928474426",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-1.4449999928474426",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-1.4449999928474426",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "70",
+        "PM": "71",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "24.8",
+        "150-200": "33.4",
+        "200+": "45.8",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Florida",
+        "StrokesGainedAverage": "-1.4449999928474426",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:24:41.209Z",
+    "ok": true
+  }
+}

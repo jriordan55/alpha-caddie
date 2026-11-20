@@ -1,0 +1,210 @@
+{
+  "playerId": "37351",
+  "playerName": "Oliver Goss",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/as-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Oliver Goss",
+    "BirthPlace": "Surrey, England",
+    "BirthDate": "April 12, 1994",
+    "Age": "32",
+    "Height": "6ft 2in",
+    "Weight": "185 lbs",
+    "Nationality": "Australia",
+    "Residence": "Perth, Australia",
+    "ProWins": "1",
+    "TurnedPro": "2014",
+    "PGAWins": "0",
+    "College": "University of Tennessee "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Oliver Goss",
+        "player_num": "37351",
+        "Year": "2018",
+        "Rounds": "2",
+        "SG:TOT": "-0.62",
+        "SG:T2G": "-0.99",
+        "SG:OTT": "-0.20",
+        "SG:APP": "-1.98",
+        "SG:BS": "-2.18",
+        "SG:ARG": "1.20",
+        "SG:P": "0.36",
+        "Dr Distance": "293.3",
+        "Dr Accuracy %": "75.0",
+        "Ball Speed": "179.71"
+      },
+      {
+        "playerName": "Oliver Goss",
+        "player_num": "37351",
+        "Year": "2015",
+        "Rounds": "3",
+        "SG:TOT": "-0.57",
+        "SG:T2G": "4.04",
+        "SG:OTT": "0.14",
+        "SG:APP": "2.79",
+        "SG:BS": "2.93",
+        "SG:ARG": "1.11",
+        "SG:P": "0.86",
+        "Dr Distance": "292.5",
+        "Dr Accuracy %": "63.4",
+        "Ball Speed": "182.21"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2018-05-20",
+        "position": "CUT",
+        "roundPosition": "T90",
+        "TournamentName": "AT&T Byron Nelson",
+        "is_major": "0",
+        "playerName": "Oliver Goss",
+        "player_num": "37351",
+        "Rounds": "2",
+        "CourseID": "243",
+        "Course": "Trinity Forest Golf Club",
+        "ShotLink": "2",
+        "SG:TOT": "-0.62",
+        "SG:T2G": "-0.99",
+        "SG:OTT": "-0.20",
+        "SG:APP": "-1.98",
+        "SG:BS": "-2.18",
+        "SG:ARG": "1.20",
+        "SG:P": "0.36",
+        "SG:SG": "1.56"
+      },
+      {
+        "Date": "2015-02-15",
+        "position": "CUT",
+        "roundPosition": "T91",
+        "TournamentName": "AT&T Pebble Beach Pro-Am",
+        "is_major": "0",
+        "playerName": "Oliver Goss",
+        "player_num": "37351",
+        "Rounds": "3",
+        "CourseID": "5",
+        "Course": "Pebble Beach Golf Links",
+        "ShotLink": "1",
+        "SG:TOT": "-0.57",
+        "SG:T2G": "4.04",
+        "SG:OTT": "0.14",
+        "SG:APP": "2.79",
+        "SG:BS": "2.93",
+        "SG:ARG": "1.11",
+        "SG:P": "0.86",
+        "SG:SG": "1.97"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "40.0",
+        "SG TOT 1+": "40.0",
+        "SG TOT 2+": "20.0",
+        "SG TOT 3+": "20.0",
+        "SG TOT 4+": "20.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "5"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "0.3644999861717224",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "0.8610000014305115",
+        "Rounds": "3"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.2500000279396772",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-2.684999942779541",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "4.900000095367432",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-0.625",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-0.5733332820236683",
+        "Rounds": "3"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-6.559999942779541",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "0.897500024177134",
+        "Rounds": "4"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-0.593999969214201",
+        "Rounds": "5"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "66.5",
+        "PM": "72.66666666666667",
+        "Rounds": "5"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "5",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "40.3",
+        "200+": "41.8",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-0.625",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "West Coast",
+        "StrokesGainedAverage": "-0.5733332820236683",
+        "Rounds": "3"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:24:33.198Z",
+    "ok": true
+  }
+}

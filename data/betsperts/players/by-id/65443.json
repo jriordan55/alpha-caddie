@@ -1,0 +1,153 @@
+{
+  "playerId": "65443",
+  "playerName": "Caleb VanArragon",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2026/05/c_fillg_face_centerq_autof_autodpr_2.0h_220w_200d_stub_default_avatar_light-16.png",
+    "Name": "Caleb VanArragon",
+    "BirthPlace": "Lexington, Kentucky",
+    "BirthDate": "August 10, 2001",
+    "Age": "25",
+    "Height": "5ft 8in",
+    "Weight": "160 lbs",
+    "Nationality": "United States",
+    "Residence": "Blaine, Minnesota",
+    "ProWins": null,
+    "TurnedPro": "2024",
+    "PGAWins": null,
+    "College": "Valparaiso University (2024, Biology & Statistics/Masters, Analytics & Modeling)"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Caleb VanArragon",
+        "player_num": "65443",
+        "Year": "2023",
+        "Rounds": "2",
+        "SG:TOT": "-3.17",
+        "SG:T2G": "-1.90",
+        "SG:OTT": "-1.01",
+        "SG:APP": "-0.02",
+        "SG:BS": "-1.03",
+        "SG:ARG": "-0.87",
+        "SG:P": "-1.27",
+        "Dr Distance": "298.8",
+        "Dr Accuracy %": "60.7",
+        "Ball Speed": "173.88"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2023-07-30",
+        "position": "CUT",
+        "roundPosition": "T138",
+        "TournamentName": "3M Open",
+        "is_major": "0",
+        "playerName": "Caleb VanArragon",
+        "player_num": "65443",
+        "Rounds": "2",
+        "CourseID": "883",
+        "Course": "TPC Twin Cities",
+        "ShotLink": "2",
+        "SG:TOT": "-3.17",
+        "SG:T2G": "-1.90",
+        "SG:OTT": "-1.01",
+        "SG:APP": "-0.02",
+        "SG:BS": "-1.03",
+        "SG:ARG": "-0.87",
+        "SG:P": "-1.27",
+        "SG:SG": "-2.14"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-1.2679999619722366",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-5.650000095367432",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.6899999976158142",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-3.170000046491623",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-5.650000095367432",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-0.6899999976158142",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-3.170000046491623",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "76",
+        "PM": "70",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": "32",
+        "100-150": null,
+        "150-200": "29.6",
+        "200+": "43.4",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-3.170000046491623",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:58.766Z",
+    "ok": true
+  }
+}

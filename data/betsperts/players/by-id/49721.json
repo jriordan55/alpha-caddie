@@ -1,0 +1,148 @@
+{
+  "playerId": "49721",
+  "playerName": "Keith Greene",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Keith Greene",
+    "BirthPlace": "Houston, Texas",
+    "BirthDate": "November 04, 1992",
+    "Age": "34",
+    "Height": "5ft 10in",
+    "Weight": "160 lbs",
+    "Nationality": "United States",
+    "Residence": "DeBary, Florida",
+    "ProWins": "0",
+    "TurnedPro": "2016",
+    "PGAWins": "0",
+    "College": "Lynn University 2015, Sports Management"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Keith Greene",
+        "player_num": "49721",
+        "Year": "2022",
+        "Rounds": "2",
+        "SG:TOT": "-9.62",
+        "SG:T2G": "-8.52",
+        "SG:OTT": "-1.28",
+        "SG:APP": "-4.22",
+        "SG:BS": "-5.50",
+        "SG:ARG": "-3.02",
+        "SG:P": "-1.10",
+        "Dr Distance": "273.9",
+        "Dr Accuracy %": "46.4",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2022-06-19",
+        "position": "CUT",
+        "roundPosition": "156",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Keith Greene",
+        "player_num": "49721",
+        "Rounds": "2",
+        "CourseID": "654",
+        "Course": "The Country Club",
+        "ShotLink": "2",
+        "SG:TOT": "-9.62",
+        "SG:T2G": "-8.52",
+        "SG:OTT": "-1.28",
+        "SG:APP": "-4.22",
+        "SG:BS": "-5.50",
+        "SG:ARG": "-3.02",
+        "SG:P": "-1.10",
+        "SG:SG": "-4.12"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "-1.0960000157356262",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-10.229999542236328",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-9.010000228881836",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-9.619999885559082",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-9.619999885559082",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-9.619999885559082",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "83",
+        "PM": "81",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": "41.9",
+        "100-150": "37.3",
+        "150-200": null,
+        "200+": "67.9",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-9.619999885559082",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:16.262Z",
+    "ok": true
+  }
+}

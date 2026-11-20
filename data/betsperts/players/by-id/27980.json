@@ -1,0 +1,153 @@
+{
+  "playerId": "27980",
+  "playerName": "In-hoi Hur",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ks-flag-1.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "In-hoi Hur",
+    "BirthPlace": "",
+    "BirthDate": "July 24, 1987",
+    "Age": "39",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "South Korea",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "In-hoi Hur",
+        "player_num": "27980",
+        "Year": "2021",
+        "Rounds": "2",
+        "SG:TOT": "-3.56",
+        "SG:T2G": "-3.13",
+        "SG:OTT": "-0.81",
+        "SG:APP": "-1.33",
+        "SG:BS": "-2.14",
+        "SG:ARG": "-1.00",
+        "SG:P": "-0.43",
+        "Dr Distance": "297.8",
+        "Dr Accuracy %": "39.3",
+        "Ball Speed": "167.17"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2021-01-17",
+        "position": "CUT",
+        "roundPosition": "T133",
+        "TournamentName": "Sony Open",
+        "is_major": "0",
+        "playerName": "In-hoi Hur",
+        "player_num": "27980",
+        "Rounds": "2",
+        "CourseID": "6",
+        "Course": "Waialae CC",
+        "ShotLink": "2",
+        "SG:TOT": "-3.56",
+        "SG:T2G": "-3.13",
+        "SG:OTT": "-0.81",
+        "SG:APP": "-1.33",
+        "SG:BS": "-2.14",
+        "SG:ARG": "-1.00",
+        "SG:P": "-0.43",
+        "SG:SG": "-1.43"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-0.42899999022483826",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-2.680000066757202",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-4.440000057220459",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-3.5600000619888306",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-4.440000057220459",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-2.680000066757202",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-3.5600000619888306",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "73",
+        "PM": "71",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "37.8",
+        "200+": "48.4",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Aloha",
+        "StrokesGainedAverage": "-3.5600000619888306",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:08.789Z",
+    "ok": true
+  }
+}

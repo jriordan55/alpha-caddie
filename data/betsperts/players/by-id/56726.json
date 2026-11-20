@@ -1,0 +1,199 @@
+{
+  "playerId": "56726",
+  "playerName": "Patrick Martin",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Patrick Martin",
+    "BirthPlace": "Birmingham, Alabama",
+    "BirthDate": "January 30, 1997",
+    "Age": "29",
+    "Height": "6ft 2in",
+    "Weight": "175 lbs",
+    "Nationality": "United States",
+    "Residence": "Birmingham, Alabama",
+    "ProWins": "0",
+    "TurnedPro": "2019",
+    "PGAWins": "0",
+    "College": "Vanderbilt University 2019, Human and Organizational Development"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Patrick Martin",
+        "player_num": "56726",
+        "Year": "2020",
+        "Rounds": "5",
+        "SG:TOT": "-2.90",
+        "SG:T2G": "-3.60",
+        "SG:OTT": "-0.17",
+        "SG:APP": "-1.99",
+        "SG:BS": "-2.16",
+        "SG:ARG": "-1.44",
+        "SG:P": "-0.49",
+        "Dr Distance": "289.6",
+        "Dr Accuracy %": "60.9",
+        "Ball Speed": "178.82"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2020-02-09",
+        "position": "CUT",
+        "roundPosition": "T109",
+        "TournamentName": "AT&T Pebble Beach Pro-Am",
+        "is_major": "0",
+        "playerName": "Patrick Martin",
+        "player_num": "56726",
+        "Rounds": "3",
+        "CourseID": "205",
+        "Course": "Spyglass Hill",
+        "ShotLink": "1",
+        "SG:TOT": "-0.54",
+        "SG:T2G": "0.66",
+        "SG:OTT": "0.36",
+        "SG:APP": "-0.64",
+        "SG:BS": "-0.28",
+        "SG:ARG": "0.94",
+        "SG:P": "-0.53",
+        "SG:SG": "0.42"
+      },
+      {
+        "Date": "2020-01-26",
+        "position": "CUT",
+        "roundPosition": "T153",
+        "TournamentName": "Farmers Insurance Open",
+        "is_major": "0",
+        "playerName": "Patrick Martin",
+        "player_num": "56726",
+        "Rounds": "2",
+        "CourseID": "104",
+        "Course": "Torrey Pines GC (North)",
+        "ShotLink": "1",
+        "SG:TOT": "-6.44",
+        "SG:T2G": "-7.86",
+        "SG:OTT": "-0.69",
+        "SG:APP": "-3.34",
+        "SG:BS": "-4.03",
+        "SG:ARG": "-3.82",
+        "SG:P": "-0.45",
+        "SG:SG": "-4.27"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "40.0",
+        "SG TOT 1+": "20.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "5"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": null,
+        "Rounds": "1"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "-0.48900000751018524",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-5.570000171661377",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-2.2150000855326653",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "1.059999942779541",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-4.570000171661377",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-8.3100004196167",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-0.5433333267768224",
+        "Rounds": "3"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-2.3700001587470374",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-3.700000047683716",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-0.5433333267768224",
+        "Rounds": "3"
+      },
+      {
+        "FieldStrength": "Strong",
+        "StrokesGainedAverage": "-6.440000295639038",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "76.5",
+        "PM": "73.66666666666667",
+        "Rounds": "5"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "5",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "West Coast",
+        "StrokesGainedAverage": "-2.9020001143217087",
+        "Rounds": "5"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:24:39.864Z",
+    "ok": true
+  }
+}

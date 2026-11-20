@@ -1,0 +1,148 @@
+{
+  "playerId": "47353",
+  "playerName": "Blake Olson",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Blake Olson",
+    "BirthPlace": "Pensacola, Florida",
+    "BirthDate": "June 28, 1991",
+    "Age": "35",
+    "Height": "6ft 0in",
+    "Weight": "175 lbs",
+    "Nationality": "United States",
+    "Residence": "Jacksonville, Florida",
+    "ProWins": null,
+    "TurnedPro": "2014",
+    "PGAWins": null,
+    "College": "Georgia Southern University  (Business, 2013) "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Blake Olson",
+        "player_num": "47353",
+        "Year": "2016",
+        "Rounds": "2",
+        "SG:TOT": "-6.60",
+        "SG:T2G": "-2.64",
+        "SG:OTT": "-0.05",
+        "SG:APP": "-1.22",
+        "SG:BS": "-1.27",
+        "SG:ARG": "-1.37",
+        "SG:P": "-3.95",
+        "Dr Distance": "284.1",
+        "Dr Accuracy %": "46.4",
+        "Ball Speed": "169.36"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2016-05-08",
+        "position": "CUT",
+        "roundPosition": "154",
+        "TournamentName": "Wells Fargo Championship",
+        "is_major": "0",
+        "playerName": "Blake Olson",
+        "player_num": "47353",
+        "Rounds": "2",
+        "CourseID": "698",
+        "Course": "Quail Hollow Club",
+        "ShotLink": "2",
+        "SG:TOT": "-6.60",
+        "SG:T2G": "-2.64",
+        "SG:OTT": "-0.05",
+        "SG:APP": "-1.22",
+        "SG:BS": "-1.27",
+        "SG:ARG": "-1.37",
+        "SG:P": "-3.95",
+        "SG:SG": "-5.32"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Poa Trivialis",
+        "StrokesGainedAverage": "-3.9549999237060547",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-5.400000095367432",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-7.789999961853027",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-6.5950000286102295",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-6.5950000286102295",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Strong",
+        "StrokesGainedAverage": "-6.5950000286102295",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "78",
+        "PM": "81",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "37.7",
+        "150-200": null,
+        "200+": "42.1",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-6.5950000286102295",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:30.371Z",
+    "ok": true
+  }
+}

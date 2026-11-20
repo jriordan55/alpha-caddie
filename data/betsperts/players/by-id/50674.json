@@ -1,0 +1,195 @@
+{
+  "playerId": "50674",
+  "playerName": "Ashton Turner",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/St_Georges_Cross.svg_.png",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Ashton Turner",
+    "BirthPlace": "",
+    "BirthDate": "March 25, 1996",
+    "Age": "30",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "England",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Ashton Turner",
+        "player_num": "50674",
+        "Year": "2019",
+        "Rounds": "4",
+        "SG:TOT": "0.17",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "53.6",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Ashton Turner",
+        "player_num": "50674",
+        "Year": "2018",
+        "Rounds": "2",
+        "SG:TOT": "-4.52",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "26.7",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2019-07-21",
+        "position": "T57",
+        "roundPosition": "T57",
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Ashton Turner",
+        "player_num": "50674",
+        "Rounds": "4",
+        "CourseID": "885",
+        "Course": "Royal Portrush GC",
+        "ShotLink": "0",
+        "SG:TOT": "0.17",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2018-07-22",
+        "position": "CUT",
+        "roundPosition": "T149",
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Ashton Turner",
+        "player_num": "50674",
+        "Rounds": "2",
+        "CourseID": "658",
+        "Course": "Carnoustie GC",
+        "ShotLink": "0",
+        "SG:TOT": "-4.52",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "33.3",
+        "SG TOT 1+": "33.3",
+        "SG TOT 2+": "33.3",
+        "SG TOT 3+": "33.3",
+        "SG TOT 4+": "16.7",
+        "SG TOT 5+": "16.7",
+        "Rounds": "6"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.42500007152557373",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-3.399999976158142",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-5.929999828338623",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "5.230000019073486",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "0.1700000762939453",
+        "Rounds": "4"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-4.515000104904175",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "0.1700000762939453",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-4.515000104904175",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-1.3916666507720947",
+        "Rounds": "6"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74.25",
+        "PM": "73",
+        "Rounds": "6"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "6",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-1.3916666507720947",
+        "Rounds": "6"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:13.982Z",
+    "ok": true
+  }
+}

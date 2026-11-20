@@ -1,0 +1,143 @@
+{
+  "playerId": "68984",
+  "playerName": "Frazer Jones",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/da-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Frazer Jones",
+    "BirthPlace": null,
+    "BirthDate": "",
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "Denmark",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Frazer Jones",
+        "player_num": "68984",
+        "Year": "2025",
+        "Rounds": "2",
+        "SG:TOT": "-2.78",
+        "SG:T2G": "-2.87",
+        "SG:OTT": "-2.29",
+        "SG:APP": "-1.96",
+        "SG:BS": "-4.25",
+        "SG:ARG": "1.38",
+        "SG:P": "0.10",
+        "Dr Distance": null,
+        "Dr Accuracy %": "35.7",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2025-07-20",
+        "position": "CUT",
+        "roundPosition": null,
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Frazer Jones",
+        "player_num": "68984",
+        "Rounds": "2",
+        "CourseID": "885",
+        "Course": "Royal Portrush GC",
+        "ShotLink": "2",
+        "SG:TOT": "-2.78",
+        "SG:T2G": "-2.87",
+        "SG:OTT": "-2.29",
+        "SG:APP": "-1.96",
+        "SG:BS": "-4.25",
+        "SG:ARG": "1.38",
+        "SG:P": "0.10",
+        "SG:SG": "1.48"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-3.9600000381469727",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.590000033378601",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-2.775000035762787",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-1.590000033378601",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-3.9600000381469727",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-2.775000035762787",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "73",
+        "PM": "77",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-2.775000035762787",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:21:38.202Z",
+    "ok": true
+  }
+}

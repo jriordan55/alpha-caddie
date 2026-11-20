@@ -1,0 +1,107 @@
+{
+  "courseNum": "789",
+  "courseName": "Conway Farms GC",
+  "list": {
+    "CourseName": "Conway Farms GC",
+    "CourseNum": "789",
+    "CourseNums": [
+      789
+    ]
+  },
+  "details": {
+    "CourseName": "Conway Farms GC",
+    "CourseNum": "789",
+    "Locations": [
+      "Midwest",
+      "Illinois"
+    ],
+    "SeasonHeld": "Playoffs",
+    "CourseTypes": [
+      "Parkland"
+    ],
+    "ParScore": "71",
+    "Yards": "7233",
+    "AVG": "101.9",
+    "CourseLength": "Short",
+    "Architects": [
+      "Tom Fazio"
+    ],
+    "RedesignArchitects": [
+      "Dennis Wise"
+    ],
+    "Elevation": "700",
+    "CourseElevation": "Average",
+    "Bunkers": "86",
+    "BunkersRank": "Average",
+    "WaterHoles": "4",
+    "WaterDanger": "Low",
+    "ScoreRTP": "-1.88",
+    "Difficulty": "Easy",
+    "FwyGrass": "Bent",
+    "FwyWidth": "0",
+    "GreenSqFt": "5200",
+    "GreenSize": "Small",
+    "GreenGrass": "Bent",
+    "GreenStimp": "12.5",
+    "GreenSpeed": "Average",
+    "RoughType": "Kentucky Bluegrass",
+    "RoughGrass": "Bluegrass",
+    "RoughLengthInc": "3.5",
+    "RoughLength": "Long",
+    "EventTypes": [
+      "No-Cut",
+      "Fed-Ex Cup Playoff"
+    ],
+    "Tournaments": [
+      {
+        "Year": "2015, 2017",
+        "Tournament": "BMW Championship"
+      }
+    ],
+    "CorrelatedCourse": [],
+    "FieldSize": "Small Field",
+    "FieldStrength": "Strong",
+    "OTTClub": "Mixed",
+    "FwyPct": "62.9",
+    "FwyAccuracy": "Average",
+    "GainOTT": "Easy",
+    "MissedFairwayPenalty": "Average",
+    "RoughPenalty": "Average",
+    "GIRAccuracy": "Average",
+    "GIRPct": "65",
+    "GainAPP": "Easy",
+    "ScramblingFromRough": "Average",
+    "ScramblingFromShortGrass": "Average",
+    "SandSaves": "Difficult",
+    "GainARG": "Average",
+    "GainingPuttingInside15": "Average",
+    "GainingPuttingOutside15": "Average",
+    "3PuttAVD": "Easy",
+    "GainPutting": "Easy",
+    "Par3Scoring": "Difficult",
+    "Par4Scoring": "Easy",
+    "Par5Scoring": "Average",
+    "ShotLink": "1"
+  },
+  "tournaments": [
+    {
+      "CourseNum": "789",
+      "TNum": "28",
+      "TourneyName": "BMW Championship"
+    }
+  ],
+  "_meta": {
+    "pulledAt": "2026-11-20T22:18:24.920Z",
+    "detailStatus": 200,
+    "tournamentsStatus": 200
+  },
+  "auth": {
+    "holeBreakdown": [],
+    "correlated": [],
+    "_meta": {
+      "pulledAt": "2026-11-20T22:52:51.725Z",
+      "holeStatus": 200,
+      "correlatedStatus": 200
+    }
+  }
+}

@@ -1,0 +1,107 @@
+{
+  "courseNum": "36",
+  "courseName": "Firestone CC (South)",
+  "list": {
+    "CourseName": "Firestone CC (South)",
+    "CourseNum": "36",
+    "CourseNums": [
+      36
+    ]
+  },
+  "details": {
+    "CourseName": "Firestone CC (South)",
+    "CourseNum": "36",
+    "Locations": [
+      "Midwest",
+      "Ohio"
+    ],
+    "SeasonHeld": "Summer",
+    "CourseTypes": [
+      "Parkland"
+    ],
+    "ParScore": "70",
+    "Yards": "7400",
+    "AVG": "105.7",
+    "CourseLength": "Very Long",
+    "Architects": [
+      "Bert Way"
+    ],
+    "RedesignArchitects": [
+      "Robert Trent Jones"
+    ],
+    "Elevation": "1004",
+    "CourseElevation": "Average",
+    "Bunkers": "82",
+    "BunkersRank": "Average",
+    "WaterHoles": "3",
+    "WaterDanger": "Low",
+    "ScoreRTP": "0.61",
+    "Difficulty": "Difficult",
+    "FwyGrass": "Bent",
+    "FwyWidth": "0",
+    "GreenSqFt": "7600",
+    "GreenSize": "Large",
+    "GreenGrass": "Bent/Poa",
+    "GreenStimp": "13",
+    "GreenSpeed": "Fast",
+    "RoughType": "Kentucky Blue/Rye/Fescue",
+    "RoughGrass": "Bluegrass",
+    "RoughLengthInc": "3.5",
+    "RoughLength": "Long",
+    "EventTypes": [
+      "No-Cut",
+      "WGC"
+    ],
+    "Tournaments": [
+      {
+        "Year": "2003-2018",
+        "Tournament": "WGC-Bridgestone Invitational"
+      }
+    ],
+    "CorrelatedCourse": [],
+    "FieldSize": "Small Field",
+    "FieldStrength": "Strong",
+    "OTTClub": "Driver Heavy",
+    "FwyPct": "52.8",
+    "FwyAccuracy": "Difficult",
+    "GainOTT": "Easy",
+    "MissedFairwayPenalty": "Average",
+    "RoughPenalty": "High",
+    "GIRAccuracy": "Difficult",
+    "GIRPct": "58.8",
+    "GainAPP": "Difficult",
+    "ScramblingFromRough": "Average",
+    "ScramblingFromShortGrass": "Average",
+    "SandSaves": "Average",
+    "GainARG": "Average",
+    "GainingPuttingInside15": "Average",
+    "GainingPuttingOutside15": "Average",
+    "3PuttAVD": "Easy",
+    "GainPutting": "Average",
+    "Par3Scoring": "Average",
+    "Par4Scoring": "Difficult",
+    "Par5Scoring": "Difficult",
+    "ShotLink": "1"
+  },
+  "tournaments": [
+    {
+      "CourseNum": "36",
+      "TNum": "476",
+      "TourneyName": "World Golf Championships-Bridgestone Invitational"
+    }
+  ],
+  "_meta": {
+    "pulledAt": "2026-11-20T22:18:25.139Z",
+    "detailStatus": 200,
+    "tournamentsStatus": 200
+  },
+  "auth": {
+    "holeBreakdown": [],
+    "correlated": [],
+    "_meta": {
+      "pulledAt": "2026-11-20T22:52:51.893Z",
+      "holeStatus": 200,
+      "correlatedStatus": 200
+    }
+  }
+}

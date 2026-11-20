@@ -1,0 +1,190 @@
+{
+  "playerId": "27619",
+  "playerName": "Ben Leong",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_my-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Ben Leong",
+    "BirthPlace": "",
+    "BirthDate": "January 20, 1986",
+    "Age": "40",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "Malaysia",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Ben Leong",
+        "player_num": "27619",
+        "Year": "2018",
+        "Rounds": "4",
+        "SG:TOT": "-0.85",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "69.6",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Ben Leong",
+        "player_num": "27619",
+        "Year": "2015",
+        "Rounds": "4",
+        "SG:TOT": "-1.63",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "66.1",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2018-10-14",
+        "position": "T54",
+        "roundPosition": "T54",
+        "TournamentName": "CIMB Classic",
+        "is_major": "0",
+        "playerName": "Ben Leong",
+        "player_num": "27619",
+        "Rounds": "4",
+        "CourseID": "800",
+        "Course": "TPC Kuala Lumpur",
+        "ShotLink": "0",
+        "SG:TOT": "-0.85",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2015-11-01",
+        "position": "T64",
+        "roundPosition": "T64",
+        "TournamentName": "CIMB Classic",
+        "is_major": "0",
+        "playerName": "Ben Leong",
+        "player_num": "27619",
+        "Rounds": "4",
+        "CourseID": "800",
+        "Course": "TPC Kuala Lumpur",
+        "ShotLink": "0",
+        "SG:TOT": "-1.63",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "25.0",
+        "SG TOT 1+": "25.0",
+        "SG TOT 2+": "12.5",
+        "SG TOT 3+": "12.5",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "12"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "0.35500001907348633",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.6500000059604645",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-4.009999990463257",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "0.35500001907348633",
+        "Rounds": "3"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-1.2374999895691872",
+        "Rounds": "8"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-1.6275000274181366",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-0.8474999517202377",
+        "Rounds": "4"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-1.2374999895691872",
+        "Rounds": "8"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "71.25",
+        "PM": "70.25",
+        "Rounds": "12"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "12",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-1.2374999895691872",
+        "Rounds": "8"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:24.243Z",
+    "ok": true
+  }
+}

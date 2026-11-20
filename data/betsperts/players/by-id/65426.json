@@ -1,0 +1,158 @@
+{
+  "playerId": "65426",
+  "playerName": "Caden Fioroni",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Caden Fioroni",
+    "BirthPlace": "San Diego, CA",
+    "BirthDate": "",
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": "San Diego, CA",
+    "ProWins": null,
+    "TurnedPro": "2025",
+    "PGAWins": null,
+    "College": "University of Nevada-Las Vegas "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Caden Fioroni",
+        "player_num": "65426",
+        "Year": "2024",
+        "Rounds": "2",
+        "SG:TOT": "-4.06",
+        "SG:T2G": "-1.68",
+        "SG:OTT": "0.10",
+        "SG:APP": "-0.99",
+        "SG:BS": "-0.89",
+        "SG:ARG": "-0.78",
+        "SG:P": "-2.39",
+        "Dr Distance": "299.2",
+        "Dr Accuracy %": "57.1",
+        "Ball Speed": "173.98"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2024-10-20",
+        "position": "CUT",
+        "roundPosition": "T125",
+        "TournamentName": "Shriners Childrens Open",
+        "is_major": "0",
+        "playerName": "Caden Fioroni",
+        "player_num": "65426",
+        "Rounds": "2",
+        "CourseID": "538",
+        "Course": "TPC Summerlin",
+        "ShotLink": "2",
+        "SG:TOT": "-4.06",
+        "SG:T2G": "-1.68",
+        "SG:OTT": "0.10",
+        "SG:APP": "-0.99",
+        "SG:BS": "-0.89",
+        "SG:ARG": "-0.78",
+        "SG:P": "-2.39",
+        "SG:SG": "-3.17"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-2.3884999752044678",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-5.139999866485596",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-2.990000009536743",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-5.139999866485596",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-2.990000009536743",
+        "Rounds": "1"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-2.990000009536743",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-5.139999866485596",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-4.064999938011169",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74",
+        "PM": "74",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "47.5",
+        "150-200": null,
+        "200+": "70.3",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-4.064999938011169",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:58.497Z",
+    "ok": true
+  }
+}

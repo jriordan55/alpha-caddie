@@ -1,0 +1,158 @@
+{
+  "playerId": "36444",
+  "playerName": "Michael Weaver",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Michael Weaver",
+    "BirthPlace": "Fresno, California",
+    "BirthDate": "April 12, 1991",
+    "Age": "35",
+    "Height": "5ft 9in",
+    "Weight": "180 lbs",
+    "Nationality": "United States",
+    "Residence": "Fresno, California",
+    "ProWins": null,
+    "TurnedPro": "2014",
+    "PGAWins": null,
+    "College": "University of California-Berkeley  (2014, Business Administration) "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Michael Weaver",
+        "player_num": "36444",
+        "Year": "2015",
+        "Rounds": "3",
+        "SG:TOT": "-5.79",
+        "SG:T2G": "-4.39",
+        "SG:OTT": "-1.60",
+        "SG:APP": "-2.86",
+        "SG:BS": "-4.45",
+        "SG:ARG": "0.06",
+        "SG:P": "-2.55",
+        "Dr Distance": "272.9",
+        "Dr Accuracy %": "48.8",
+        "Ball Speed": "171.78"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2015-02-15",
+        "position": "CUT",
+        "roundPosition": "T154",
+        "TournamentName": "AT&T Pebble Beach Pro-Am",
+        "is_major": "0",
+        "playerName": "Michael Weaver",
+        "player_num": "36444",
+        "Rounds": "3",
+        "CourseID": "205",
+        "Course": "Spyglass Hill",
+        "ShotLink": "1",
+        "SG:TOT": "-5.79",
+        "SG:T2G": "-4.39",
+        "SG:OTT": "-1.60",
+        "SG:APP": "-2.86",
+        "SG:BS": "-4.45",
+        "SG:ARG": "0.06",
+        "SG:P": "-2.55",
+        "SG:SG": "-2.49"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "3"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "-2.5510001182556152",
+        "Rounds": "3"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-6.940000057220459",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-6.829999923706055",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-3.609999895095825",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-5.793333292007446",
+        "Rounds": "3"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-3.609999895095825",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-6.884999990463257",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-5.793333292007446",
+        "Rounds": "3"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "75",
+        "PM": "76.5",
+        "Rounds": "3"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "3",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": "55.5",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "West Coast",
+        "StrokesGainedAverage": "-5.793333292007446",
+        "Rounds": "3"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:24:13.193Z",
+    "ok": true
+  }
+}

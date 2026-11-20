@@ -1,0 +1,251 @@
+{
+  "playerId": "65310",
+  "playerName": "Anders Larson",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Anders Larson",
+    "BirthPlace": null,
+    "BirthDate": "",
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Anders Larson",
+        "player_num": "65310",
+        "Year": "2026",
+        "Rounds": "2",
+        "SG:TOT": "-1.94",
+        "SG:T2G": "-2.44",
+        "SG:OTT": "1.01",
+        "SG:APP": "-1.88",
+        "SG:BS": "-0.87",
+        "SG:ARG": "-1.57",
+        "SG:P": "0.49",
+        "Dr Distance": "302.4",
+        "Dr Accuracy %": "67.9",
+        "Ball Speed": "192.86"
+      },
+      {
+        "playerName": "Anders Larson",
+        "player_num": "65310",
+        "Year": "2024",
+        "Rounds": "2",
+        "SG:TOT": "-14.00",
+        "SG:T2G": "-11.02",
+        "SG:OTT": "-4.89",
+        "SG:APP": "-5.04",
+        "SG:BS": "-9.93",
+        "SG:ARG": "-1.09",
+        "SG:P": "-2.98",
+        "Dr Distance": "300.4",
+        "Dr Accuracy %": "46.4",
+        "Ball Speed": "186.38"
+      },
+      {
+        "playerName": "Anders Larson",
+        "player_num": "65310",
+        "Year": "2023",
+        "Rounds": "2",
+        "SG:TOT": "-7.24",
+        "SG:T2G": "-6.33",
+        "SG:OTT": "-1.74",
+        "SG:APP": "-3.03",
+        "SG:BS": "-4.77",
+        "SG:ARG": "-1.56",
+        "SG:P": "-0.92",
+        "Dr Distance": "296.9",
+        "Dr Accuracy %": "50.0",
+        "Ball Speed": "180.16"
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Anders Larson",
+        "player_num": "65310",
+        "Rounds": "2",
+        "SG:TOT": "-1.94",
+        "SG:T2G": "-2.44",
+        "SG:OTT": "1.01",
+        "SG:APP": "-1.88",
+        "SG:BS": "-0.87",
+        "SG:ARG": "-1.57",
+        "SG:P": "0.49",
+        "SG:SG": "-1.07"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-07-12",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "ISCO Championship",
+        "is_major": "0",
+        "playerName": "Anders Larson",
+        "player_num": "65310",
+        "Rounds": "2",
+        "CourseID": "934",
+        "Course": "Hurstbourne CC",
+        "ShotLink": "2",
+        "SG:TOT": "-1.94",
+        "SG:T2G": "-2.44",
+        "SG:OTT": "1.01",
+        "SG:APP": "-1.88",
+        "SG:BS": "-0.87",
+        "SG:ARG": "-1.57",
+        "SG:P": "0.49",
+        "SG:SG": "-1.07"
+      },
+      {
+        "Date": "2024-07-07",
+        "position": "CUT",
+        "roundPosition": "155",
+        "TournamentName": "John Deere Classic",
+        "is_major": "0",
+        "playerName": "Anders Larson",
+        "player_num": "65310",
+        "Rounds": "2",
+        "CourseID": "669",
+        "Course": "TPC Deere Run",
+        "ShotLink": "2",
+        "SG:TOT": "-14.00",
+        "SG:T2G": "-11.02",
+        "SG:OTT": "-4.89",
+        "SG:APP": "-5.04",
+        "SG:BS": "-9.93",
+        "SG:ARG": "-1.09",
+        "SG:P": "-2.98",
+        "SG:SG": "-4.07"
+      },
+      {
+        "Date": "2023-07-09",
+        "position": "CUT",
+        "roundPosition": "155",
+        "TournamentName": "John Deere Classic",
+        "is_major": "0",
+        "playerName": "Anders Larson",
+        "player_num": "65310",
+        "Rounds": "2",
+        "CourseID": "669",
+        "Course": "TPC Deere Run",
+        "ShotLink": "2",
+        "SG:TOT": "-7.24",
+        "SG:T2G": "-6.33",
+        "SG:OTT": "-1.74",
+        "SG:APP": "-3.03",
+        "SG:BS": "-4.77",
+        "SG:ARG": "-1.56",
+        "SG:P": "-0.92",
+        "SG:SG": "-2.48"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "6"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-1.1354999989271164",
+        "Rounds": "6"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-5.853333353996277",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-9.603333257138729",
+        "Rounds": "3"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-7.239999949932098",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-7.972499983385205",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-6.656666619082292",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-8.799999992052713",
+        "Rounds": "3"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-1.9449999667704105",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-10.61999997496605",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "77",
+        "PM": "77",
+        "Rounds": "6"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "6",
+        "50-100": "25.4",
+        "100-150": "35.3",
+        "150-200": "46.4",
+        "200+": "61.6",
+        "200-250": "61.6",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-7.728333305567503",
+        "Rounds": "6"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:18:58.002Z",
+    "ok": true
+  }
+}

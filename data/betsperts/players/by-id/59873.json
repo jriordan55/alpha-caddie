@@ -1,0 +1,138 @@
+{
+  "playerId": "59873",
+  "playerName": "Tim Pearce",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Tim Pearce",
+    "BirthPlace": "",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "United States",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Tim Pearce",
+        "player_num": "59873",
+        "Year": "2021",
+        "Rounds": "2",
+        "SG:TOT": "-2.85",
+        "SG:T2G": "-3.03",
+        "SG:OTT": "-0.07",
+        "SG:APP": "-1.35",
+        "SG:BS": "-1.42",
+        "SG:ARG": "-1.61",
+        "SG:P": "0.18",
+        "Dr Distance": "285.5",
+        "Dr Accuracy %": "67.9",
+        "Ball Speed": "161.83"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2021-05-23",
+        "position": "CUT",
+        "roundPosition": "T130",
+        "TournamentName": "PGA Championship",
+        "is_major": "1",
+        "playerName": "Tim Pearce",
+        "player_num": "59873",
+        "Rounds": "2",
+        "CourseID": "697",
+        "Course": "Ocean Course at Kiawah Island",
+        "ShotLink": "2",
+        "SG:TOT": "-2.85",
+        "SG:T2G": "-3.03",
+        "SG:OTT": "-0.07",
+        "SG:APP": "-1.35",
+        "SG:BS": "-1.42",
+        "SG:ARG": "-1.61",
+        "SG:P": "0.18",
+        "SG:SG": "-1.43"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-4.21999979019165",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.4800000190734863",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-2.8499999046325684",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-2.8499999046325684",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-2.8499999046325684",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "77",
+        "PM": "79",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "32.7",
+        "150-200": null,
+        "200+": "66.4",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-2.8499999046325684",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:26:02.619Z",
+    "ok": true
+  }
+}

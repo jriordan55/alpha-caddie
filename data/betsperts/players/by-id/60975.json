@@ -1,0 +1,195 @@
+{
+  "playerId": "60975",
+  "playerName": "Michael Duncan",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Michael Duncan",
+    "BirthPlace": "",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "United States",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Michael Duncan",
+        "player_num": "60975",
+        "Year": "2023",
+        "Rounds": "2",
+        "SG:TOT": "-1.90",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": null,
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Michael Duncan",
+        "player_num": "60975",
+        "Year": "2021",
+        "Rounds": "2",
+        "SG:TOT": "-5.28",
+        "SG:T2G": "-4.59",
+        "SG:OTT": "-1.61",
+        "SG:APP": "-1.50",
+        "SG:BS": "-3.11",
+        "SG:ARG": "-1.48",
+        "SG:P": "-0.69",
+        "Dr Distance": "286.5",
+        "Dr Accuracy %": "35.7",
+        "Ball Speed": "170.37"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2023-07-23",
+        "position": "CUT",
+        "roundPosition": null,
+        "TournamentName": "Barracuda Championship",
+        "is_major": null,
+        "playerName": "Michael Duncan",
+        "player_num": "60975",
+        "Rounds": "2",
+        "CourseID": "890",
+        "Course": "Tahoe Mountain Club (Old Greenwood)",
+        "ShotLink": "0",
+        "SG:TOT": "-1.90",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2021-09-19",
+        "position": "CUT",
+        "roundPosition": "152",
+        "TournamentName": "Fortinet Championship",
+        "is_major": "0",
+        "playerName": "Michael Duncan",
+        "player_num": "60975",
+        "Rounds": "2",
+        "CourseID": "552",
+        "Course": "Silverado Resort (North)",
+        "ShotLink": "2",
+        "SG:TOT": "-5.28",
+        "SG:T2G": "-4.59",
+        "SG:OTT": "-1.61",
+        "SG:APP": "-1.50",
+        "SG:BS": "-3.11",
+        "SG:ARG": "-1.48",
+        "SG:P": "-0.69",
+        "SG:SG": "-2.17"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "25.0",
+        "SG TOT 1+": "25.0",
+        "SG TOT 2+": "25.0",
+        "SG TOT 3+": "25.0",
+        "SG TOT 4+": "25.0",
+        "SG TOT 5+": "25.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-8.424999952316284",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "1.244999885559082",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-1.9000000953674316",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-5.2799999713897705",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "1.244999885559082",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-8.424999952316284",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-1.9000000953674316",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-5.2799999713897705",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "75",
+        "PM": "78",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": "28.1",
+        "150-200": "37.3",
+        "200+": "69.8",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-5.2799999713897705",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-1.9000000953674316",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:24:08.641Z",
+    "ok": true
+  }
+}

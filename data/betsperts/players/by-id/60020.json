@@ -1,0 +1,195 @@
+{
+  "playerId": "60020",
+  "playerName": "Johnny Travale",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ca-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Johnny Travale",
+    "BirthPlace": "",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "Canada",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": "University of Central Florida "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Johnny Travale",
+        "player_num": "60020",
+        "Year": "2023",
+        "Rounds": "2",
+        "SG:TOT": "-1.30",
+        "SG:T2G": "-1.05",
+        "SG:OTT": "0.51",
+        "SG:APP": "-1.11",
+        "SG:BS": "-0.60",
+        "SG:ARG": "-0.45",
+        "SG:P": "-0.26",
+        "Dr Distance": "286.9",
+        "Dr Accuracy %": "33.3",
+        "Ball Speed": "182.57"
+      },
+      {
+        "playerName": "Johnny Travale",
+        "player_num": "60020",
+        "Year": "2022",
+        "Rounds": "2",
+        "SG:TOT": "-4.43",
+        "SG:T2G": "-1.49",
+        "SG:OTT": "0.31",
+        "SG:APP": "-1.23",
+        "SG:BS": "-0.92",
+        "SG:ARG": "-0.56",
+        "SG:P": "-2.95",
+        "Dr Distance": "304.8",
+        "Dr Accuracy %": "50.0",
+        "Ball Speed": "179.63"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2023-06-11",
+        "position": "CUT",
+        "roundPosition": "T107",
+        "TournamentName": "RBC Canadian Open",
+        "is_major": "0",
+        "playerName": "Johnny Travale",
+        "player_num": "60020",
+        "Rounds": "2",
+        "CourseID": "908",
+        "Course": "Oakdale Golf & Country Club",
+        "ShotLink": "2",
+        "SG:TOT": "-1.30",
+        "SG:T2G": "-1.05",
+        "SG:OTT": "0.51",
+        "SG:APP": "-1.11",
+        "SG:BS": "-0.60",
+        "SG:ARG": "-0.45",
+        "SG:P": "-0.26",
+        "SG:SG": "-0.70"
+      },
+      {
+        "Date": "2022-06-12",
+        "position": "CUT",
+        "roundPosition": "T139",
+        "TournamentName": "RBC Canadian Open",
+        "is_major": "0",
+        "playerName": "Johnny Travale",
+        "player_num": "60020",
+        "Rounds": "2",
+        "CourseID": "772",
+        "Course": "St. Georges G&CC",
+        "ShotLink": "2",
+        "SG:TOT": "-4.43",
+        "SG:T2G": "-1.49",
+        "SG:OTT": "0.31",
+        "SG:APP": "-1.23",
+        "SG:BS": "-0.92",
+        "SG:ARG": "-0.56",
+        "SG:P": "-2.95",
+        "SG:SG": "-3.51"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-2.9494999647140503",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-2.5099999010562897",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-3.2300000190734863",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-2.869999960064888",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-2.0399999618530273",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-0.5699999928474426",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-4.434999942779541",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-2.869999960064888",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74.5",
+        "PM": "75",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": "21.2",
+        "100-150": "38.2",
+        "150-200": "42.3",
+        "200+": "53",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-2.869999960064888",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:58.317Z",
+    "ok": true
+  }
+}

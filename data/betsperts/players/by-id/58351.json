@@ -1,0 +1,143 @@
+{
+  "playerId": "58351",
+  "playerName": "Josh Goldenberg",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Josh Goldenberg",
+    "BirthPlace": "New York, New York",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "6ft 0in",
+    "Weight": "165 lbs",
+    "Nationality": "United States",
+    "Residence": "Jupiter, Florida",
+    "ProWins": null,
+    "TurnedPro": "2019",
+    "PGAWins": null,
+    "College": "University of Pennsylvania 2019, Science and Technology"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Josh Goldenberg",
+        "player_num": "58351",
+        "Year": "2025",
+        "Rounds": "2",
+        "SG:TOT": "-3.35",
+        "SG:T2G": "-3.53",
+        "SG:OTT": "-0.11",
+        "SG:APP": "-2.81",
+        "SG:BS": "-2.92",
+        "SG:ARG": "-0.61",
+        "SG:P": "0.17",
+        "Dr Distance": "311.3",
+        "Dr Accuracy %": "50.0",
+        "Ball Speed": "184.05"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2025-06-08",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "RBC Canadian Open",
+        "is_major": "0",
+        "playerName": "Josh Goldenberg",
+        "player_num": "58351",
+        "Rounds": "2",
+        "CourseID": "935",
+        "Course": "TPC Toronto at Osprey Valley (North)",
+        "ShotLink": "2",
+        "SG:TOT": "-3.35",
+        "SG:T2G": "-3.53",
+        "SG:OTT": "-0.11",
+        "SG:APP": "-2.81",
+        "SG:BS": "-2.92",
+        "SG:ARG": "-0.61",
+        "SG:P": "0.17",
+        "SG:SG": "-0.44"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-5.239999771118164",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.4700000286102295",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-3.3549998998641968",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-1.4700000286102295",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-5.239999771118164",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-3.3549998998641968",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74",
+        "PM": "71",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "29.6",
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-3.3549998998641968",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:06.635Z",
+    "ok": true
+  }
+}

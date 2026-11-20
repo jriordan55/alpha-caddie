@@ -1,0 +1,148 @@
+{
+  "playerId": "12757",
+  "playerName": "Mike Genovese",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Mike Genovese",
+    "BirthPlace": null,
+    "BirthDate": "April 12, 1967",
+    "Age": "59",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Mike Genovese",
+        "player_num": "12757",
+        "Year": "2017",
+        "Rounds": "2",
+        "SG:TOT": "-3.81",
+        "SG:T2G": "-4.50",
+        "SG:OTT": "-0.33",
+        "SG:APP": "-3.68",
+        "SG:BS": "-4.00",
+        "SG:ARG": "-0.49",
+        "SG:P": "0.69",
+        "Dr Distance": "263.9",
+        "Dr Accuracy %": "75.0",
+        "Ball Speed": "153.01"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2017-07-23",
+        "position": "CUT",
+        "roundPosition": "T124",
+        "TournamentName": "Barbasol Championship",
+        "is_major": "0",
+        "playerName": "Mike Genovese",
+        "player_num": "12757",
+        "Rounds": "2",
+        "CourseID": "819",
+        "Course": "RTJ Trail (Grand National)",
+        "ShotLink": "2",
+        "SG:TOT": "-3.81",
+        "SG:T2G": "-4.50",
+        "SG:OTT": "-0.33",
+        "SG:APP": "-3.68",
+        "SG:BS": "-4.00",
+        "SG:ARG": "-0.49",
+        "SG:P": "0.69",
+        "SG:SG": "0.20"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "0.6944999843835831",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.600000023841858",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-6.010000228881836",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-3.805000126361847",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-3.805000126361847",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-3.805000126361847",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "75",
+        "PM": "72",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "47.7",
+        "200+": "63.2",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-3.805000126361847",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:24:14.972Z",
+    "ok": true
+  }
+}

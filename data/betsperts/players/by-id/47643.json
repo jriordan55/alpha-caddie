@@ -1,0 +1,210 @@
+{
+  "playerId": "47643",
+  "playerName": "Lance Lopez",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Lance Lopez",
+    "BirthPlace": null,
+    "BirthDate": "August 03, 1987",
+    "Age": "39",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Lance Lopez",
+        "player_num": "47643",
+        "Year": "2016",
+        "Rounds": "3",
+        "SG:TOT": "-1.22",
+        "SG:T2G": "-2.48",
+        "SG:OTT": "-1.83",
+        "SG:APP": "-1.02",
+        "SG:BS": "-2.85",
+        "SG:ARG": "0.37",
+        "SG:P": "1.26",
+        "Dr Distance": "266.7",
+        "Dr Accuracy %": "57.1",
+        "Ball Speed": "164.83"
+      },
+      {
+        "playerName": "Lance Lopez",
+        "player_num": "47643",
+        "Year": "2015",
+        "Rounds": "2",
+        "SG:TOT": "-1.47",
+        "SG:T2G": "-0.59",
+        "SG:OTT": "-0.93",
+        "SG:APP": "0.53",
+        "SG:BS": "-0.40",
+        "SG:ARG": "-0.19",
+        "SG:P": "-0.88",
+        "Dr Distance": "272.4",
+        "Dr Accuracy %": "46.4",
+        "Ball Speed": "164.49"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2016-05-22",
+        "position": "T79",
+        "roundPosition": "T79",
+        "TournamentName": "AT&T Byron Nelson",
+        "is_major": "0",
+        "playerName": "Lance Lopez",
+        "player_num": "47643",
+        "Rounds": "3",
+        "CourseID": "19",
+        "Course": "TPC Four Seasons Resort",
+        "ShotLink": "3",
+        "SG:TOT": "-1.22",
+        "SG:T2G": "-2.48",
+        "SG:OTT": "-1.83",
+        "SG:APP": "-1.02",
+        "SG:BS": "-2.85",
+        "SG:ARG": "0.37",
+        "SG:P": "1.26",
+        "SG:SG": "1.63"
+      },
+      {
+        "Date": "2015-03-29",
+        "position": "CUT",
+        "roundPosition": "T100",
+        "TournamentName": "Valero Texas Open",
+        "is_major": "0",
+        "playerName": "Lance Lopez",
+        "player_num": "47643",
+        "Rounds": "2",
+        "CourseID": "770",
+        "Course": "TPC San Antonio (Oaks)",
+        "ShotLink": "2",
+        "SG:TOT": "-1.47",
+        "SG:T2G": "-0.59",
+        "SG:OTT": "-0.93",
+        "SG:APP": "0.53",
+        "SG:BS": "-0.40",
+        "SG:ARG": "-0.19",
+        "SG:P": "-0.88",
+        "SG:SG": "-1.07"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "60.0",
+        "SG TOT 1+": "40.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "5"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "1.256333351135254",
+        "Rounds": "3"
+      },
+      {
+        "GreenSurface": "Poa Trivialis",
+        "StrokesGainedAverage": "-0.8819999843835831",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "1.5",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.8800000548362732",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-5.829999923706055",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-1.2199999888737996",
+        "Rounds": "3"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-1.465000033378601",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-1.2199999888737996",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-1.465000033378601",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-1.465000033378601",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-1.2199999888737996",
+        "Rounds": "3"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "73.66666666666667",
+        "PM": "71.5",
+        "Rounds": "5"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "5",
+        "50-100": null,
+        "100-150": "32.9",
+        "150-200": "36.2",
+        "200+": "47.8",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-1.3180000066757203",
+        "Rounds": "5"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:31.116Z",
+    "ok": true
+  }
+}

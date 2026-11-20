@@ -1,0 +1,148 @@
+{
+  "playerId": "28100",
+  "playerName": "Kevin Carll",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Kevin Carll",
+    "BirthPlace": "",
+    "BirthDate": "May 07, 1975",
+    "Age": "51",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "United States",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Kevin Carll",
+        "player_num": "28100",
+        "Year": "2022",
+        "Rounds": "2",
+        "SG:TOT": "-2.88",
+        "SG:T2G": "-2.46",
+        "SG:OTT": "-0.56",
+        "SG:APP": "-1.18",
+        "SG:BS": "-1.74",
+        "SG:ARG": "-0.73",
+        "SG:P": "-0.41",
+        "Dr Distance": "273.4",
+        "Dr Accuracy %": "57.1",
+        "Ball Speed": "160.71"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2022-01-16",
+        "position": "CUT",
+        "roundPosition": "T132",
+        "TournamentName": "Sony Open",
+        "is_major": "0",
+        "playerName": "Kevin Carll",
+        "player_num": "28100",
+        "Rounds": "2",
+        "CourseID": "6",
+        "Course": "Waialae CC",
+        "ShotLink": "2",
+        "SG:TOT": "-2.88",
+        "SG:T2G": "-2.46",
+        "SG:OTT": "-0.56",
+        "SG:APP": "-1.18",
+        "SG:BS": "-1.74",
+        "SG:ARG": "-0.73",
+        "SG:P": "-0.41",
+        "SG:SG": "-1.14"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-0.4099999964237213",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.9800000190734863",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-3.7699999809265137",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-2.875",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-2.875",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-2.875",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "70",
+        "PM": "72",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "31.1",
+        "150-200": null,
+        "200+": "61.6",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Aloha",
+        "StrokesGainedAverage": "-2.875",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:20.522Z",
+    "ok": true
+  }
+}

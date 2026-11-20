@@ -1,0 +1,215 @@
+{
+  "playerId": "23540",
+  "playerName": "Jason Allred",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Jason Allred",
+    "BirthPlace": "Ashland, Oregon",
+    "BirthDate": "April 06, 1980",
+    "Age": "46",
+    "Height": "6ft 2in",
+    "Weight": "175 lbs",
+    "Nationality": "United States",
+    "Residence": "Scottsdale, Arizona",
+    "ProWins": null,
+    "TurnedPro": "2002",
+    "PGAWins": null,
+    "College": "Pepperdine University  (2002, Speech Communications) "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Jason Allred",
+        "player_num": "23540",
+        "Year": "2016",
+        "Rounds": "2",
+        "SG:TOT": "-3.59",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "39.3",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Jason Allred",
+        "player_num": "23540",
+        "Year": "2015",
+        "Rounds": "2",
+        "SG:TOT": "-0.41",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "78.6",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2016-06-19",
+        "position": "CUT",
+        "roundPosition": "T134",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Jason Allred",
+        "player_num": "23540",
+        "Rounds": "2",
+        "CourseID": "608",
+        "Course": "Oakmont CC",
+        "ShotLink": "0",
+        "SG:TOT": "-3.59",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2015-06-21",
+        "position": "CUT",
+        "roundPosition": "T85",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Jason Allred",
+        "player_num": "23540",
+        "Rounds": "2",
+        "CourseID": "100",
+        "Course": "Chambers Bay GC 2",
+        "ShotLink": "0",
+        "SG:TOT": "-0.41",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "25.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "12"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": null,
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.5466666519641876",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.1133333643277485",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-1.7100000381469727",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-2.4800000190734863",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "",
+        "StrokesGainedAverage": null,
+        "Rounds": "4"
+      },
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-3.5850000381469727",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-0.41499999165534973",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": null,
+        "Rounds": "4"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-2.000000014901161",
+        "Rounds": "4"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-2.000000014901161",
+        "Rounds": "4"
+      },
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": null,
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "75",
+        "PM": "73",
+        "Rounds": "12"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "12",
+        "50-100": null,
+        "100-150": "28",
+        "150-200": "41.5",
+        "200+": "62.4",
+        "200-250": null,
+        "250+": "55.2"
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-2.000000014901161",
+        "Rounds": "8"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:25.207Z",
+    "ok": true
+  }
+}

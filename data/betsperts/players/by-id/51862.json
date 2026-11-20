@@ -1,0 +1,148 @@
+{
+  "playerId": "51862",
+  "playerName": "Jake Kevorkian",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Jake Kevorkian",
+    "BirthPlace": "St. Petersburg, Florida",
+    "BirthDate": "November 16, 1994",
+    "Age": "32",
+    "Height": "6ft 1in",
+    "Weight": "170 lbs",
+    "Nationality": "United States",
+    "Residence": "Tampa, Florida",
+    "ProWins": "0",
+    "TurnedPro": "2017",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Jake Kevorkian",
+        "player_num": "51862",
+        "Year": "2022",
+        "Rounds": "2",
+        "SG:TOT": "-2.07",
+        "SG:T2G": "-3.33",
+        "SG:OTT": "0.15",
+        "SG:APP": "-2.69",
+        "SG:BS": "-2.54",
+        "SG:ARG": "-0.79",
+        "SG:P": "1.26",
+        "Dr Distance": "303.8",
+        "Dr Accuracy %": "57.1",
+        "Ball Speed": "179.37"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2022-04-03",
+        "position": "CUT",
+        "roundPosition": "T110",
+        "TournamentName": "Valero Texas Open",
+        "is_major": "0",
+        "playerName": "Jake Kevorkian",
+        "player_num": "51862",
+        "Rounds": "2",
+        "CourseID": "770",
+        "Course": "TPC San Antonio (Oaks)",
+        "ShotLink": "2",
+        "SG:TOT": "-2.07",
+        "SG:T2G": "-3.33",
+        "SG:OTT": "0.15",
+        "SG:APP": "-2.69",
+        "SG:BS": "-2.54",
+        "SG:ARG": "-0.79",
+        "SG:P": "1.26",
+        "SG:SG": "0.47"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Poa Trivialis",
+        "StrokesGainedAverage": "1.2569999992847443",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.18000000715255737",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-3.9600000381469727",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-2.070000022649765",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-2.070000022649765",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-2.070000022649765",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "76",
+        "PM": "72",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-2.070000022649765",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:16.818Z",
+    "ok": true
+  }
+}

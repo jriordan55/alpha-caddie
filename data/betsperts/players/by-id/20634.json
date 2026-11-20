@@ -1,0 +1,168 @@
+{
+  "playerId": "20634",
+  "playerName": "Peter Lonard",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/as-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Peter Lonard",
+    "BirthPlace": "Sydney, Australia",
+    "BirthDate": "July 17, 1967",
+    "Age": "59",
+    "Height": "6ft 0in",
+    "Weight": "215 lbs",
+    "Nationality": "Australia",
+    "Residence": "Miami, Florida",
+    "ProWins": "11",
+    "TurnedPro": "1987",
+    "PGAWins": "1",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Peter Lonard",
+        "player_num": "20634",
+        "Year": "2018",
+        "Rounds": "2",
+        "SG:TOT": "-3.37",
+        "SG:T2G": "-2.32",
+        "SG:OTT": "-1.26",
+        "SG:APP": "-0.89",
+        "SG:BS": "-2.15",
+        "SG:ARG": "-0.17",
+        "SG:P": "-1.06",
+        "Dr Distance": "258.9",
+        "Dr Accuracy %": "67.9",
+        "Ball Speed": "152.01"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2018-07-22",
+        "position": "CUT",
+        "roundPosition": "T114",
+        "TournamentName": "Barbasol Championship",
+        "is_major": "0",
+        "playerName": "Peter Lonard",
+        "player_num": "20634",
+        "Rounds": "2",
+        "CourseID": "823",
+        "Course": "Keene Trace GC",
+        "ShotLink": "2",
+        "SG:TOT": "-3.37",
+        "SG:T2G": "-2.32",
+        "SG:OTT": "-1.26",
+        "SG:APP": "-0.89",
+        "SG:BS": "-2.15",
+        "SG:ARG": "-0.17",
+        "SG:P": "-1.06",
+        "SG:SG": "-1.23"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "6"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-1.0555000305175781",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.6799999475479126",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-5.059999942779541",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": null,
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": null,
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "",
+        "StrokesGainedAverage": null,
+        "Rounds": "4"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-3.369999945163727",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": null,
+        "Rounds": "4"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-3.369999945163727",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-3.369999945163727",
+        "Rounds": "6"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "72",
+        "PM": "75",
+        "Rounds": "6"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "6",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "30.5",
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-3.369999945163727",
+        "Rounds": "6"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:24:48.762Z",
+    "ok": true
+  }
+}

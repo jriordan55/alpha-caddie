@@ -1,0 +1,257 @@
+{
+  "playerId": "48135",
+  "playerName": "Blair Hamilton",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ca-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Blair Hamilton",
+    "BirthPlace": "Burlington, Ontario, Canada",
+    "BirthDate": "October 12, 1993",
+    "Age": "33",
+    "Height": "6ft 1in",
+    "Weight": "180 lbs",
+    "Nationality": "Canada",
+    "Residence": "Burlington, Ontario, Canada",
+    "ProWins": "0",
+    "TurnedPro": "2016",
+    "PGAWins": "0",
+    "College": "University of Houston 2016, Corporate Communications"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Blair Hamilton",
+        "player_num": "48135",
+        "Year": "2019",
+        "Rounds": "2",
+        "SG:TOT": "-4.00",
+        "SG:T2G": "-3.22",
+        "SG:OTT": "-0.26",
+        "SG:APP": "-2.26",
+        "SG:BS": "-2.52",
+        "SG:ARG": "-0.71",
+        "SG:P": "-0.78",
+        "Dr Distance": "311.2",
+        "Dr Accuracy %": "46.4",
+        "Ball Speed": "176.67"
+      },
+      {
+        "playerName": "Blair Hamilton",
+        "player_num": "48135",
+        "Year": "2016",
+        "Rounds": "2",
+        "SG:TOT": "-4.67",
+        "SG:T2G": "-4.10",
+        "SG:OTT": "-0.84",
+        "SG:APP": "-0.18",
+        "SG:BS": "-1.02",
+        "SG:ARG": "-3.08",
+        "SG:P": "-0.56",
+        "Dr Distance": "296.8",
+        "Dr Accuracy %": "46.4",
+        "Ball Speed": "178.01"
+      },
+      {
+        "playerName": "Blair Hamilton",
+        "player_num": "48135",
+        "Year": "2015",
+        "Rounds": "3",
+        "SG:TOT": "-0.45",
+        "SG:T2G": "-0.56",
+        "SG:OTT": "-0.70",
+        "SG:APP": "0.50",
+        "SG:BS": "-0.20",
+        "SG:ARG": "-0.36",
+        "SG:P": "0.11",
+        "Dr Distance": "308.3",
+        "Dr Accuracy %": "47.6",
+        "Ball Speed": "175.85"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2019-02-03",
+        "position": "CUT",
+        "roundPosition": "T125",
+        "TournamentName": "WM Phoenix Open",
+        "is_major": "0",
+        "playerName": "Blair Hamilton",
+        "player_num": "48135",
+        "Rounds": "2",
+        "CourseID": "510",
+        "Course": "TPC Scottsdale",
+        "ShotLink": "2",
+        "SG:TOT": "-4.00",
+        "SG:T2G": "-3.22",
+        "SG:OTT": "-0.26",
+        "SG:APP": "-2.26",
+        "SG:BS": "-2.52",
+        "SG:ARG": "-0.71",
+        "SG:P": "-0.78",
+        "SG:SG": "-1.48"
+      },
+      {
+        "Date": "2016-07-24",
+        "position": "CUT",
+        "roundPosition": "T148",
+        "TournamentName": "RBC Canadian Open",
+        "is_major": "0",
+        "playerName": "Blair Hamilton",
+        "player_num": "48135",
+        "Rounds": "2",
+        "CourseID": "32",
+        "Course": "Glen Abbey GC",
+        "ShotLink": "2",
+        "SG:TOT": "-4.67",
+        "SG:T2G": "-4.10",
+        "SG:OTT": "-0.84",
+        "SG:APP": "-0.18",
+        "SG:BS": "-1.02",
+        "SG:ARG": "-3.08",
+        "SG:P": "-0.56",
+        "SG:SG": "-3.64"
+      },
+      {
+        "Date": "2015-07-26",
+        "position": "T79",
+        "roundPosition": "T79",
+        "TournamentName": "RBC Canadian Open",
+        "is_major": "0",
+        "playerName": "Blair Hamilton",
+        "player_num": "48135",
+        "Rounds": "3",
+        "CourseID": "32",
+        "Course": "Glen Abbey GC",
+        "ShotLink": "3",
+        "SG:TOT": "-0.45",
+        "SG:T2G": "-0.56",
+        "SG:OTT": "-0.70",
+        "SG:APP": "0.50",
+        "SG:BS": "-0.20",
+        "SG:ARG": "-0.36",
+        "SG:P": "0.11",
+        "SG:SG": "-0.25"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "28.6",
+        "SG TOT 1+": "14.3",
+        "SG TOT 2+": "14.3",
+        "SG TOT 3+": "14.3",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "7"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.15860000848770142",
+        "Rounds": "5"
+      },
+      {
+        "GreenSurface": "Poa Trivialis",
+        "StrokesGainedAverage": "-0.7760000135749578",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-2.009999950726827",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-2.6433334350585938",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-4.710000038146973",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-3.9950000047683716",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-2.1360000371932983",
+        "Rounds": "5"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-3.9950000047683716",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-4.665000081062317",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-0.45000000794728595",
+        "Rounds": "3"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Strong",
+        "StrokesGainedAverage": "-3.9950000047683716",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-2.1360000371932983",
+        "Rounds": "5"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "72.66666666666667",
+        "PM": "75.5",
+        "Rounds": "7"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "7",
+        "50-100": "21.7",
+        "100-150": "31.6",
+        "150-200": "30",
+        "200+": "69.2",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-2.1360000371932983",
+        "Rounds": "5"
+      },
+      {
+        "SeasonHeld": "West Coast",
+        "StrokesGainedAverage": "-3.9950000047683716",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:29.448Z",
+    "ok": true
+  }
+}

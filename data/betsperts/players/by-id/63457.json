@@ -1,0 +1,179 @@
+{
+  "playerId": "63457",
+  "playerName": "Palmer Jackson",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Palmer Jackson",
+    "BirthPlace": "",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "United States",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Palmer Jackson",
+        "player_num": "63457",
+        "Year": "2022",
+        "Rounds": "4",
+        "SG:TOT": "-3.07",
+        "SG:T2G": "-3.13",
+        "SG:OTT": "-1.60",
+        "SG:APP": "-1.11",
+        "SG:BS": "-2.71",
+        "SG:ARG": "-0.42",
+        "SG:P": "-1.21",
+        "Dr Distance": "284.3",
+        "Dr Accuracy %": "46.4",
+        "Ball Speed": "172.40"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2022-11-20",
+        "position": "CUT",
+        "roundPosition": "T138",
+        "TournamentName": "The RSM Classic",
+        "is_major": "0",
+        "playerName": "Palmer Jackson",
+        "player_num": "63457",
+        "Rounds": "2",
+        "CourseID": "776",
+        "Course": "Sea Island GC (Seaside)",
+        "ShotLink": "1",
+        "SG:TOT": "-3.56",
+        "SG:T2G": "-3.13",
+        "SG:OTT": "-1.60",
+        "SG:APP": "-1.11",
+        "SG:BS": "-2.71",
+        "SG:ARG": "-0.42",
+        "SG:P": "-1.21",
+        "SG:SG": "-1.63"
+      },
+      {
+        "Date": "2022-10-30",
+        "position": "CUT",
+        "roundPosition": "T117",
+        "TournamentName": "Butterfield Bermuda Championship",
+        "is_major": "0",
+        "playerName": "Palmer Jackson",
+        "player_num": "63457",
+        "Rounds": "2",
+        "CourseID": "765",
+        "Course": "Port Royal GC",
+        "ShotLink": "0",
+        "SG:TOT": "-2.58",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "25.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-1.2120000123977661",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-3.9999998807907104",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-2.1450000759214163",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-3.0724999783560634",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-4.340000152587891",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-2.6499999202787876",
+        "Rounds": "3"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-2.584999894723296",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-3.5600000619888306",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "71",
+        "PM": "73",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "38",
+        "200+": "49",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-3.0724999783560634",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:24:35.820Z",
+    "ok": true
+  }
+}

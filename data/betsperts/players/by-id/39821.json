@@ -1,0 +1,138 @@
+{
+  "playerId": "39821",
+  "playerName": "Justin YW Kim",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ca-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Justin YW Kim",
+    "BirthPlace": "",
+    "BirthDate": "October 16, 1986",
+    "Age": "40",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "Canada",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Justin YW Kim",
+        "player_num": "39821",
+        "Year": "2018",
+        "Rounds": "2",
+        "SG:TOT": "-7.90",
+        "SG:T2G": "-6.35",
+        "SG:OTT": "-1.79",
+        "SG:APP": "-3.22",
+        "SG:BS": "-5.00",
+        "SG:ARG": "-1.34",
+        "SG:P": "-1.55",
+        "Dr Distance": "279.8",
+        "Dr Accuracy %": "67.9",
+        "Ball Speed": "153.65"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2018-07-29",
+        "position": "CUT",
+        "roundPosition": "153",
+        "TournamentName": "RBC Canadian Open",
+        "is_major": "0",
+        "playerName": "Justin YW Kim",
+        "player_num": "39821",
+        "Rounds": "2",
+        "CourseID": "32",
+        "Course": "Glen Abbey GC",
+        "ShotLink": "2",
+        "SG:TOT": "-7.90",
+        "SG:T2G": "-6.35",
+        "SG:OTT": "-1.79",
+        "SG:APP": "-3.22",
+        "SG:BS": "-5.00",
+        "SG:ARG": "-1.34",
+        "SG:P": "-1.55",
+        "SG:SG": "-2.89"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-10.619999885559082",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-5.179999828338623",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-7.8999998569488525",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-7.8999998569488525",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-7.8999998569488525",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "76",
+        "PM": "81",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": "42",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-7.8999998569488525",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:13.623Z",
+    "ok": true
+  }
+}

@@ -1,0 +1,107 @@
+{
+  "courseNum": "873",
+  "courseName": "Ridgewood CC",
+  "list": {
+    "CourseName": "Ridgewood CC",
+    "CourseNum": "873",
+    "CourseNums": [
+      873
+    ]
+  },
+  "details": {
+    "CourseName": "Ridgewood CC",
+    "CourseNum": "873",
+    "Locations": [
+      "Northeast",
+      "New Jersey"
+    ],
+    "SeasonHeld": "Playoffs",
+    "CourseTypes": [
+      "Parkland"
+    ],
+    "ParScore": "71",
+    "Yards": "7385",
+    "AVG": "104",
+    "CourseLength": "Long",
+    "Architects": [
+      "Albert Tillinghast"
+    ],
+    "RedesignArchitects": [
+      "Gil Hanse"
+    ],
+    "Elevation": "49",
+    "CourseElevation": "Sea Level",
+    "Bunkers": "81",
+    "BunkersRank": "Average",
+    "WaterHoles": "0",
+    "WaterDanger": "Low",
+    "ScoreRTP": "-0.57",
+    "Difficulty": "Average",
+    "FwyGrass": "Rye",
+    "FwyWidth": "0",
+    "GreenSqFt": "5605",
+    "GreenSize": "Small",
+    "GreenGrass": "Bent/Poa",
+    "GreenStimp": "12.5",
+    "GreenSpeed": "Average",
+    "RoughType": "Kentucky Bluegrass/Rye/Fescue",
+    "RoughGrass": "Bluegrass",
+    "RoughLengthInc": "3.5",
+    "RoughLength": "Long",
+    "EventTypes": [
+      "36-Hole Cut",
+      "Fed-Ex Cup Playoff"
+    ],
+    "Tournaments": [
+      {
+        "Year": "2018",
+        "Tournament": "The Northern Trust"
+      }
+    ],
+    "CorrelatedCourse": [],
+    "FieldSize": "Average Size Field",
+    "FieldStrength": "Strong",
+    "OTTClub": "Less Than Driver",
+    "FwyPct": "63.9",
+    "FwyAccuracy": "Average",
+    "GainOTT": "Very Difficult",
+    "MissedFairwayPenalty": "Average",
+    "RoughPenalty": "Average",
+    "GIRAccuracy": "Average",
+    "GIRPct": "66.9",
+    "GainAPP": "Easy",
+    "ScramblingFromRough": "Difficult",
+    "ScramblingFromShortGrass": "Average",
+    "SandSaves": "Average",
+    "GainARG": "Difficult",
+    "GainingPuttingInside15": "Easy",
+    "GainingPuttingOutside15": "Average",
+    "3PuttAVD": "Easy",
+    "GainPutting": "Easy",
+    "Par3Scoring": "Easy",
+    "Par4Scoring": "Average",
+    "Par5Scoring": "Difficult",
+    "ShotLink": "1"
+  },
+  "tournaments": [
+    {
+      "CourseNum": "873",
+      "TNum": "27",
+      "TourneyName": "THE NORTHERN TRUST"
+    }
+  ],
+  "_meta": {
+    "pulledAt": "2026-11-20T22:18:25.785Z",
+    "detailStatus": 200,
+    "tournamentsStatus": 200
+  },
+  "auth": {
+    "holeBreakdown": [],
+    "correlated": [],
+    "_meta": {
+      "pulledAt": "2026-11-20T22:52:52.407Z",
+      "holeStatus": 200,
+      "correlatedStatus": 200
+    }
+  }
+}

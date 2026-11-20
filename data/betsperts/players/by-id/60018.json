@@ -1,0 +1,273 @@
+{
+  "playerId": "60018",
+  "playerName": "Cameron Sisk",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Cameron Sisk",
+    "BirthPlace": "San Diego, California",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "6ft 0in",
+    "Weight": "165 lbs",
+    "Nationality": "United States",
+    "Residence": "Phoenix, Arizona",
+    "ProWins": "0",
+    "TurnedPro": "2022",
+    "PGAWins": "0",
+    "College": "Arizona State University 2022"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Cameron Sisk",
+        "player_num": "60018",
+        "Year": "2025",
+        "Rounds": "2",
+        "SG:TOT": "-4.67",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": null,
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Cameron Sisk",
+        "player_num": "60018",
+        "Year": "2024",
+        "Rounds": "2",
+        "SG:TOT": "-3.53",
+        "SG:T2G": "-4.98",
+        "SG:OTT": "-1.94",
+        "SG:APP": "-2.68",
+        "SG:BS": "-4.62",
+        "SG:ARG": "-0.36",
+        "SG:P": "0.22",
+        "Dr Distance": "279.1",
+        "Dr Accuracy %": "46.4",
+        "Ball Speed": "167.79"
+      },
+      {
+        "playerName": "Cameron Sisk",
+        "player_num": "60018",
+        "Year": "2021",
+        "Rounds": "2",
+        "SG:TOT": "-1.29",
+        "SG:T2G": "-1.47",
+        "SG:OTT": "-0.32",
+        "SG:APP": "-0.76",
+        "SG:BS": "-1.07",
+        "SG:ARG": "-0.40",
+        "SG:P": "0.18",
+        "Dr Distance": "278.7",
+        "Dr Accuracy %": "46.2",
+        "Ball Speed": "166.99"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2025-07-20",
+        "position": "CUT",
+        "roundPosition": null,
+        "TournamentName": "Barracuda Championship",
+        "is_major": null,
+        "playerName": "Cameron Sisk",
+        "player_num": "60018",
+        "Rounds": "2",
+        "CourseID": "931",
+        "Course": "Tahoe Mountain Club (Old Greenwood)",
+        "ShotLink": "0",
+        "SG:TOT": "-4.67",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2024-01-27",
+        "position": "CUT",
+        "roundPosition": "T149",
+        "TournamentName": "Farmers Insurance Open",
+        "is_major": "0",
+        "playerName": "Cameron Sisk",
+        "player_num": "60018",
+        "Rounds": "2",
+        "CourseID": "4",
+        "Course": "Torrey Pines GC (South)",
+        "ShotLink": "1",
+        "SG:TOT": "-3.53",
+        "SG:T2G": "-4.98",
+        "SG:OTT": "-1.94",
+        "SG:APP": "-2.68",
+        "SG:BS": "-4.62",
+        "SG:ARG": "-0.36",
+        "SG:P": "0.22",
+        "SG:SG": "-0.15"
+      },
+      {
+        "Date": "2021-11-14",
+        "position": "CUT",
+        "roundPosition": "T98",
+        "TournamentName": "Houston Open",
+        "is_major": "0",
+        "playerName": "Cameron Sisk",
+        "player_num": "60018",
+        "Rounds": "2",
+        "CourseID": "897",
+        "Course": "Memorial Park Golf Course",
+        "ShotLink": "2",
+        "SG:TOT": "-1.29",
+        "SG:T2G": "-1.47",
+        "SG:OTT": "-0.32",
+        "SG:APP": "-0.76",
+        "SG:BS": "-1.07",
+        "SG:ARG": "-0.40",
+        "SG:P": "0.18",
+        "SG:SG": "-0.22"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "6"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": null,
+        "Rounds": "1"
+      },
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "0.18150000646710396",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "0.21699999272823334",
+        "Rounds": "1"
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-2.0199999809265137",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-4.306666632493337",
+        "Rounds": "3"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-0.8399999737739563",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-4.669999957084656",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-2.0149999856948853",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-4.769999980926514",
+        "Rounds": "1"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-1.8849999904632568",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-2.804999977350235",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-7.309999942779541",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-2.2899999618530273",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-2.40999998152256",
+        "Rounds": "4"
+      },
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-4.669999957084656",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74.5",
+        "PM": "72",
+        "Rounds": "6"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "6",
+        "50-100": null,
+        "100-150": "35.1",
+        "150-200": "32.7",
+        "200+": "62.1",
+        "200-250": "62.4",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-1.2899999916553497",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-4.669999957084656",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "West Coast",
+        "StrokesGainedAverage": "-3.5299999713897705",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:20:02.568Z",
+    "ok": true
+  }
+}

@@ -1,0 +1,254 @@
+{
+  "playerId": "70695",
+  "playerName": "Ryder Cowan",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Ryder Cowan",
+    "BirthPlace": null,
+    "BirthDate": "",
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Ryder Cowan",
+        "player_num": "70695",
+        "Year": "2026",
+        "Rounds": "8",
+        "SG:TOT": "0.18",
+        "SG:T2G": "0.39",
+        "SG:OTT": "0.21",
+        "SG:APP": "-0.26",
+        "SG:BS": "-0.05",
+        "SG:ARG": "0.44",
+        "SG:P": "-0.21",
+        "Dr Distance": "302.4",
+        "Dr Accuracy %": "72.7",
+        "Ball Speed": "175.92"
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Ryder Cowan",
+        "player_num": "70695",
+        "Rounds": "8",
+        "SG:TOT": "0.18",
+        "SG:T2G": "0.39",
+        "SG:OTT": "0.21",
+        "SG:APP": "-0.26",
+        "SG:BS": "-0.05",
+        "SG:ARG": "0.44",
+        "SG:P": "-0.21",
+        "SG:SG": "0.23"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-11-01",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "Mexico Open at Vidanta",
+        "is_major": "0",
+        "playerName": "Ryder Cowan",
+        "player_num": "70695",
+        "Rounds": "2",
+        "CourseID": "978",
+        "Course": "Vidanta Vallarta",
+        "ShotLink": "2",
+        "SG:TOT": "-1.54",
+        "SG:T2G": "-0.09",
+        "SG:OTT": "0.18",
+        "SG:APP": "-0.32",
+        "SG:BS": "-0.14",
+        "SG:ARG": "0.05",
+        "SG:P": "-1.45",
+        "SG:SG": "-1.39"
+      },
+      {
+        "Date": "2026-07-26",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "3M Open",
+        "is_major": "0",
+        "playerName": "Ryder Cowan",
+        "player_num": "70695",
+        "Rounds": "2",
+        "CourseID": "883",
+        "Course": "TPC Twin Cities",
+        "ShotLink": "2",
+        "SG:TOT": "-0.52",
+        "SG:T2G": "-0.84",
+        "SG:OTT": "0.08",
+        "SG:APP": "0.09",
+        "SG:BS": "0.17",
+        "SG:ARG": "-1.00",
+        "SG:P": "0.32",
+        "SG:SG": "-0.68"
+      },
+      {
+        "Date": "2026-06-21",
+        "position": "T23",
+        "roundPosition": "T23",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Ryder Cowan",
+        "player_num": "70695",
+        "Rounds": "4",
+        "CourseID": "618",
+        "Course": "Shinnecock Hills GC",
+        "ShotLink": "4",
+        "SG:TOT": "1.39",
+        "SG:T2G": "1.24",
+        "SG:OTT": "0.30",
+        "SG:APP": "-0.41",
+        "SG:BS": "-0.11",
+        "SG:ARG": "1.35",
+        "SG:P": "0.15",
+        "SG:SG": "1.49"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "62.5",
+        "SG TOT 1+": "37.5",
+        "SG TOT 2+": "12.5",
+        "SG TOT 3+": "12.5",
+        "SG TOT 4+": "12.5",
+        "SG TOT 5+": "12.5",
+        "Rounds": "8"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "0.3244999647140503",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "0.8666667143503824",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.3933333158493042",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "1.6299999952316284",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-1.6100000143051147",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-0.2600000301996867",
+        "Rounds": "3"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-3.3299999237060547",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "1.3875000476837158",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-1.6100000143051147",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-0.51500004529953",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "2.386666735013326",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-1.5399999618530273",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-0.51500004529953",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "1.3875000476837158",
+        "Rounds": "4"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-1.5399999618530273",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "72.33333333333333",
+        "PM": "70",
+        "Rounds": "8"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "8",
+        "50-100": null,
+        "100-150": "29",
+        "150-200": "33.7",
+        "200+": "69.5",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-1.5399999618530273",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "0.7533333500226339",
+        "Rounds": "6"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:19.209Z",
+    "ok": true
+  }
+}

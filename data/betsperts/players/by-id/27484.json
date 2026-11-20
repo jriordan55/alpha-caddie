@@ -1,0 +1,167 @@
+{
+  "playerId": "27484",
+  "playerName": "Bryce Fisher",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Bryce Fisher",
+    "BirthPlace": null,
+    "BirthDate": "March 01, 1980",
+    "Age": "46",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Bryce Fisher",
+        "player_num": "27484",
+        "Year": "2026",
+        "Rounds": "2",
+        "SG:TOT": "-8.57",
+        "SG:T2G": "-8.60",
+        "SG:OTT": "-1.70",
+        "SG:APP": "-3.35",
+        "SG:BS": "-5.06",
+        "SG:ARG": "-3.54",
+        "SG:P": "0.03",
+        "Dr Distance": "278.5",
+        "Dr Accuracy %": "42.9",
+        "Ball Speed": "167.83"
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Bryce Fisher",
+        "player_num": "27484",
+        "Rounds": "2",
+        "SG:TOT": "-8.57",
+        "SG:T2G": "-8.60",
+        "SG:OTT": "-1.70",
+        "SG:APP": "-3.35",
+        "SG:BS": "-5.06",
+        "SG:ARG": "-3.54",
+        "SG:P": "0.03",
+        "SG:SG": "-3.51"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-05-17",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "PGA Championship",
+        "is_major": "1",
+        "playerName": "Bryce Fisher",
+        "player_num": "27484",
+        "Rounds": "2",
+        "CourseID": "773",
+        "Course": "Aronimink Golf Club",
+        "ShotLink": "2",
+        "SG:TOT": "-8.57",
+        "SG:T2G": "-8.60",
+        "SG:OTT": "-1.70",
+        "SG:APP": "-3.35",
+        "SG:BS": "-5.06",
+        "SG:ARG": "-3.54",
+        "SG:P": "0.03",
+        "SG:SG": "-3.51"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "0.03199999779462814",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-6.739999771118164",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-10.390000343322754",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-10.390000343322754",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-6.739999771118164",
+        "Rounds": "1"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-8.565000057220459",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-8.565000057220459",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "79",
+        "PM": "83",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "45.5",
+        "150-200": null,
+        "200+": "79",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-8.565000057220459",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:55.278Z",
+    "ok": true
+  }
+}

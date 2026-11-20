@@ -1,0 +1,163 @@
+{
+  "playerId": "67971",
+  "playerName": "Cavin McCall",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Cavin McCall",
+    "BirthPlace": null,
+    "BirthDate": "",
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Cavin McCall",
+        "player_num": "67971",
+        "Year": "2025",
+        "Rounds": "2",
+        "SG:TOT": "-7.10",
+        "SG:T2G": "-5.16",
+        "SG:OTT": "-2.41",
+        "SG:APP": "-2.48",
+        "SG:BS": "-4.89",
+        "SG:ARG": "-0.28",
+        "SG:P": "0.73",
+        "Dr Distance": "276.4",
+        "Dr Accuracy %": "42.9",
+        "Ball Speed": "162.65"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2025-01-25",
+        "position": "CUT",
+        "roundPosition": "130",
+        "TournamentName": "Farmers Insurance Open",
+        "is_major": "0",
+        "playerName": "Cavin McCall",
+        "player_num": "67971",
+        "Rounds": "2",
+        "CourseID": "4",
+        "Course": "Torrey Pines GC (South)",
+        "ShotLink": "1",
+        "SG:TOT": "-7.10",
+        "SG:T2G": "-5.16",
+        "SG:OTT": "-2.41",
+        "SG:APP": "-2.48",
+        "SG:BS": "-4.89",
+        "SG:ARG": "-0.28",
+        "SG:P": "0.73",
+        "SG:SG": "0.45"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": null,
+        "Rounds": "1"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "0.7279999852180481",
+        "Rounds": "1"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-9.779999732971191",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-4.429999828338623",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-9.779999732971191",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-4.429999828338623",
+        "Rounds": "1"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-4.429999828338623",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-9.779999732971191",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-7.104999780654907",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "80",
+        "PM": "80",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "65",
+        "200+": "60.6",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "West Coast",
+        "StrokesGainedAverage": "-7.104999780654907",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:20:08.159Z",
+    "ok": true
+  }
+}

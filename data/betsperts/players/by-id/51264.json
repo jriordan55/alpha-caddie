@@ -1,0 +1,225 @@
+{
+  "playerId": "51264",
+  "playerName": "Jediah Morgan",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/as-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Jediah Morgan",
+    "BirthPlace": "",
+    "BirthDate": "November 30, 1999",
+    "Age": "26",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "Australia",
+    "Residence": "",
+    "ProWins": "1",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Jediah Morgan",
+        "player_num": "51264",
+        "Year": "2022",
+        "Rounds": "6",
+        "SG:TOT": "-5.48",
+        "SG:T2G": "-4.12",
+        "SG:OTT": "-0.61",
+        "SG:APP": "-2.15",
+        "SG:BS": "-2.76",
+        "SG:ARG": "-1.37",
+        "SG:P": "-1.36",
+        "Dr Distance": "282.8",
+        "Dr Accuracy %": "48.9",
+        "Ball Speed": "182.76"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2022-07-17",
+        "position": "CUT",
+        "roundPosition": null,
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Jediah Morgan",
+        "player_num": "51264",
+        "Rounds": "2",
+        "CourseID": "668",
+        "Course": "St. Andrews GC (Old Course)",
+        "ShotLink": "2",
+        "SG:TOT": "-5.29",
+        "SG:T2G": "-3.27",
+        "SG:OTT": "-0.09",
+        "SG:APP": "-2.54",
+        "SG:BS": "-2.64",
+        "SG:ARG": "-0.63",
+        "SG:P": "-2.02",
+        "SG:SG": "-2.65"
+      },
+      {
+        "Date": "2022-06-19",
+        "position": "CUT",
+        "roundPosition": "T150",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Jediah Morgan",
+        "player_num": "51264",
+        "Rounds": "2",
+        "CourseID": "654",
+        "Course": "The Country Club",
+        "ShotLink": "2",
+        "SG:TOT": "-5.62",
+        "SG:T2G": "-3.30",
+        "SG:OTT": "-0.53",
+        "SG:APP": "-0.90",
+        "SG:BS": "-1.43",
+        "SG:ARG": "-1.87",
+        "SG:P": "-2.32",
+        "SG:SG": "-4.19"
+      },
+      {
+        "Date": "2022-06-05",
+        "position": "CUT",
+        "roundPosition": "T115",
+        "TournamentName": "the Memorial Tournament",
+        "is_major": "0",
+        "playerName": "Jediah Morgan",
+        "player_num": "51264",
+        "Rounds": "2",
+        "CourseID": "23",
+        "Course": "Muirfield Village GC",
+        "ShotLink": "2",
+        "SG:TOT": "-5.54",
+        "SG:T2G": "-5.80",
+        "SG:OTT": "-1.19",
+        "SG:APP": "-3.01",
+        "SG:BS": "-4.20",
+        "SG:ARG": "-1.60",
+        "SG:P": "0.27",
+        "SG:SG": "-1.33"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "6"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.878000020980835",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "-2.321000039577484",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-6.273333231608073",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-4.690000136693318",
+        "Rounds": "3"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-5.6199997663497925",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-5.5350000858306885",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-5.2900002002716064",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-4.28000020980835",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-5.790000120798747",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-5.6199997663497925",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Strong",
+        "StrokesGainedAverage": "-5.5350000858306885",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-5.4549999833106995",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "77",
+        "PM": "79",
+        "Rounds": "6"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "6",
+        "50-100": null,
+        "100-150": "26.9",
+        "150-200": "45.1",
+        "200+": "67.2",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-5.5350000858306885",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-5.4549999833106995",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:34.608Z",
+    "ok": true
+  }
+}

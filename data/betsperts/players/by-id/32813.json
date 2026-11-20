@@ -1,0 +1,164 @@
+{
+  "playerId": "32813",
+  "playerName": "Shota Akiyoshi",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ja-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Shota Akiyoshi",
+    "BirthPlace": "",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "Japan",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Shota Akiyoshi",
+        "player_num": "32813",
+        "Year": "2018",
+        "Rounds": "4",
+        "SG:TOT": "-3.49",
+        "SG:T2G": "-3.36",
+        "SG:OTT": "-0.39",
+        "SG:APP": "-1.24",
+        "SG:BS": "-1.63",
+        "SG:ARG": "-1.73",
+        "SG:P": "-1.10",
+        "Dr Distance": "277.0",
+        "Dr Accuracy %": "58.6",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2018-07-22",
+        "position": "CUT",
+        "roundPosition": "T131",
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Shota Akiyoshi",
+        "player_num": "32813",
+        "Rounds": "2",
+        "CourseID": "658",
+        "Course": "Carnoustie GC",
+        "ShotLink": "0",
+        "SG:TOT": "-2.51",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2018-06-17",
+        "position": "CUT",
+        "roundPosition": "T148",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Shota Akiyoshi",
+        "player_num": "32813",
+        "Rounds": "2",
+        "CourseID": "618",
+        "Course": "Shinnecock Hills GC",
+        "ShotLink": "2",
+        "SG:TOT": "-4.47",
+        "SG:T2G": "-3.36",
+        "SG:OTT": "-0.39",
+        "SG:APP": "-1.24",
+        "SG:BS": "-1.63",
+        "SG:ARG": "-1.73",
+        "SG:P": "-1.10",
+        "SG:SG": "-2.84"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-4.685000061988831",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-2.2950000762939453",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-2.5149999856948853",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-4.465000152587891",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-3.490000069141388",
+        "Rounds": "4"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-3.490000069141388",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "75.5",
+        "PM": "79.5",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-3.490000069141388",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:37.018Z",
+    "ok": true
+  }
+}

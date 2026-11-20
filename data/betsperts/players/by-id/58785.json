@@ -1,0 +1,221 @@
+{
+  "playerId": "58785",
+  "playerName": "Michael Herrera",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Michael Herrera",
+    "BirthPlace": "Los Angeles, California",
+    "BirthDate": "April 15, 1998",
+    "Age": "28",
+    "Height": "6ft 0in",
+    "Weight": "185 lbs",
+    "Nationality": "United States",
+    "Residence": "Moreno Valley, California",
+    "ProWins": "0",
+    "TurnedPro": "2019",
+    "PGAWins": "0",
+    "College": "Riverside City College "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Michael Herrera",
+        "player_num": "58785",
+        "Year": "2024",
+        "Rounds": "2",
+        "SG:TOT": "-6.62",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "46.4",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Michael Herrera",
+        "player_num": "58785",
+        "Year": "2023",
+        "Rounds": "2",
+        "SG:TOT": "-0.70",
+        "SG:T2G": "-0.36",
+        "SG:OTT": "0.51",
+        "SG:APP": "0.44",
+        "SG:BS": "0.95",
+        "SG:ARG": "-1.31",
+        "SG:P": "1.22",
+        "Dr Distance": "296.0",
+        "Dr Accuracy %": "46.4",
+        "Ball Speed": "175.56"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2024-11-17",
+        "position": "CUT",
+        "roundPosition": "115",
+        "TournamentName": "Butterfield Bermuda Championship",
+        "is_major": "0",
+        "playerName": "Michael Herrera",
+        "player_num": "58785",
+        "Rounds": "2",
+        "CourseID": "765",
+        "Course": "Port Royal GC",
+        "ShotLink": "0",
+        "SG:TOT": "-6.62",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2023-01-28",
+        "position": "CUT",
+        "roundPosition": "T99",
+        "TournamentName": "Farmers Insurance Open",
+        "is_major": "0",
+        "playerName": "Michael Herrera",
+        "player_num": "58785",
+        "Rounds": "2",
+        "CourseID": "4",
+        "Course": "Torrey Pines GC (South)",
+        "ShotLink": "1",
+        "SG:TOT": "-0.70",
+        "SG:T2G": "-0.36",
+        "SG:OTT": "0.51",
+        "SG:APP": "0.44",
+        "SG:BS": "0.95",
+        "SG:ARG": "-1.31",
+        "SG:P": "1.22",
+        "SG:SG": "-0.09"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "25.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": null,
+        "Rounds": "1"
+      },
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": null,
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "1.215999960899353",
+        "Rounds": "1"
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-2.2200000286102295",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-5.100000202655792",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-2.2699999809265137",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "0.8600000143051147",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-6.615000247955322",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-2.1700000762939453",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "0.8600000143051147",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-6.6650002002716064",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Strong",
+        "StrokesGainedAverage": "-0.7049999833106995",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-6.615000247955322",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74",
+        "PM": "76",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": "28",
+        "150-200": "32.1",
+        "200+": "51.3",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-6.615000247955322",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "West Coast",
+        "StrokesGainedAverage": "-0.7049999833106995",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:24:09.477Z",
+    "ok": true
+  }
+}

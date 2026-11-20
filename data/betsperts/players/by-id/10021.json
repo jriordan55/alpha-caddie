@@ -1,0 +1,148 @@
+{
+  "playerId": "10021",
+  "playerName": "Loren Personett",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Loren Personett",
+    "BirthPlace": null,
+    "BirthDate": "September 29, 1964",
+    "Age": "62",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Loren Personett",
+        "player_num": "10021",
+        "Year": "2016",
+        "Rounds": "2",
+        "SG:TOT": "-5.90",
+        "SG:T2G": "-8.14",
+        "SG:OTT": "-1.15",
+        "SG:APP": "-4.33",
+        "SG:BS": "-5.48",
+        "SG:ARG": "-2.66",
+        "SG:P": "2.24",
+        "Dr Distance": "276.2",
+        "Dr Accuracy %": "50.0",
+        "Ball Speed": "159.05"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2016-06-12",
+        "position": "CUT",
+        "roundPosition": "155",
+        "TournamentName": "FedEx St. Jude Classic",
+        "is_major": "0",
+        "playerName": "Loren Personett",
+        "player_num": "10021",
+        "Rounds": "2",
+        "CourseID": "513",
+        "Course": "TPC Southwind",
+        "ShotLink": "2",
+        "SG:TOT": "-5.90",
+        "SG:T2G": "-8.14",
+        "SG:OTT": "-1.15",
+        "SG:APP": "-4.33",
+        "SG:BS": "-5.48",
+        "SG:ARG": "-2.66",
+        "SG:P": "2.24",
+        "SG:SG": "-0.42"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "2.236999988555908",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-4.909999847412109",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-6.900000095367432",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-5.9049999713897705",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-5.9049999713897705",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-5.9049999713897705",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "78",
+        "PM": "76",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": "60.6",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-5.9049999713897705",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:38.314Z",
+    "ok": true
+  }
+}

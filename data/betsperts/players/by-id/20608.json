@@ -1,0 +1,262 @@
+{
+  "playerId": "20608",
+  "playerName": "David Howell",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/St_Georges_Cross.svg_.png",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "David Howell",
+    "BirthPlace": "Swindon, England",
+    "BirthDate": "June 23, 1975",
+    "Age": "51",
+    "Height": "6ft 1in",
+    "Weight": "185 lbs",
+    "Nationality": "England",
+    "Residence": "Weybridge, England",
+    "ProWins": null,
+    "TurnedPro": "1995",
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "David Howell",
+        "player_num": "20608",
+        "Year": "2016",
+        "Rounds": "4",
+        "SG:TOT": "1.89",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "67.9",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "David Howell",
+        "player_num": "20608",
+        "Year": "2015",
+        "Rounds": "10",
+        "SG:TOT": "0.02",
+        "SG:T2G": "-3.19",
+        "SG:OTT": "-1.66",
+        "SG:APP": "-0.48",
+        "SG:BS": "-2.14",
+        "SG:ARG": "-1.05",
+        "SG:P": "1.24",
+        "Dr Distance": "280.2",
+        "Dr Accuracy %": "62.8",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2016-07-17",
+        "position": "T22",
+        "roundPosition": "T22",
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "David Howell",
+        "player_num": "20608",
+        "Rounds": "4",
+        "CourseID": "709",
+        "Course": "Royal Troon",
+        "ShotLink": "0",
+        "SG:TOT": "1.89",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2015-11-08",
+        "position": "T30",
+        "roundPosition": "T30",
+        "TournamentName": "WGC - HSBC Champions",
+        "is_major": "0",
+        "playerName": "David Howell",
+        "player_num": "20608",
+        "Rounds": "4",
+        "CourseID": "766",
+        "Course": "Sheshan International GC",
+        "ShotLink": "0",
+        "SG:TOT": "0.58",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2015-08-16",
+        "position": "CUT",
+        "roundPosition": "T118",
+        "TournamentName": "PGA Championship",
+        "is_major": "1",
+        "playerName": "David Howell",
+        "player_num": "20608",
+        "Rounds": "2",
+        "CourseID": "706",
+        "Course": "Whistling Straits",
+        "ShotLink": "2",
+        "SG:TOT": "-1.95",
+        "SG:T2G": "-3.19",
+        "SG:OTT": "-1.66",
+        "SG:APP": "-0.48",
+        "SG:BS": "-2.14",
+        "SG:ARG": "-1.05",
+        "SG:P": "1.24",
+        "SG:SG": "0.18"
+      },
+      {
+        "Date": "2015-07-19",
+        "position": "T49",
+        "roundPosition": "T49",
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "David Howell",
+        "player_num": "20608",
+        "Rounds": "4",
+        "CourseID": "668",
+        "Course": "St. Andrews GC (Old Course)",
+        "ShotLink": "0",
+        "SG:TOT": "0.44",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "64.3",
+        "SG TOT 1+": "50.0",
+        "SG TOT 2+": "35.7",
+        "SG TOT 3+": "21.4",
+        "SG TOT 4+": "14.3",
+        "SG TOT 5+": "0.0",
+        "Rounds": "14"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "1.2355000376701355",
+        "Rounds": "10"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.00000008940696716308594",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "0.6600000560283661",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-0.0033333500226338706",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "1.7033333381017048",
+        "Rounds": "3"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-1.9549999833106995",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "0.9708333164453506",
+        "Rounds": "12"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "0.4374999701976776",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-0.26499999562899273",
+        "Rounds": "6"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "1.8949999809265137",
+        "Rounds": "4"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Strong",
+        "StrokesGainedAverage": "0.5799999982118607",
+        "Rounds": "4"
+      },
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "0.5419999837875367",
+        "Rounds": "10"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "70.5",
+        "PM": "72.66666666666667",
+        "Rounds": "14"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "14",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": "57.2",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "0.5799999982118607",
+        "Rounds": "4"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "0.5419999837875367",
+        "Rounds": "10"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:21:01.325Z",
+    "ok": true
+  }
+}

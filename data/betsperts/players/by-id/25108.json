@@ -1,0 +1,199 @@
+{
+  "playerId": "25108",
+  "playerName": "Chip Deason",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Chip Deason",
+    "BirthPlace": "Montgomery, Alabama",
+    "BirthDate": "October 13, 1974",
+    "Age": "52",
+    "Height": "6ft 2in",
+    "Weight": "220 lbs",
+    "Nationality": "United States",
+    "Residence": "Lexington, South Carolina",
+    "ProWins": null,
+    "TurnedPro": "1999",
+    "PGAWins": null,
+    "College": "University of Alabama  (1998, Sports Management) "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Chip Deason",
+        "player_num": "25108",
+        "Year": "2017",
+        "Rounds": "5",
+        "SG:TOT": "-0.94",
+        "SG:T2G": "-0.94",
+        "SG:OTT": "-0.35",
+        "SG:APP": "-0.71",
+        "SG:BS": "-1.06",
+        "SG:ARG": "0.13",
+        "SG:P": "-0.01",
+        "Dr Distance": "274.7",
+        "Dr Accuracy %": "60.0",
+        "Ball Speed": "163.63"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2017-07-23",
+        "position": "CUT",
+        "roundPosition": "T100",
+        "TournamentName": "Barbasol Championship",
+        "is_major": "0",
+        "playerName": "Chip Deason",
+        "player_num": "25108",
+        "Rounds": "2",
+        "CourseID": "819",
+        "Course": "RTJ Trail (Grand National)",
+        "ShotLink": "2",
+        "SG:TOT": "-1.80",
+        "SG:T2G": "-0.29",
+        "SG:OTT": "0.28",
+        "SG:APP": "0.14",
+        "SG:BS": "0.42",
+        "SG:ARG": "-0.71",
+        "SG:P": "-1.51",
+        "SG:SG": "-2.22"
+      },
+      {
+        "Date": "2017-06-11",
+        "position": "T72",
+        "roundPosition": "T72",
+        "TournamentName": "FedEx St. Jude Classic",
+        "is_major": "0",
+        "playerName": "Chip Deason",
+        "player_num": "25108",
+        "Rounds": "3",
+        "CourseID": "513",
+        "Course": "TPC Southwind",
+        "ShotLink": "3",
+        "SG:TOT": "-0.37",
+        "SG:T2G": "-1.37",
+        "SG:OTT": "-0.77",
+        "SG:APP": "-1.29",
+        "SG:BS": "-2.05",
+        "SG:ARG": "0.68",
+        "SG:P": "1.00",
+        "SG:SG": "1.68"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "20.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "7"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-0.0075999975204467775",
+        "Rounds": "5"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.6799999475479126",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.025000005960464478",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-1.309999942779541",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "",
+        "StrokesGainedAverage": null,
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-0.943999969959259",
+        "Rounds": "5"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": null,
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-0.3699999849001567",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-1.8049999475479126",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-1.8049999475479126",
+        "Rounds": "4"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-0.3699999849001567",
+        "Rounds": "3"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "71",
+        "PM": "71.33333333333333",
+        "Rounds": "7"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "7",
+        "50-100": null,
+        "100-150": "24",
+        "150-200": "35.7",
+        "200+": "47.5",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-0.3699999849001567",
+        "Rounds": "3"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-1.8049999475479126",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:20:17.548Z",
+    "ok": true
+  }
+}

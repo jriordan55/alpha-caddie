@@ -1,0 +1,162 @@
+{
+  "playerId": "70525",
+  "playerName": "Ronin Banerjee",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Ronin Banerjee",
+    "BirthPlace": null,
+    "BirthDate": "",
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Ronin Banerjee",
+        "player_num": "70525",
+        "Year": "2026",
+        "Rounds": "2",
+        "SG:TOT": "-0.94",
+        "SG:T2G": "-0.37",
+        "SG:OTT": "-0.08",
+        "SG:APP": "-0.35",
+        "SG:BS": "-0.43",
+        "SG:ARG": "0.06",
+        "SG:P": "-0.58",
+        "Dr Distance": "288.5",
+        "Dr Accuracy %": "67.9",
+        "Ball Speed": "170.61"
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Ronin Banerjee",
+        "player_num": "70525",
+        "Rounds": "2",
+        "SG:TOT": "-0.94",
+        "SG:T2G": "-0.37",
+        "SG:OTT": "-0.08",
+        "SG:APP": "-0.35",
+        "SG:BS": "-0.43",
+        "SG:ARG": "0.06",
+        "SG:P": "-0.58",
+        "SG:SG": "-0.51"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-05-24",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "The CJ CUP Byron Nelson",
+        "is_major": "0",
+        "playerName": "Ronin Banerjee",
+        "player_num": "70525",
+        "Rounds": "2",
+        "CourseID": "921",
+        "Course": "TPC Craig Ranch",
+        "ShotLink": "2",
+        "SG:TOT": "-0.94",
+        "SG:T2G": "-0.37",
+        "SG:OTT": "-0.08",
+        "SG:APP": "-0.35",
+        "SG:BS": "-0.43",
+        "SG:ARG": "0.06",
+        "SG:P": "-0.58",
+        "SG:SG": "-0.51"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.578000009059906",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-2.049999952316284",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "0.1599999964237213",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-0.9449999779462814",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-0.9449999779462814",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-0.9449999779462814",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "68",
+        "PM": "71",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "46.8",
+        "200+": "58.9",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-0.9449999779462814",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:11.247Z",
+    "ok": true
+  }
+}

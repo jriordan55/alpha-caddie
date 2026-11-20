@@ -1,0 +1,195 @@
+{
+  "playerId": "35113",
+  "playerName": "Dimitrios Papadatos",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/as-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Dimitrios Papadatos",
+    "BirthPlace": "Sydney, Australia",
+    "BirthDate": "June 04, 1991",
+    "Age": "35",
+    "Height": "6ft 2in",
+    "Weight": "220 lbs",
+    "Nationality": "Australia",
+    "Residence": "Sydney, Australia",
+    "ProWins": "1",
+    "TurnedPro": "2013",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Dimitrios Papadatos",
+        "player_num": "35113",
+        "Year": "2022",
+        "Rounds": "2",
+        "SG:TOT": "-3.29",
+        "SG:T2G": "-2.69",
+        "SG:OTT": "-1.69",
+        "SG:APP": "-0.98",
+        "SG:BS": "-2.67",
+        "SG:ARG": "-0.03",
+        "SG:P": "-0.59",
+        "Dr Distance": null,
+        "Dr Accuracy %": "53.1",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Dimitrios Papadatos",
+        "player_num": "35113",
+        "Year": "2019",
+        "Rounds": "2",
+        "SG:TOT": "-5.31",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "50.0",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2022-07-17",
+        "position": "CUT",
+        "roundPosition": null,
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Dimitrios Papadatos",
+        "player_num": "35113",
+        "Rounds": "2",
+        "CourseID": "668",
+        "Course": "St. Andrews GC (Old Course)",
+        "ShotLink": "2",
+        "SG:TOT": "-3.29",
+        "SG:T2G": "-2.69",
+        "SG:OTT": "-1.69",
+        "SG:APP": "-0.98",
+        "SG:BS": "-2.67",
+        "SG:ARG": "-0.03",
+        "SG:P": "-0.59",
+        "SG:SG": "-0.62"
+      },
+      {
+        "Date": "2019-07-21",
+        "position": "CUT",
+        "roundPosition": "T153",
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Dimitrios Papadatos",
+        "player_num": "35113",
+        "Rounds": "2",
+        "CourseID": "885",
+        "Course": "Royal Portrush GC",
+        "ShotLink": "0",
+        "SG:TOT": "-5.31",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.593500018119812",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-7.15500020980835",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.4449999928474426",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-5.310000121593475",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-3.290000081062317",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-2.2799999713897705",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-4.973333477973938",
+        "Rounds": "3"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-4.300000101327896",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "73",
+        "PM": "80",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-4.300000101327896",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:21:14.306Z",
+    "ok": true
+  }
+}

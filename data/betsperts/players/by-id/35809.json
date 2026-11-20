@@ -1,0 +1,143 @@
+{
+  "playerId": "35809",
+  "playerName": "Steven Brown",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/St_Georges_Cross.svg_.png",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Steven Brown",
+    "BirthPlace": "",
+    "BirthDate": "May 07, 1987",
+    "Age": "39",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "England",
+    "Residence": "",
+    "ProWins": "1",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Steven Brown",
+        "player_num": "35809",
+        "Year": "2022",
+        "Rounds": "2",
+        "SG:TOT": "-2.74",
+        "SG:T2G": "-2.54",
+        "SG:OTT": "-1.65",
+        "SG:APP": "-1.14",
+        "SG:BS": "-2.79",
+        "SG:ARG": "0.25",
+        "SG:P": "-0.18",
+        "Dr Distance": null,
+        "Dr Accuracy %": "34.6",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2022-07-10",
+        "position": "CUT",
+        "roundPosition": "T138",
+        "TournamentName": "Genesis Scottish Open",
+        "is_major": "0",
+        "playerName": "Steven Brown",
+        "player_num": "35809",
+        "Rounds": "2",
+        "CourseID": "977",
+        "Course": "The Renaissance Club",
+        "ShotLink": "2",
+        "SG:TOT": "-2.74",
+        "SG:T2G": "-2.54",
+        "SG:OTT": "-1.65",
+        "SG:APP": "-1.14",
+        "SG:BS": "-2.79",
+        "SG:ARG": "0.25",
+        "SG:P": "-0.18",
+        "SG:SG": "0.07"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-4.010000228881836",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.4700000286102295",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-4.010000228881836",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-1.4700000286102295",
+        "Rounds": "1"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-2.7400001287460327",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-2.7400001287460327",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "76",
+        "PM": "74",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-2.7400001287460327",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:48.295Z",
+    "ok": true
+  }
+}

@@ -1,0 +1,148 @@
+{
+  "playerId": "28327",
+  "playerName": "Brett Jones",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Brett Jones",
+    "BirthPlace": "Sydney, Australia",
+    "BirthDate": "July 14, 1975",
+    "Age": "51",
+    "Height": "6ft 0in",
+    "Weight": "175 lbs",
+    "Nationality": "United States",
+    "Residence": "Basking Ridge, New Jersey",
+    "ProWins": null,
+    "TurnedPro": "2002",
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Brett Jones",
+        "player_num": "28327",
+        "Year": "2015",
+        "Rounds": "2",
+        "SG:TOT": "-2.95",
+        "SG:T2G": "-1.12",
+        "SG:OTT": "-0.72",
+        "SG:APP": "-1.21",
+        "SG:BS": "-1.94",
+        "SG:ARG": "0.82",
+        "SG:P": "-1.84",
+        "Dr Distance": "277.1",
+        "Dr Accuracy %": "53.6",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2015-08-16",
+        "position": "CUT",
+        "roundPosition": "T132",
+        "TournamentName": "PGA Championship",
+        "is_major": "1",
+        "playerName": "Brett Jones",
+        "player_num": "28327",
+        "Rounds": "2",
+        "CourseID": "706",
+        "Course": "Whistling Straits",
+        "ShotLink": "2",
+        "SG:TOT": "-2.95",
+        "SG:T2G": "-1.12",
+        "SG:OTT": "-0.72",
+        "SG:APP": "-1.21",
+        "SG:BS": "-1.94",
+        "SG:ARG": "0.82",
+        "SG:P": "-1.84",
+        "SG:SG": "-1.02"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-1.837499976158142",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.8500000238418579",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-5.059999942779541",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-2.9549999833106995",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-2.9549999833106995",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-2.9549999833106995",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "78",
+        "PM": "75",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "27.9",
+        "150-200": null,
+        "200+": "65.3",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-2.9549999833106995",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:45.866Z",
+    "ok": true
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "playerId": "7547",
+  "playerName": "Craig Kanada",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Craig Kanada",
+    "BirthPlace": "Portland, Oregon",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "5ft 9in",
+    "Weight": "150 lbs",
+    "Nationality": "United States",
+    "Residence": "The Woodlands, Texas",
+    "ProWins": null,
+    "TurnedPro": "1991",
+    "PGAWins": null,
+    "College": "Ohio State University 1991, International Business"
+  },
+  "stats": {
+    "sgSummary": [],
+    "sgGuest": [],
+    "sgByEvent": [],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.5899999737739563",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.3899999856948853",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [],
+    "byScoringCondition": [],
+    "byFieldStrength": [],
+    "amPmSplit": [
+      {
+        "AM": "73",
+        "PM": "72",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "33",
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": []
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:20:38.014Z",
+    "ok": true
+  }
+}

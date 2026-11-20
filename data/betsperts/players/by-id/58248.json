@@ -1,0 +1,143 @@
+{
+  "playerId": "58248",
+  "playerName": "Nick Bienz",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Nick Bienz",
+    "BirthPlace": null,
+    "BirthDate": "",
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Nick Bienz",
+        "player_num": "58248",
+        "Year": "2024",
+        "Rounds": "2",
+        "SG:TOT": "-4.55",
+        "SG:T2G": "-4.08",
+        "SG:OTT": "-1.10",
+        "SG:APP": "-1.04",
+        "SG:BS": "-2.14",
+        "SG:ARG": "-1.94",
+        "SG:P": "-0.47",
+        "Dr Distance": "279.6",
+        "Dr Accuracy %": "60.7",
+        "Ball Speed": "163.20"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2024-06-30",
+        "position": "CUT",
+        "roundPosition": "152",
+        "TournamentName": "Rocket Mortgage Classic",
+        "is_major": "0",
+        "playerName": "Nick Bienz",
+        "player_num": "58248",
+        "Rounds": "2",
+        "CourseID": "876",
+        "Course": "Detroit GC",
+        "ShotLink": "2",
+        "SG:TOT": "-4.55",
+        "SG:T2G": "-4.08",
+        "SG:OTT": "-1.10",
+        "SG:APP": "-1.04",
+        "SG:BS": "-2.14",
+        "SG:ARG": "-1.94",
+        "SG:P": "-0.47",
+        "SG:SG": "-2.41"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-4.110000133514404",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-4.989999771118164",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-4.549999952316284",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-4.110000133514404",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-4.989999771118164",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-4.549999952316284",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "75",
+        "PM": "75",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "20.6",
+        "150-200": null,
+        "200+": "47.2",
+        "200-250": "50.2",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-4.549999952316284",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:24:25.549Z",
+    "ok": true
+  }
+}

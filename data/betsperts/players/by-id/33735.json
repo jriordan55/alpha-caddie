@@ -1,0 +1,205 @@
+{
+  "playerId": "33735",
+  "playerName": "Gabe Reynolds",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Gabe Reynolds",
+    "BirthPlace": null,
+    "BirthDate": "November 16, 1979",
+    "Age": "47",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Gabe Reynolds",
+        "player_num": "33735",
+        "Year": "2025",
+        "Rounds": "2",
+        "SG:TOT": "-4.70",
+        "SG:T2G": "-4.95",
+        "SG:OTT": "-2.11",
+        "SG:APP": "-1.78",
+        "SG:BS": "-3.89",
+        "SG:ARG": "-1.06",
+        "SG:P": "0.24",
+        "Dr Distance": "292.6",
+        "Dr Accuracy %": "42.9",
+        "Ball Speed": "175.94"
+      },
+      {
+        "playerName": "Gabe Reynolds",
+        "player_num": "33735",
+        "Year": "2023",
+        "Rounds": "2",
+        "SG:TOT": "-6.75",
+        "SG:T2G": "-5.01",
+        "SG:OTT": "-0.27",
+        "SG:APP": "-1.88",
+        "SG:BS": "-2.16",
+        "SG:ARG": "-2.85",
+        "SG:P": "-1.74",
+        "Dr Distance": "296.9",
+        "Dr Accuracy %": "28.6",
+        "Ball Speed": "178.67"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2025-05-04",
+        "position": "CUT",
+        "roundPosition": "152",
+        "TournamentName": "The CJ CUP Byron Nelson",
+        "is_major": "0",
+        "playerName": "Gabe Reynolds",
+        "player_num": "33735",
+        "Rounds": "2",
+        "CourseID": "921",
+        "Course": "TPC Craig Ranch",
+        "ShotLink": "2",
+        "SG:TOT": "-4.70",
+        "SG:T2G": "-4.95",
+        "SG:OTT": "-2.11",
+        "SG:APP": "-1.78",
+        "SG:BS": "-3.89",
+        "SG:ARG": "-1.06",
+        "SG:P": "0.24",
+        "SG:SG": "-0.82"
+      },
+      {
+        "Date": "2023-05-21",
+        "position": "CUT",
+        "roundPosition": "154",
+        "TournamentName": "PGA Championship",
+        "is_major": "1",
+        "playerName": "Gabe Reynolds",
+        "player_num": "33735",
+        "Rounds": "2",
+        "CourseID": "514",
+        "Course": "Oak Hill CC",
+        "ShotLink": "2",
+        "SG:TOT": "-6.75",
+        "SG:T2G": "-5.01",
+        "SG:OTT": "-0.27",
+        "SG:APP": "-1.88",
+        "SG:BS": "-2.16",
+        "SG:ARG": "-2.85",
+        "SG:P": "-1.74",
+        "SG:SG": "-4.60"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.7517499923706055",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-9.304999828338623",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-2.149999976158142",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-3.863333304723104",
+        "Rounds": "3"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-11.319999694824219",
+        "Rounds": "1"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-2.119999885559082",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-6.7499998807907104",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-7.289999961853027",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-4.704999923706055",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-6.7499998807907104",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "75",
+        "PM": "77.66666666666667",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": "26.4",
+        "100-150": "31.1",
+        "150-200": "37.8",
+        "200+": "64",
+        "200-250": "60.7",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-5.727499902248383",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:21:39.399Z",
+    "ok": true
+  }
+}

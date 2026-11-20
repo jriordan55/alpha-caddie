@@ -1,0 +1,143 @@
+{
+  "playerId": "59942",
+  "playerName": "Brian Keiser",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Brian Keiser",
+    "BirthPlace": "",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "United States",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Brian Keiser",
+        "player_num": "59942",
+        "Year": "2021",
+        "Rounds": "2",
+        "SG:TOT": "-8.98",
+        "SG:T2G": "-7.88",
+        "SG:OTT": "-1.33",
+        "SG:APP": "-3.25",
+        "SG:BS": "-4.58",
+        "SG:ARG": "-3.30",
+        "SG:P": "-1.10",
+        "Dr Distance": "272.5",
+        "Dr Accuracy %": "53.6",
+        "Ball Speed": "164.00"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2021-06-27",
+        "position": "CUT",
+        "roundPosition": "156",
+        "TournamentName": "Travelers Championship",
+        "is_major": "0",
+        "playerName": "Brian Keiser",
+        "player_num": "59942",
+        "Rounds": "2",
+        "CourseID": "503",
+        "Course": "TPC River Highlands",
+        "ShotLink": "2",
+        "SG:TOT": "-8.98",
+        "SG:T2G": "-7.88",
+        "SG:OTT": "-1.33",
+        "SG:APP": "-3.25",
+        "SG:BS": "-4.58",
+        "SG:ARG": "-3.30",
+        "SG:P": "-1.10",
+        "SG:SG": "-4.40"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-12.90999984741211",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-5.050000190734863",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-8.980000019073486",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-12.90999984741211",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-5.050000190734863",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-8.980000019073486",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74",
+        "PM": "83",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "23.6",
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-8.980000019073486",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:49.825Z",
+    "ok": true
+  }
+}

@@ -1,0 +1,148 @@
+{
+  "playerId": "55601",
+  "playerName": "Callum Davison",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ca-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Callum Davison",
+    "BirthPlace": "North Vancouver, British Columbia, Canada",
+    "BirthDate": "June 19, 2000",
+    "Age": "26",
+    "Height": "6ft 0in",
+    "Weight": "185 lbs",
+    "Nationality": "Canada",
+    "Residence": "Duncan, British Columbia, Canada",
+    "ProWins": "2",
+    "TurnedPro": "2018",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Callum Davison",
+        "player_num": "55601",
+        "Year": "2022",
+        "Rounds": "2",
+        "SG:TOT": "-4.93",
+        "SG:T2G": "-4.94",
+        "SG:OTT": "-0.76",
+        "SG:APP": "-3.68",
+        "SG:BS": "-4.45",
+        "SG:ARG": "-0.49",
+        "SG:P": "0.00",
+        "Dr Distance": "276.8",
+        "Dr Accuracy %": "46.2",
+        "Ball Speed": "164.95"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2022-06-12",
+        "position": "CUT",
+        "roundPosition": "142",
+        "TournamentName": "RBC Canadian Open",
+        "is_major": "0",
+        "playerName": "Callum Davison",
+        "player_num": "55601",
+        "Rounds": "2",
+        "CourseID": "772",
+        "Course": "St. Georges G&CC",
+        "ShotLink": "2",
+        "SG:TOT": "-4.93",
+        "SG:T2G": "-4.94",
+        "SG:OTT": "-0.76",
+        "SG:APP": "-3.68",
+        "SG:BS": "-4.45",
+        "SG:ARG": "-0.49",
+        "SG:P": "0.00",
+        "SG:SG": "-0.49"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "0.0029999613761901855",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-4.449999809265137",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-5.420000076293945",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-4.934999942779541",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-4.934999942779541",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-4.934999942779541",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "76",
+        "PM": "77",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "37.6",
+        "150-200": "40.6",
+        "200+": "67",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-4.934999942779541",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:59.813Z",
+    "ok": true
+  }
+}

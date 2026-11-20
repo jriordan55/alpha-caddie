@@ -1,0 +1,167 @@
+{
+  "playerId": "65418",
+  "playerName": "Charlie Crockett",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/St_Georges_Cross.svg_.png",
+  "profile": {
+    "ProfileImage": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2026/05/c_fillg_face_centerq_autof_autodpr_2.0h_220w_200d_stub_default_avatar_light-20.png",
+    "Name": "Charlie Crockett",
+    "BirthPlace": "Croydon, England",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "5ft 10in",
+    "Weight": null,
+    "Nationality": "England",
+    "Residence": "Oxted, England",
+    "ProWins": null,
+    "TurnedPro": "2024",
+    "PGAWins": null,
+    "College": "University of Missouri (2024, Business Management)"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Charlie Crockett",
+        "player_num": "65418",
+        "Year": "2026",
+        "Rounds": "2",
+        "SG:TOT": "-0.95",
+        "SG:T2G": "-0.20",
+        "SG:OTT": "0.47",
+        "SG:APP": "-0.33",
+        "SG:BS": "0.14",
+        "SG:ARG": "-0.34",
+        "SG:P": "-0.75",
+        "Dr Distance": "305.0",
+        "Dr Accuracy %": "50.0",
+        "Ball Speed": "175.58"
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Charlie Crockett",
+        "player_num": "65418",
+        "Rounds": "2",
+        "SG:TOT": "-0.95",
+        "SG:T2G": "-0.20",
+        "SG:OTT": "0.47",
+        "SG:APP": "-0.33",
+        "SG:BS": "0.14",
+        "SG:ARG": "-0.34",
+        "SG:P": "-0.75",
+        "SG:SG": "-1.09"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-04-05",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "Valero Texas Open",
+        "is_major": "0",
+        "playerName": "Charlie Crockett",
+        "player_num": "65418",
+        "Rounds": "2",
+        "CourseID": "770",
+        "Course": "TPC San Antonio (Oaks)",
+        "ShotLink": "2",
+        "SG:TOT": "-0.95",
+        "SG:T2G": "-0.20",
+        "SG:OTT": "0.47",
+        "SG:APP": "-0.33",
+        "SG:BS": "0.14",
+        "SG:ARG": "-0.34",
+        "SG:P": "-0.75",
+        "SG:SG": "-1.09"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "50.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Poa Trivialis",
+        "StrokesGainedAverage": "-0.7454999834299088",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-3.2200000286102295",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "1.3200000524520874",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-0.949999988079071",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "1.3200000524520874",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-3.2200000286102295",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-0.949999988079071",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "70",
+        "PM": "74",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "29.2",
+        "150-200": "28.9",
+        "200+": "52.8",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-0.949999988079071",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:20:13.240Z",
+    "ok": true
+  }
+}

@@ -1,0 +1,152 @@
+{
+  "playerId": "56267",
+  "playerName": "Yurav Premlall",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_sf-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Yurav Premlall",
+    "BirthPlace": null,
+    "BirthDate": "June 17, 2003",
+    "Age": "23",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "South Africa",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Yurav Premlall",
+        "player_num": "56267",
+        "Year": "2026",
+        "Rounds": "2",
+        "SG:TOT": "-3.71",
+        "SG:T2G": "-5.37",
+        "SG:OTT": "-1.18",
+        "SG:APP": "-3.02",
+        "SG:BS": "-4.20",
+        "SG:ARG": "-1.17",
+        "SG:P": "1.66",
+        "Dr Distance": "290.9",
+        "Dr Accuracy %": "23.1",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Yurav Premlall",
+        "player_num": "56267",
+        "Rounds": "2",
+        "SG:TOT": "-3.71",
+        "SG:T2G": "-5.37",
+        "SG:OTT": "-1.18",
+        "SG:APP": "-3.02",
+        "SG:BS": "-4.20",
+        "SG:ARG": "-1.17",
+        "SG:P": "1.66",
+        "SG:SG": "0.49"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-07-12",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "Genesis Scottish Open",
+        "is_major": "0",
+        "playerName": "Yurav Premlall",
+        "player_num": "56267",
+        "Rounds": "2",
+        "CourseID": "945",
+        "Course": "The Renaissance Club",
+        "ShotLink": "2",
+        "SG:TOT": "-3.71",
+        "SG:T2G": "-5.37",
+        "SG:OTT": "-1.18",
+        "SG:APP": "-3.02",
+        "SG:BS": "-4.20",
+        "SG:ARG": "-1.17",
+        "SG:P": "1.66",
+        "SG:SG": "0.49"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.149999976158142",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-6.260000228881836",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-3.705000102519989",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-3.705000102519989",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Strong",
+        "StrokesGainedAverage": "-3.705000102519989",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "71",
+        "PM": "76",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "44.5",
+        "150-200": null,
+        "200+": "81.2",
+        "200-250": "68.6",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-3.705000102519989",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:26:33.385Z",
+    "ok": true
+  }
+}

@@ -1,0 +1,162 @@
+{
+  "playerId": "46123",
+  "playerName": "Matt Snyder",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Matt Snyder",
+    "BirthPlace": "Las Vegas, Nevada",
+    "BirthDate": "September 17, 1989",
+    "Age": "37",
+    "Height": "5ft 10in",
+    "Weight": "170 lbs",
+    "Nationality": "United States",
+    "Residence": "Las Vegas, Nevada",
+    "ProWins": null,
+    "TurnedPro": "2014",
+    "PGAWins": null,
+    "College": "California Lutheran University 2012, Business Management"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Matt Snyder",
+        "player_num": "46123",
+        "Year": "2026",
+        "Rounds": "2",
+        "SG:TOT": "-7.01",
+        "SG:T2G": "-4.18",
+        "SG:OTT": "-1.34",
+        "SG:APP": "-2.85",
+        "SG:BS": "-4.18",
+        "SG:ARG": "0.00",
+        "SG:P": "-2.82",
+        "Dr Distance": "304.5",
+        "Dr Accuracy %": "71.4",
+        "Ball Speed": "178.35"
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Matt Snyder",
+        "player_num": "46123",
+        "Rounds": "2",
+        "SG:TOT": "-7.01",
+        "SG:T2G": "-4.18",
+        "SG:OTT": "-1.34",
+        "SG:APP": "-2.85",
+        "SG:BS": "-4.18",
+        "SG:ARG": "0.00",
+        "SG:P": "-2.82",
+        "SG:SG": "-2.82"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-10-04",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "Bank of Utah Championship",
+        "is_major": "0",
+        "playerName": "Matt Snyder",
+        "player_num": "46123",
+        "Rounds": "2",
+        "CourseID": "930",
+        "Course": "Black Desert Resort",
+        "ShotLink": "2",
+        "SG:TOT": "-7.01",
+        "SG:T2G": "-4.18",
+        "SG:OTT": "-1.34",
+        "SG:APP": "-2.85",
+        "SG:BS": "-4.18",
+        "SG:ARG": "0.00",
+        "SG:P": "-2.82",
+        "SG:SG": "-2.82"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-2.821000039577484",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-5.960000038146973",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-8.050000190734863",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-7.005000114440918",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-7.005000114440918",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-7.005000114440918",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74",
+        "PM": "76",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "38.7",
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-7.005000114440918",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:58.196Z",
+    "ok": true
+  }
+}

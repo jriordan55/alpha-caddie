@@ -1,0 +1,200 @@
+{
+  "playerId": "49371",
+  "playerName": "Otto Black",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Otto Black",
+    "BirthPlace": "Ann Arbor, Michigan",
+    "BirthDate": "March 09, 1994",
+    "Age": "32",
+    "Height": "6ft 2in",
+    "Weight": "195 lbs",
+    "Nationality": "United States",
+    "Residence": "Naples, Florida",
+    "ProWins": null,
+    "TurnedPro": "2016",
+    "PGAWins": null,
+    "College": "University of Toledo 2016, Entrepreneurship"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Otto Black",
+        "player_num": "49371",
+        "Year": "2025",
+        "Rounds": "2",
+        "SG:TOT": "-2.14",
+        "SG:T2G": "-1.60",
+        "SG:OTT": "-1.49",
+        "SG:APP": "0.18",
+        "SG:BS": "-1.31",
+        "SG:ARG": "-0.29",
+        "SG:P": "-0.54",
+        "Dr Distance": "300.1",
+        "Dr Accuracy %": "35.7",
+        "Ball Speed": "176.75"
+      },
+      {
+        "playerName": "Otto Black",
+        "player_num": "49371",
+        "Year": "2024",
+        "Rounds": "2",
+        "SG:TOT": "-6.42",
+        "SG:T2G": "-5.75",
+        "SG:OTT": "-2.65",
+        "SG:APP": "-2.81",
+        "SG:BS": "-5.46",
+        "SG:ARG": "-0.29",
+        "SG:P": "-0.67",
+        "Dr Distance": "292.9",
+        "Dr Accuracy %": "39.3",
+        "Ball Speed": "181.07"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2025-06-29",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "Rocket Classic",
+        "is_major": "0",
+        "playerName": "Otto Black",
+        "player_num": "49371",
+        "Rounds": "2",
+        "CourseID": "876",
+        "Course": "Detroit GC",
+        "ShotLink": "2",
+        "SG:TOT": "-2.14",
+        "SG:T2G": "-1.60",
+        "SG:OTT": "-1.49",
+        "SG:APP": "0.18",
+        "SG:BS": "-1.31",
+        "SG:ARG": "-0.29",
+        "SG:P": "-0.54",
+        "SG:SG": "-0.83"
+      },
+      {
+        "Date": "2024-06-16",
+        "position": "CUT",
+        "roundPosition": "T153",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Otto Black",
+        "player_num": "49371",
+        "Rounds": "2",
+        "CourseID": "528",
+        "Course": "Pinehurst No. 2",
+        "ShotLink": "2",
+        "SG:TOT": "-6.42",
+        "SG:T2G": "-5.75",
+        "SG:OTT": "-2.65",
+        "SG:APP": "-2.81",
+        "SG:BS": "-5.46",
+        "SG:ARG": "-0.29",
+        "SG:P": "-0.67",
+        "SG:SG": "-0.96"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-0.6699999868869781",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-4.319999933242798",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-4.239999949932098",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-2.14000004529953",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-6.419999837875366",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-6.419999837875366",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-2.14000004529953",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-2.14000004529953",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-6.419999837875366",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "76",
+        "PM": "75",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": "19.9",
+        "150-200": null,
+        "200+": "61.5",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-4.279999941587448",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:24:34.963Z",
+    "ok": true
+  }
+}

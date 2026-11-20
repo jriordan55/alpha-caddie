@@ -1,0 +1,106 @@
+{
+  "courseNum": "100",
+  "courseName": "Chambers Bay GC 2",
+  "list": {
+    "CourseName": "Chambers Bay GC 2",
+    "CourseNum": "100",
+    "CourseNums": [
+      100,
+      818
+    ]
+  },
+  "details": {
+    "CourseName": "Chambers Bay GC",
+    "CourseNum": "100",
+    "Locations": [
+      "Northwest",
+      "Washington"
+    ],
+    "SeasonHeld": "",
+    "CourseTypes": [
+      "Hybrid Links"
+    ],
+    "ParScore": "70",
+    "Yards": "7710",
+    "AVG": "110.1",
+    "CourseLength": "Very Long",
+    "Architects": [
+      "Robert Trent Jones Jr."
+    ],
+    "RedesignArchitects": [],
+    "Elevation": "227",
+    "CourseElevation": "Average",
+    "Bunkers": "105",
+    "BunkersRank": "High",
+    "WaterHoles": "0",
+    "WaterDanger": "Low",
+    "ScoreRTP": "2.8",
+    "Difficulty": "",
+    "FwyGrass": "Fescue Mix",
+    "FwyWidth": "0",
+    "GreenSqFt": "8700",
+    "GreenSize": "Large",
+    "GreenGrass": "Poa",
+    "GreenStimp": "12",
+    "GreenSpeed": "Average",
+    "RoughType": "Fescue",
+    "RoughGrass": "Fescue",
+    "RoughLengthInc": "4",
+    "RoughLength": "Long",
+    "EventTypes": [
+      "36-Hole Cut",
+      "Major"
+    ],
+    "Tournaments": [
+      {
+        "Year": "2015",
+        "Tournament": "U.S. Open"
+      }
+    ],
+    "CorrelatedCourse": [],
+    "FieldSize": "Full Field",
+    "FieldStrength": "Very Strong",
+    "OTTClub": "",
+    "FwyPct": "0",
+    "FwyAccuracy": "",
+    "GainOTT": "",
+    "MissedFairwayPenalty": "",
+    "RoughPenalty": "",
+    "GIRAccuracy": "",
+    "GIRPct": "0",
+    "GainAPP": "",
+    "ScramblingFromRough": "",
+    "ScramblingFromShortGrass": "",
+    "SandSaves": "",
+    "GainARG": "",
+    "GainingPuttingInside15": "",
+    "GainingPuttingOutside15": "",
+    "3PuttAVD": "",
+    "GainPutting": "",
+    "Par3Scoring": "",
+    "Par4Scoring": "",
+    "Par5Scoring": "",
+    "ShotLink": "1"
+  },
+  "tournaments": [
+    {
+      "CourseNum": "100",
+      "TNum": "26",
+      "TourneyName": "U.S. Open"
+    }
+  ],
+  "_meta": {
+    "pulledAt": "2026-11-20T22:18:24.827Z",
+    "detailStatus": 200,
+    "tournamentsStatus": 200
+  },
+  "auth": {
+    "holeBreakdown": [],
+    "correlated": [],
+    "_meta": {
+      "pulledAt": "2026-11-20T22:52:51.648Z",
+      "holeStatus": 200,
+      "correlatedStatus": 200
+    }
+  }
+}

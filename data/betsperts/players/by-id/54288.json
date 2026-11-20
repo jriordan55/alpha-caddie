@@ -1,0 +1,184 @@
+{
+  "playerId": "54288",
+  "playerName": "Harrison Crowe",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/as-flag.gif",
+  "profile": {
+    "ProfileImage": "0",
+    "Name": "Harrison Crowe",
+    "BirthPlace": "Bexley, Australia",
+    "BirthDate": "0",
+    "Age": null,
+    "Height": "0",
+    "Weight": "0",
+    "Nationality": "Australia",
+    "Residence": "0",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": "0"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Harrison Crowe",
+        "player_num": "54288",
+        "Year": "2023",
+        "Rounds": "4",
+        "SG:TOT": "-3.92",
+        "SG:T2G": "-2.33",
+        "SG:OTT": "-0.50",
+        "SG:APP": "-1.38",
+        "SG:BS": "-1.88",
+        "SG:ARG": "-0.45",
+        "SG:P": "-1.37",
+        "Dr Distance": null,
+        "Dr Accuracy %": "51.8",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2023-07-23",
+        "position": "CUT",
+        "roundPosition": null,
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Harrison Crowe",
+        "player_num": "54288",
+        "Rounds": "2",
+        "CourseID": "923",
+        "Course": "Royal Liverpool",
+        "ShotLink": "2",
+        "SG:TOT": "-4.65",
+        "SG:T2G": "-3.39",
+        "SG:OTT": "0.15",
+        "SG:APP": "-1.53",
+        "SG:BS": "-1.38",
+        "SG:ARG": "-2.01",
+        "SG:P": "-0.86",
+        "SG:SG": "-2.87"
+      },
+      {
+        "Date": "2023-04-09",
+        "position": "CUT",
+        "roundPosition": "T75",
+        "TournamentName": "Masters Tournament",
+        "is_major": "1",
+        "playerName": "Harrison Crowe",
+        "player_num": "54288",
+        "Rounds": "2",
+        "CourseID": "14",
+        "Course": "Augusta National GC",
+        "ShotLink": "2",
+        "SG:TOT": "-3.20",
+        "SG:T2G": "-1.27",
+        "SG:OTT": "-1.14",
+        "SG:APP": "-1.24",
+        "SG:BS": "-2.38",
+        "SG:ARG": "1.11",
+        "SG:P": "-1.89",
+        "SG:SG": "-0.78"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-1.3727500140666962",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-2.7050000429153442",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-5.140000104904175",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-3.1950000524520874",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-4.650000095367432",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-3.1950000524520874",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-4.650000095367432",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-3.9225000739097595",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "77.5",
+        "PM": "76.5",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-3.1950000524520874",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-4.650000095367432",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:21:57.422Z",
+    "ok": true
+  }
+}

@@ -1,0 +1,143 @@
+{
+  "playerId": "67145",
+  "playerName": "Cameron Adam",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/04/Flag_of_Scotland.svg_.png",
+  "profile": {
+    "ProfileImage": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2026/05/2025_adam_cameron_67145.png",
+    "Name": "Cameron Adam",
+    "BirthPlace": "Edinburgh, Scotland",
+    "BirthDate": "July 6, 2003",
+    "Age": "23",
+    "Height": "6ft 2in",
+    "Weight": "165 lbs",
+    "Nationality": "Scotland",
+    "Residence": "Fife, Scotland",
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": "Northwestern University (2025)"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Cameron Adam",
+        "player_num": "67145",
+        "Year": "2025",
+        "Rounds": "2",
+        "SG:TOT": "-0.27",
+        "SG:T2G": "0.85",
+        "SG:OTT": "-0.96",
+        "SG:APP": "1.48",
+        "SG:BS": "0.52",
+        "SG:ARG": "0.32",
+        "SG:P": "-1.12",
+        "Dr Distance": null,
+        "Dr Accuracy %": "46.4",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2025-07-20",
+        "position": "CUT",
+        "roundPosition": null,
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Cameron Adam",
+        "player_num": "67145",
+        "Rounds": "2",
+        "CourseID": "885",
+        "Course": "Royal Portrush GC",
+        "ShotLink": "2",
+        "SG:TOT": "-0.27",
+        "SG:T2G": "0.85",
+        "SG:OTT": "-0.96",
+        "SG:APP": "1.48",
+        "SG:BS": "0.52",
+        "SG:ARG": "0.32",
+        "SG:P": "-1.12",
+        "SG:SG": "-0.80"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "0.03999999910593033",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.5899999737739563",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-0.274999987334013",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-0.5899999737739563",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "0.03999999910593033",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-0.274999987334013",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "72",
+        "PM": "73",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-0.274999987334013",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:20:01.479Z",
+    "ok": true
+  }
+}

@@ -1,0 +1,157 @@
+{
+  "playerId": "62996",
+  "playerName": "Lev Grinberg",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_fr-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Lev Grinberg",
+    "BirthPlace": null,
+    "BirthDate": "",
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "France",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Lev Grinberg",
+        "player_num": "62996",
+        "Year": "2026",
+        "Rounds": "2",
+        "SG:TOT": "-2.61",
+        "SG:T2G": "-0.42",
+        "SG:OTT": "-0.00",
+        "SG:APP": "0.41",
+        "SG:BS": "0.40",
+        "SG:ARG": "-0.83",
+        "SG:P": "-2.19",
+        "Dr Distance": null,
+        "Dr Accuracy %": "57.1",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Lev Grinberg",
+        "player_num": "62996",
+        "Rounds": "2",
+        "SG:TOT": "-2.61",
+        "SG:T2G": "-0.42",
+        "SG:OTT": "-0.00",
+        "SG:APP": "0.41",
+        "SG:BS": "0.40",
+        "SG:ARG": "-0.83",
+        "SG:P": "-2.19",
+        "SG:SG": "-3.02"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-07-19",
+        "position": "CUT",
+        "roundPosition": null,
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Lev Grinberg",
+        "player_num": "62996",
+        "Rounds": "2",
+        "CourseID": "541",
+        "Course": "Royal Birkdale GC",
+        "ShotLink": "2",
+        "SG:TOT": "-2.61",
+        "SG:T2G": "-0.42",
+        "SG:OTT": "-0.00",
+        "SG:APP": "0.41",
+        "SG:BS": "0.40",
+        "SG:ARG": "-0.83",
+        "SG:P": "-2.19",
+        "SG:SG": "-3.02"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "0.4399999976158142",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-5.650000095367432",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-2.6050000488758087",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-5.650000095367432",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "0.4399999976158142",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-2.6050000488758087",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "71",
+        "PM": "76",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-2.6050000488758087",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:36.786Z",
+    "ok": true
+  }
+}

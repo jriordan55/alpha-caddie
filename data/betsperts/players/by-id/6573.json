@@ -1,0 +1,293 @@
+{
+  "playerId": "6573",
+  "playerName": "Brandt Jobe",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Brandt Jobe",
+    "BirthPlace": "Oklahoma City, Oklahoma",
+    "BirthDate": "August 01, 1965",
+    "Age": "61",
+    "Height": "5ft 11in",
+    "Weight": "180 lbs",
+    "Nationality": "United States",
+    "Residence": "Argyle, Texas",
+    "ProWins": null,
+    "TurnedPro": "1988",
+    "PGAWins": null,
+    "College": "UCLA  (1988, History) "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Brandt Jobe",
+        "player_num": "6573",
+        "Year": "2015",
+        "Rounds": "15",
+        "SG:TOT": "-0.91",
+        "SG:T2G": "-1.18",
+        "SG:OTT": "0.16",
+        "SG:APP": "-0.38",
+        "SG:BS": "-0.23",
+        "SG:ARG": "-0.95",
+        "SG:P": "-0.20",
+        "Dr Distance": "283.0",
+        "Dr Accuracy %": "64.9",
+        "Ball Speed": "169.71"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2015-07-19",
+        "position": "T72",
+        "roundPosition": "T72",
+        "TournamentName": "Barbasol Championship",
+        "is_major": "0",
+        "playerName": "Brandt Jobe",
+        "player_num": "6573",
+        "Rounds": "4",
+        "CourseID": "819",
+        "Course": "RTJ Trail (Grand National)",
+        "ShotLink": "4",
+        "SG:TOT": "-0.95",
+        "SG:T2G": "0.49",
+        "SG:OTT": "0.17",
+        "SG:APP": "1.00",
+        "SG:BS": "1.17",
+        "SG:ARG": "-0.68",
+        "SG:P": "-1.44",
+        "SG:SG": "-2.11"
+      },
+      {
+        "Date": "2015-06-14",
+        "position": "CUT",
+        "roundPosition": "T97",
+        "TournamentName": "FedEx St. Jude Classic",
+        "is_major": "0",
+        "playerName": "Brandt Jobe",
+        "player_num": "6573",
+        "Rounds": "2",
+        "CourseID": "513",
+        "Course": "TPC Southwind",
+        "ShotLink": "2",
+        "SG:TOT": "-0.83",
+        "SG:T2G": "-2.90",
+        "SG:OTT": "-0.25",
+        "SG:APP": "-2.20",
+        "SG:BS": "-2.45",
+        "SG:ARG": "-0.46",
+        "SG:P": "2.07",
+        "SG:SG": "1.61"
+      },
+      {
+        "Date": "2015-05-31",
+        "position": "CUT",
+        "roundPosition": "T100",
+        "TournamentName": "AT&T Byron Nelson",
+        "is_major": "0",
+        "playerName": "Brandt Jobe",
+        "player_num": "6573",
+        "Rounds": "2",
+        "CourseID": "822",
+        "Course": "TPC Four Seasons Resort",
+        "ShotLink": "2",
+        "SG:TOT": "-0.90",
+        "SG:T2G": "0.43",
+        "SG:OTT": "0.60",
+        "SG:APP": "0.35",
+        "SG:BS": "0.94",
+        "SG:ARG": "-0.51",
+        "SG:P": "-0.91",
+        "SG:SG": "-1.42"
+      },
+      {
+        "Date": "2015-03-08",
+        "position": "T70",
+        "roundPosition": "T70",
+        "TournamentName": "Puerto Rico Open",
+        "is_major": "0",
+        "playerName": "Brandt Jobe",
+        "player_num": "6573",
+        "Rounds": "4",
+        "CourseID": "742",
+        "Course": "Grand Reserve GC",
+        "ShotLink": "0",
+        "SG:TOT": "-0.44",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2015-02-15",
+        "position": "CUT",
+        "roundPosition": "T118",
+        "TournamentName": "AT&T Pebble Beach Pro-Am",
+        "is_major": "0",
+        "playerName": "Brandt Jobe",
+        "player_num": "6573",
+        "Rounds": "3",
+        "CourseID": "5",
+        "Course": "Pebble Beach Golf Links",
+        "ShotLink": "1",
+        "SG:TOT": "-1.57",
+        "SG:T2G": "-6.00",
+        "SG:OTT": "0.47",
+        "SG:APP": "-3.01",
+        "SG:BS": "-2.54",
+        "SG:ARG": "-3.46",
+        "SG:P": "0.90",
+        "SG:SG": "-2.56"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "26.7",
+        "SG TOT 1+": "20.0",
+        "SG TOT 2+": "13.3",
+        "SG TOT 3+": "6.7",
+        "SG TOT 4+": "6.7",
+        "SG TOT 5+": "0.0",
+        "Rounds": "17"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.9100000262260437",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-0.2695000022649765",
+        "Rounds": "6"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "0.9039999842643738",
+        "Rounds": "3"
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "0.6300000131130219",
+        "Rounds": "6"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.5139999866485596",
+        "Rounds": "6"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-3.206666653354963",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-2.34000001847744",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "",
+        "StrokesGainedAverage": null,
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-0.9074999988079071",
+        "Rounds": "8"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-0.4350000210106373",
+        "Rounds": "4"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-1.5733332633972168",
+        "Rounds": "3"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-0.9000000208616257",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-0.56833333025376",
+        "Rounds": "6"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-1.559999942779541",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-1.1583333164453506",
+        "Rounds": "6"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-0.691250016912818",
+        "Rounds": "10"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-1.1699999613421304",
+        "Rounds": "7"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "71.875",
+        "PM": "71.14285714285714",
+        "Rounds": "17"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "17",
+        "50-100": "18.7",
+        "100-150": "23.5",
+        "150-200": "25",
+        "200+": "45.2",
+        "200-250": "38.6",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-0.6512500029057264",
+        "Rounds": "8"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-0.9475000128149986",
+        "Rounds": "6"
+      },
+      {
+        "SeasonHeld": "West Coast",
+        "StrokesGainedAverage": "-1.5733332633972168",
+        "Rounds": "3"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:41.884Z",
+    "ok": true
+  }
+}

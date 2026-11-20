@@ -1,0 +1,157 @@
+{
+  "playerId": "59679",
+  "playerName": "Alejandro Fierro",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_mx-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Alejandro Fierro",
+    "BirthPlace": null,
+    "BirthDate": "",
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "Mexico",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Alejandro Fierro",
+        "player_num": "59679",
+        "Year": "2026",
+        "Rounds": "2",
+        "SG:TOT": "-3.04",
+        "SG:T2G": "-5.72",
+        "SG:OTT": "-2.84",
+        "SG:APP": "-1.73",
+        "SG:BS": "-4.57",
+        "SG:ARG": "-1.16",
+        "SG:P": "2.69",
+        "Dr Distance": "296.2",
+        "Dr Accuracy %": "61.5",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Alejandro Fierro",
+        "player_num": "59679",
+        "Rounds": "2",
+        "SG:TOT": "-3.04",
+        "SG:T2G": "-5.72",
+        "SG:OTT": "-2.84",
+        "SG:APP": "-1.73",
+        "SG:BS": "-4.57",
+        "SG:ARG": "-1.16",
+        "SG:P": "2.69",
+        "SG:SG": "1.53"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-11-01",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "Mexico Open at Vidanta",
+        "is_major": "0",
+        "playerName": "Alejandro Fierro",
+        "player_num": "59679",
+        "Rounds": "2",
+        "CourseID": "978",
+        "Course": "Vidanta Vallarta",
+        "ShotLink": "2",
+        "SG:TOT": "-3.04",
+        "SG:T2G": "-5.72",
+        "SG:OTT": "-2.84",
+        "SG:APP": "-1.73",
+        "SG:BS": "-4.57",
+        "SG:ARG": "-1.16",
+        "SG:P": "2.69",
+        "SG:SG": "1.53"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-3.75",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-2.3299999237060547",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-3.75",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-2.3299999237060547",
+        "Rounds": "1"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-3.0399999618530273",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-3.0399999618530273",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "71",
+        "PM": "73",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": "82.7",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-3.0399999618530273",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:18:49.935Z",
+    "ok": true
+  }
+}

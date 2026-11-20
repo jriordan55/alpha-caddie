@@ -1,0 +1,508 @@
+{
+  "playerId": "20070",
+  "playerName": "Matt Bettencourt",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "0",
+    "Name": "Matt Bettencourt",
+    "BirthPlace": "Alameda, California",
+    "BirthDate": "April 12, 1975",
+    "Age": "51",
+    "Height": "5ft 11in",
+    "Weight": "180 lbs",
+    "Nationality": "United States",
+    "Residence": "Duncan, South Carolina",
+    "ProWins": "1",
+    "TurnedPro": "2002",
+    "PGAWins": "1",
+    "College": "Modesto Junior College  (1997, Business Administration) "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Matt Bettencourt",
+        "player_num": "20070",
+        "Year": "2018",
+        "Rounds": "2",
+        "SG:TOT": "-3.68",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "67.9",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Matt Bettencourt",
+        "player_num": "20070",
+        "Year": "2017",
+        "Rounds": "2",
+        "SG:TOT": "-2.80",
+        "SG:T2G": "-3.00",
+        "SG:OTT": "-0.78",
+        "SG:APP": "-0.63",
+        "SG:BS": "-1.41",
+        "SG:ARG": "-1.59",
+        "SG:P": "0.19",
+        "Dr Distance": "276.7",
+        "Dr Accuracy %": "57.1",
+        "Ball Speed": "167.18"
+      },
+      {
+        "playerName": "Matt Bettencourt",
+        "player_num": "20070",
+        "Year": "2016",
+        "Rounds": "8",
+        "SG:TOT": "-3.72",
+        "SG:T2G": "-3.80",
+        "SG:OTT": "-0.68",
+        "SG:APP": "-2.33",
+        "SG:BS": "-3.01",
+        "SG:ARG": "-0.79",
+        "SG:P": "0.06",
+        "Dr Distance": "276.5",
+        "Dr Accuracy %": "54.1",
+        "Ball Speed": "166.70"
+      },
+      {
+        "playerName": "Matt Bettencourt",
+        "player_num": "20070",
+        "Year": "2015",
+        "Rounds": "20",
+        "SG:TOT": "-0.92",
+        "SG:T2G": "-1.69",
+        "SG:OTT": "-1.18",
+        "SG:APP": "-0.46",
+        "SG:BS": "-1.63",
+        "SG:ARG": "-0.06",
+        "SG:P": "0.05",
+        "Dr Distance": "268.4",
+        "Dr Accuracy %": "57.3",
+        "Ball Speed": "163.74"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2018-03-25",
+        "position": "CUT",
+        "roundPosition": "T117",
+        "TournamentName": "Corales Puntacana Championship",
+        "is_major": "0",
+        "playerName": "Matt Bettencourt",
+        "player_num": "20070",
+        "Rounds": "2",
+        "CourseID": "244",
+        "Course": "Corales Golf Course",
+        "ShotLink": "0",
+        "SG:TOT": "-3.68",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2017-07-23",
+        "position": "CUT",
+        "roundPosition": "T114",
+        "TournamentName": "Barbasol Championship",
+        "is_major": "0",
+        "playerName": "Matt Bettencourt",
+        "player_num": "20070",
+        "Rounds": "2",
+        "CourseID": "819",
+        "Course": "RTJ Trail (Grand National)",
+        "ShotLink": "2",
+        "SG:TOT": "-2.80",
+        "SG:T2G": "-3.00",
+        "SG:OTT": "-0.78",
+        "SG:APP": "-0.63",
+        "SG:BS": "-1.41",
+        "SG:ARG": "-1.59",
+        "SG:P": "0.19",
+        "SG:SG": "-1.40"
+      },
+      {
+        "Date": "2016-08-14",
+        "position": "CUT",
+        "roundPosition": "151",
+        "TournamentName": "John Deere Classic",
+        "is_major": "0",
+        "playerName": "Matt Bettencourt",
+        "player_num": "20070",
+        "Rounds": "2",
+        "CourseID": "669",
+        "Course": "TPC Deere Run",
+        "ShotLink": "2",
+        "SG:TOT": "-7.34",
+        "SG:T2G": "-6.67",
+        "SG:OTT": "-0.99",
+        "SG:APP": "-2.74",
+        "SG:BS": "-3.73",
+        "SG:ARG": "-2.94",
+        "SG:P": "-0.67",
+        "SG:SG": "-3.61"
+      },
+      {
+        "Date": "2016-07-17",
+        "position": "T81",
+        "roundPosition": "T81",
+        "TournamentName": "Barbasol Championship",
+        "is_major": "0",
+        "playerName": "Matt Bettencourt",
+        "player_num": "20070",
+        "Rounds": "3",
+        "CourseID": "819",
+        "Course": "RTJ Trail (Grand National)",
+        "ShotLink": "3",
+        "SG:TOT": "-2.23",
+        "SG:T2G": "-2.65",
+        "SG:OTT": "-0.88",
+        "SG:APP": "-2.45",
+        "SG:BS": "-3.32",
+        "SG:ARG": "0.68",
+        "SG:P": "0.42",
+        "SG:SG": "1.09"
+      },
+      {
+        "Date": "2016-02-14",
+        "position": "CUT",
+        "roundPosition": "T136",
+        "TournamentName": "AT&T Pebble Beach Pro-Am",
+        "is_major": "0",
+        "playerName": "Matt Bettencourt",
+        "player_num": "20070",
+        "Rounds": "3",
+        "CourseID": "5",
+        "Course": "Pebble Beach Golf Links",
+        "ShotLink": "1",
+        "SG:TOT": "-2.81",
+        "SG:T2G": "-1.54",
+        "SG:OTT": "0.55",
+        "SG:APP": "-1.17",
+        "SG:BS": "-0.62",
+        "SG:ARG": "-0.92",
+        "SG:P": "0.44",
+        "SG:SG": "-0.47"
+      },
+      {
+        "Date": "2015-11-08",
+        "position": "CUT",
+        "roundPosition": "T91",
+        "TournamentName": "Sanderson Farms Championship",
+        "is_major": "0",
+        "playerName": "Matt Bettencourt",
+        "player_num": "20070",
+        "Rounds": "2",
+        "CourseID": "746",
+        "Course": "The Country Club of Jackson",
+        "ShotLink": "2",
+        "SG:TOT": "-1.59",
+        "SG:T2G": "-2.13",
+        "SG:OTT": "-0.27",
+        "SG:APP": "-1.14",
+        "SG:BS": "-1.41",
+        "SG:ARG": "-0.72",
+        "SG:P": "0.54",
+        "SG:SG": "-0.17"
+      },
+      {
+        "Date": "2015-08-23",
+        "position": "CUT",
+        "roundPosition": "T71",
+        "TournamentName": "Wyndham Championship",
+        "is_major": "0",
+        "playerName": "Matt Bettencourt",
+        "player_num": "20070",
+        "Rounds": "2",
+        "CourseID": "752",
+        "Course": "Sedgefield CC",
+        "ShotLink": "2",
+        "SG:TOT": "-0.05",
+        "SG:T2G": "-0.29",
+        "SG:OTT": "-1.14",
+        "SG:APP": "0.86",
+        "SG:BS": "-0.28",
+        "SG:ARG": "-0.00",
+        "SG:P": "0.24",
+        "SG:SG": "0.24"
+      },
+      {
+        "Date": "2015-07-19",
+        "position": "T39",
+        "roundPosition": "T39",
+        "TournamentName": "Barbasol Championship",
+        "is_major": "0",
+        "playerName": "Matt Bettencourt",
+        "player_num": "20070",
+        "Rounds": "4",
+        "CourseID": "819",
+        "Course": "RTJ Trail (Grand National)",
+        "ShotLink": "4",
+        "SG:TOT": "0.55",
+        "SG:T2G": "-0.62",
+        "SG:OTT": "-0.88",
+        "SG:APP": "0.25",
+        "SG:BS": "-0.63",
+        "SG:ARG": "0.01",
+        "SG:P": "1.17",
+        "SG:SG": "1.18"
+      },
+      {
+        "Date": "2015-07-12",
+        "position": "CUT",
+        "roundPosition": "T124",
+        "TournamentName": "John Deere Classic",
+        "is_major": "0",
+        "playerName": "Matt Bettencourt",
+        "player_num": "20070",
+        "Rounds": "2",
+        "CourseID": "669",
+        "Course": "TPC Deere Run",
+        "ShotLink": "2",
+        "SG:TOT": "-1.81",
+        "SG:T2G": "-1.02",
+        "SG:OTT": "-0.56",
+        "SG:APP": "-1.07",
+        "SG:BS": "-1.63",
+        "SG:ARG": "0.61",
+        "SG:P": "-0.79",
+        "SG:SG": "-0.18"
+      },
+      {
+        "Date": "2015-06-14",
+        "position": "CUT",
+        "roundPosition": "T150",
+        "TournamentName": "FedEx St. Jude Classic",
+        "is_major": "0",
+        "playerName": "Matt Bettencourt",
+        "player_num": "20070",
+        "Rounds": "2",
+        "CourseID": "513",
+        "Course": "TPC Southwind",
+        "ShotLink": "2",
+        "SG:TOT": "-5.84",
+        "SG:T2G": "-4.31",
+        "SG:OTT": "-3.77",
+        "SG:APP": "-0.25",
+        "SG:BS": "-4.02",
+        "SG:ARG": "-0.29",
+        "SG:P": "-1.52",
+        "SG:SG": "-1.81"
+      },
+      {
+        "Date": "2015-03-08",
+        "position": "T38",
+        "roundPosition": "T38",
+        "TournamentName": "Puerto Rico Open",
+        "is_major": "0",
+        "playerName": "Matt Bettencourt",
+        "player_num": "20070",
+        "Rounds": "4",
+        "CourseID": "742",
+        "Course": "Grand Reserve GC",
+        "ShotLink": "0",
+        "SG:TOT": "0.56",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2015-02-15",
+        "position": "63",
+        "roundPosition": "63",
+        "TournamentName": "AT&T Pebble Beach Pro-Am",
+        "is_major": "0",
+        "playerName": "Matt Bettencourt",
+        "player_num": "20070",
+        "Rounds": "4",
+        "CourseID": "5",
+        "Course": "Pebble Beach Golf Links",
+        "ShotLink": "2",
+        "SG:TOT": "-1.09",
+        "SG:T2G": "-2.88",
+        "SG:OTT": "-0.72",
+        "SG:APP": "-2.09",
+        "SG:BS": "-2.82",
+        "SG:ARG": "-0.06",
+        "SG:P": "-0.49",
+        "SG:SG": "-0.55"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "26.5",
+        "SG TOT 1+": "20.6",
+        "SG TOT 2+": "8.8",
+        "SG TOT 3+": "2.9",
+        "SG TOT 4+": "2.9",
+        "SG TOT 5+": "0.0",
+        "Rounds": "42"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.7269999925047159",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "0.323199999332428",
+        "Rounds": "15"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "-0.17833332220713297",
+        "Rounds": "7"
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.5915384682325215",
+        "Rounds": "16"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-2.3861538779277067",
+        "Rounds": "16"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-2.2320000365376473",
+        "Rounds": "6"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-1.1066666444142659",
+        "Rounds": "4"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "",
+        "StrokesGainedAverage": null,
+        "Rounds": "8"
+      },
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-1.9184615732385562",
+        "Rounds": "13"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "0.5649999678134918",
+        "Rounds": "4"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-3.0633333486815295",
+        "Rounds": "6"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-3.6849998980760574",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-1.8257142869489533",
+        "Rounds": "7"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-3.1933332780996957",
+        "Rounds": "5"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-1.95250004529953",
+        "Rounds": "8"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-0.2166666785875956",
+        "Rounds": "9"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-1.9644444580707285",
+        "Rounds": "18"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-2.8066667318344116",
+        "Rounds": "3"
+      },
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-1.7461904933055241",
+        "Rounds": "29"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-2.014999990351498",
+        "Rounds": "8"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "71.47058823529412",
+        "PM": "73.58823529411765",
+        "Rounds": "42"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "42",
+        "50-100": "19.9",
+        "100-150": "25.4",
+        "150-200": "38.6",
+        "200+": "59.1",
+        "200-250": "54.4",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-1.5850000567734241",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-2.0975000001490116",
+        "Rounds": "8"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-1.8986666902899743",
+        "Rounds": "23"
+      },
+      {
+        "SeasonHeld": "West Coast",
+        "StrokesGainedAverage": "-1.8257142869489533",
+        "Rounds": "7"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:54.946Z",
+    "ok": true
+  }
+}

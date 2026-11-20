@@ -1,0 +1,148 @@
+{
+  "playerId": "52664",
+  "playerName": "Chris Moody",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Chris Moody",
+    "BirthPlace": null,
+    "BirthDate": null,
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Chris Moody",
+        "player_num": "52664",
+        "Year": "2017",
+        "Rounds": "2",
+        "SG:TOT": "-5.33",
+        "SG:T2G": "-5.00",
+        "SG:OTT": "-0.44",
+        "SG:APP": "-2.11",
+        "SG:BS": "-2.55",
+        "SG:ARG": "-2.45",
+        "SG:P": "-0.33",
+        "Dr Distance": "282.0",
+        "Dr Accuracy %": "60.7",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2017-08-13",
+        "position": "CUT",
+        "roundPosition": "T144",
+        "TournamentName": "PGA Championship",
+        "is_major": "1",
+        "playerName": "Chris Moody",
+        "player_num": "52664",
+        "Rounds": "2",
+        "CourseID": "241",
+        "Course": "Quail Hollow Club",
+        "ShotLink": "2",
+        "SG:TOT": "-5.33",
+        "SG:T2G": "-5.00",
+        "SG:OTT": "-0.44",
+        "SG:APP": "-2.11",
+        "SG:BS": "-2.55",
+        "SG:ARG": "-2.45",
+        "SG:P": "-0.33",
+        "SG:SG": "-2.78"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-0.3279999941587448",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-6.260000228881836",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-4.400000095367432",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-5.330000162124634",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-5.330000162124634",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-5.330000162124634",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "78",
+        "PM": "81",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": "20.8",
+        "100-150": null,
+        "150-200": null,
+        "200+": "58.9",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-5.330000162124634",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:20:22.580Z",
+    "ok": true
+  }
+}

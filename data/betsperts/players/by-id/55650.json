@@ -1,0 +1,153 @@
+{
+  "playerId": "55650",
+  "playerName": "Luke Kluver",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Luke Kluver",
+    "BirthPlace": "Lincoln, Nebraska",
+    "BirthDate": "June 03, 2000",
+    "Age": "26",
+    "Height": "6ft 1in",
+    "Weight": "195 lbs",
+    "Nationality": "United States",
+    "Residence": "Norfolk, Nebraska",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Luke Kluver",
+        "player_num": "55650",
+        "Year": "2021",
+        "Rounds": "2",
+        "SG:TOT": "-1.06",
+        "SG:T2G": "-2.43",
+        "SG:OTT": "-0.45",
+        "SG:APP": "-0.75",
+        "SG:BS": "-1.20",
+        "SG:ARG": "-1.24",
+        "SG:P": "1.37",
+        "Dr Distance": "303.8",
+        "Dr Accuracy %": "57.1",
+        "Ball Speed": "178.10"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2021-07-11",
+        "position": "CUT",
+        "roundPosition": "T103",
+        "TournamentName": "John Deere Classic",
+        "is_major": "0",
+        "playerName": "Luke Kluver",
+        "player_num": "55650",
+        "Rounds": "2",
+        "CourseID": "669",
+        "Course": "TPC Deere Run",
+        "ShotLink": "2",
+        "SG:TOT": "-1.06",
+        "SG:T2G": "-2.43",
+        "SG:OTT": "-0.45",
+        "SG:APP": "-0.75",
+        "SG:BS": "-1.20",
+        "SG:ARG": "-1.24",
+        "SG:P": "1.37",
+        "SG:SG": "0.13"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "1.365500032901764",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "0.8799999952316284",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-3.009999990463257",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-1.0649999976158142",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "0.8799999952316284",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-3.009999990463257",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-1.0649999976158142",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "69",
+        "PM": "72",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": "58.3",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-1.0649999976158142",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:42.096Z",
+    "ok": true
+  }
+}

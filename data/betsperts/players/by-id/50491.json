@@ -1,0 +1,205 @@
+{
+  "playerId": "50491",
+  "playerName": "Richie Schembechler II",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Richie Schembechler II",
+    "BirthPlace": "Massillon, Ohio",
+    "BirthDate": "January 30, 1990",
+    "Age": "36",
+    "Height": "5ft 9in",
+    "Weight": "165 lbs",
+    "Nationality": "United States",
+    "Residence": "Massillon, Ohio",
+    "ProWins": null,
+    "TurnedPro": "2012",
+    "PGAWins": null,
+    "College": "Malone University  (Business Administration, 2012) "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Richie Schembechler II",
+        "player_num": "50491",
+        "Year": "2017",
+        "Rounds": "2",
+        "SG:TOT": "-4.40",
+        "SG:T2G": "-1.87",
+        "SG:OTT": "-0.43",
+        "SG:APP": "-1.80",
+        "SG:BS": "-2.23",
+        "SG:ARG": "0.36",
+        "SG:P": "-2.53",
+        "Dr Distance": "288.8",
+        "Dr Accuracy %": "57.1",
+        "Ball Speed": "175.19"
+      },
+      {
+        "playerName": "Richie Schembechler II",
+        "player_num": "50491",
+        "Year": "2016",
+        "Rounds": "2",
+        "SG:TOT": "-3.59",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "42.9",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2017-06-11",
+        "position": "CUT",
+        "roundPosition": "T148",
+        "TournamentName": "FedEx St. Jude Classic",
+        "is_major": "0",
+        "playerName": "Richie Schembechler II",
+        "player_num": "50491",
+        "Rounds": "2",
+        "CourseID": "513",
+        "Course": "TPC Southwind",
+        "ShotLink": "2",
+        "SG:TOT": "-4.40",
+        "SG:T2G": "-1.87",
+        "SG:OTT": "-0.43",
+        "SG:APP": "-1.80",
+        "SG:BS": "-2.23",
+        "SG:ARG": "0.36",
+        "SG:P": "-2.53",
+        "SG:SG": "-2.17"
+      },
+      {
+        "Date": "2016-06-19",
+        "position": "CUT",
+        "roundPosition": "T134",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Richie Schembechler II",
+        "player_num": "50491",
+        "Rounds": "2",
+        "CourseID": "608",
+        "Course": "Oakmont CC",
+        "ShotLink": "0",
+        "SG:TOT": "-3.59",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-2.526499927043915",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": null,
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-5.765000104904175",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-2.2200000286102295",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-3.992500066757202",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-4.400000095367432",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-3.5850000381469727",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-3.5850000381469727",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-4.400000095367432",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74",
+        "PM": "78.5",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": "30.7",
+        "100-150": "22.3",
+        "150-200": "43.2",
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-4.400000095367432",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-3.5850000381469727",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:01.551Z",
+    "ok": true
+  }
+}

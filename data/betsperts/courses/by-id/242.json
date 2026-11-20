@@ -1,0 +1,106 @@
+{
+  "courseNum": "242",
+  "courseName": "Nine Bridges",
+  "list": {
+    "CourseName": "Nine Bridges",
+    "CourseNum": "242",
+    "CourseNums": [
+      242
+    ]
+  },
+  "details": {
+    "CourseName": "Nine Bridges",
+    "CourseNum": "242",
+    "Locations": [
+      "Asia",
+      "International"
+    ],
+    "SeasonHeld": "Fall Swing",
+    "CourseTypes": [
+      "Mountain",
+      "Parkland"
+    ],
+    "ParScore": "72",
+    "Yards": "7241",
+    "AVG": "100.6",
+    "CourseLength": "Short",
+    "Architects": [
+      "Ronald Fream",
+      "David Dale"
+    ],
+    "RedesignArchitects": [],
+    "Elevation": "3500",
+    "CourseElevation": "High",
+    "Bunkers": "101",
+    "BunkersRank": "High",
+    "WaterHoles": "3",
+    "WaterDanger": "Low",
+    "ScoreRTP": "-0.34",
+    "Difficulty": "Average",
+    "FwyGrass": "Bent",
+    "FwyWidth": "0",
+    "GreenSqFt": "7800",
+    "GreenSize": "Large",
+    "GreenGrass": "Bent",
+    "GreenStimp": "11",
+    "GreenSpeed": "Slow",
+    "RoughType": "Kentucky Bluegrass/Rye",
+    "RoughGrass": "Bluegrass",
+    "RoughLengthInc": "3.3",
+    "RoughLength": "Long",
+    "EventTypes": [
+      "No-Cut"
+    ],
+    "Tournaments": [
+      {
+        "Year": "2017-2019",
+        "Tournament": "The CJ Cup"
+      }
+    ],
+    "CorrelatedCourse": [],
+    "FieldSize": "Small Field",
+    "FieldStrength": "Average",
+    "OTTClub": "Mixed",
+    "FwyPct": "73.3",
+    "FwyAccuracy": "Easy",
+    "GainOTT": "Easy",
+    "MissedFairwayPenalty": "Low",
+    "RoughPenalty": "Average",
+    "GIRAccuracy": "Easy",
+    "GIRPct": "72.9",
+    "GainAPP": "Easy",
+    "ScramblingFromRough": "Difficult",
+    "ScramblingFromShortGrass": "Average",
+    "SandSaves": "Easy",
+    "GainARG": "Difficult",
+    "GainingPuttingInside15": "Difficult",
+    "GainingPuttingOutside15": "Difficult",
+    "3PuttAVD": "Difficult",
+    "GainPutting": "Difficult",
+    "Par3Scoring": "Difficult",
+    "Par4Scoring": "Easy",
+    "Par5Scoring": "Average",
+    "ShotLink": "0"
+  },
+  "tournaments": [
+    {
+      "CourseNum": "242",
+      "TNum": "521",
+      "TourneyName": "THE CJ CUP @ NINE BRIDGES"
+    }
+  ],
+  "_meta": {
+    "pulledAt": "2026-11-20T22:18:25.508Z",
+    "detailStatus": 200,
+    "tournamentsStatus": 200
+  },
+  "auth": {
+    "holeBreakdown": [],
+    "correlated": [],
+    "_meta": {
+      "pulledAt": "2026-11-20T22:52:52.197Z",
+      "holeStatus": 200,
+      "correlatedStatus": 200
+    }
+  }
+}

@@ -1,0 +1,148 @@
+{
+  "playerId": "51282",
+  "playerName": "Drew Goff",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Drew Goff",
+    "BirthPlace": null,
+    "BirthDate": "September 24, 1986",
+    "Age": "40",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Drew Goff",
+        "player_num": "51282",
+        "Year": "2016",
+        "Rounds": "2",
+        "SG:TOT": "-12.04",
+        "SG:T2G": "-11.42",
+        "SG:OTT": "-4.28",
+        "SG:APP": "-3.81",
+        "SG:BS": "-8.09",
+        "SG:ARG": "-3.34",
+        "SG:P": "-0.61",
+        "Dr Distance": "259.6",
+        "Dr Accuracy %": "25.0",
+        "Ball Speed": "160.67"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2016-10-30",
+        "position": "CUT",
+        "roundPosition": "132",
+        "TournamentName": "Sanderson Farms Championship",
+        "is_major": "0",
+        "playerName": "Drew Goff",
+        "player_num": "51282",
+        "Rounds": "2",
+        "CourseID": "746",
+        "Course": "The Country Club of Jackson",
+        "ShotLink": "2",
+        "SG:TOT": "-12.04",
+        "SG:T2G": "-11.42",
+        "SG:OTT": "-4.28",
+        "SG:APP": "-3.81",
+        "SG:BS": "-8.09",
+        "SG:ARG": "-3.34",
+        "SG:P": "-0.61",
+        "SG:SG": "-3.95"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-0.6139999777078629",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-14.5",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-9.579999923706055",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-12.039999961853027",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-12.039999961853027",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-12.039999961853027",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "85",
+        "PM": "81",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "42.1",
+        "150-200": null,
+        "200+": "90.5",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-12.039999961853027",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:21:18.353Z",
+    "ok": true
+  }
+}

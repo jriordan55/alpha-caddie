@@ -1,0 +1,162 @@
+{
+  "playerId": "70524",
+  "playerName": "Alex Huang",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Alex Huang",
+    "BirthPlace": null,
+    "BirthDate": "",
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Alex Huang",
+        "player_num": "70524",
+        "Year": "2026",
+        "Rounds": "2",
+        "SG:TOT": "-6.95",
+        "SG:T2G": "-6.72",
+        "SG:OTT": "-1.55",
+        "SG:APP": "-3.46",
+        "SG:BS": "-5.00",
+        "SG:ARG": "-1.72",
+        "SG:P": "-0.23",
+        "Dr Distance": "307.1",
+        "Dr Accuracy %": "46.4",
+        "Ball Speed": "184.20"
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Alex Huang",
+        "player_num": "70524",
+        "Rounds": "2",
+        "SG:TOT": "-6.95",
+        "SG:T2G": "-6.72",
+        "SG:OTT": "-1.55",
+        "SG:APP": "-3.46",
+        "SG:BS": "-5.00",
+        "SG:ARG": "-1.72",
+        "SG:P": "-0.23",
+        "SG:SG": "-1.94"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-05-24",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "The CJ CUP Byron Nelson",
+        "is_major": "0",
+        "playerName": "Alex Huang",
+        "player_num": "70524",
+        "Rounds": "2",
+        "CourseID": "921",
+        "Course": "TPC Craig Ranch",
+        "ShotLink": "2",
+        "SG:TOT": "-6.95",
+        "SG:T2G": "-6.72",
+        "SG:OTT": "-1.55",
+        "SG:APP": "-3.46",
+        "SG:BS": "-5.00",
+        "SG:ARG": "-1.72",
+        "SG:P": "-0.23",
+        "SG:SG": "-1.94"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.22699999809265137",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-7.050000190734863",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-6.840000152587891",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-6.945000171661377",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-6.945000171661377",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-6.945000171661377",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "76",
+        "PM": "75",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": "65.5",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-6.945000171661377",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:18:52.384Z",
+    "ok": true
+  }
+}

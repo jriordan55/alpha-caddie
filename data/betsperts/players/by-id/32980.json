@@ -1,0 +1,143 @@
+{
+  "playerId": "32980",
+  "playerName": "Jonathan Caldwell",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/Flag-of-Northern-Ireland.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Jonathan Caldwell",
+    "BirthPlace": "",
+    "BirthDate": "June 10, 1984",
+    "Age": "42",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "Northern Ireland",
+    "Residence": "",
+    "ProWins": "1",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Jonathan Caldwell",
+        "player_num": "32980",
+        "Year": "2022",
+        "Rounds": "2",
+        "SG:TOT": "-2.74",
+        "SG:T2G": "-2.14",
+        "SG:OTT": "-0.30",
+        "SG:APP": "-0.10",
+        "SG:BS": "-0.40",
+        "SG:ARG": "-1.74",
+        "SG:P": "-0.58",
+        "Dr Distance": null,
+        "Dr Accuracy %": "61.5",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2022-07-10",
+        "position": "CUT",
+        "roundPosition": "T138",
+        "TournamentName": "Genesis Scottish Open",
+        "is_major": "0",
+        "playerName": "Jonathan Caldwell",
+        "player_num": "32980",
+        "Rounds": "2",
+        "CourseID": "977",
+        "Course": "The Renaissance Club",
+        "ShotLink": "2",
+        "SG:TOT": "-2.74",
+        "SG:T2G": "-2.14",
+        "SG:OTT": "-0.30",
+        "SG:APP": "-0.10",
+        "SG:BS": "-0.40",
+        "SG:ARG": "-1.74",
+        "SG:P": "-0.58",
+        "SG:SG": "-2.32"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "0.9900000095367432",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-6.46999979019165",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "0.9900000095367432",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-6.46999979019165",
+        "Rounds": "1"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-2.7399998903274536",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-2.7399998903274536",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "71",
+        "PM": "79",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-2.7399998903274536",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:00.434Z",
+    "ok": true
+  }
+}

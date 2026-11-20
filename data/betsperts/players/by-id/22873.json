@@ -1,0 +1,138 @@
+{
+  "playerId": "22873",
+  "playerName": "Todd Fanning",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ca-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Todd Fanning",
+    "BirthPlace": "",
+    "BirthDate": "February 12, 1968",
+    "Age": "58",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "Canada",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Todd Fanning",
+        "player_num": "22873",
+        "Year": "2018",
+        "Rounds": "2",
+        "SG:TOT": "-5.90",
+        "SG:T2G": "-4.63",
+        "SG:OTT": "-0.63",
+        "SG:APP": "-3.68",
+        "SG:BS": "-4.31",
+        "SG:ARG": "-0.32",
+        "SG:P": "-1.27",
+        "Dr Distance": "284.9",
+        "Dr Accuracy %": "46.4",
+        "Ball Speed": "157.53"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2018-07-29",
+        "position": "CUT",
+        "roundPosition": "T150",
+        "TournamentName": "RBC Canadian Open",
+        "is_major": "0",
+        "playerName": "Todd Fanning",
+        "player_num": "22873",
+        "Rounds": "2",
+        "CourseID": "32",
+        "Course": "Glen Abbey GC",
+        "ShotLink": "2",
+        "SG:TOT": "-5.90",
+        "SG:T2G": "-4.63",
+        "SG:OTT": "-0.63",
+        "SG:APP": "-3.68",
+        "SG:BS": "-4.31",
+        "SG:ARG": "-0.32",
+        "SG:P": "-1.27",
+        "SG:SG": "-1.59"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-6.619999885559082",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-5.179999828338623",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-5.8999998569488525",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-5.8999998569488525",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-5.8999998569488525",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "77",
+        "PM": "76",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "24",
+        "150-200": "45.5",
+        "200+": "58.5",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-5.8999998569488525",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:26:05.662Z",
+    "ok": true
+  }
+}

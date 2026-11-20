@@ -1,0 +1,148 @@
+{
+  "playerId": "60567",
+  "playerName": "Harrison Ott",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Harrison Ott",
+    "BirthPlace": "Brookfield, Wisconsin",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "5ft 10in",
+    "Weight": "170 lbs",
+    "Nationality": "United States",
+    "Residence": "Nashville, Tennessee",
+    "ProWins": null,
+    "TurnedPro": "2022",
+    "PGAWins": null,
+    "College": "Vanderbilt University 2021, Human and Organizational Development; 2022, Human Development Studies"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Harrison Ott",
+        "player_num": "60567",
+        "Year": "2025",
+        "Rounds": "2",
+        "SG:TOT": "-2.29",
+        "SG:T2G": "0.84",
+        "SG:OTT": "0.48",
+        "SG:APP": "0.35",
+        "SG:BS": "0.83",
+        "SG:ARG": "0.01",
+        "SG:P": "-3.14",
+        "Dr Distance": "286.5",
+        "Dr Accuracy %": "53.6",
+        "Ball Speed": "170.99"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2025-06-15",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Harrison Ott",
+        "player_num": "60567",
+        "Rounds": "2",
+        "CourseID": "608",
+        "Course": "Oakmont CC",
+        "ShotLink": "2",
+        "SG:TOT": "-2.29",
+        "SG:T2G": "0.84",
+        "SG:OTT": "0.48",
+        "SG:APP": "0.35",
+        "SG:BS": "0.83",
+        "SG:ARG": "0.01",
+        "SG:P": "-3.14",
+        "SG:SG": "-3.12"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "-3.136000096797943",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.36000001430511475",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-4.21999979019165",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-2.2899999022483826",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-2.2899999022483826",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-2.2899999022483826",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "79",
+        "PM": "75",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "40.4",
+        "200+": "73.4",
+        "200-250": "63.8",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-2.2899999022483826",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:21:57.978Z",
+    "ok": true
+  }
+}

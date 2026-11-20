@@ -1,0 +1,163 @@
+{
+  "playerId": "31997",
+  "playerName": "Steve Lewton",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/St_Georges_Cross.svg_.png",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Steve Lewton",
+    "BirthPlace": "Northampton, England",
+    "BirthDate": "May 05, 1983",
+    "Age": "43",
+    "Height": "6ft 3in",
+    "Weight": "193 lbs",
+    "Nationality": "England",
+    "Residence": "Milton Keynes, Buckinghamshire, England",
+    "ProWins": "0",
+    "TurnedPro": "2008",
+    "PGAWins": "0",
+    "College": "North Carolina State University "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Steve Lewton",
+        "player_num": "31997",
+        "Year": "2020",
+        "Rounds": "4",
+        "SG:TOT": "-0.78",
+        "SG:T2G": "-1.80",
+        "SG:OTT": "-0.71",
+        "SG:APP": "-0.85",
+        "SG:BS": "-1.56",
+        "SG:ARG": "-0.25",
+        "SG:P": "1.02",
+        "Dr Distance": "286.9",
+        "Dr Accuracy %": "41.1",
+        "Ball Speed": "167.89"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2020-10-04",
+        "position": "T59",
+        "roundPosition": "T59",
+        "TournamentName": "Sanderson Farms Championship",
+        "is_major": "0",
+        "playerName": "Steve Lewton",
+        "player_num": "31997",
+        "Rounds": "4",
+        "CourseID": "746",
+        "Course": "The Country Club of Jackson",
+        "ShotLink": "4",
+        "SG:TOT": "-0.78",
+        "SG:T2G": "-1.80",
+        "SG:OTT": "-0.71",
+        "SG:APP": "-0.85",
+        "SG:BS": "-1.56",
+        "SG:ARG": "-0.25",
+        "SG:P": "1.02",
+        "SG:SG": "0.78"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "37.5",
+        "SG TOT 1+": "37.5",
+        "SG TOT 2+": "25.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "8"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "1.0232499837875366",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "0.3200000524520874",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "0.5949999690055847",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-0.5249999761581421",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-2.8550000190734863",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-0.7824999988079071",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-1.409999966621399",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-0.5733333428700765",
+        "Rounds": "3"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-0.7824999988079071",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "72",
+        "PM": "71",
+        "Rounds": "8"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "8",
+        "50-100": null,
+        "100-150": "24.3",
+        "150-200": "42",
+        "200+": "57.3",
+        "200-250": "49.7",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-0.7824999988079071",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:46.413Z",
+    "ok": true
+  }
+}

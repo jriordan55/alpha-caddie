@@ -1,0 +1,148 @@
+{
+  "playerId": "58652",
+  "playerName": "Sam Jones",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_nz-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Sam Jones",
+    "BirthPlace": null,
+    "BirthDate": "",
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "New Zealand",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Sam Jones",
+        "player_num": "58652",
+        "Year": "2024",
+        "Rounds": "2",
+        "SG:TOT": "-3.89",
+        "SG:T2G": "-3.61",
+        "SG:OTT": "0.08",
+        "SG:APP": "-3.49",
+        "SG:BS": "-3.42",
+        "SG:ARG": "-0.19",
+        "SG:P": "-0.29",
+        "Dr Distance": "303.3",
+        "Dr Accuracy %": "60.7",
+        "Ball Speed": "179.32"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2024-07-14",
+        "position": "CUT",
+        "roundPosition": "T144",
+        "TournamentName": "ISCO Championship",
+        "is_major": "0",
+        "playerName": "Sam Jones",
+        "player_num": "58652",
+        "Rounds": "2",
+        "CourseID": "884",
+        "Course": "Keene Trace GC",
+        "ShotLink": "2",
+        "SG:TOT": "-3.89",
+        "SG:T2G": "-3.61",
+        "SG:OTT": "0.08",
+        "SG:APP": "-3.49",
+        "SG:BS": "-3.42",
+        "SG:ARG": "-0.19",
+        "SG:P": "-0.29",
+        "SG:SG": "-0.48"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.2874999940395355",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-4.579999923706055",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-3.2100000381469727",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-3.8949999809265137",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-3.8949999809265137",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-3.8949999809265137",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74",
+        "PM": "72",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "23.9",
+        "150-200": null,
+        "200+": "49.3",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-3.8949999809265137",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:22.078Z",
+    "ok": true
+  }
+}

@@ -1,0 +1,108 @@
+{
+  "courseNum": "24",
+  "courseName": "Congressional CC (Blue)",
+  "list": {
+    "CourseName": "Congressional CC (Blue)",
+    "CourseNum": "24",
+    "CourseNums": [
+      24
+    ]
+  },
+  "details": {
+    "CourseName": "Congressional CC (Blue)",
+    "CourseNum": "24",
+    "Locations": [
+      "East",
+      "Maryland"
+    ],
+    "SeasonHeld": "Summer",
+    "CourseTypes": [
+      "Parkland"
+    ],
+    "ParScore": "71",
+    "Yards": "7569",
+    "AVG": "106.6",
+    "CourseLength": "Very Long",
+    "Architects": [
+      "Devereax Emmet",
+      "Alfred Tull"
+    ],
+    "RedesignArchitects": [
+      "Robert Trent Jones",
+      "Rees Jones"
+    ],
+    "Elevation": "272",
+    "CourseElevation": "Average",
+    "Bunkers": "99",
+    "BunkersRank": "High",
+    "WaterHoles": "5",
+    "WaterDanger": "Average",
+    "ScoreRTP": "-0.11",
+    "Difficulty": "Average",
+    "FwyGrass": "Bent",
+    "FwyWidth": "0",
+    "GreenSqFt": "5600",
+    "GreenSize": "Small",
+    "GreenGrass": "Bent",
+    "GreenStimp": "13",
+    "GreenSpeed": "Fast",
+    "RoughType": "Fescue",
+    "RoughGrass": "Fescue",
+    "RoughLengthInc": "3",
+    "RoughLength": "Average",
+    "EventTypes": [
+      "36-Hole Cut"
+    ],
+    "Tournaments": [
+      {
+        "Year": "2014, 2016",
+        "Tournament": "Quicken Loans"
+      }
+    ],
+    "CorrelatedCourse": [],
+    "FieldSize": "Average Size Field",
+    "FieldStrength": "Average",
+    "OTTClub": "Mixed",
+    "FwyPct": "57.4",
+    "FwyAccuracy": "Average",
+    "GainOTT": "Easy",
+    "MissedFairwayPenalty": "Low",
+    "RoughPenalty": "Average",
+    "GIRAccuracy": "Average",
+    "GIRPct": "63.6",
+    "GainAPP": "Very Easy",
+    "ScramblingFromRough": "Easy",
+    "ScramblingFromShortGrass": "Easy",
+    "SandSaves": "Average",
+    "GainARG": "Easy",
+    "GainingPuttingInside15": "Difficult",
+    "GainingPuttingOutside15": "Average",
+    "3PuttAVD": "Average",
+    "GainPutting": "Difficult",
+    "Par3Scoring": "Easy",
+    "Par4Scoring": "Average",
+    "Par5Scoring": "Difficult",
+    "ShotLink": "1"
+  },
+  "tournaments": [
+    {
+      "CourseNum": "24",
+      "TNum": "471",
+      "TourneyName": "Quicken Loans National"
+    }
+  ],
+  "_meta": {
+    "pulledAt": "2026-11-20T22:18:24.923Z",
+    "detailStatus": 200,
+    "tournamentsStatus": 200
+  },
+  "auth": {
+    "holeBreakdown": [],
+    "correlated": [],
+    "_meta": {
+      "pulledAt": "2026-11-20T22:52:51.719Z",
+      "holeStatus": 200,
+      "correlatedStatus": 200
+    }
+  }
+}

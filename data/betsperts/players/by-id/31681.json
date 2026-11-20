@@ -1,0 +1,272 @@
+{
+  "playerId": "31681",
+  "playerName": "Louis de Jager",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_sf-flag.gif",
+  "profile": {
+    "ProfileImage": "0",
+    "Name": "Louis de Jager",
+    "BirthPlace": null,
+    "BirthDate": "March 29, 1987",
+    "Age": "39",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "South Africa",
+    "Residence": null,
+    "ProWins": "0",
+    "TurnedPro": null,
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Louis de Jager",
+        "player_num": "31681",
+        "Year": "2024",
+        "Rounds": "4",
+        "SG:TOT": "-0.82",
+        "SG:T2G": "0.57",
+        "SG:OTT": "-0.42",
+        "SG:APP": "1.04",
+        "SG:BS": "0.62",
+        "SG:ARG": "-0.06",
+        "SG:P": "-1.23",
+        "Dr Distance": "312.3",
+        "Dr Accuracy %": "38.5",
+        "Ball Speed": "181.74"
+      },
+      {
+        "playerName": "Louis de Jager",
+        "player_num": "31681",
+        "Year": "2023",
+        "Rounds": "6",
+        "SG:TOT": "0.59",
+        "SG:T2G": "2.53",
+        "SG:OTT": "1.36",
+        "SG:APP": "1.14",
+        "SG:BS": "2.49",
+        "SG:ARG": "0.04",
+        "SG:P": "-0.70",
+        "Dr Distance": "318.8",
+        "Dr Accuracy %": "44.6",
+        "Ball Speed": "178.72"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2024-07-21",
+        "position": "CUT",
+        "roundPosition": null,
+        "TournamentName": "Barracuda Championship",
+        "is_major": null,
+        "playerName": "Louis de Jager",
+        "player_num": "31681",
+        "Rounds": "2",
+        "CourseID": "931",
+        "Course": "Tahoe Mountain Club (Old Greenwood)",
+        "ShotLink": "0",
+        "SG:TOT": "-0.97",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2024-07-14",
+        "position": "CUT",
+        "roundPosition": "T93",
+        "TournamentName": "Genesis Scottish Open",
+        "is_major": "0",
+        "playerName": "Louis de Jager",
+        "player_num": "31681",
+        "Rounds": "2",
+        "CourseID": "977",
+        "Course": "The Renaissance Club",
+        "ShotLink": "2",
+        "SG:TOT": "-0.66",
+        "SG:T2G": "0.57",
+        "SG:OTT": "-0.42",
+        "SG:APP": "1.04",
+        "SG:BS": "0.62",
+        "SG:ARG": "-0.06",
+        "SG:P": "-1.23",
+        "SG:SG": "-1.28"
+      },
+      {
+        "Date": "2023-07-23",
+        "position": "CUT",
+        "roundPosition": null,
+        "TournamentName": "Barracuda Championship",
+        "is_major": null,
+        "playerName": "Louis de Jager",
+        "player_num": "31681",
+        "Rounds": "2",
+        "CourseID": "890",
+        "Course": "Tahoe Mountain Club (Old Greenwood)",
+        "ShotLink": "0",
+        "SG:TOT": "-1.90",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2023-07-16",
+        "position": "T16",
+        "roundPosition": "T16",
+        "TournamentName": "Barbasol Championship",
+        "is_major": "0",
+        "playerName": "Louis de Jager",
+        "player_num": "31681",
+        "Rounds": "4",
+        "CourseID": "884",
+        "Course": "Keene Trace GC",
+        "ShotLink": "4",
+        "SG:TOT": "1.83",
+        "SG:T2G": "2.53",
+        "SG:OTT": "1.36",
+        "SG:APP": "1.14",
+        "SG:BS": "2.49",
+        "SG:ARG": "0.04",
+        "SG:P": "-0.70",
+        "SG:SG": "-0.66"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "40.0",
+        "SG TOT 2+": "10.0",
+        "SG TOT 3+": "10.0",
+        "SG TOT 4+": "10.0",
+        "SG TOT 5+": "10.0",
+        "Rounds": "10"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.6997500061988831",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.8099999874830246",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "1.0149999856948853",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "0.5699999928474426",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-1.1200000047683716",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-1.2799999862909317",
+        "Rounds": "4"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-3.0299999713897705",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "2.819999953111013",
+        "Rounds": "3"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "1.0800000429153442",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-1.1200000047683716",
+        "Rounds": "1"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "1.9900000095367432",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-0.16714285952704294",
+        "Rounds": "7"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-0.2750000059604645",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Strong",
+        "StrokesGainedAverage": "-0.6599999964237213",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "0.19874999672174454",
+        "Rounds": "8"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "69.33333333333333",
+        "PM": "69.2",
+        "Rounds": "10"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "10",
+        "50-100": "18.2",
+        "100-150": "27.2",
+        "150-200": "29.7",
+        "200+": "50.5",
+        "200-250": null,
+        "250+": "80.1"
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "0.026999998092651366",
+        "Rounds": "10"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:38.937Z",
+    "ok": true
+  }
+}

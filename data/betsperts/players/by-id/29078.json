@@ -1,0 +1,194 @@
+{
+  "playerId": "29078",
+  "playerName": "Chan Shih-chang",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/image.png",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Chan Shih-chang",
+    "BirthPlace": "Hsinchu, Chinese Taipei",
+    "BirthDate": "June 07, 1986",
+    "Age": "40",
+    "Height": "5ft 5in",
+    "Weight": "141 lbs",
+    "Nationality": "Chinese Taipei",
+    "Residence": "Hsinchu, Chinese Taipei",
+    "ProWins": null,
+    "TurnedPro": "2006",
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Chan Shih-chang",
+        "player_num": "29078",
+        "Year": "2016",
+        "Rounds": "8",
+        "SG:TOT": "-1.90",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "64.3",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2016-10-30",
+        "position": "T60",
+        "roundPosition": "T60",
+        "TournamentName": "WGC - HSBC Champions",
+        "is_major": "0",
+        "playerName": "Chan Shih-chang",
+        "player_num": "29078",
+        "Rounds": "4",
+        "CourseID": "766",
+        "Course": "Sheshan International GC",
+        "ShotLink": "0",
+        "SG:TOT": "-1.85",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2016-10-23",
+        "position": "T69",
+        "roundPosition": "T69",
+        "TournamentName": "CIMB Classic",
+        "is_major": "0",
+        "playerName": "Chan Shih-chang",
+        "player_num": "29078",
+        "Rounds": "4",
+        "CourseID": "800",
+        "Course": "TPC Kuala Lumpur",
+        "ShotLink": "0",
+        "SG:TOT": "-1.95",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "37.5",
+        "SG TOT 1+": "12.5",
+        "SG TOT 2+": "12.5",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "12"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": null,
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-3.8150001168251038",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-4.564999938011169",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "1.4199999496340752",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-0.64000004529953",
+        "Rounds": "3"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-1.8475000597536564",
+        "Rounds": "4"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-1.9525000154972076",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-1.8475000597536564",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-1.9525000154972076",
+        "Rounds": "4"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-1.9525000154972076",
+        "Rounds": "4"
+      },
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-1.8475000597536564",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "78.5",
+        "PM": "71.16666666666667",
+        "Rounds": "12"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "12",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-1.900000037625432",
+        "Rounds": "8"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:20:10.374Z",
+    "ok": true
+  }
+}

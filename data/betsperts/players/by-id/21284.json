@@ -1,0 +1,226 @@
+{
+  "playerId": "21284",
+  "playerName": "Hiroyuki Fujita",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ja-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Hiroyuki Fujita",
+    "BirthPlace": "Tokyo, Japan",
+    "BirthDate": "June 16, 1969",
+    "Age": "57",
+    "Height": "5ft 8in",
+    "Weight": "150 lbs",
+    "Nationality": "Japan",
+    "Residence": "Tokyo, Japan",
+    "ProWins": null,
+    "TurnedPro": "1992",
+    "PGAWins": null,
+    "College": "Senshu University (1992, Economics) "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Hiroyuki Fujita",
+        "player_num": "21284",
+        "Year": "2015",
+        "Rounds": "8",
+        "SG:TOT": "-2.91",
+        "SG:T2G": "-4.65",
+        "SG:OTT": "-1.38",
+        "SG:APP": "-2.10",
+        "SG:BS": "-3.48",
+        "SG:ARG": "-1.17",
+        "SG:P": "-0.86",
+        "Dr Distance": "267.8",
+        "Dr Accuracy %": "62.9",
+        "Ball Speed": "155.05"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2015-07-19",
+        "position": "CUT",
+        "roundPosition": "T93",
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Hiroyuki Fujita",
+        "player_num": "21284",
+        "Rounds": "2",
+        "CourseID": "668",
+        "Course": "St. Andrews GC (Old Course)",
+        "ShotLink": "0",
+        "SG:TOT": "-0.70",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2015-06-21",
+        "position": "CUT",
+        "roundPosition": "T76",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Hiroyuki Fujita",
+        "player_num": "21284",
+        "Rounds": "2",
+        "CourseID": "100",
+        "Course": "Chambers Bay GC 2",
+        "ShotLink": "0",
+        "SG:TOT": "0.09",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2015-03-08",
+        "position": "73",
+        "roundPosition": "73",
+        "TournamentName": "WGC - Cadillac Championship",
+        "is_major": "0",
+        "playerName": "Hiroyuki Fujita",
+        "player_num": "21284",
+        "Rounds": "4",
+        "CourseID": "8",
+        "Course": "Trump National Doral",
+        "ShotLink": "4",
+        "SG:TOT": "-5.51",
+        "SG:T2G": "-4.65",
+        "SG:OTT": "-1.38",
+        "SG:APP": "-2.10",
+        "SG:BS": "-3.48",
+        "SG:ARG": "-1.17",
+        "SG:P": "-0.86",
+        "SG:SG": "-2.03"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "25.0",
+        "SG TOT 1+": "12.5",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "8"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": null,
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-0.860249936580658",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": null,
+        "Rounds": "2"
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "0.1066666841506958",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-4.239999949932098",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-5.449999809265137",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-5.409999847412109",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-5.507499843835831",
+        "Rounds": "4"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-0.7000000476837158",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "0.08500000834465027",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-0.7000000476837158",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-3.643333226442337",
+        "Rounds": "6"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-2.9074999317526817",
+        "Rounds": "8"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "77.4",
+        "PM": "73.33333333333333",
+        "Rounds": "8"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "8",
+        "50-100": null,
+        "100-150": "32",
+        "150-200": "44.6",
+        "200+": "63.5",
+        "200-250": "64.7",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Florida",
+        "StrokesGainedAverage": "-5.507499843835831",
+        "Rounds": "4"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-0.3075000196695328",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:03.204Z",
+    "ok": true
+  }
+}

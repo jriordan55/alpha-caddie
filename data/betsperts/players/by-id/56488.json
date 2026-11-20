@@ -1,0 +1,148 @@
+{
+  "playerId": "56488",
+  "playerName": "Jake Kneen",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Jake Kneen",
+    "BirthPlace": "Livonia, Michigan",
+    "BirthDate": "April 08, 1996",
+    "Age": "30",
+    "Height": "6ft 2in",
+    "Weight": "195 lbs",
+    "Nationality": "United States",
+    "Residence": "White Lake, Michigan",
+    "ProWins": "0",
+    "TurnedPro": "2018",
+    "PGAWins": "0",
+    "College": "Oakland University 2018, Biomedical Sciences"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Jake Kneen",
+        "player_num": "56488",
+        "Year": "2020",
+        "Rounds": "2",
+        "SG:TOT": "-3.92",
+        "SG:T2G": "-3.17",
+        "SG:OTT": "-1.44",
+        "SG:APP": "-0.99",
+        "SG:BS": "-2.43",
+        "SG:ARG": "-0.74",
+        "SG:P": "-0.75",
+        "Dr Distance": "287.1",
+        "Dr Accuracy %": "53.6",
+        "Ball Speed": "169.90"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2020-07-26",
+        "position": "CUT",
+        "roundPosition": "T145",
+        "TournamentName": "3M Open",
+        "is_major": "0",
+        "playerName": "Jake Kneen",
+        "player_num": "56488",
+        "Rounds": "2",
+        "CourseID": "883",
+        "Course": "TPC Twin Cities",
+        "ShotLink": "2",
+        "SG:TOT": "-3.92",
+        "SG:T2G": "-3.17",
+        "SG:OTT": "-1.44",
+        "SG:APP": "-0.99",
+        "SG:BS": "-2.43",
+        "SG:ARG": "-0.74",
+        "SG:P": "-0.75",
+        "SG:SG": "-1.49"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.7475000023841858",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-7.570000171661377",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.27000001072883606",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-3.9200000911951065",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-3.9200000911951065",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-3.9200000911951065",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "71",
+        "PM": "78",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "23.6",
+        "150-200": "45.9",
+        "200+": "43.8",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-3.9200000911951065",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:17.280Z",
+    "ok": true
+  }
+}

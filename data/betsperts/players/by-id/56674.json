@@ -1,0 +1,148 @@
+{
+  "playerId": "56674",
+  "playerName": "Michael Perras",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Michael Perras",
+    "BirthPlace": "Cincinnati, Ohio",
+    "BirthDate": "January 22, 1996",
+    "Age": "30",
+    "Height": "5ft 10in",
+    "Weight": "170 lbs",
+    "Nationality": "United States",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": "University of Houston "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Michael Perras",
+        "player_num": "56674",
+        "Year": "2019",
+        "Rounds": "2",
+        "SG:TOT": "-2.10",
+        "SG:T2G": "-2.88",
+        "SG:OTT": "0.38",
+        "SG:APP": "-3.26",
+        "SG:BS": "-2.88",
+        "SG:ARG": "0.00",
+        "SG:P": "0.78",
+        "Dr Distance": "282.0",
+        "Dr Accuracy %": "64.3",
+        "Ball Speed": "165.42"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2019-10-13",
+        "position": "CUT",
+        "roundPosition": "T115",
+        "TournamentName": "Houston Open",
+        "is_major": "0",
+        "playerName": "Michael Perras",
+        "player_num": "56674",
+        "Rounds": "2",
+        "CourseID": "729",
+        "Course": "GC of Houston",
+        "ShotLink": "2",
+        "SG:TOT": "-2.10",
+        "SG:T2G": "-2.88",
+        "SG:OTT": "0.38",
+        "SG:APP": "-3.26",
+        "SG:BS": "-2.88",
+        "SG:ARG": "0.00",
+        "SG:P": "0.78",
+        "SG:SG": "0.78"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "0.7804999947547913",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.49000000953674316",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-3.7100000381469727",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-2.100000023841858",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-2.100000023841858",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-2.100000023841858",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "72",
+        "PM": "77",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": "84.1",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-2.100000023841858",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:24:11.831Z",
+    "ok": true
+  }
+}

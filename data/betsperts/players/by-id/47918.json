@@ -1,0 +1,158 @@
+{
+  "playerId": "47918",
+  "playerName": "Naoki Sekito",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ja-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Naoki Sekito",
+    "BirthPlace": "",
+    "BirthDate": "October 03, 1997",
+    "Age": "29",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "Japan",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Naoki Sekito",
+        "player_num": "47918",
+        "Year": "2020",
+        "Rounds": "4",
+        "SG:TOT": "-2.99",
+        "SG:T2G": "-2.75",
+        "SG:OTT": "0.07",
+        "SG:APP": "-2.59",
+        "SG:BS": "-2.52",
+        "SG:ARG": "-0.23",
+        "SG:P": "-0.24",
+        "Dr Distance": "276.2",
+        "Dr Accuracy %": "80.8",
+        "Ball Speed": "163.06"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2020-10-25",
+        "position": "75",
+        "roundPosition": "75",
+        "TournamentName": "ZOZO Championship",
+        "is_major": "0",
+        "playerName": "Naoki Sekito",
+        "player_num": "47918",
+        "Rounds": "4",
+        "CourseID": "881",
+        "Course": "Sherwood CC",
+        "ShotLink": "4",
+        "SG:TOT": "-2.99",
+        "SG:T2G": "-2.75",
+        "SG:OTT": "0.07",
+        "SG:APP": "-2.59",
+        "SG:BS": "-2.52",
+        "SG:ARG": "-0.23",
+        "SG:P": "-0.24",
+        "SG:SG": "-0.47"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "25.0",
+        "SG TOT 1+": "25.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.23750002682209015",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.1399999856948853",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-12.130000114440918",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "1.4199999570846558",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-0.10000000149011612",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-2.987500036135316",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-2.987500036135316",
+        "Rounds": "4"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-2.987500036135316",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "75.5",
+        "PM": "69",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-2.987500036135316",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:24:21.260Z",
+    "ok": true
+  }
+}

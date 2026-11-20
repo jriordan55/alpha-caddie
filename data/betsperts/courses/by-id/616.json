@@ -1,0 +1,106 @@
+{
+  "courseNum": "616",
+  "courseName": "Robert Trent Jones GC",
+  "list": {
+    "CourseName": "Robert Trent Jones GC",
+    "CourseNum": "616",
+    "CourseNums": [
+      616
+    ]
+  },
+  "details": {
+    "CourseName": "Robert Trent Jones GC",
+    "CourseNum": "616",
+    "Locations": [
+      "East",
+      "Virginia"
+    ],
+    "SeasonHeld": "",
+    "CourseTypes": [
+      "Parkland"
+    ],
+    "ParScore": "71",
+    "Yards": "7385",
+    "AVG": "104",
+    "CourseLength": "Long",
+    "Architects": [
+      "Robert Trent Jones"
+    ],
+    "RedesignArchitects": [
+      "Kyle Phillips"
+    ],
+    "Elevation": "377",
+    "CourseElevation": "Average",
+    "Bunkers": "65",
+    "BunkersRank": "Average",
+    "WaterHoles": "8",
+    "WaterDanger": "Average",
+    "ScoreRTP": "-0.82",
+    "Difficulty": "",
+    "FwyGrass": "Bent",
+    "FwyWidth": "0",
+    "GreenSqFt": "6000",
+    "GreenSize": "Average",
+    "GreenGrass": "Bent",
+    "GreenStimp": "12.5",
+    "GreenSpeed": "Average",
+    "RoughType": "",
+    "RoughGrass": "Bluegrass",
+    "RoughLengthInc": "3.5",
+    "RoughLength": "Long",
+    "EventTypes": [
+      "36-Hole Cut"
+    ],
+    "Tournaments": [
+      {
+        "Year": "2015",
+        "Tournament": "Quicken Loans National"
+      }
+    ],
+    "CorrelatedCourse": [],
+    "FieldSize": "Average Size Field",
+    "FieldStrength": "",
+    "OTTClub": "",
+    "FwyPct": "0",
+    "FwyAccuracy": "",
+    "GainOTT": "",
+    "MissedFairwayPenalty": "",
+    "RoughPenalty": "",
+    "GIRAccuracy": "",
+    "GIRPct": "0",
+    "GainAPP": "",
+    "ScramblingFromRough": "",
+    "ScramblingFromShortGrass": "",
+    "SandSaves": "",
+    "GainARG": "",
+    "GainingPuttingInside15": "",
+    "GainingPuttingOutside15": "",
+    "3PuttAVD": "",
+    "GainPutting": "",
+    "Par3Scoring": "",
+    "Par4Scoring": "",
+    "Par5Scoring": "",
+    "ShotLink": "1"
+  },
+  "tournaments": [
+    {
+      "CourseNum": "616",
+      "TNum": "471",
+      "TourneyName": "Quicken Loans National"
+    }
+  ],
+  "_meta": {
+    "pulledAt": "2026-11-20T22:18:25.796Z",
+    "detailStatus": 200,
+    "tournamentsStatus": 200
+  },
+  "auth": {
+    "holeBreakdown": [],
+    "correlated": [],
+    "_meta": {
+      "pulledAt": "2026-11-20T22:52:52.431Z",
+      "holeStatus": 200,
+      "correlatedStatus": 200
+    }
+  }
+}

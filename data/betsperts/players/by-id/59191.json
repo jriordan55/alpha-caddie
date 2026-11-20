@@ -1,0 +1,153 @@
+{
+  "playerId": "59191",
+  "playerName": "Vijay Srinivasan",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Vijay Srinivasan",
+    "BirthPlace": null,
+    "BirthDate": "",
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Vijay Srinivasan",
+        "player_num": "59191",
+        "Year": "2023",
+        "Rounds": "2",
+        "SG:TOT": "-8.20",
+        "SG:T2G": "-5.37",
+        "SG:OTT": "-0.97",
+        "SG:APP": "-2.11",
+        "SG:BS": "-3.08",
+        "SG:ARG": "-2.29",
+        "SG:P": "-2.84",
+        "Dr Distance": "303.6",
+        "Dr Accuracy %": "53.6",
+        "Ball Speed": "168.58"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2023-10-15",
+        "position": "CUT",
+        "roundPosition": "129",
+        "TournamentName": "Shriners Childrens Open",
+        "is_major": "0",
+        "playerName": "Vijay Srinivasan",
+        "player_num": "59191",
+        "Rounds": "2",
+        "CourseID": "538",
+        "Course": "TPC Summerlin",
+        "ShotLink": "2",
+        "SG:TOT": "-8.20",
+        "SG:T2G": "-5.37",
+        "SG:OTT": "-0.97",
+        "SG:APP": "-2.11",
+        "SG:BS": "-3.08",
+        "SG:ARG": "-2.29",
+        "SG:P": "-2.84",
+        "SG:SG": "-5.13"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-2.8355000019073486",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-10.170000076293945",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-6.239999771118164",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-8.204999923706055",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-10.170000076293945",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-6.239999771118164",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-8.204999923706055",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "81",
+        "PM": "75",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "36",
+        "150-200": null,
+        "200+": "71.4",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-8.204999923706055",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:26:21.052Z",
+    "ok": true
+  }
+}

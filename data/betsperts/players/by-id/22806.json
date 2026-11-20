@@ -1,0 +1,158 @@
+{
+  "playerId": "22806",
+  "playerName": "Doug LaBelle II",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Doug LaBelle II",
+    "BirthPlace": "Mount Pleasant, Michigan",
+    "BirthDate": "January 19, 1975",
+    "Age": "51",
+    "Height": "5ft 10in",
+    "Weight": "165 lbs",
+    "Nationality": "United States",
+    "Residence": "Scottsdale, Arizona",
+    "ProWins": null,
+    "TurnedPro": "1998",
+    "PGAWins": null,
+    "College": "University of New Mexico  (1998 Business and Human Resources) "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Doug LaBelle II",
+        "player_num": "22806",
+        "Year": "2015",
+        "Rounds": "4",
+        "SG:TOT": "0.55",
+        "SG:T2G": "0.31",
+        "SG:OTT": "-0.02",
+        "SG:APP": "-0.18",
+        "SG:BS": "-0.20",
+        "SG:ARG": "0.51",
+        "SG:P": "0.25",
+        "Dr Distance": "270.9",
+        "Dr Accuracy %": "75.0",
+        "Ball Speed": "161.17"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2015-07-19",
+        "position": "T39",
+        "roundPosition": "T39",
+        "TournamentName": "Barbasol Championship",
+        "is_major": "0",
+        "playerName": "Doug LaBelle II",
+        "player_num": "22806",
+        "Rounds": "4",
+        "CourseID": "819",
+        "Course": "RTJ Trail (Grand National)",
+        "ShotLink": "4",
+        "SG:TOT": "0.55",
+        "SG:T2G": "0.31",
+        "SG:OTT": "-0.02",
+        "SG:APP": "-0.18",
+        "SG:BS": "-0.20",
+        "SG:ARG": "0.51",
+        "SG:P": "0.25",
+        "SG:SG": "0.75"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "50.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "0.24525000527501106",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "1.7599999904632568",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.6399999856948853",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "1.559999942779541",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-0.4699999988079071",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "0.5524999871850014",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "0.5524999871850014",
+        "Rounds": "4"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "0.5524999871850014",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "69.66666666666667",
+        "PM": "69",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "35.1",
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "0.5524999871850014",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:21:17.664Z",
+    "ok": true
+  }
+}

@@ -1,0 +1,277 @@
+{
+  "playerId": "63342",
+  "playerName": "Barclay Brown",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/St_Georges_Cross.svg_.png",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Barclay Brown",
+    "BirthPlace": "",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "England",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Barclay Brown",
+        "player_num": "63342",
+        "Year": "2024",
+        "Rounds": "2",
+        "SG:TOT": "-7.47",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": "275.2",
+        "Dr Accuracy %": null,
+        "Ball Speed": "178.77"
+      },
+      {
+        "playerName": "Barclay Brown",
+        "player_num": "63342",
+        "Year": "2023",
+        "Rounds": "2",
+        "SG:TOT": "-0.70",
+        "SG:T2G": "0.34",
+        "SG:OTT": "0.92",
+        "SG:APP": "-0.58",
+        "SG:BS": "0.34",
+        "SG:ARG": "-0.01",
+        "SG:P": "-1.04",
+        "Dr Distance": "309.9",
+        "Dr Accuracy %": "61.5",
+        "Ball Speed": "176.99"
+      },
+      {
+        "playerName": "Barclay Brown",
+        "player_num": "63342",
+        "Year": "2022",
+        "Rounds": "4",
+        "SG:TOT": "-1.14",
+        "SG:T2G": "-1.23",
+        "SG:OTT": "-0.89",
+        "SG:APP": "0.13",
+        "SG:BS": "-0.76",
+        "SG:ARG": "-0.48",
+        "SG:P": "0.09",
+        "Dr Distance": null,
+        "Dr Accuracy %": "51.6",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2024-07-21",
+        "position": "CUT",
+        "roundPosition": null,
+        "TournamentName": "Barracuda Championship",
+        "is_major": null,
+        "playerName": "Barclay Brown",
+        "player_num": "63342",
+        "Rounds": "2",
+        "CourseID": "931",
+        "Course": "Tahoe Mountain Club (Old Greenwood)",
+        "ShotLink": "0",
+        "SG:TOT": "-7.47",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2023-06-18",
+        "position": "CUT",
+        "roundPosition": "T92",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Barclay Brown",
+        "player_num": "63342",
+        "Rounds": "2",
+        "CourseID": "43",
+        "Course": "Los Angeles CC (North)",
+        "ShotLink": "2",
+        "SG:TOT": "-0.70",
+        "SG:T2G": "0.34",
+        "SG:OTT": "0.92",
+        "SG:APP": "-0.58",
+        "SG:BS": "0.34",
+        "SG:ARG": "-0.01",
+        "SG:P": "-1.04",
+        "SG:SG": "-1.05"
+      },
+      {
+        "Date": "2022-07-17",
+        "position": "T79",
+        "roundPosition": null,
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Barclay Brown",
+        "player_num": "63342",
+        "Rounds": "4",
+        "CourseID": "668",
+        "Course": "St. Andrews GC (Old Course)",
+        "ShotLink": "4",
+        "SG:TOT": "-1.14",
+        "SG:T2G": "-1.23",
+        "SG:OTT": "-0.89",
+        "SG:APP": "0.13",
+        "SG:BS": "-0.76",
+        "SG:ARG": "-0.48",
+        "SG:P": "0.09",
+        "SG:SG": "-0.38"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "37.5",
+        "SG TOT 1+": "25.0",
+        "SG TOT 2+": "12.5",
+        "SG TOT 3+": "12.5",
+        "SG TOT 4+": "12.5",
+        "SG TOT 5+": "0.0",
+        "Rounds": "8"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "0.09199997782707214",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-1.0390000343322754",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.28000009059906006",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-3.0299998919169107",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-5.659999847412109",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-5.320000171661377",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-2.4700000882148743",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-9.029999732971191",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "0.25333333015441895",
+        "Rounds": "3"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-3.850000023841858",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-1.96999990940094",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "2.5399999022483826",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-7.474999904632568",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-1.7799999713897705",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-5.320000171661377",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-0.9933333595593771",
+        "Rounds": "6"
+      },
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-7.474999904632568",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "73.25",
+        "PM": "74.25",
+        "Rounds": "8"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "8",
+        "50-100": null,
+        "100-150": "27",
+        "150-200": "36.6",
+        "200+": "59.5",
+        "200-250": "45.5",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-2.613749995827675",
+        "Rounds": "8"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:18.161Z",
+    "ok": true
+  }
+}

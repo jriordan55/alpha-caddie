@@ -1,0 +1,162 @@
+{
+  "playerId": "71667",
+  "playerName": "Nixon Lauritzen",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Nixon Lauritzen",
+    "BirthPlace": null,
+    "BirthDate": "",
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Nixon Lauritzen",
+        "player_num": "71667",
+        "Year": "2026",
+        "Rounds": "2",
+        "SG:TOT": "-3.92",
+        "SG:T2G": "-1.60",
+        "SG:OTT": "-1.19",
+        "SG:APP": "0.63",
+        "SG:BS": "-0.56",
+        "SG:ARG": "-1.04",
+        "SG:P": "-2.32",
+        "Dr Distance": "282.0",
+        "Dr Accuracy %": "39.3",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Nixon Lauritzen",
+        "player_num": "71667",
+        "Rounds": "2",
+        "SG:TOT": "-3.92",
+        "SG:T2G": "-1.60",
+        "SG:OTT": "-1.19",
+        "SG:APP": "0.63",
+        "SG:BS": "-0.56",
+        "SG:ARG": "-1.04",
+        "SG:P": "-2.32",
+        "SG:SG": "-3.36"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-10-25",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "Butterfield Bermuda Championship",
+        "is_major": "0",
+        "playerName": "Nixon Lauritzen",
+        "player_num": "71667",
+        "Rounds": "2",
+        "CourseID": "765",
+        "Course": "Port Royal Golf Course",
+        "ShotLink": "2",
+        "SG:TOT": "-3.92",
+        "SG:T2G": "-1.60",
+        "SG:OTT": "-1.19",
+        "SG:APP": "0.63",
+        "SG:BS": "-0.56",
+        "SG:ARG": "-1.04",
+        "SG:P": "-2.32",
+        "SG:SG": "-3.36"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-2.3235000371932983",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-2.5199999809265137",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-5.320000171661377",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-3.9200000762939453",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-3.9200000762939453",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-3.9200000762939453",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "71",
+        "PM": "74",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "26.7",
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-3.9200000762939453",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:24:30.850Z",
+    "ok": true
+  }
+}

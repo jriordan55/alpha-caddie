@@ -1,0 +1,138 @@
+{
+  "playerId": "57872",
+  "playerName": "Andi Xu",
+  "flag": null,
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Andi Xu",
+    "BirthPlace": "Guangzhou, Guangdong, China",
+    "BirthDate": "July 29, 2002",
+    "Age": "24",
+    "Height": "6ft 0in",
+    "Weight": "175 lbs",
+    "Nationality": "People’s Rep of Chin",
+    "Residence": "San Diego, California",
+    "ProWins": null,
+    "TurnedPro": "2024",
+    "PGAWins": null,
+    "College": "University of San Diego "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Andi Xu",
+        "player_num": "57872",
+        "Year": "2025",
+        "Rounds": "2",
+        "SG:TOT": "-3.64",
+        "SG:T2G": "-2.84",
+        "SG:OTT": "0.49",
+        "SG:APP": "-2.49",
+        "SG:BS": "-2.00",
+        "SG:ARG": "-0.84",
+        "SG:P": "-0.80",
+        "Dr Distance": "296.9",
+        "Dr Accuracy %": "78.6",
+        "Ball Speed": "172.88"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2025-06-29",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "Rocket Classic",
+        "is_major": "0",
+        "playerName": "Andi Xu",
+        "player_num": "57872",
+        "Rounds": "2",
+        "CourseID": "876",
+        "Course": "Detroit GC",
+        "ShotLink": "2",
+        "SG:TOT": "-3.64",
+        "SG:T2G": "-2.84",
+        "SG:OTT": "0.49",
+        "SG:APP": "-2.49",
+        "SG:BS": "-2.00",
+        "SG:ARG": "-0.84",
+        "SG:P": "-0.80",
+        "SG:SG": "-1.64"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.899999976158142",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-5.380000114440918",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-3.64000004529953",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-3.64000004529953",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-3.64000004529953",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "75",
+        "PM": "71",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "41",
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-3.64000004529953",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:18:58.428Z",
+    "ok": true
+  }
+}

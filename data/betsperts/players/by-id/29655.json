@@ -1,0 +1,148 @@
+{
+  "playerId": "29655",
+  "playerName": "Björn Åkesson",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_sw-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Björn Åkesson",
+    "BirthPlace": null,
+    "BirthDate": "January 04, 1989",
+    "Age": "37",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "Sweden",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Björn Åkesson",
+        "player_num": "29655",
+        "Year": "2025",
+        "Rounds": "2",
+        "SG:TOT": "-1.29",
+        "SG:T2G": "-0.54",
+        "SG:OTT": "-1.16",
+        "SG:APP": "0.49",
+        "SG:BS": "-0.68",
+        "SG:ARG": "0.14",
+        "SG:P": "-0.75",
+        "Dr Distance": "291.1",
+        "Dr Accuracy %": "42.9",
+        "Ball Speed": "175.55"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2025-07-13",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "ISCO Championship",
+        "is_major": "0",
+        "playerName": "Björn Åkesson",
+        "player_num": "29655",
+        "Rounds": "2",
+        "CourseID": "934",
+        "Course": "Hurstbourne CC",
+        "ShotLink": "2",
+        "SG:TOT": "-1.29",
+        "SG:T2G": "-0.54",
+        "SG:OTT": "-1.16",
+        "SG:APP": "0.49",
+        "SG:BS": "-0.68",
+        "SG:ARG": "0.14",
+        "SG:P": "-0.75",
+        "SG:SG": "-0.61"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "50.0",
+        "SG TOT 2+": "50.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.7489999532699585",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "2.1500000953674316",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-4.730000019073486",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-1.2899999618530273",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-1.2899999618530273",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-1.2899999618530273",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "69",
+        "PM": "76",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "22.5",
+        "150-200": "49.9",
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-1.2899999618530273",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:29.171Z",
+    "ok": true
+  }
+}

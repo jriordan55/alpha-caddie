@@ -1,0 +1,148 @@
+{
+  "playerId": "66190",
+  "playerName": "Steve Bogdanoff",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Steve Bogdanoff",
+    "BirthPlace": null,
+    "BirthDate": "",
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Steve Bogdanoff",
+        "player_num": "66190",
+        "Year": "2024",
+        "Rounds": "2",
+        "SG:TOT": "-5.59",
+        "SG:T2G": "-3.45",
+        "SG:OTT": "-0.78",
+        "SG:APP": "-0.99",
+        "SG:BS": "-1.76",
+        "SG:ARG": "-1.68",
+        "SG:P": "-2.14",
+        "Dr Distance": "265.8",
+        "Dr Accuracy %": "71.4",
+        "Ball Speed": "155.85"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2024-08-11",
+        "position": "CUT",
+        "roundPosition": "T151",
+        "TournamentName": "Wyndham Championship",
+        "is_major": "0",
+        "playerName": "Steve Bogdanoff",
+        "player_num": "66190",
+        "Rounds": "2",
+        "CourseID": "752",
+        "Course": "Sedgefield CC",
+        "ShotLink": "2",
+        "SG:TOT": "-5.59",
+        "SG:T2G": "-3.45",
+        "SG:OTT": "-0.78",
+        "SG:APP": "-0.99",
+        "SG:BS": "-1.76",
+        "SG:ARG": "-1.68",
+        "SG:P": "-2.14",
+        "SG:SG": "-3.82"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-2.1419999599456787",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-6.260000228881836",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-4.920000076293945",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-5.590000152587891",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-5.590000152587891",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-5.590000152587891",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74",
+        "PM": "75",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "35.3",
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-5.590000152587891",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:44.259Z",
+    "ok": true
+  }
+}

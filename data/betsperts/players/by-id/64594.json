@@ -1,0 +1,443 @@
+{
+  "playerId": "64594",
+  "playerName": "Angel Hidalgo Portillo",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_sp-flag-1.gif",
+  "profile": {
+    "ProfileImage": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2025/07/i.png",
+    "Name": "Angel Hidalgo Portillo",
+    "BirthPlace": "Marbella, Spain",
+    "BirthDate": "April 28, 1998",
+    "Age": "28",
+    "Height": "5ft 8in",
+    "Weight": "165 lbs",
+    "Nationality": "Spain",
+    "Residence": "Marbella, Spain",
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Angel Hidalgo",
+        "player_num": "64594",
+        "Year": "2026",
+        "Rounds": "6",
+        "SG:TOT": "0.02",
+        "SG:T2G": "0.71",
+        "SG:OTT": "0.66",
+        "SG:APP": "0.58",
+        "SG:BS": "1.24",
+        "SG:ARG": "-0.53",
+        "SG:P": "-0.69",
+        "Dr Distance": "296.9",
+        "Dr Accuracy %": "86.6",
+        "Ball Speed": "170.53"
+      },
+      {
+        "playerName": "Angel Hidalgo Portillo",
+        "player_num": "64594",
+        "Year": "2025",
+        "Rounds": "4",
+        "SG:TOT": "-1.95",
+        "SG:T2G": "-1.32",
+        "SG:OTT": "0.11",
+        "SG:APP": "-0.96",
+        "SG:BS": "-0.85",
+        "SG:ARG": "-0.47",
+        "SG:P": "-0.63",
+        "Dr Distance": "296.4",
+        "Dr Accuracy %": "51.9",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Angel Hidalgo Portillo",
+        "player_num": "64594",
+        "Year": "2024",
+        "Rounds": "6",
+        "SG:TOT": "0.49",
+        "SG:T2G": "0.57",
+        "SG:OTT": "0.23",
+        "SG:APP": "0.60",
+        "SG:BS": "0.83",
+        "SG:ARG": "-0.26",
+        "SG:P": "-0.08",
+        "Dr Distance": "311.1",
+        "Dr Accuracy %": "57.1",
+        "Ball Speed": "171.29"
+      },
+      {
+        "playerName": "Angel Hidalgo Portillo",
+        "player_num": "64594",
+        "Year": "2023",
+        "Rounds": "8",
+        "SG:TOT": "-1.11",
+        "SG:T2G": "-0.35",
+        "SG:OTT": "0.08",
+        "SG:APP": "0.06",
+        "SG:BS": "0.14",
+        "SG:ARG": "-0.49",
+        "SG:P": "1.44",
+        "Dr Distance": "293.2",
+        "Dr Accuracy %": "58.3",
+        "Ball Speed": "166.42"
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Angel Hidalgo",
+        "player_num": "64594",
+        "Rounds": "6",
+        "SG:TOT": "0.02",
+        "SG:T2G": "0.71",
+        "SG:OTT": "0.66",
+        "SG:APP": "0.58",
+        "SG:BS": "1.24",
+        "SG:ARG": "-0.53",
+        "SG:P": "-0.69",
+        "SG:SG": "-1.22"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-07-12",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "Genesis Scottish Open",
+        "is_major": "0",
+        "playerName": "Angel Hidalgo",
+        "player_num": "64594",
+        "Rounds": "2",
+        "CourseID": "945",
+        "Course": "The Renaissance Club",
+        "ShotLink": "2",
+        "SG:TOT": "-0.70",
+        "SG:T2G": "0.77",
+        "SG:OTT": "0.77",
+        "SG:APP": "0.55",
+        "SG:BS": "1.32",
+        "SG:ARG": "-0.55",
+        "SG:P": "-1.48",
+        "SG:SG": "-2.03"
+      },
+      {
+        "Date": "2026-06-21",
+        "position": "T53",
+        "roundPosition": "T53",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Angel Hidalgo",
+        "player_num": "64594",
+        "Rounds": "4",
+        "CourseID": "618",
+        "Course": "Shinnecock Hills GC",
+        "ShotLink": "4",
+        "SG:TOT": "0.39",
+        "SG:T2G": "0.68",
+        "SG:OTT": "0.60",
+        "SG:APP": "0.59",
+        "SG:BS": "1.20",
+        "SG:ARG": "-0.52",
+        "SG:P": "-0.29",
+        "SG:SG": "-0.81"
+      },
+      {
+        "Date": "2025-07-20",
+        "position": "CUT",
+        "roundPosition": null,
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Angel Hidalgo Portillo",
+        "player_num": "64594",
+        "Rounds": "2",
+        "CourseID": "885",
+        "Course": "Royal Portrush GC",
+        "ShotLink": "2",
+        "SG:TOT": "-0.27",
+        "SG:T2G": "-0.56",
+        "SG:OTT": "0.71",
+        "SG:APP": "-0.69",
+        "SG:BS": "0.02",
+        "SG:ARG": "-0.58",
+        "SG:P": "0.28",
+        "SG:SG": "-0.30"
+      },
+      {
+        "Date": "2025-07-13",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "Genesis Scottish Open",
+        "is_major": "0",
+        "playerName": "Angel Hidalgo Portillo",
+        "player_num": "64594",
+        "Rounds": "2",
+        "CourseID": "977",
+        "Course": "The Renaissance Club",
+        "ShotLink": "2",
+        "SG:TOT": "-3.62",
+        "SG:T2G": "-2.09",
+        "SG:OTT": "-0.49",
+        "SG:APP": "-1.24",
+        "SG:BS": "-1.73",
+        "SG:ARG": "-0.36",
+        "SG:P": "-1.53",
+        "SG:SG": "-1.90"
+      },
+      {
+        "Date": "2024-07-21",
+        "position": "CUT",
+        "roundPosition": null,
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Angel Hidalgo Portillo",
+        "player_num": "64594",
+        "Rounds": "2",
+        "CourseID": "709",
+        "Course": "Royal Troon",
+        "ShotLink": "2",
+        "SG:TOT": "-2.10",
+        "SG:T2G": "-1.05",
+        "SG:OTT": "-0.52",
+        "SG:APP": "-0.04",
+        "SG:BS": "-0.57",
+        "SG:ARG": "-0.49",
+        "SG:P": "-1.05",
+        "SG:SG": "-1.54"
+      },
+      {
+        "Date": "2024-07-14",
+        "position": "T16",
+        "roundPosition": "T16",
+        "TournamentName": "ISCO Championship",
+        "is_major": "0",
+        "playerName": "Angel Hidalgo Portillo",
+        "player_num": "64594",
+        "Rounds": "4",
+        "CourseID": "884",
+        "Course": "Keene Trace GC",
+        "ShotLink": "4",
+        "SG:TOT": "1.78",
+        "SG:T2G": "1.38",
+        "SG:OTT": "0.61",
+        "SG:APP": "0.92",
+        "SG:BS": "1.53",
+        "SG:ARG": "-0.15",
+        "SG:P": "0.40",
+        "SG:SG": "0.25"
+      },
+      {
+        "Date": "2023-07-23",
+        "position": "CUT",
+        "roundPosition": null,
+        "TournamentName": "Barracuda Championship",
+        "is_major": null,
+        "playerName": "Angel Hidalgo Portillo",
+        "player_num": "64594",
+        "Rounds": "2",
+        "CourseID": "890",
+        "Course": "Tahoe Mountain Club (Old Greenwood)",
+        "ShotLink": "0",
+        "SG:TOT": "-0.40",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2023-07-16",
+        "position": "T30",
+        "roundPosition": "T30",
+        "TournamentName": "Barbasol Championship",
+        "is_major": "0",
+        "playerName": "Angel Hidalgo Portillo",
+        "player_num": "64594",
+        "Rounds": "4",
+        "CourseID": "884",
+        "Course": "Keene Trace GC",
+        "ShotLink": "4",
+        "SG:TOT": "1.08",
+        "SG:T2G": "-0.35",
+        "SG:OTT": "0.08",
+        "SG:APP": "0.06",
+        "SG:BS": "0.14",
+        "SG:ARG": "-0.49",
+        "SG:P": "1.44",
+        "SG:SG": "0.94"
+      },
+      {
+        "Date": "2023-03-26",
+        "position": "CUT",
+        "roundPosition": "118",
+        "TournamentName": "Corales Puntacana Championship",
+        "is_major": "0",
+        "playerName": "Angel Hidalgo Portillo",
+        "player_num": "64594",
+        "Rounds": "2",
+        "CourseID": "244",
+        "Course": "Corales Golf Course",
+        "ShotLink": "0",
+        "SG:TOT": "-6.21",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "37.5",
+        "SG TOT 1+": "33.3",
+        "SG TOT 2+": "29.2",
+        "SG TOT 3+": "16.7",
+        "SG TOT 4+": "12.5",
+        "SG TOT 5+": "0.0",
+        "Rounds": "24"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "0.9192499946802855",
+        "Rounds": "8"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "1.200000034438239",
+        "Rounds": "9"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-2.3111111720403037",
+        "Rounds": "9"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-0.8199999928474426",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-0.38333334525426227",
+        "Rounds": "3"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-1.251249983906746",
+        "Rounds": "8"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-2.099999964237213",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "1.7985714163099016",
+        "Rounds": "7"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-1.81166672706604",
+        "Rounds": "6"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-1.1200000047683716",
+        "Rounds": "1"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-2.333999991416931",
+        "Rounds": "5"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-2.7700000206629434",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "0.27399989366531374",
+        "Rounds": "5"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "0.16666670640309653",
+        "Rounds": "6"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "0.800000011920929",
+        "Rounds": "5"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Strong",
+        "StrokesGainedAverage": "-2.1649999916553497",
+        "Rounds": "4"
+      },
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-0.3999999612569809",
+        "Rounds": "8"
+      },
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-0.14583338300387064",
+        "Rounds": "12"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "72.6",
+        "PM": "71",
+        "Rounds": "24"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "24",
+        "50-100": "20.7",
+        "100-150": "26.5",
+        "150-200": "36.8",
+        "200+": "54.8",
+        "200-250": "53.1",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-6.210000276565552",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-0.05409089543602683",
+        "Rounds": "22"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:08.067Z",
+    "ok": true
+  }
+}

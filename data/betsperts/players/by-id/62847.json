@@ -1,0 +1,195 @@
+{
+  "playerId": "62847",
+  "playerName": "Nic Ishee",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Nic Ishee",
+    "BirthPlace": "",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "United States",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Nic Ishee",
+        "player_num": "62847",
+        "Year": "2025",
+        "Rounds": "2",
+        "SG:TOT": "-6.41",
+        "SG:T2G": "-4.06",
+        "SG:OTT": "-1.68",
+        "SG:APP": "-1.71",
+        "SG:BS": "-3.39",
+        "SG:ARG": "-0.67",
+        "SG:P": "-2.36",
+        "Dr Distance": "281.1",
+        "Dr Accuracy %": "60.7",
+        "Ball Speed": "160.41"
+      },
+      {
+        "playerName": "Nic Ishee",
+        "player_num": "62847",
+        "Year": "2022",
+        "Rounds": "2",
+        "SG:TOT": "-3.79",
+        "SG:T2G": "-3.78",
+        "SG:OTT": "-1.16",
+        "SG:APP": "-2.40",
+        "SG:BS": "-3.56",
+        "SG:ARG": "-0.22",
+        "SG:P": "0.00",
+        "Dr Distance": "303.1",
+        "Dr Accuracy %": "64.3",
+        "Ball Speed": "162.76"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2025-05-18",
+        "position": "CUT",
+        "roundPosition": "151",
+        "TournamentName": "PGA Championship",
+        "is_major": "1",
+        "playerName": "Nic Ishee",
+        "player_num": "62847",
+        "Rounds": "2",
+        "CourseID": "241",
+        "Course": "Quail Hollow Club",
+        "ShotLink": "2",
+        "SG:TOT": "-6.41",
+        "SG:T2G": "-4.06",
+        "SG:OTT": "-1.68",
+        "SG:APP": "-1.71",
+        "SG:BS": "-3.39",
+        "SG:ARG": "-0.67",
+        "SG:P": "-2.36",
+        "SG:SG": "-3.03"
+      },
+      {
+        "Date": "2022-05-22",
+        "position": "CUT",
+        "roundPosition": "T135",
+        "TournamentName": "PGA Championship",
+        "is_major": "1",
+        "playerName": "Nic Ishee",
+        "player_num": "62847",
+        "Rounds": "2",
+        "CourseID": "611",
+        "Course": "Southern Hills CC",
+        "ShotLink": "2",
+        "SG:TOT": "-3.79",
+        "SG:T2G": "-3.78",
+        "SG:OTT": "-1.16",
+        "SG:APP": "-2.40",
+        "SG:BS": "-3.56",
+        "SG:ARG": "-0.22",
+        "SG:P": "0.00",
+        "SG:SG": "-0.22"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "0",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa Trivialis",
+        "StrokesGainedAverage": "-2.356000006198883",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-7.204999923706055",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-2.990000009536743",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-5.097499966621399",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-3.5799999237060547",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-5.603333314259847",
+        "Rounds": "3"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-5.097499966621399",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "80",
+        "PM": "75.5",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": "31.3",
+        "150-200": "43.8",
+        "200+": "51.5",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-5.097499966621399",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:24:24.347Z",
+    "ok": true
+  }
+}

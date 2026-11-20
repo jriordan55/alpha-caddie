@@ -1,0 +1,265 @@
+{
+  "playerId": "69500",
+  "playerName": "Tyler Watts",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Tyler Watts",
+    "BirthPlace": null,
+    "BirthDate": "",
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Tyler Watts",
+        "player_num": "69500",
+        "Year": "2026",
+        "Rounds": "4",
+        "SG:TOT": "0.22",
+        "SG:T2G": "1.47",
+        "SG:OTT": "0.86",
+        "SG:APP": "0.62",
+        "SG:BS": "1.48",
+        "SG:ARG": "-0.00",
+        "SG:P": "-1.25",
+        "Dr Distance": "309.4",
+        "Dr Accuracy %": "80.8",
+        "Ball Speed": "176.84"
+      },
+      {
+        "playerName": "Tyler Watts",
+        "player_num": "69500",
+        "Year": "2025",
+        "Rounds": "8",
+        "SG:TOT": "-0.28",
+        "SG:T2G": "-0.30",
+        "SG:OTT": "0.34",
+        "SG:APP": "0.55",
+        "SG:BS": "0.89",
+        "SG:ARG": "-1.19",
+        "SG:P": "0.35",
+        "Dr Distance": "300.0",
+        "Dr Accuracy %": "50.0",
+        "Ball Speed": "174.82"
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Tyler Watts",
+        "player_num": "69500",
+        "Rounds": "4",
+        "SG:TOT": "0.22",
+        "SG:T2G": "1.47",
+        "SG:OTT": "0.86",
+        "SG:APP": "0.62",
+        "SG:BS": "1.48",
+        "SG:ARG": "-0.00",
+        "SG:P": "-1.25",
+        "SG:SG": "-1.25"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-09-20",
+        "position": "T53",
+        "roundPosition": "T53",
+        "TournamentName": "Biltmore Championship Asheville",
+        "is_major": null,
+        "playerName": "Tyler Watts",
+        "player_num": "69500",
+        "Rounds": "4",
+        "CourseID": "942",
+        "Course": "The Cliffs at Walnut Cove",
+        "ShotLink": "4",
+        "SG:TOT": "0.22",
+        "SG:T2G": "1.47",
+        "SG:OTT": "0.86",
+        "SG:APP": "0.62",
+        "SG:BS": "1.48",
+        "SG:ARG": "-0.00",
+        "SG:P": "-1.25",
+        "SG:SG": "-1.25"
+      },
+      {
+        "Date": "2025-11-16",
+        "position": "T58",
+        "roundPosition": "T58",
+        "TournamentName": "Butterfield Bermuda Championship",
+        "is_major": "0",
+        "playerName": "Tyler Watts",
+        "player_num": "69500",
+        "Rounds": "4",
+        "CourseID": "765",
+        "Course": "Port Royal GC",
+        "ShotLink": "0",
+        "SG:TOT": "-0.60",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2025-09-14",
+        "position": "T53",
+        "roundPosition": "T53",
+        "TournamentName": "Procore Championship",
+        "is_major": "0",
+        "playerName": "Tyler Watts",
+        "player_num": "69500",
+        "Rounds": "4",
+        "CourseID": "926",
+        "Course": "Silverado Resort (North)",
+        "ShotLink": "4",
+        "SG:TOT": "0.05",
+        "SG:T2G": "-0.30",
+        "SG:OTT": "0.34",
+        "SG:APP": "0.55",
+        "SG:BS": "0.89",
+        "SG:ARG": "-1.19",
+        "SG:P": "0.35",
+        "SG:SG": "-0.85"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "33.3",
+        "SG TOT 2+": "25.0",
+        "SG TOT 3+": "8.3",
+        "SG TOT 4+": "8.3",
+        "SG TOT 5+": "0.0",
+        "Rounds": "12"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": null,
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "0.45666664838790894",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "1.9333333373069763",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-2.770000080267588",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-0.05666675170262655",
+        "Rounds": "3"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "0.22499993443489075",
+        "Rounds": "4"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-0.27625003457069397",
+        "Rounds": "8"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "1.1733333071072896",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "0.949999988079071",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-0.13500000536441803",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-3.890000104904175",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-0.4500001072883606",
+        "Rounds": "3"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Strong",
+        "StrokesGainedAverage": "0.047499969601631165",
+        "Rounds": "4"
+      },
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-0.6000000387430191",
+        "Rounds": "4"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "0.22499993443489075",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "71",
+        "PM": "69.8",
+        "Rounds": "12"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "12",
+        "50-100": "15.9",
+        "100-150": "24",
+        "150-200": null,
+        "200+": "49.8",
+        "200-250": "40.4",
+        "250+": "86.3"
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-0.1091667115688324",
+        "Rounds": "12"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:26:18.376Z",
+    "ok": true
+  }
+}

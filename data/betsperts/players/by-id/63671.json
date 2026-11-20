@@ -1,0 +1,153 @@
+{
+  "playerId": "63671",
+  "playerName": "William Knauth",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "William Knauth",
+    "BirthPlace": null,
+    "BirthDate": "",
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "William Knauth",
+        "player_num": "63671",
+        "Year": "2023",
+        "Rounds": "2",
+        "SG:TOT": "-5.50",
+        "SG:T2G": "-5.34",
+        "SG:OTT": "-1.50",
+        "SG:APP": "-3.29",
+        "SG:BS": "-4.78",
+        "SG:ARG": "-0.56",
+        "SG:P": "-0.16",
+        "Dr Distance": "289.6",
+        "Dr Accuracy %": "46.4",
+        "Ball Speed": "170.29"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2023-05-14",
+        "position": "CUT",
+        "roundPosition": "T153",
+        "TournamentName": "AT&T Byron Nelson",
+        "is_major": "0",
+        "playerName": "William Knauth",
+        "player_num": "63671",
+        "Rounds": "2",
+        "CourseID": "921",
+        "Course": "TPC Craig Ranch",
+        "ShotLink": "2",
+        "SG:TOT": "-5.50",
+        "SG:T2G": "-5.34",
+        "SG:OTT": "-1.50",
+        "SG:APP": "-3.29",
+        "SG:BS": "-4.78",
+        "SG:ARG": "-0.56",
+        "SG:P": "-0.16",
+        "SG:SG": "-0.72"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.1600000262260437",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-9.789999961853027",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.2000000476837158",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-5.495000004768372",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-1.2000000476837158",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-9.789999961853027",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-5.495000004768372",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "71",
+        "PM": "79",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "47.8",
+        "200+": "59.4",
+        "200-250": "59.4",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-5.495000004768372",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:26:28.496Z",
+    "ok": true
+  }
+}

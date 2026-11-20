@@ -1,0 +1,215 @@
+{
+  "playerId": "39831",
+  "playerName": "Zhengkai Bai",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ch-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Zhengkai Bai",
+    "BirthPlace": "Shantou, China",
+    "BirthDate": "August 19, 1997",
+    "Age": "29",
+    "Height": "6ft 0in",
+    "Weight": "182 lbs",
+    "Nationality": "China",
+    "Residence": "Lake Mary, FL",
+    "ProWins": "2",
+    "TurnedPro": "2019",
+    "PGAWins": "0",
+    "College": "University of Central Florida "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Zhengkai Bai",
+        "player_num": "39831",
+        "Year": "2021",
+        "Rounds": "4",
+        "SG:TOT": "0.34",
+        "SG:T2G": "0.63",
+        "SG:OTT": "0.91",
+        "SG:APP": "0.29",
+        "SG:BS": "1.20",
+        "SG:ARG": "-0.57",
+        "SG:P": "-0.29",
+        "Dr Distance": "292.4",
+        "Dr Accuracy %": "67.9",
+        "Ball Speed": "179.11"
+      },
+      {
+        "playerName": "Zhengkai Bai",
+        "player_num": "39831",
+        "Year": "2019",
+        "Rounds": "4",
+        "SG:TOT": "-2.57",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "42.9",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2021-07-18",
+        "position": "T42",
+        "roundPosition": "T42",
+        "TournamentName": "Barbasol Championship",
+        "is_major": "0",
+        "playerName": "Zhengkai Bai",
+        "player_num": "39831",
+        "Rounds": "4",
+        "CourseID": "884",
+        "Course": "Keene Trace GC",
+        "ShotLink": "4",
+        "SG:TOT": "0.34",
+        "SG:T2G": "0.63",
+        "SG:OTT": "0.91",
+        "SG:APP": "0.29",
+        "SG:BS": "1.20",
+        "SG:ARG": "-0.57",
+        "SG:P": "-0.29",
+        "SG:SG": "-0.87"
+      },
+      {
+        "Date": "2019-11-03",
+        "position": "T70",
+        "roundPosition": "T70",
+        "TournamentName": "WGC - HSBC Champions",
+        "is_major": "0",
+        "playerName": "Zhengkai Bai",
+        "player_num": "39831",
+        "Rounds": "4",
+        "CourseID": "766",
+        "Course": "Sheshan International GC",
+        "ShotLink": "4",
+        "SG:TOT": "-2.57",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "25.0",
+        "SG TOT 1+": "25.0",
+        "SG TOT 2+": "12.5",
+        "SG TOT 3+": "12.5",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "8"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.2947499714791775",
+        "Rounds": "8"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "0.7800000905990601",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-2.3750000298023224",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-0.38499993085861206",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-2.494999945163727",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-1.8028571009635925",
+        "Rounds": "7"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "3.6700000762939453",
+        "Rounds": "1"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-2.5724999606609344",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "0.33500005304813385",
+        "Rounds": "4"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Strong",
+        "StrokesGainedAverage": "-2.5724999606609344",
+        "Rounds": "4"
+      },
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "0.33500005304813385",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "70",
+        "PM": "72.8",
+        "Rounds": "8"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "8",
+        "50-100": null,
+        "100-150": "25.3",
+        "150-200": null,
+        "200+": "62.9",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-2.5724999606609344",
+        "Rounds": "4"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "0.33500005304813385",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:26:37.530Z",
+    "ok": true
+  }
+}

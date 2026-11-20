@@ -1,0 +1,85 @@
+{
+  "playerId": "22400",
+  "playerName": "Hennie Otto",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_sf-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Hennie Otto",
+    "BirthPlace": "Boksburg, South Africa",
+    "BirthDate": "June 25, 1976",
+    "Age": "50",
+    "Height": "5ft 9in",
+    "Weight": "181 lbs",
+    "Nationality": "South Africa",
+    "Residence": "Boksburg, South Africa",
+    "ProWins": null,
+    "TurnedPro": "1998",
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [],
+    "sgGuest": [],
+    "sgByEvent": [],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "25.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.7200000286102295",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "0.4000000059604645",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-2.200000047683716",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-0.5899999737739563",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [],
+    "byScoringCondition": [],
+    "byFieldStrength": [],
+    "amPmSplit": [
+      {
+        "AM": "73.33333333333333",
+        "PM": "74",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": []
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:01.071Z",
+    "ok": true
+  }
+}

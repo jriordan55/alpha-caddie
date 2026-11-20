@@ -1,0 +1,278 @@
+{
+  "playerId": "54926",
+  "playerName": "George Cunningham",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "George Cunningham",
+    "BirthPlace": "Louisville, Colorado",
+    "BirthDate": "August 14, 1995",
+    "Age": "31",
+    "Height": "5ft 10in",
+    "Weight": "180 lbs",
+    "Nationality": "United States",
+    "Residence": "Tucson, Arizona",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": "University of Arizona 2018, General Studies"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "George Cunningham",
+        "player_num": "54926",
+        "Year": "2019",
+        "Rounds": "5",
+        "SG:TOT": "-1.80",
+        "SG:T2G": "-2.06",
+        "SG:OTT": "-0.09",
+        "SG:APP": "-0.59",
+        "SG:BS": "-0.68",
+        "SG:ARG": "-1.38",
+        "SG:P": "-0.38",
+        "Dr Distance": "284.1",
+        "Dr Accuracy %": "58.6",
+        "Ball Speed": "167.58"
+      },
+      {
+        "playerName": "George Cunningham",
+        "player_num": "54926",
+        "Year": "2018",
+        "Rounds": "8",
+        "SG:TOT": "0.92",
+        "SG:T2G": "1.15",
+        "SG:OTT": "0.56",
+        "SG:APP": "0.23",
+        "SG:BS": "0.79",
+        "SG:ARG": "0.36",
+        "SG:P": "-0.23",
+        "Dr Distance": "302.3",
+        "Dr Accuracy %": "71.4",
+        "Ball Speed": "165.52"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2019-10-13",
+        "position": "CUT",
+        "roundPosition": "T109",
+        "TournamentName": "Houston Open",
+        "is_major": "0",
+        "playerName": "George Cunningham",
+        "player_num": "54926",
+        "Rounds": "2",
+        "CourseID": "729",
+        "Course": "GC of Houston",
+        "ShotLink": "2",
+        "SG:TOT": "-1.60",
+        "SG:T2G": "-1.72",
+        "SG:OTT": "-0.16",
+        "SG:APP": "-0.78",
+        "SG:BS": "-0.94",
+        "SG:ARG": "-0.78",
+        "SG:P": "0.12",
+        "SG:SG": "-0.66"
+      },
+      {
+        "Date": "2019-01-20",
+        "position": "CUT",
+        "roundPosition": "T133",
+        "TournamentName": "Desert Classic",
+        "is_major": "0",
+        "playerName": "George Cunningham",
+        "player_num": "54926",
+        "Rounds": "3",
+        "CourseID": "233",
+        "Course": "Nicklaus Tournament Course",
+        "ShotLink": "1",
+        "SG:TOT": "-1.93",
+        "SG:T2G": "-2.75",
+        "SG:OTT": "0.06",
+        "SG:APP": "-0.22",
+        "SG:BS": "-0.15",
+        "SG:ARG": "-2.60",
+        "SG:P": "-1.37",
+        "SG:SG": "-3.96"
+      },
+      {
+        "Date": "2018-11-04",
+        "position": "T36",
+        "roundPosition": "T36",
+        "TournamentName": "Shriners Childrens Open",
+        "is_major": "0",
+        "playerName": "George Cunningham",
+        "player_num": "54926",
+        "Rounds": "4",
+        "CourseID": "538",
+        "Course": "TPC Summerlin",
+        "ShotLink": "4",
+        "SG:TOT": "0.72",
+        "SG:T2G": "1.02",
+        "SG:OTT": "0.81",
+        "SG:APP": "0.42",
+        "SG:BS": "1.24",
+        "SG:ARG": "-0.22",
+        "SG:P": "-0.29",
+        "SG:SG": "-0.51"
+      },
+      {
+        "Date": "2018-07-29",
+        "position": "T29",
+        "roundPosition": "T29",
+        "TournamentName": "RBC Canadian Open",
+        "is_major": "0",
+        "playerName": "George Cunningham",
+        "player_num": "54926",
+        "Rounds": "4",
+        "CourseID": "32",
+        "Course": "Glen Abbey GC",
+        "ShotLink": "4",
+        "SG:TOT": "1.11",
+        "SG:T2G": "1.28",
+        "SG:OTT": "0.31",
+        "SG:APP": "0.03",
+        "SG:BS": "0.34",
+        "SG:ARG": "0.93",
+        "SG:P": "-0.16",
+        "SG:SG": "0.77"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "53.8",
+        "SG TOT 1+": "30.8",
+        "SG TOT 2+": "23.1",
+        "SG TOT 3+": "7.7",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "13"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.2945000049949158",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "0.11750000715255737",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa Trivialis",
+        "StrokesGainedAverage": "-1.3660000562667847",
+        "Rounds": "3"
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.2175000086426735",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "0.16500001400709152",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-1.059999982515971",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "0.8749999403953552",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-0.05000001688798269",
+        "Rounds": "6"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "1.1125000268220901",
+        "Rounds": "4"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-1.930000017086665",
+        "Rounds": "3"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-1.600000023841858",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "0.141818182034926",
+        "Rounds": "11"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-1.930000017086665",
+        "Rounds": "3"
+      },
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-1.600000023841858",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "0.9187500067055225",
+        "Rounds": "8"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "69.5",
+        "PM": "70.85714285714286",
+        "Rounds": "13"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "13",
+        "50-100": "24.1",
+        "100-150": "22",
+        "150-200": "33.1",
+        "200+": "61.8",
+        "200-250": "52.9",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-0.05000001688798269",
+        "Rounds": "6"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "1.1125000268220901",
+        "Rounds": "4"
+      },
+      {
+        "SeasonHeld": "West Coast",
+        "StrokesGainedAverage": "-1.930000017086665",
+        "Rounds": "3"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:21:45.982Z",
+    "ok": true
+  }
+}

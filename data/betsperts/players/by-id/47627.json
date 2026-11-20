@@ -1,0 +1,148 @@
+{
+  "playerId": "47627",
+  "playerName": "Samuel Saunders",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Samuel Saunders",
+    "BirthPlace": "Albuquerque, New Mexico",
+    "BirthDate": "March 15, 1992",
+    "Age": "34",
+    "Height": "5ft 9in",
+    "Weight": "150 lbs",
+    "Nationality": "United States",
+    "Residence": "Albuquerque, New Mexico",
+    "ProWins": "4",
+    "TurnedPro": "2015",
+    "PGAWins": "0",
+    "College": "University of New Mexico 2015, Business Administration (Finance)"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Samuel Saunders",
+        "player_num": "47627",
+        "Year": "2022",
+        "Rounds": "2",
+        "SG:TOT": "-4.07",
+        "SG:T2G": "-3.68",
+        "SG:OTT": "-0.20",
+        "SG:APP": "-3.38",
+        "SG:BS": "-3.58",
+        "SG:ARG": "-0.11",
+        "SG:P": "-0.39",
+        "Dr Distance": "294.2",
+        "Dr Accuracy %": "57.1",
+        "Ball Speed": "170.57"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2022-04-03",
+        "position": "CUT",
+        "roundPosition": "T135",
+        "TournamentName": "Valero Texas Open",
+        "is_major": "0",
+        "playerName": "Samuel Saunders",
+        "player_num": "47627",
+        "Rounds": "2",
+        "CourseID": "770",
+        "Course": "TPC San Antonio (Oaks)",
+        "ShotLink": "2",
+        "SG:TOT": "-4.07",
+        "SG:T2G": "-3.68",
+        "SG:OTT": "-0.20",
+        "SG:APP": "-3.38",
+        "SG:BS": "-3.58",
+        "SG:ARG": "-0.11",
+        "SG:P": "-0.39",
+        "SG:SG": "-0.50"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Poa Trivialis",
+        "StrokesGainedAverage": "-0.38849999755620956",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-3.180000066757202",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-4.960000038146973",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-4.070000052452087",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-4.070000052452087",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-4.070000052452087",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "77",
+        "PM": "75",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "24",
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-4.070000052452087",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:24.297Z",
+    "ok": true
+  }
+}

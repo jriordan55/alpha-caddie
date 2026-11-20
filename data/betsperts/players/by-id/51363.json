@@ -1,0 +1,236 @@
+{
+  "playerId": "51363",
+  "playerName": "George Bryan, IV",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "George Bryan, IV",
+    "BirthPlace": "Columbia, South Carolina",
+    "BirthDate": "January 12, 1988",
+    "Age": "38",
+    "Height": "5ft 10in",
+    "Weight": "160 lbs",
+    "Nationality": "United States",
+    "Residence": "Aiken, South Carolina",
+    "ProWins": null,
+    "TurnedPro": "2010",
+    "PGAWins": null,
+    "College": "University of South Carolina  (Sport Management, 2010) "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "George Bryan, IV",
+        "player_num": "51363",
+        "Year": "2024",
+        "Rounds": "4",
+        "SG:TOT": "-2.77",
+        "SG:T2G": "-1.31",
+        "SG:OTT": "-1.14",
+        "SG:APP": "1.42",
+        "SG:BS": "0.29",
+        "SG:ARG": "-1.59",
+        "SG:P": "-0.13",
+        "Dr Distance": "291.8",
+        "Dr Accuracy %": "48.2",
+        "Ball Speed": "174.52"
+      },
+      {
+        "playerName": "George Bryan, IV",
+        "player_num": "51363",
+        "Year": "2023",
+        "Rounds": "4",
+        "SG:TOT": "-0.73",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "53.6",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2024-11-17",
+        "position": "CUT",
+        "roundPosition": "T109",
+        "TournamentName": "Butterfield Bermuda Championship",
+        "is_major": "0",
+        "playerName": "George Bryan, IV",
+        "player_num": "51363",
+        "Rounds": "2",
+        "CourseID": "765",
+        "Course": "Port Royal GC",
+        "ShotLink": "0",
+        "SG:TOT": "-4.12",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2024-05-12",
+        "position": "CUT",
+        "roundPosition": "T98",
+        "TournamentName": "Myrtle Beach Classic",
+        "is_major": "0",
+        "playerName": "George Bryan, IV",
+        "player_num": "51363",
+        "Rounds": "2",
+        "CourseID": "925",
+        "Course": "Dunes Golf & Beach Club",
+        "ShotLink": "2",
+        "SG:TOT": "-1.43",
+        "SG:T2G": "-1.31",
+        "SG:OTT": "-1.14",
+        "SG:APP": "1.42",
+        "SG:BS": "0.29",
+        "SG:ARG": "-1.59",
+        "SG:P": "-0.13",
+        "SG:SG": "-1.72"
+      },
+      {
+        "Date": "2023-11-12",
+        "position": "T69",
+        "roundPosition": "T69",
+        "TournamentName": "Butterfield Bermuda Championship",
+        "is_major": "0",
+        "playerName": "George Bryan, IV",
+        "player_num": "51363",
+        "Rounds": "4",
+        "CourseID": "765",
+        "Course": "Port Royal GC",
+        "ShotLink": "0",
+        "SG:TOT": "-0.73",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "12.5",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "8"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-0.12500000186264515",
+        "Rounds": "8"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-2.4500000377496085",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.1366666456063588",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-0.019999999552965164",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-3.2100000381469727",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-1.4300000220537186",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-1.8550000072767336",
+        "Rounds": "6"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-4.170000076293945",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-1.4300000220537186",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-1.3919999934732914",
+        "Rounds": "5"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-1.74875001097098",
+        "Rounds": "8"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "70.75",
+        "PM": "71.5",
+        "Rounds": "8"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "8",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "37.6",
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-1.8550000072767336",
+        "Rounds": "6"
+      },
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-1.4300000220537186",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:21:45.812Z",
+    "ok": true
+  }
+}

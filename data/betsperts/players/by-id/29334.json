@@ -1,0 +1,190 @@
+{
+  "playerId": "29334",
+  "playerName": "Jaco Ahlers",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_sf-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Jaco Ahlers",
+    "BirthPlace": "",
+    "BirthDate": "November 19, 1982",
+    "Age": "44",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "South Africa",
+    "Residence": "",
+    "ProWins": "1",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Jaco Ahlers",
+        "player_num": "29334",
+        "Year": "2021",
+        "Rounds": "2",
+        "SG:TOT": "-2.82",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "64.3",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Jaco Ahlers",
+        "player_num": "29334",
+        "Year": "2018",
+        "Rounds": "4",
+        "SG:TOT": "-5.85",
+        "SG:T2G": "-5.63",
+        "SG:OTT": "-1.48",
+        "SG:APP": "-2.70",
+        "SG:BS": "-4.18",
+        "SG:ARG": "-1.45",
+        "SG:P": "-0.21",
+        "Dr Distance": "303.2",
+        "Dr Accuracy %": "30.4",
+        "Ball Speed": "165.70"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2021-07-18",
+        "position": "CUT",
+        "roundPosition": null,
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Jaco Ahlers",
+        "player_num": "29334",
+        "Rounds": "2",
+        "CourseID": "778",
+        "Course": "Royal St. Georges GC",
+        "ShotLink": "0",
+        "SG:TOT": "-2.82",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2018-08-05",
+        "position": "71",
+        "roundPosition": "71",
+        "TournamentName": "WGC - Bridgestone Invitational",
+        "is_major": "0",
+        "playerName": "Jaco Ahlers",
+        "player_num": "29334",
+        "Rounds": "4",
+        "CourseID": "36",
+        "Course": "Firestone CC (South)",
+        "ShotLink": "4",
+        "SG:TOT": "-5.85",
+        "SG:T2G": "-5.63",
+        "SG:OTT": "-1.48",
+        "SG:APP": "-2.70",
+        "SG:BS": "-4.18",
+        "SG:ARG": "-1.45",
+        "SG:P": "-0.21",
+        "SG:SG": "-1.67"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "33.3",
+        "SG TOT 1+": "16.7",
+        "SG TOT 2+": "16.7",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "6"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "1.6650000214576721",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-8.869999885559082",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-6.800000190734863",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-7.820000171661377",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-2.8249998092651367",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-5.845000118017197",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-4.838333348433177",
+        "Rounds": "6"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-4.838333348433177",
+        "Rounds": "6"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "75.75",
+        "PM": "73.5",
+        "Rounds": "6"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "6",
+        "50-100": "20.3",
+        "100-150": "31.6",
+        "150-200": "47.3",
+        "200+": "48",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-4.838333348433177",
+        "Rounds": "6"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:14.468Z",
+    "ok": true
+  }
+}

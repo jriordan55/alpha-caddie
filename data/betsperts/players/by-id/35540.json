@@ -1,0 +1,247 @@
+{
+  "playerId": "35540",
+  "playerName": "Albin Choi",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ca-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Albin Choi",
+    "BirthPlace": "Surrey, British Columbia, Canada",
+    "BirthDate": "May 04, 1992",
+    "Age": "34",
+    "Height": "5ft 11in",
+    "Weight": "173 lbs",
+    "Nationality": "Canada",
+    "Residence": "Jupiter, Florida",
+    "ProWins": "1",
+    "TurnedPro": "2013",
+    "PGAWins": "0",
+    "College": "North Carolina State University "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Albin Choi",
+        "player_num": "35540",
+        "Year": "2022",
+        "Rounds": "2",
+        "SG:TOT": "-5.93",
+        "SG:T2G": "-4.15",
+        "SG:OTT": "-1.97",
+        "SG:APP": "-2.17",
+        "SG:BS": "-4.15",
+        "SG:ARG": "-0.00",
+        "SG:P": "-1.78",
+        "Dr Distance": "285.3",
+        "Dr Accuracy %": "53.8",
+        "Ball Speed": "168.48"
+      },
+      {
+        "playerName": "Albin Choi",
+        "player_num": "35540",
+        "Year": "2019",
+        "Rounds": "2",
+        "SG:TOT": "-4.52",
+        "SG:T2G": "-4.04",
+        "SG:OTT": "-0.44",
+        "SG:APP": "-1.55",
+        "SG:BS": "-1.99",
+        "SG:ARG": "-2.05",
+        "SG:P": "-0.48",
+        "Dr Distance": "273.0",
+        "Dr Accuracy %": "53.6",
+        "Ball Speed": "163.02"
+      },
+      {
+        "playerName": "Albin Choi",
+        "player_num": "35540",
+        "Year": "2015",
+        "Rounds": "2",
+        "SG:TOT": "-2.82",
+        "SG:T2G": "-3.74",
+        "SG:OTT": "-0.90",
+        "SG:APP": "-3.16",
+        "SG:BS": "-4.05",
+        "SG:ARG": "0.31",
+        "SG:P": "0.93",
+        "Dr Distance": "293.7",
+        "Dr Accuracy %": "35.7",
+        "Ball Speed": "172.91"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2022-06-12",
+        "position": "CUT",
+        "roundPosition": "T145",
+        "TournamentName": "RBC Canadian Open",
+        "is_major": "0",
+        "playerName": "Albin Choi",
+        "player_num": "35540",
+        "Rounds": "2",
+        "CourseID": "772",
+        "Course": "St. Georges G&CC",
+        "ShotLink": "2",
+        "SG:TOT": "-5.93",
+        "SG:T2G": "-4.15",
+        "SG:OTT": "-1.97",
+        "SG:APP": "-2.17",
+        "SG:BS": "-4.15",
+        "SG:ARG": "-0.00",
+        "SG:P": "-1.78",
+        "SG:SG": "-1.79"
+      },
+      {
+        "Date": "2019-06-09",
+        "position": "CUT",
+        "roundPosition": "T152",
+        "TournamentName": "RBC Canadian Open",
+        "is_major": "0",
+        "playerName": "Albin Choi",
+        "player_num": "35540",
+        "Rounds": "2",
+        "CourseID": "874",
+        "Course": "Hamilton Golf & Country Club",
+        "ShotLink": "2",
+        "SG:TOT": "-4.52",
+        "SG:T2G": "-4.04",
+        "SG:OTT": "-0.44",
+        "SG:APP": "-1.55",
+        "SG:BS": "-1.99",
+        "SG:ARG": "-2.05",
+        "SG:P": "-0.48",
+        "SG:SG": "-2.53"
+      },
+      {
+        "Date": "2015-07-26",
+        "position": "CUT",
+        "roundPosition": "T131",
+        "TournamentName": "RBC Canadian Open",
+        "is_major": "0",
+        "playerName": "Albin Choi",
+        "player_num": "35540",
+        "Rounds": "2",
+        "CourseID": "32",
+        "Course": "Glen Abbey GC",
+        "ShotLink": "2",
+        "SG:TOT": "-2.82",
+        "SG:T2G": "-3.74",
+        "SG:OTT": "-0.90",
+        "SG:APP": "-3.16",
+        "SG:BS": "-4.05",
+        "SG:ARG": "0.31",
+        "SG:P": "0.93",
+        "SG:SG": "1.24"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "6"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.4287499859929085",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-4.636666655540466",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-4.213333368301392",
+        "Rounds": "3"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-4.377499967813492",
+        "Rounds": "4"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-4.520000100135803",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-4.520000100135803",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-2.8199999928474426",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-5.934999942779541",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-5.227500021457672",
+        "Rounds": "4"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-2.8199999928474426",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "75",
+        "PM": "75.33333333333333",
+        "Rounds": "6"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "6",
+        "50-100": "38.4",
+        "100-150": "22.4",
+        "150-200": "47",
+        "200+": "51.8",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-5.227500021457672",
+        "Rounds": "4"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-2.8199999928474426",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:18:49.674Z",
+    "ok": true
+  }
+}

@@ -1,0 +1,168 @@
+{
+  "playerId": "56220",
+  "playerName": "Garrett Barber",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Garrett Barber",
+    "BirthPlace": "",
+    "BirthDate": "February 09, 2000",
+    "Age": "26",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "United States",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Garrett Barber",
+        "player_num": "56220",
+        "Year": "2018",
+        "Rounds": "4",
+        "SG:TOT": "-1.18",
+        "SG:T2G": "-0.91",
+        "SG:OTT": "-0.15",
+        "SG:APP": "-0.46",
+        "SG:BS": "-0.61",
+        "SG:ARG": "-0.30",
+        "SG:P": "-0.68",
+        "Dr Distance": "284.4",
+        "Dr Accuracy %": "57.1",
+        "Ball Speed": "173.34"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2018-11-18",
+        "position": "T76",
+        "roundPosition": "T76",
+        "TournamentName": "The RSM Classic",
+        "is_major": "0",
+        "playerName": "Garrett Barber",
+        "player_num": "56220",
+        "Rounds": "4",
+        "CourseID": "776",
+        "Course": "Sea Island GC (Seaside)",
+        "ShotLink": "3",
+        "SG:TOT": "-1.18",
+        "SG:T2G": "-0.91",
+        "SG:OTT": "-0.15",
+        "SG:APP": "-0.46",
+        "SG:BS": "-0.61",
+        "SG:ARG": "-0.30",
+        "SG:P": "-0.68",
+        "SG:SG": "-0.98"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "25.0",
+        "SG TOT 2+": "25.0",
+        "SG TOT 3+": "25.0",
+        "SG TOT 4+": "25.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-0.6780000527699789",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "0.05000000074505806",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "4.880000114440918",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-3.5",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-6.150000095367432",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-1.5899999936421711",
+        "Rounds": "3"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "0.05000000074505806",
+        "Rounds": "1"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-1.5899999936421711",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "0.05000000074505806",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-1.179999995045364",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "71.66666666666667",
+        "PM": "65",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": "28.7",
+        "150-200": null,
+        "200+": "46.4",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-1.179999995045364",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:21:40.385Z",
+    "ok": true
+  }
+}

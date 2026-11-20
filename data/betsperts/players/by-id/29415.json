@@ -1,0 +1,189 @@
+{
+  "playerId": "29415",
+  "playerName": "Ryan Baca",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Ryan Baca",
+    "BirthPlace": "Houston, Texas",
+    "BirthDate": "January 18, 1983",
+    "Age": "43",
+    "Height": "5ft 9in",
+    "Weight": "165 lbs",
+    "Nationality": "United States",
+    "Residence": "Sugar Land, Texas",
+    "ProWins": "0",
+    "TurnedPro": "2006",
+    "PGAWins": "0",
+    "College": "Baylor University (Education, 2006)"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Ryan Baca",
+        "player_num": "29415",
+        "Year": "2018",
+        "Rounds": "4",
+        "SG:TOT": "-2.61",
+        "SG:T2G": "-2.46",
+        "SG:OTT": "-0.03",
+        "SG:APP": "-1.30",
+        "SG:BS": "-1.33",
+        "SG:ARG": "-1.12",
+        "SG:P": "-0.15",
+        "Dr Distance": "275.8",
+        "Dr Accuracy %": "83.9",
+        "Ball Speed": "157.74"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2018-05-20",
+        "position": "CUT",
+        "roundPosition": "T146",
+        "TournamentName": "AT&T Byron Nelson",
+        "is_major": "0",
+        "playerName": "Ryan Baca",
+        "player_num": "29415",
+        "Rounds": "2",
+        "CourseID": "243",
+        "Course": "Trinity Forest Golf Club",
+        "ShotLink": "2",
+        "SG:TOT": "-3.13",
+        "SG:T2G": "-3.06",
+        "SG:OTT": "0.26",
+        "SG:APP": "-1.82",
+        "SG:BS": "-1.56",
+        "SG:ARG": "-1.50",
+        "SG:P": "-0.07",
+        "SG:SG": "-1.57"
+      },
+      {
+        "Date": "2018-04-01",
+        "position": "CUT",
+        "roundPosition": "T119",
+        "TournamentName": "Houston Open",
+        "is_major": "0",
+        "playerName": "Ryan Baca",
+        "player_num": "29415",
+        "Rounds": "2",
+        "CourseID": "729",
+        "Course": "GC of Houston",
+        "ShotLink": "2",
+        "SG:TOT": "-2.09",
+        "SG:T2G": "-1.86",
+        "SG:OTT": "-0.33",
+        "SG:APP": "-0.78",
+        "SG:BS": "-1.11",
+        "SG:ARG": "-0.74",
+        "SG:P": "-0.23",
+        "SG:SG": "-0.98"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "25.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-0.06749999523162842",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa Trivialis",
+        "StrokesGainedAverage": "-0.234499990940094",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-3.325000025331974",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.8850000202655792",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-2.085000015795231",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-3.1250000298023224",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-2.085000015795231",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-3.1250000298023224",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-2.085000015795231",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-3.1250000298023224",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "69.5",
+        "PM": "75.5",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": "22.9",
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-2.6050000227987766",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:14.471Z",
+    "ok": true
+  }
+}

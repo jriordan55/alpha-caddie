@@ -1,0 +1,210 @@
+{
+  "playerId": "47992",
+  "playerName": "Matt Mabrey",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Matt Mabrey",
+    "BirthPlace": null,
+    "BirthDate": "September 06, 1992",
+    "Age": "34",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Matt Mabrey",
+        "player_num": "47992",
+        "Year": "2016",
+        "Rounds": "2",
+        "SG:TOT": "-1.56",
+        "SG:T2G": "0.05",
+        "SG:OTT": "0.55",
+        "SG:APP": "-1.17",
+        "SG:BS": "-0.63",
+        "SG:ARG": "0.68",
+        "SG:P": "-1.62",
+        "Dr Distance": "274.4",
+        "Dr Accuracy %": "82.1",
+        "Ball Speed": "170.82"
+      },
+      {
+        "playerName": "Matt Mabrey",
+        "player_num": "47992",
+        "Year": "2015",
+        "Rounds": "2",
+        "SG:TOT": "-0.91",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "71.4",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2016-05-01",
+        "position": "CUT",
+        "roundPosition": "T114",
+        "TournamentName": "Zurich Classic",
+        "is_major": "0",
+        "playerName": "Matt Mabrey",
+        "player_num": "47992",
+        "Rounds": "2",
+        "CourseID": "714",
+        "Course": "TPC Louisiana",
+        "ShotLink": "2",
+        "SG:TOT": "-1.56",
+        "SG:T2G": "0.05",
+        "SG:OTT": "0.55",
+        "SG:APP": "-1.17",
+        "SG:BS": "-0.63",
+        "SG:ARG": "0.68",
+        "SG:P": "-1.62",
+        "SG:SG": "-0.94"
+      },
+      {
+        "Date": "2015-06-21",
+        "position": "CUT",
+        "roundPosition": "T97",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Matt Mabrey",
+        "player_num": "47992",
+        "Rounds": "2",
+        "CourseID": "100",
+        "Course": "Chambers Bay GC 2",
+        "ShotLink": "0",
+        "SG:TOT": "-0.91",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "25.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-1.6205000579357147",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": null,
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-2.4199999570846558",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.06000000238418579",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-1.5649999678134918",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-0.9149999916553497",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-1.5649999678134918",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-0.9149999916553497",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-0.9149999916553497",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-1.5649999678134918",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "72.5",
+        "PM": "74.5",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-1.5649999678134918",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-0.9149999916553497",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:56.965Z",
+    "ok": true
+  }
+}

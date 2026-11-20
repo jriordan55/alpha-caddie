@@ -1,0 +1,185 @@
+{
+  "playerId": "49413",
+  "playerName": "Brian Bullington",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Brian Bullington",
+    "BirthPlace": "Chicago, Illinois",
+    "BirthDate": "August 20, 1993",
+    "Age": "33",
+    "Height": "6ft 2in",
+    "Weight": "185 lbs",
+    "Nationality": "United States",
+    "Residence": "Frankfort, Illinois",
+    "ProWins": "0",
+    "TurnedPro": "2015",
+    "PGAWins": "0",
+    "College": "University of Iowa 2015, Marketing"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Brian Bullington",
+        "player_num": "49413",
+        "Year": "2018",
+        "Rounds": "2",
+        "SG:TOT": "-4.25",
+        "SG:T2G": "-2.80",
+        "SG:OTT": "-1.02",
+        "SG:APP": "-2.49",
+        "SG:BS": "-3.51",
+        "SG:ARG": "0.71",
+        "SG:P": "-1.45",
+        "Dr Distance": "286.5",
+        "Dr Accuracy %": "53.6",
+        "Ball Speed": "179.86"
+      },
+      {
+        "playerName": "Brian Bullington",
+        "player_num": "49413",
+        "Year": "2016",
+        "Rounds": "2",
+        "SG:TOT": "-4.34",
+        "SG:T2G": "-2.68",
+        "SG:OTT": "0.66",
+        "SG:APP": "-0.96",
+        "SG:BS": "-0.30",
+        "SG:ARG": "-2.38",
+        "SG:P": "-1.65",
+        "Dr Distance": "279.1",
+        "Dr Accuracy %": "78.6",
+        "Ball Speed": "167.19"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2018-07-15",
+        "position": "CUT",
+        "roundPosition": "T139",
+        "TournamentName": "John Deere Classic",
+        "is_major": "0",
+        "playerName": "Brian Bullington",
+        "player_num": "49413",
+        "Rounds": "2",
+        "CourseID": "669",
+        "Course": "TPC Deere Run",
+        "ShotLink": "2",
+        "SG:TOT": "-4.25",
+        "SG:T2G": "-2.80",
+        "SG:OTT": "-1.02",
+        "SG:APP": "-2.49",
+        "SG:BS": "-3.51",
+        "SG:ARG": "0.71",
+        "SG:P": "-1.45",
+        "SG:SG": "-0.74"
+      },
+      {
+        "Date": "2016-08-14",
+        "position": "CUT",
+        "roundPosition": "T143",
+        "TournamentName": "John Deere Classic",
+        "is_major": "0",
+        "playerName": "Brian Bullington",
+        "player_num": "49413",
+        "Rounds": "2",
+        "CourseID": "669",
+        "Course": "TPC Deere Run",
+        "ShotLink": "2",
+        "SG:TOT": "-4.34",
+        "SG:T2G": "-2.68",
+        "SG:OTT": "0.66",
+        "SG:APP": "-0.96",
+        "SG:BS": "-0.30",
+        "SG:ARG": "-2.38",
+        "SG:P": "-1.65",
+        "SG:SG": "-4.03"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-1.5509999841451645",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-4.450000047683716",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-4.134999990463257",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-4.292500019073486",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-4.292500019073486",
+        "Rounds": "4"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-4.292500019073486",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74",
+        "PM": "74.33333333333333",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "36.3",
+        "200+": "51.8",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-4.292500019073486",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:47.894Z",
+    "ok": true
+  }
+}

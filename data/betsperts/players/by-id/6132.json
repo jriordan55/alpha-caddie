@@ -1,0 +1,138 @@
+{
+  "playerId": "6132",
+  "playerName": "Sonny Skinner",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Sonny Skinner",
+    "BirthPlace": "Portsmouth, Virginia",
+    "BirthDate": "August 18, 1960",
+    "Age": "66",
+    "Height": "5ft 9in",
+    "Weight": "170 lbs",
+    "Nationality": "United States",
+    "Residence": "Sylvester, Georgia",
+    "ProWins": "6",
+    "TurnedPro": "1982",
+    "PGAWins": "0",
+    "College": "Shorter College; Abraham Baldwin Agricultural College  (1982) "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Sonny Skinner",
+        "player_num": "6132",
+        "Year": "2021",
+        "Rounds": "2",
+        "SG:TOT": "-6.35",
+        "SG:T2G": "-4.83",
+        "SG:OTT": "-2.89",
+        "SG:APP": "-2.62",
+        "SG:BS": "-5.51",
+        "SG:ARG": "0.68",
+        "SG:P": "-1.52",
+        "Dr Distance": "257.4",
+        "Dr Accuracy %": "71.4",
+        "Ball Speed": "152.34"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2021-05-23",
+        "position": "CUT",
+        "roundPosition": "147",
+        "TournamentName": "PGA Championship",
+        "is_major": "1",
+        "playerName": "Sonny Skinner",
+        "player_num": "6132",
+        "Rounds": "2",
+        "CourseID": "697",
+        "Course": "Ocean Course at Kiawah Island",
+        "ShotLink": "2",
+        "SG:TOT": "-6.35",
+        "SG:T2G": "-4.83",
+        "SG:OTT": "-2.89",
+        "SG:APP": "-2.62",
+        "SG:BS": "-5.51",
+        "SG:ARG": "0.68",
+        "SG:P": "-1.52",
+        "SG:SG": "-0.84"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-7.180000066757202",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-3.4100000858306885",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-6.3500001430511475",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-6.3500001430511475",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-6.3500001430511475",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "79.5",
+        "PM": "76",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "49.5",
+        "200+": "64.5",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-6.3500001430511475",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:39.429Z",
+    "ok": true
+  }
+}

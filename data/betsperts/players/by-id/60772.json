@@ -1,0 +1,158 @@
+{
+  "playerId": "60772",
+  "playerName": "Gilbert Mendez",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Gilbert Mendez",
+    "BirthPlace": "",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "United States",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Gilbert Mendez",
+        "player_num": "60772",
+        "Year": "2021",
+        "Rounds": "2",
+        "SG:TOT": "-3.29",
+        "SG:T2G": "-3.63",
+        "SG:OTT": "-0.99",
+        "SG:APP": "-0.97",
+        "SG:BS": "-1.96",
+        "SG:ARG": "-1.66",
+        "SG:P": "0.34",
+        "Dr Distance": "274.3",
+        "Dr Accuracy %": "42.3",
+        "Ball Speed": "162.58"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2021-11-14",
+        "position": "CUT",
+        "roundPosition": "T122",
+        "TournamentName": "Houston Open",
+        "is_major": "0",
+        "playerName": "Gilbert Mendez",
+        "player_num": "60772",
+        "Rounds": "2",
+        "CourseID": "897",
+        "Course": "Memorial Park Golf Course",
+        "ShotLink": "2",
+        "SG:TOT": "-3.29",
+        "SG:T2G": "-3.63",
+        "SG:OTT": "-0.99",
+        "SG:APP": "-0.97",
+        "SG:BS": "-1.96",
+        "SG:ARG": "-1.66",
+        "SG:P": "0.34",
+        "SG:SG": "-1.33"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "0.33650003373622894",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-2.740000009536743",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-3.8399999141693115",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-3.8399999141693115",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-2.740000009536743",
+        "Rounds": "1"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-2.740000009536743",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-3.8399999141693115",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-3.2899999618530273",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "73",
+        "PM": "75",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "39.5",
+        "150-200": "36.1",
+        "200+": "48.4",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-3.2899999618530273",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:21:48.125Z",
+    "ok": true
+  }
+}

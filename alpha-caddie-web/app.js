@@ -28941,7 +28941,57 @@ function initTabs() {
   showHomeView();
 }
 
+const ALPHACADDIE_THEME_KEY = "alphacaddie-theme";
+
+function getPreferredAlphaCaddieTheme() {
+  try {
+    const stored = String(localStorage.getItem(ALPHACADDIE_THEME_KEY) || "").trim();
+    if (stored === "light" || stored === "dark") return stored;
+  } catch {
+    /* ignore */
+  }
+  try {
+    if (window.matchMedia("(prefers-color-scheme: light)").matches) return "light";
+  } catch {
+    /* ignore */
+  }
+  return "dark";
+}
+
+function syncAlphaCaddieThemeToggleUi(theme) {
+  const label = document.getElementById("nav-theme-toggle-label");
+  const btn = document.getElementById("nav-theme-toggle");
+  const t = theme === "light" ? "light" : "dark";
+  if (label) label.textContent = t === "light" ? "Light" : "Dark";
+  if (btn) {
+    btn.setAttribute("aria-pressed", t === "light" ? "true" : "false");
+    btn.title = t === "light" ? "Switch to dark theme" : "Switch to light theme";
+  }
+}
+
+function applyAlphaCaddieTheme(theme, { persist = true } = {}) {
+  const t = theme === "light" ? "light" : "dark";
+  document.documentElement.setAttribute("data-theme", t);
+  if (persist) {
+    try {
+      localStorage.setItem(ALPHACADDIE_THEME_KEY, t);
+    } catch {
+      /* ignore */
+    }
+  }
+  syncAlphaCaddieThemeToggleUi(t);
+}
+
+function initAlphaCaddieThemeToggle() {
+  applyAlphaCaddieTheme(getPreferredAlphaCaddieTheme(), { persist: false });
+  document.getElementById("nav-theme-toggle")?.addEventListener("click", () => {
+    const cur = document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
+    applyAlphaCaddieTheme(cur === "light" ? "dark" : "light");
+  });
+}
+
 document.addEventListener("DOMContentLoaded", () => {
+  initAlphaCaddieThemeToggle();
   syncWeatherUiFromState();
   initPropsTopTableSortOnce();
   configureRoundPickerUi();

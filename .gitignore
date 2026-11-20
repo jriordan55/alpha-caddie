@@ -10,6 +10,7 @@ website/.env
 website/datagolf.local.json
 
 alpha-caddie-web/datagolf.local.json
+alpha-caddie-web/betsperts.local.json
 alpha-caddie-web/course_holes.local.json
 alpha-caddie-web/player_round_history.json
 alpha-caddie-web/player_shots_web.json
@@ -57,6 +58,8 @@ alpha-caddie-web/embedded-player-round-history.js
 data/*.tmp.*
 data/**/*.tmp.*
 **/logs/*.log
+data/betsperts/pull.log
+data/betsperts/pull.log.err
 
 java/alphacaddie/target/
 java/alphacaddie/.mvn-tools/

@@ -1,0 +1,190 @@
+{
+  "playerId": "62846",
+  "playerName": "Colin Inglis",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Colin Inglis",
+    "BirthPlace": "",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "United States",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Colin Inglis",
+        "player_num": "62846",
+        "Year": "2023",
+        "Rounds": "2",
+        "SG:TOT": "-0.75",
+        "SG:T2G": "-0.90",
+        "SG:OTT": "-0.84",
+        "SG:APP": "-0.24",
+        "SG:BS": "-1.08",
+        "SG:ARG": "0.18",
+        "SG:P": "0.15",
+        "Dr Distance": "281.2",
+        "Dr Accuracy %": "57.1",
+        "Ball Speed": "159.51"
+      },
+      {
+        "playerName": "Colin Inglis",
+        "player_num": "62846",
+        "Year": "2022",
+        "Rounds": "2",
+        "SG:TOT": "-4.79",
+        "SG:T2G": "-5.04",
+        "SG:OTT": "-2.57",
+        "SG:APP": "-2.55",
+        "SG:BS": "-5.12",
+        "SG:ARG": "0.09",
+        "SG:P": "0.25",
+        "Dr Distance": "283.5",
+        "Dr Accuracy %": "46.4",
+        "Ball Speed": "157.34"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2023-05-21",
+        "position": "CUT",
+        "roundPosition": "T98",
+        "TournamentName": "PGA Championship",
+        "is_major": "1",
+        "playerName": "Colin Inglis",
+        "player_num": "62846",
+        "Rounds": "2",
+        "CourseID": "514",
+        "Course": "Oak Hill CC",
+        "ShotLink": "2",
+        "SG:TOT": "-0.75",
+        "SG:T2G": "-0.90",
+        "SG:OTT": "-0.84",
+        "SG:APP": "-0.24",
+        "SG:BS": "-1.08",
+        "SG:ARG": "0.18",
+        "SG:P": "0.15",
+        "SG:SG": "0.33"
+      },
+      {
+        "Date": "2022-05-22",
+        "position": "CUT",
+        "roundPosition": "T148",
+        "TournamentName": "PGA Championship",
+        "is_major": "1",
+        "playerName": "Colin Inglis",
+        "player_num": "62846",
+        "Rounds": "2",
+        "CourseID": "611",
+        "Course": "Southern Hills CC",
+        "ShotLink": "2",
+        "SG:TOT": "-4.79",
+        "SG:T2G": "-5.04",
+        "SG:OTT": "-2.57",
+        "SG:APP": "-2.55",
+        "SG:BS": "-5.12",
+        "SG:ARG": "0.09",
+        "SG:P": "0.25",
+        "SG:SG": "0.34"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "25.0",
+        "SG TOT 1+": "25.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "0.20274999737739563",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-4.245000004768372",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.2900000214576721",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "1.8200000524520874",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-4.296666701634725",
+        "Rounds": "3"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-2.767500013113022",
+        "Rounds": "4"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-2.767500013113022",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "77.5",
+        "PM": "74",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": "23.8",
+        "100-150": "27.5",
+        "150-200": "38.9",
+        "200+": "65",
+        "200-250": "70",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-2.767500013113022",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:20:32.731Z",
+    "ok": true
+  }
+}

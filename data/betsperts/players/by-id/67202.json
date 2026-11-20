@@ -1,0 +1,177 @@
+{
+  "playerId": "67202",
+  "playerName": "Luke Gutschewski",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Luke Gutschewski",
+    "BirthPlace": null,
+    "BirthDate": "March 31, 2003",
+    "Age": "23",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": "2025",
+    "PGAWins": null,
+    "College": "Iowa State University "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Luke Gutschewski",
+        "player_num": "67202",
+        "Year": "2026",
+        "Rounds": "4",
+        "SG:TOT": "0.22",
+        "SG:T2G": "1.02",
+        "SG:OTT": "0.14",
+        "SG:APP": "-0.07",
+        "SG:BS": "0.07",
+        "SG:ARG": "0.95",
+        "SG:P": "-0.79",
+        "Dr Distance": "291.5",
+        "Dr Accuracy %": "71.4",
+        "Ball Speed": "175.17"
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Luke Gutschewski",
+        "player_num": "67202",
+        "Rounds": "4",
+        "SG:TOT": "0.22",
+        "SG:T2G": "1.02",
+        "SG:OTT": "0.14",
+        "SG:APP": "-0.07",
+        "SG:BS": "0.07",
+        "SG:ARG": "0.95",
+        "SG:P": "-0.79",
+        "SG:SG": "0.16"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-07-05",
+        "position": "T51",
+        "roundPosition": "T51",
+        "TournamentName": "John Deere Classic",
+        "is_major": "0",
+        "playerName": "Luke Gutschewski",
+        "player_num": "67202",
+        "Rounds": "4",
+        "CourseID": "669",
+        "Course": "TPC Deere Run",
+        "ShotLink": "4",
+        "SG:TOT": "0.22",
+        "SG:T2G": "1.02",
+        "SG:OTT": "0.14",
+        "SG:APP": "-0.07",
+        "SG:BS": "0.07",
+        "SG:ARG": "0.95",
+        "SG:P": "-0.79",
+        "SG:SG": "0.16"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "50.0",
+        "SG TOT 2+": "25.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.7912500090897083",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "2.799999952316284",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "1.3600000143051147",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-2.940000057220459",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-0.3199999928474426",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "0.22499997913837433",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "2.799999952316284",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-0.6333333452542623",
+        "Rounds": "3"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "0.22499997913837433",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "69.33333333333333",
+        "PM": "68",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "35.7",
+        "200+": "52.1",
+        "200-250": "49.1",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "0.22499997913837433",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:41.719Z",
+    "ok": true
+  }
+}

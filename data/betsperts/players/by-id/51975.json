@@ -1,0 +1,200 @@
+{
+  "playerId": "51975",
+  "playerName": "Zach Cabra",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Zach Cabra",
+    "BirthPlace": "Beaumont, Texas",
+    "BirthDate": "April 09, 1992",
+    "Age": "34",
+    "Height": "5ft 10in",
+    "Weight": "175 lbs",
+    "Nationality": "United States",
+    "Residence": "McKinney, Texas",
+    "ProWins": "0",
+    "TurnedPro": "2015",
+    "PGAWins": "0",
+    "College": "Sam Houston State 2015, Finance"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Zach Cabra",
+        "player_num": "51975",
+        "Year": "2018",
+        "Rounds": "2",
+        "SG:TOT": "-1.59",
+        "SG:T2G": "0.61",
+        "SG:OTT": "0.28",
+        "SG:APP": "-0.26",
+        "SG:BS": "0.02",
+        "SG:ARG": "0.59",
+        "SG:P": "-2.20",
+        "Dr Distance": "275.2",
+        "Dr Accuracy %": "64.3",
+        "Ball Speed": "168.64"
+      },
+      {
+        "playerName": "Zach Cabra",
+        "player_num": "51975",
+        "Year": "2017",
+        "Rounds": "2",
+        "SG:TOT": "-0.58",
+        "SG:T2G": "-0.97",
+        "SG:OTT": "0.71",
+        "SG:APP": "-1.36",
+        "SG:BS": "-0.64",
+        "SG:ARG": "-0.33",
+        "SG:P": "0.39",
+        "Dr Distance": "284.3",
+        "Dr Accuracy %": "67.9",
+        "Ball Speed": "169.81"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2018-04-01",
+        "position": "CUT",
+        "roundPosition": "T114",
+        "TournamentName": "Houston Open",
+        "is_major": "0",
+        "playerName": "Zach Cabra",
+        "player_num": "51975",
+        "Rounds": "2",
+        "CourseID": "729",
+        "Course": "GC of Houston",
+        "ShotLink": "2",
+        "SG:TOT": "-1.59",
+        "SG:T2G": "0.61",
+        "SG:OTT": "0.28",
+        "SG:APP": "-0.26",
+        "SG:BS": "0.02",
+        "SG:ARG": "0.59",
+        "SG:P": "-2.20",
+        "SG:SG": "-1.61"
+      },
+      {
+        "Date": "2017-04-23",
+        "position": "CUT",
+        "roundPosition": "T92",
+        "TournamentName": "Valero Texas Open",
+        "is_major": "0",
+        "playerName": "Zach Cabra",
+        "player_num": "51975",
+        "Rounds": "2",
+        "CourseID": "770",
+        "Course": "TPC San Antonio (Oaks)",
+        "ShotLink": "2",
+        "SG:TOT": "-0.58",
+        "SG:T2G": "-0.97",
+        "SG:OTT": "0.71",
+        "SG:APP": "-1.36",
+        "SG:BS": "-0.64",
+        "SG:ARG": "-0.33",
+        "SG:P": "0.39",
+        "SG:SG": "0.06"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "25.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Poa Trivialis",
+        "StrokesGainedAverage": "-0.9047499820590019",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.6750000193715096",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.4949999861419201",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-1.5850000195205212",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-0.5849999859929085",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-0.5849999859929085",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-1.5850000195205212",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-1.5850000195205212",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-0.5849999859929085",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "72.5",
+        "PM": "72.5",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": "29.9",
+        "150-200": null,
+        "200+": "65.7",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-1.0850000027567148",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:26:34.771Z",
+    "ok": true
+  }
+}

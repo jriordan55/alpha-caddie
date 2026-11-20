@@ -1,0 +1,148 @@
+{
+  "playerId": "50844",
+  "playerName": "Ryan McClintock",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Ryan McClintock",
+    "BirthPlace": null,
+    "BirthDate": "August 23, 1982",
+    "Age": "44",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Ryan McClintock",
+        "player_num": "50844",
+        "Year": "2016",
+        "Rounds": "2",
+        "SG:TOT": "-0.33",
+        "SG:T2G": "0.07",
+        "SG:OTT": "-0.02",
+        "SG:APP": "-0.29",
+        "SG:BS": "-0.31",
+        "SG:ARG": "0.39",
+        "SG:P": "-0.41",
+        "Dr Distance": "272.8",
+        "Dr Accuracy %": "71.4",
+        "Ball Speed": "162.18"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2016-08-14",
+        "position": "CUT",
+        "roundPosition": "T89",
+        "TournamentName": "John Deere Classic",
+        "is_major": "0",
+        "playerName": "Ryan McClintock",
+        "player_num": "50844",
+        "Rounds": "2",
+        "CourseID": "669",
+        "Course": "TPC Deere Run",
+        "ShotLink": "2",
+        "SG:TOT": "-0.33",
+        "SG:T2G": "0.07",
+        "SG:OTT": "-0.02",
+        "SG:APP": "-0.29",
+        "SG:BS": "-0.31",
+        "SG:ARG": "0.39",
+        "SG:P": "-0.41",
+        "SG:SG": "-0.02"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.41050004959106445",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.559999942779541",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "0.8899999856948853",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-0.3349999785423279",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-0.3349999785423279",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-0.3349999785423279",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "70.5",
+        "PM": null,
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-0.3349999785423279",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:17.140Z",
+    "ok": true
+  }
+}

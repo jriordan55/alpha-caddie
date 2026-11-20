@@ -1,0 +1,204 @@
+{
+  "playerId": "1707",
+  "playerName": "Steve Lowery",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Steve Lowery",
+    "BirthPlace": "Birmingham, Alabama",
+    "BirthDate": "October 12, 1960",
+    "Age": "66",
+    "Height": "6ft 2in",
+    "Weight": "230 lbs",
+    "Nationality": "United States",
+    "Residence": "Birmingham, Alabama",
+    "ProWins": null,
+    "TurnedPro": "1983",
+    "PGAWins": null,
+    "College": "University of Alabama "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Steve Lowery",
+        "player_num": "1707",
+        "Year": "2015",
+        "Rounds": "6",
+        "SG:TOT": "-2.21",
+        "SG:T2G": "-1.37",
+        "SG:OTT": "-0.59",
+        "SG:APP": "-1.72",
+        "SG:BS": "-2.31",
+        "SG:ARG": "0.94",
+        "SG:P": "0.17",
+        "Dr Distance": "267.9",
+        "Dr Accuracy %": "56.0",
+        "Ball Speed": "156.12"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2015-07-19",
+        "position": "76",
+        "roundPosition": "76",
+        "TournamentName": "Barbasol Championship",
+        "is_major": "0",
+        "playerName": "Steve Lowery",
+        "player_num": "1707",
+        "Rounds": "4",
+        "CourseID": "819",
+        "Course": "RTJ Trail (Grand National)",
+        "ShotLink": "4",
+        "SG:TOT": "-1.20",
+        "SG:T2G": "-1.37",
+        "SG:OTT": "-0.59",
+        "SG:APP": "-1.72",
+        "SG:BS": "-2.31",
+        "SG:ARG": "0.94",
+        "SG:P": "0.17",
+        "SG:SG": "1.12"
+      },
+      {
+        "Date": "2015-03-08",
+        "position": "CUT",
+        "roundPosition": "T125",
+        "TournamentName": "Puerto Rico Open",
+        "is_major": "0",
+        "playerName": "Steve Lowery",
+        "player_num": "1707",
+        "Rounds": "2",
+        "CourseID": "742",
+        "Course": "Grand Reserve GC",
+        "ShotLink": "0",
+        "SG:TOT": "-4.22",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "16.7",
+        "SG TOT 1+": "16.7",
+        "SG TOT 2+": "16.7",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "8"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "0.17224999237805605",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-3.114999882876873",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.05000007152557373",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-3.440000057220459",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-3.4700000286102295",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "",
+        "StrokesGainedAverage": null,
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-1.1975000463426113",
+        "Rounds": "4"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-4.224999904632568",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-4.224999904632568",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": null,
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-1.1975000463426113",
+        "Rounds": "4"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-2.206666665772597",
+        "Rounds": "8"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74.25",
+        "PM": "71.5",
+        "Rounds": "8"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "8",
+        "50-100": null,
+        "100-150": "24.3",
+        "150-200": "35.9",
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-4.224999904632568",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-1.1975000463426113",
+        "Rounds": "6"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:46.468Z",
+    "ok": true
+  }
+}

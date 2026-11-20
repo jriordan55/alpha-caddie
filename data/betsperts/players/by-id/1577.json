@@ -1,0 +1,340 @@
+{
+  "playerId": "1577",
+  "playerName": "Lee Janzen",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Lee Janzen",
+    "BirthPlace": "Austin, Minnesota",
+    "BirthDate": "August 28, 1964",
+    "Age": "62",
+    "Height": "6ft 0in",
+    "Weight": "175 lbs",
+    "Nationality": "United States",
+    "Residence": "Orlando, Florida",
+    "ProWins": "9",
+    "TurnedPro": "1986",
+    "PGAWins": "8",
+    "College": "Florida Southern College  (1986, Marketing) "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Lee Janzen",
+        "player_num": "1577",
+        "Year": "2018",
+        "Rounds": "3",
+        "SG:TOT": "-0.08",
+        "SG:T2G": "-1.21",
+        "SG:OTT": "-0.37",
+        "SG:APP": "-0.23",
+        "SG:BS": "-0.60",
+        "SG:ARG": "-0.61",
+        "SG:P": "2.74",
+        "Dr Distance": "264.9",
+        "Dr Accuracy %": "57.1",
+        "Ball Speed": "158.16"
+      },
+      {
+        "playerName": "Lee Janzen",
+        "player_num": "1577",
+        "Year": "2017",
+        "Rounds": "2",
+        "SG:TOT": "-3.30",
+        "SG:T2G": "-3.57",
+        "SG:OTT": "-1.35",
+        "SG:APP": "-1.56",
+        "SG:BS": "-2.91",
+        "SG:ARG": "-0.66",
+        "SG:P": "0.27",
+        "Dr Distance": "267.8",
+        "Dr Accuracy %": "57.1",
+        "Ball Speed": "156.87"
+      },
+      {
+        "playerName": "Lee Janzen",
+        "player_num": "1577",
+        "Year": "2015",
+        "Rounds": "9",
+        "SG:TOT": "-0.27",
+        "SG:T2G": "-2.39",
+        "SG:OTT": "0.30",
+        "SG:APP": "-0.57",
+        "SG:BS": "-0.27",
+        "SG:ARG": "-2.12",
+        "SG:P": "0.20",
+        "Dr Distance": "265.6",
+        "Dr Accuracy %": "63.2",
+        "Ball Speed": "158.35"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2018-01-21",
+        "position": "CUT",
+        "roundPosition": "T78",
+        "TournamentName": "CareerBuilder Challenge",
+        "is_major": "0",
+        "playerName": "Lee Janzen",
+        "player_num": "1577",
+        "Rounds": "3",
+        "CourseID": "202",
+        "Course": "La Quinta CC",
+        "ShotLink": "1",
+        "SG:TOT": "-0.08",
+        "SG:T2G": "-1.21",
+        "SG:OTT": "-0.37",
+        "SG:APP": "-0.23",
+        "SG:BS": "-0.60",
+        "SG:ARG": "-0.61",
+        "SG:P": "2.74",
+        "SG:SG": "2.13"
+      },
+      {
+        "Date": "2017-07-23",
+        "position": "CUT",
+        "roundPosition": "T122",
+        "TournamentName": "Barbasol Championship",
+        "is_major": "0",
+        "playerName": "Lee Janzen",
+        "player_num": "1577",
+        "Rounds": "2",
+        "CourseID": "819",
+        "Course": "RTJ Trail (Grand National)",
+        "ShotLink": "2",
+        "SG:TOT": "-3.30",
+        "SG:T2G": "-3.57",
+        "SG:OTT": "-1.35",
+        "SG:APP": "-1.56",
+        "SG:BS": "-2.91",
+        "SG:ARG": "-0.66",
+        "SG:P": "0.27",
+        "SG:SG": "-0.39"
+      },
+      {
+        "Date": "2015-06-21",
+        "position": "CUT",
+        "roundPosition": "T107",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Lee Janzen",
+        "player_num": "1577",
+        "Rounds": "2",
+        "CourseID": "100",
+        "Course": "Chambers Bay GC 2",
+        "ShotLink": "0",
+        "SG:TOT": "-1.41",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2015-03-08",
+        "position": "T16",
+        "roundPosition": "T16",
+        "TournamentName": "Puerto Rico Open",
+        "is_major": "0",
+        "playerName": "Lee Janzen",
+        "player_num": "1577",
+        "Rounds": "4",
+        "CourseID": "742",
+        "Course": "Grand Reserve GC",
+        "ShotLink": "0",
+        "SG:TOT": "1.31",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2015-01-25",
+        "position": "CUT",
+        "roundPosition": "T134",
+        "TournamentName": "Humana Challenge",
+        "is_major": "0",
+        "playerName": "Lee Janzen",
+        "player_num": "1577",
+        "Rounds": "3",
+        "CourseID": "202",
+        "Course": "La Quinta CC",
+        "ShotLink": "1",
+        "SG:TOT": "-1.61",
+        "SG:T2G": "-2.39",
+        "SG:OTT": "0.30",
+        "SG:APP": "-0.57",
+        "SG:BS": "-0.27",
+        "SG:ARG": "-2.12",
+        "SG:P": "0.20",
+        "SG:SG": "-1.92"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "31.3",
+        "SG TOT 1+": "31.3",
+        "SG TOT 2+": "12.5",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "18"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "0.2685000076889992",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": null,
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa Trivialis",
+        "StrokesGainedAverage": "1.4699999764561653",
+        "Rounds": "6"
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.11499997476736705",
+        "Rounds": "7"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.5099999904632568",
+        "Rounds": "7"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-1.086666688323021",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "1.7899999618530273",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "",
+        "StrokesGainedAverage": null,
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-3.3049999475479126",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "1.3149999789893627",
+        "Rounds": "4"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-1.4149999767541885",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-0.84333336353302",
+        "Rounds": "6"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": null,
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "1.3149999789893627",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "1.5399999618530273",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-1.4149999767541885",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-1.8871428625924247",
+        "Rounds": "7"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-1.4149999767541885",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-0.22499999652306238",
+        "Rounds": "8"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-0.84333336353302",
+        "Rounds": "6"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "73.16666666666667",
+        "PM": "71",
+        "Rounds": "18"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "18",
+        "50-100": null,
+        "100-150": "23.4",
+        "150-200": "32.4",
+        "200+": "56.7",
+        "200-250": "55.6",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "1.3149999789893627",
+        "Rounds": "4"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-2.3599999621510506",
+        "Rounds": "6"
+      },
+      {
+        "SeasonHeld": "West Coast",
+        "StrokesGainedAverage": "-0.84333336353302",
+        "Rounds": "6"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:34.206Z",
+    "ok": true
+  }
+}

@@ -1,0 +1,148 @@
+{
+  "playerId": "15704",
+  "playerName": "David Holmes",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "David Holmes",
+    "BirthPlace": "Knoxville, Tennessee",
+    "BirthDate": "June 05, 1988",
+    "Age": "38",
+    "Height": "5ft 10in",
+    "Weight": "175 lbs",
+    "Nationality": "United States",
+    "Residence": "Knoxville, Tennessee",
+    "ProWins": null,
+    "TurnedPro": "2011",
+    "PGAWins": null,
+    "College": "University of Tennessee "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "David Holmes",
+        "player_num": "15704",
+        "Year": "2015",
+        "Rounds": "2",
+        "SG:TOT": "-5.34",
+        "SG:T2G": "-4.52",
+        "SG:OTT": "-0.99",
+        "SG:APP": "-2.64",
+        "SG:BS": "-3.63",
+        "SG:ARG": "-0.88",
+        "SG:P": "-0.82",
+        "Dr Distance": "281.2",
+        "Dr Accuracy %": "53.6",
+        "Ball Speed": "169.94"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2015-06-14",
+        "position": "CUT",
+        "roundPosition": "T148",
+        "TournamentName": "FedEx St. Jude Classic",
+        "is_major": "0",
+        "playerName": "David Holmes",
+        "player_num": "15704",
+        "Rounds": "2",
+        "CourseID": "513",
+        "Course": "TPC Southwind",
+        "ShotLink": "2",
+        "SG:TOT": "-5.34",
+        "SG:T2G": "-4.52",
+        "SG:OTT": "-0.99",
+        "SG:APP": "-2.64",
+        "SG:BS": "-3.63",
+        "SG:ARG": "-0.88",
+        "SG:P": "-0.82",
+        "SG:SG": "-1.70"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-0.8155000060796738",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-5.079999923706055",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-5.590000152587891",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-5.335000038146973",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-5.335000038146973",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-5.335000038146973",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "77",
+        "PM": "76",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "32.1",
+        "150-200": "39.2",
+        "200+": "72.8",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-5.335000038146973",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:21:00.837Z",
+    "ok": true
+  }
+}

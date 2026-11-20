@@ -1,0 +1,158 @@
+{
+  "playerId": "49403",
+  "playerName": "Grady Brame",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Grady Brame",
+    "BirthPlace": "Hammond, Louisiana",
+    "BirthDate": "September 18, 1992",
+    "Age": "34",
+    "Height": "5ft 9in",
+    "Weight": "160 lbs",
+    "Nationality": "United States",
+    "Residence": "Hammond, Louisiana",
+    "ProWins": "0",
+    "TurnedPro": "2015",
+    "PGAWins": "0",
+    "College": "Southeastern Louisiana University 2015, Marketing"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Grady Brame",
+        "player_num": "49403",
+        "Year": "2017",
+        "Rounds": "4",
+        "SG:TOT": "-0.84",
+        "SG:T2G": "-1.39",
+        "SG:OTT": "0.34",
+        "SG:APP": "-0.68",
+        "SG:BS": "-0.34",
+        "SG:ARG": "-1.05",
+        "SG:P": "0.55",
+        "Dr Distance": "283.8",
+        "Dr Accuracy %": "48.2",
+        "Ball Speed": "168.09"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2017-10-29",
+        "position": "T68",
+        "roundPosition": "T68",
+        "TournamentName": "Sanderson Farms Championship",
+        "is_major": "0",
+        "playerName": "Grady Brame",
+        "player_num": "49403",
+        "Rounds": "4",
+        "CourseID": "746",
+        "Course": "The Country Club of Jackson",
+        "ShotLink": "4",
+        "SG:TOT": "-0.84",
+        "SG:T2G": "-1.39",
+        "SG:OTT": "0.34",
+        "SG:APP": "-0.68",
+        "SG:BS": "-0.34",
+        "SG:ARG": "-1.05",
+        "SG:P": "0.55",
+        "SG:SG": "-0.50"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "25.0",
+        "SG TOT 1+": "25.0",
+        "SG TOT 2+": "25.0",
+        "SG TOT 3+": "25.0",
+        "SG TOT 4+": "25.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "0.5517499893903732",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.46000000834465027",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "4.650000095367432",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-2.880000114440918",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-4.670000076293945",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-0.8400000259280205",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-0.8400000259280205",
+        "Rounds": "4"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-0.8400000259280205",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "73",
+        "PM": "72",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": "25.1",
+        "150-200": "35.9",
+        "200+": "70.4",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-0.8400000259280205",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:21:48.868Z",
+    "ok": true
+  }
+}

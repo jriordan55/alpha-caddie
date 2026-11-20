@@ -1,0 +1,210 @@
+{
+  "playerId": "55415",
+  "playerName": "Ryan Lumsden",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/04/Flag_of_Scotland.svg_.png",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Ryan Lumsden",
+    "BirthPlace": "London, England",
+    "BirthDate": "November 03, 1996",
+    "Age": "30",
+    "Height": "6ft 0in",
+    "Weight": "168 lbs",
+    "Nationality": "Scotland",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "2019",
+    "PGAWins": "0",
+    "College": "Northwestern University 2019, Economics"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Ryan Lumsden",
+        "player_num": "55415",
+        "Year": "2021",
+        "Rounds": "2",
+        "SG:TOT": "-2.94",
+        "SG:T2G": "-3.34",
+        "SG:OTT": "0.01",
+        "SG:APP": "-2.44",
+        "SG:BS": "-2.43",
+        "SG:ARG": "-0.91",
+        "SG:P": "0.40",
+        "Dr Distance": "290.7",
+        "Dr Accuracy %": "71.4",
+        "Ball Speed": "173.94"
+      },
+      {
+        "playerName": "Ryan Lumsden",
+        "player_num": "55415",
+        "Year": "2018",
+        "Rounds": "2",
+        "SG:TOT": "-3.97",
+        "SG:T2G": "-3.11",
+        "SG:OTT": "0.62",
+        "SG:APP": "-0.99",
+        "SG:BS": "-0.37",
+        "SG:ARG": "-2.74",
+        "SG:P": "-0.85",
+        "Dr Distance": "295.9",
+        "Dr Accuracy %": "67.9",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2021-05-16",
+        "position": "CUT",
+        "roundPosition": "T139",
+        "TournamentName": "AT&T Byron Nelson",
+        "is_major": "0",
+        "playerName": "Ryan Lumsden",
+        "player_num": "55415",
+        "Rounds": "2",
+        "CourseID": "894",
+        "Course": "TPC Craig Ranch",
+        "ShotLink": "2",
+        "SG:TOT": "-2.94",
+        "SG:T2G": "-3.34",
+        "SG:OTT": "0.01",
+        "SG:APP": "-2.44",
+        "SG:BS": "-2.43",
+        "SG:ARG": "-0.91",
+        "SG:P": "0.40",
+        "SG:SG": "-0.51"
+      },
+      {
+        "Date": "2018-06-17",
+        "position": "CUT",
+        "roundPosition": "T136",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Ryan Lumsden",
+        "player_num": "55415",
+        "Rounds": "2",
+        "CourseID": "618",
+        "Course": "Shinnecock Hills GC",
+        "ShotLink": "2",
+        "SG:TOT": "-3.97",
+        "SG:T2G": "-3.11",
+        "SG:OTT": "0.62",
+        "SG:APP": "-0.99",
+        "SG:BS": "-0.37",
+        "SG:ARG": "-2.74",
+        "SG:P": "-0.85",
+        "SG:SG": "-3.59"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "0.3970000147819519",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-3.890000104904175",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-3.015000104904175",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-2.25",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-3.630000114440918",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-3.9650001525878906",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-3.9650001525878906",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-2.940000057220459",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-2.940000057220459",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-3.9650001525878906",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "75",
+        "PM": "76.5",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": "32.1",
+        "100-150": "33.2",
+        "150-200": "48.8",
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-2.940000057220459",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-3.9650001525878906",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:16.680Z",
+    "ok": true
+  }
+}

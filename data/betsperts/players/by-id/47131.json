@@ -1,0 +1,138 @@
+{
+  "playerId": "47131",
+  "playerName": "Timothy Crouch",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Timothy Crouch",
+    "BirthPlace": "Mount Vernon, Ohio",
+    "BirthDate": "August 12, 1991",
+    "Age": "35",
+    "Height": null,
+    "Weight": "195 lbs",
+    "Nationality": "United States",
+    "Residence": "Mount Vernon, Ohio",
+    "ProWins": null,
+    "TurnedPro": "2014",
+    "PGAWins": null,
+    "College": "Florida Southern College  (2014, Physical Education) "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Timothy Crouch",
+        "player_num": "47131",
+        "Year": "2015",
+        "Rounds": "2",
+        "SG:TOT": "-3.72",
+        "SG:T2G": "-4.17",
+        "SG:OTT": "-0.52",
+        "SG:APP": "-2.08",
+        "SG:BS": "-2.60",
+        "SG:ARG": "-1.57",
+        "SG:P": "0.45",
+        "Dr Distance": "276.6",
+        "Dr Accuracy %": "64.3",
+        "Ball Speed": "172.35"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2015-06-07",
+        "position": "CUT",
+        "roundPosition": "T110",
+        "TournamentName": "the Memorial Tournament",
+        "is_major": "0",
+        "playerName": "Timothy Crouch",
+        "player_num": "47131",
+        "Rounds": "2",
+        "CourseID": "23",
+        "Course": "Muirfield Village GC",
+        "ShotLink": "2",
+        "SG:TOT": "-3.72",
+        "SG:T2G": "-4.17",
+        "SG:OTT": "-0.52",
+        "SG:APP": "-2.08",
+        "SG:BS": "-2.60",
+        "SG:ARG": "-1.57",
+        "SG:P": "0.45",
+        "SG:SG": "-1.12"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-4.699999809265137",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-2.740000009536743",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-3.71999990940094",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-3.71999990940094",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Strong",
+        "StrokesGainedAverage": "-3.71999990940094",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74",
+        "PM": "76",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": "51.8",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-3.71999990940094",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:26:04.044Z",
+    "ok": true
+  }
+}

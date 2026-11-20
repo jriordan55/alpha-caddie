@@ -1,0 +1,256 @@
+{
+  "playerId": "32776",
+  "playerName": "Yeongsu Kim",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ks-flag-1.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Yeongsu Kim",
+    "BirthPlace": "Changwon, South Korea",
+    "BirthDate": "May 19, 1989",
+    "Age": "37",
+    "Height": "5ft 9in",
+    "Weight": "146 lbs",
+    "Nationality": "South Korea",
+    "Residence": "",
+    "ProWins": "2",
+    "TurnedPro": "2009",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Yeongsu Kim",
+        "player_num": "32776",
+        "Year": "2023",
+        "Rounds": "4",
+        "SG:TOT": "-4.31",
+        "SG:T2G": "-4.02",
+        "SG:OTT": "-1.72",
+        "SG:APP": "-1.78",
+        "SG:BS": "-3.49",
+        "SG:ARG": "-0.53",
+        "SG:P": "-0.29",
+        "Dr Distance": "277.1",
+        "Dr Accuracy %": "42.6",
+        "Ball Speed": "171.06"
+      },
+      {
+        "playerName": "Yeongsu Kim",
+        "player_num": "32776",
+        "Year": "2022",
+        "Rounds": "4",
+        "SG:TOT": "-5.28",
+        "SG:T2G": "-4.38",
+        "SG:OTT": "-1.45",
+        "SG:APP": "-1.49",
+        "SG:BS": "-2.94",
+        "SG:ARG": "-1.44",
+        "SG:P": "-0.91",
+        "Dr Distance": "284.5",
+        "Dr Accuracy %": "73.2",
+        "Ball Speed": "169.49"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2023-07-16",
+        "position": "CUT",
+        "roundPosition": "T149",
+        "TournamentName": "Genesis Scottish Open",
+        "is_major": "0",
+        "playerName": "Yeongsu Kim",
+        "player_num": "32776",
+        "Rounds": "2",
+        "CourseID": "977",
+        "Course": "The Renaissance Club",
+        "ShotLink": "2",
+        "SG:TOT": "-4.56",
+        "SG:T2G": "-5.97",
+        "SG:OTT": "-2.89",
+        "SG:APP": "-3.19",
+        "SG:BS": "-6.08",
+        "SG:ARG": "0.11",
+        "SG:P": "1.43",
+        "SG:SG": "1.54"
+      },
+      {
+        "Date": "2023-02-19",
+        "position": "CUT",
+        "roundPosition": "127",
+        "TournamentName": "The Genesis Invitational",
+        "is_major": "0",
+        "playerName": "Yeongsu Kim",
+        "player_num": "32776",
+        "Rounds": "2",
+        "CourseID": "500",
+        "Course": "Riviera CC",
+        "ShotLink": "2",
+        "SG:TOT": "-4.07",
+        "SG:T2G": "-2.07",
+        "SG:OTT": "-0.54",
+        "SG:APP": "-0.36",
+        "SG:BS": "-0.90",
+        "SG:ARG": "-1.17",
+        "SG:P": "-2.00",
+        "SG:SG": "-3.17"
+      },
+      {
+        "Date": "2022-10-23",
+        "position": "T77",
+        "roundPosition": "T77",
+        "TournamentName": "The CJ CUP",
+        "is_major": "0",
+        "playerName": "Yeongsu Kim",
+        "player_num": "32776",
+        "Rounds": "4",
+        "CourseID": "902",
+        "Course": "Congaree Golf Club",
+        "ShotLink": "4",
+        "SG:TOT": "-5.28",
+        "SG:T2G": "-4.38",
+        "SG:OTT": "-1.45",
+        "SG:APP": "-1.49",
+        "SG:BS": "-2.94",
+        "SG:ARG": "-1.44",
+        "SG:P": "-0.91",
+        "SG:SG": "-2.35"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "8"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-0.9054999947547913",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "-1.9969999194145203",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-3.3466666539510093",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-5.773333231608073",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-4.769999980926514",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-6.269999980926514",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-4.613999938964843",
+        "Rounds": "5"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-5.019999980926514",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-5.289999961853027",
+        "Rounds": "1"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-5.4433333079020185",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-4.069999933242798",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-4.643333276112874",
+        "Rounds": "3"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Strong",
+        "StrokesGainedAverage": "-5.043333292007446",
+        "Rounds": "6"
+      },
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-4.069999933242798",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "75.8",
+        "PM": "74.33333333333333",
+        "Rounds": "8"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "8",
+        "50-100": null,
+        "100-150": "32.8",
+        "150-200": "40.9",
+        "200+": "75.4",
+        "200-250": "61.1",
+        "250+": "118"
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-5.284999966621399",
+        "Rounds": "4"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-4.559999942779541",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "West Coast",
+        "StrokesGainedAverage": "-4.069999933242798",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:26:31.463Z",
+    "ok": true
+  }
+}

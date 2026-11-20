@@ -1,0 +1,189 @@
+{
+  "playerId": "34449",
+  "playerName": "Kevin O'Connell",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Kevin O'Connell",
+    "BirthPlace": "",
+    "BirthDate": "July 09, 1988",
+    "Age": "38",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "United States",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Kevin OConnell",
+        "player_num": "34449",
+        "Year": "2019",
+        "Rounds": "4",
+        "SG:TOT": "-1.97",
+        "SG:T2G": "-3.70",
+        "SG:OTT": "-0.91",
+        "SG:APP": "-1.59",
+        "SG:BS": "-2.50",
+        "SG:ARG": "-1.20",
+        "SG:P": "1.33",
+        "Dr Distance": "266.8",
+        "Dr Accuracy %": "50.0",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2019-06-16",
+        "position": "CUT",
+        "roundPosition": "T129",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Kevin OConnell",
+        "player_num": "34449",
+        "Rounds": "2",
+        "CourseID": "666",
+        "Course": "Pebble Beach Golf Links",
+        "ShotLink": "2",
+        "SG:TOT": "-2.37",
+        "SG:T2G": "-3.70",
+        "SG:OTT": "-0.91",
+        "SG:APP": "-1.59",
+        "SG:BS": "-2.50",
+        "SG:ARG": "-1.20",
+        "SG:P": "1.33",
+        "SG:SG": "0.13"
+      },
+      {
+        "Date": "2019-04-14",
+        "position": "CUT",
+        "roundPosition": "T66",
+        "TournamentName": "Masters Tournament",
+        "is_major": "1",
+        "playerName": "Kevin OConnell",
+        "player_num": "34449",
+        "Rounds": "2",
+        "CourseID": "14",
+        "Course": "Augusta National GC",
+        "ShotLink": "2",
+        "SG:TOT": "-1.58",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "25.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": null,
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "1.331499993801117",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-3.7200000286102295",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.22499996423721313",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-1.5750000476837158",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-2.369999945163727",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-1.5750000476837158",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-2.369999945163727",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-1.9724999964237213",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "76.5",
+        "PM": "72.5",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": "33.5",
+        "150-200": "43.9",
+        "200+": "64",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-1.5750000476837158",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-2.369999945163727",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:22.389Z",
+    "ok": true
+  }
+}

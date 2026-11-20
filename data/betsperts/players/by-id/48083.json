@@ -1,0 +1,148 @@
+{
+  "playerId": "48083",
+  "playerName": "Garland Green",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Garland Green",
+    "BirthPlace": null,
+    "BirthDate": "January 17, 1988",
+    "Age": "38",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Garland Green",
+        "player_num": "48083",
+        "Year": "2015",
+        "Rounds": "2",
+        "SG:TOT": "-4.67",
+        "SG:T2G": "-7.19",
+        "SG:OTT": "-3.45",
+        "SG:APP": "-2.71",
+        "SG:BS": "-6.16",
+        "SG:ARG": "-1.04",
+        "SG:P": "2.52",
+        "Dr Distance": "277.3",
+        "Dr Accuracy %": "57.1",
+        "Ball Speed": "162.99"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2015-07-05",
+        "position": "CUT",
+        "roundPosition": "T150",
+        "TournamentName": "The Greenbrier Classic",
+        "is_major": "0",
+        "playerName": "Garland Green",
+        "player_num": "48083",
+        "Rounds": "2",
+        "CourseID": "771",
+        "Course": "The Old White TPC",
+        "ShotLink": "2",
+        "SG:TOT": "-4.67",
+        "SG:T2G": "-7.19",
+        "SG:OTT": "-3.45",
+        "SG:APP": "-2.71",
+        "SG:BS": "-6.16",
+        "SG:ARG": "-1.04",
+        "SG:P": "2.52",
+        "SG:SG": "1.49"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "2.522499978542328",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-6.130000114440918",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-3.2100000381469727",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-4.670000076293945",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-4.670000076293945",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-4.670000076293945",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "75",
+        "PM": "73",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "24.3",
+        "150-200": "49.3",
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-4.670000076293945",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:21:40.301Z",
+    "ok": true
+  }
+}

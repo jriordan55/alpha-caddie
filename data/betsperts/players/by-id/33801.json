@@ -1,0 +1,183 @@
+{
+  "playerId": "33801",
+  "playerName": "Joachim B Hansen",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/da-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Joachim B Hansen",
+    "BirthPlace": "",
+    "BirthDate": "August 18, 1990",
+    "Age": "36",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "Denmark",
+    "Residence": "",
+    "ProWins": "1",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Joachim B Hansen",
+        "player_num": "33801",
+        "Year": "2022",
+        "Rounds": "2",
+        "SG:TOT": "-1.24",
+        "SG:T2G": "-3.73",
+        "SG:OTT": "-0.47",
+        "SG:APP": "-1.99",
+        "SG:BS": "-2.46",
+        "SG:ARG": "-1.26",
+        "SG:P": "2.51",
+        "Dr Distance": null,
+        "Dr Accuracy %": "46.2",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2022-07-10",
+        "position": "CUT",
+        "roundPosition": "T109",
+        "TournamentName": "Genesis Scottish Open",
+        "is_major": "0",
+        "playerName": "Joachim B Hansen",
+        "player_num": "33801",
+        "Rounds": "2",
+        "CourseID": "977",
+        "Course": "The Renaissance Club",
+        "ShotLink": "2",
+        "SG:TOT": "-1.24",
+        "SG:T2G": "-3.73",
+        "SG:OTT": "-0.47",
+        "SG:APP": "-1.99",
+        "SG:BS": "-2.46",
+        "SG:ARG": "-1.26",
+        "SG:P": "2.51",
+        "SG:SG": "1.24"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "6"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": null,
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.009999999776482582",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-2.4700000286102295",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": null,
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": null,
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-0.009999999776482582",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": null,
+        "Rounds": "4"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-2.4700000286102295",
+        "Rounds": "1"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": null,
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-1.240000014193356",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": null,
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": null,
+        "Rounds": "4"
+      },
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-1.240000014193356",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "75",
+        "PM": "72",
+        "Rounds": "6"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "6",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-1.240000014193356",
+        "Rounds": "6"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:47.770Z",
+    "ok": true
+  }
+}

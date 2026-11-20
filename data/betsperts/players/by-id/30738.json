@@ -1,0 +1,143 @@
+{
+  "playerId": "30738",
+  "playerName": "Manuel Inman",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_mx-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Manuel Inman",
+    "BirthPlace": "",
+    "BirthDate": "January 31, 1975",
+    "Age": "51",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "Mexico",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Manuel Inman",
+        "player_num": "30738",
+        "Year": "2022",
+        "Rounds": "2",
+        "SG:TOT": "-9.41",
+        "SG:T2G": "-7.71",
+        "SG:OTT": "-1.60",
+        "SG:APP": "-5.62",
+        "SG:BS": "-7.23",
+        "SG:ARG": "-0.48",
+        "SG:P": "-1.71",
+        "Dr Distance": "270.0",
+        "Dr Accuracy %": "65.4",
+        "Ball Speed": "154.13"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2022-05-01",
+        "position": "CUT",
+        "roundPosition": "143",
+        "TournamentName": "Mexico Open at Vidanta",
+        "is_major": "0",
+        "playerName": "Manuel Inman",
+        "player_num": "30738",
+        "Rounds": "2",
+        "CourseID": "978",
+        "Course": "Vidanta Vallarta",
+        "ShotLink": "2",
+        "SG:TOT": "-9.41",
+        "SG:T2G": "-7.71",
+        "SG:OTT": "-1.60",
+        "SG:APP": "-5.62",
+        "SG:BS": "-7.23",
+        "SG:ARG": "-0.48",
+        "SG:P": "-1.71",
+        "SG:SG": "-2.19"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-6.710000038146973",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-12.119999885559082",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-9.414999961853027",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-12.119999885559082",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-6.710000038146973",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-9.414999961853027",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "83",
+        "PM": "77",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": "83",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-9.414999961853027",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:44.258Z",
+    "ok": true
+  }
+}

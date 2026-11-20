@@ -1,0 +1,138 @@
+{
+  "playerId": "48585",
+  "playerName": "Charlie Lindh",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_sw-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Charlie Lindh",
+    "BirthPlace": null,
+    "BirthDate": null,
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "Sweden",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Charlie Lindh",
+        "player_num": "48585",
+        "Year": "2024",
+        "Rounds": "2",
+        "SG:TOT": "-0.60",
+        "SG:T2G": "-2.72",
+        "SG:OTT": "-1.80",
+        "SG:APP": "-1.80",
+        "SG:BS": "-3.60",
+        "SG:ARG": "0.88",
+        "SG:P": "2.11",
+        "Dr Distance": null,
+        "Dr Accuracy %": "53.6",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2024-07-21",
+        "position": "CUT",
+        "roundPosition": null,
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Charlie Lindh",
+        "player_num": "48585",
+        "Rounds": "2",
+        "CourseID": "709",
+        "Course": "Royal Troon",
+        "ShotLink": "2",
+        "SG:TOT": "-0.60",
+        "SG:T2G": "-2.72",
+        "SG:OTT": "-1.80",
+        "SG:APP": "-1.80",
+        "SG:BS": "-3.60",
+        "SG:ARG": "0.88",
+        "SG:P": "2.11",
+        "SG:SG": "2.99"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.5600000023841858",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.6399999856948853",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-0.5999999940395355",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-0.5999999940395355",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-0.5999999940395355",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "75",
+        "PM": "75",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-0.5999999940395355",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:20:14.102Z",
+    "ok": true
+  }
+}

@@ -1,0 +1,193 @@
+{
+  "playerId": "62811",
+  "playerName": "Jeevan Sihota",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ca-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Jeevan Sihota",
+    "BirthPlace": "Victoria, British Columbia, Canada",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "6ft 1in",
+    "Weight": "190 lbs",
+    "Nationality": "Canada",
+    "Residence": "Victoria, British Columbia, Canada",
+    "ProWins": null,
+    "TurnedPro": "2022",
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Jeevan Sihota",
+        "player_num": "62811",
+        "Year": "2026",
+        "Rounds": "4",
+        "SG:TOT": "-3.11",
+        "SG:T2G": "-3.44",
+        "SG:OTT": "-1.04",
+        "SG:APP": "-1.22",
+        "SG:BS": "-2.26",
+        "SG:ARG": "-1.17",
+        "SG:P": "0.32",
+        "Dr Distance": "303.8",
+        "Dr Accuracy %": "58.9",
+        "Ball Speed": "181.25"
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Jeevan Sihota",
+        "player_num": "62811",
+        "Rounds": "4",
+        "SG:TOT": "-3.11",
+        "SG:T2G": "-3.44",
+        "SG:OTT": "-1.04",
+        "SG:APP": "-1.22",
+        "SG:BS": "-2.26",
+        "SG:ARG": "-1.17",
+        "SG:P": "0.32",
+        "SG:SG": "-0.85"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-07-26",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "3M Open",
+        "is_major": "0",
+        "playerName": "Jeevan Sihota",
+        "player_num": "62811",
+        "Rounds": "2",
+        "CourseID": "883",
+        "Course": "TPC Twin Cities",
+        "ShotLink": "2",
+        "SG:TOT": "-4.01",
+        "SG:T2G": "-4.07",
+        "SG:OTT": "-0.28",
+        "SG:APP": "-2.07",
+        "SG:BS": "-2.35",
+        "SG:ARG": "-1.72",
+        "SG:P": "0.06",
+        "SG:SG": "-1.67"
+      },
+      {
+        "Date": "2026-06-14",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "RBC Canadian Open",
+        "is_major": "0",
+        "playerName": "Jeevan Sihota",
+        "player_num": "62811",
+        "Rounds": "2",
+        "CourseID": "935",
+        "Course": "TPC Toronto at Osprey Valley (North)",
+        "ShotLink": "2",
+        "SG:TOT": "-2.22",
+        "SG:T2G": "-2.81",
+        "SG:OTT": "-1.81",
+        "SG:APP": "-0.38",
+        "SG:BS": "-2.18",
+        "SG:ARG": "-0.62",
+        "SG:P": "0.59",
+        "SG:SG": "-0.04"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "0.05750000476837158",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.7100000083446503",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-4.519999980926514",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-3.114999994635582",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-1.940000057220459",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-3.506666640440623",
+        "Rounds": "3"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-3.114999994635582",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "71.5",
+        "PM": "74",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": "28.6",
+        "150-200": null,
+        "200+": "58.6",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-2.215000033378601",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-4.014999955892563",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:34.822Z",
+    "ok": true
+  }
+}

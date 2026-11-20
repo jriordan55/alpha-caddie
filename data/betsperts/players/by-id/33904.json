@@ -1,0 +1,195 @@
+{
+  "playerId": "33904",
+  "playerName": "Grant Leaver",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Grant Leaver",
+    "BirthPlace": "Pasdena, California",
+    "BirthDate": "February 12, 1986",
+    "Age": "40",
+    "Height": "6ft 7in",
+    "Weight": "200 lbs",
+    "Nationality": "United States",
+    "Residence": "Murfreesboro, Tennessee",
+    "ProWins": null,
+    "TurnedPro": "2008",
+    "PGAWins": null,
+    "College": "Austin Peay State University 2008, Business Management"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Grant Leaver",
+        "player_num": "33904",
+        "Year": "2017",
+        "Rounds": "4",
+        "SG:TOT": "0.64",
+        "SG:T2G": "-0.42",
+        "SG:OTT": "-0.31",
+        "SG:APP": "0.46",
+        "SG:BS": "0.15",
+        "SG:ARG": "-0.57",
+        "SG:P": "1.06",
+        "Dr Distance": "281.4",
+        "Dr Accuracy %": "64.3",
+        "Ball Speed": "178.06"
+      },
+      {
+        "playerName": "Grant Leaver",
+        "player_num": "33904",
+        "Year": "2015",
+        "Rounds": "2",
+        "SG:TOT": "-2.94",
+        "SG:T2G": "-0.62",
+        "SG:OTT": "-0.32",
+        "SG:APP": "-1.30",
+        "SG:BS": "-1.62",
+        "SG:ARG": "1.00",
+        "SG:P": "-2.32",
+        "Dr Distance": "283.2",
+        "Dr Accuracy %": "50.0",
+        "Ball Speed": "171.41"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2017-07-23",
+        "position": "T42",
+        "roundPosition": "T42",
+        "TournamentName": "Barbasol Championship",
+        "is_major": "0",
+        "playerName": "Grant Leaver",
+        "player_num": "33904",
+        "Rounds": "4",
+        "CourseID": "819",
+        "Course": "RTJ Trail (Grand National)",
+        "ShotLink": "4",
+        "SG:TOT": "0.64",
+        "SG:T2G": "-0.42",
+        "SG:OTT": "-0.31",
+        "SG:APP": "0.46",
+        "SG:BS": "0.15",
+        "SG:ARG": "-0.57",
+        "SG:P": "1.06",
+        "SG:SG": "0.49"
+      },
+      {
+        "Date": "2015-07-19",
+        "position": "CUT",
+        "roundPosition": "T112",
+        "TournamentName": "Barbasol Championship",
+        "is_major": "0",
+        "playerName": "Grant Leaver",
+        "player_num": "33904",
+        "Rounds": "2",
+        "CourseID": "819",
+        "Course": "RTJ Trail (Grand National)",
+        "ShotLink": "2",
+        "SG:TOT": "-2.94",
+        "SG:T2G": "-0.62",
+        "SG:OTT": "-0.32",
+        "SG:APP": "-1.30",
+        "SG:BS": "-1.62",
+        "SG:ARG": "1.00",
+        "SG:P": "-2.32",
+        "SG:SG": "-1.32"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "33.3",
+        "SG TOT 1+": "16.7",
+        "SG TOT 2+": "16.7",
+        "SG TOT 3+": "16.7",
+        "SG TOT 4+": "16.7",
+        "SG TOT 5+": "0.0",
+        "Rounds": "6"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-0.06799999872843425",
+        "Rounds": "6"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "0.08000000566244125",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-2.824999933131039",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "4.920000076293945",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-2.759999990463257",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-0.5549999615177512",
+        "Rounds": "6"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-0.5549999615177512",
+        "Rounds": "6"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-0.5549999615177512",
+        "Rounds": "6"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "70.25",
+        "PM": "70",
+        "Rounds": "6"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "6",
+        "50-100": null,
+        "100-150": "25.1",
+        "150-200": "25.8",
+        "200+": "51",
+        "200-250": "50.5",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-0.5549999615177512",
+        "Rounds": "6"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:21:50.096Z",
+    "ok": true
+  }
+}

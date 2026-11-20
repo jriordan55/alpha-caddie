@@ -1,0 +1,148 @@
+{
+  "playerId": "23174",
+  "playerName": "Jake Narro",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Jake Narro",
+    "BirthPlace": null,
+    "BirthDate": "June 01, 1970",
+    "Age": "56",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Jake Narro",
+        "player_num": "23174",
+        "Year": "2015",
+        "Rounds": "2",
+        "SG:TOT": "-8.25",
+        "SG:T2G": "-5.61",
+        "SG:OTT": "-1.84",
+        "SG:APP": "-2.20",
+        "SG:BS": "-4.03",
+        "SG:ARG": "-1.57",
+        "SG:P": "-2.65",
+        "Dr Distance": "264.9",
+        "Dr Accuracy %": "57.1",
+        "Ball Speed": "162.18"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2015-04-26",
+        "position": "CUT",
+        "roundPosition": "150",
+        "TournamentName": "Zurich Classic",
+        "is_major": "0",
+        "playerName": "Jake Narro",
+        "player_num": "23174",
+        "Rounds": "2",
+        "CourseID": "714",
+        "Course": "TPC Louisiana",
+        "ShotLink": "2",
+        "SG:TOT": "-8.25",
+        "SG:T2G": "-5.61",
+        "SG:OTT": "-1.84",
+        "SG:APP": "-2.20",
+        "SG:BS": "-4.03",
+        "SG:ARG": "-1.57",
+        "SG:P": "-2.65",
+        "SG:SG": "-4.22"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-2.650499939918518",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-8.109999656677246",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-8.399999618530273",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-8.25499963760376",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-8.25499963760376",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-8.25499963760376",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "78",
+        "PM": "79",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": "60.6",
+        "200-250": "59.3",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-8.25499963760376",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:17.811Z",
+    "ok": true
+  }
+}

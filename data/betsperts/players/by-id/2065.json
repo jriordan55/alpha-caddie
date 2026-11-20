@@ -1,0 +1,138 @@
+{
+  "playerId": "2065",
+  "playerName": "Rick Schuller",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Rick Schuller",
+    "BirthPlace": null,
+    "BirthDate": "December 18, 1962",
+    "Age": "63",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Rick Schuller",
+        "player_num": "2065",
+        "Year": "2016",
+        "Rounds": "2",
+        "SG:TOT": "-5.81",
+        "SG:T2G": "-4.95",
+        "SG:OTT": "-2.32",
+        "SG:APP": "-2.94",
+        "SG:BS": "-5.26",
+        "SG:ARG": "0.31",
+        "SG:P": "-0.86",
+        "Dr Distance": "280.4",
+        "Dr Accuracy %": "39.3",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2016-07-31",
+        "position": "CUT",
+        "roundPosition": "T154",
+        "TournamentName": "PGA Championship",
+        "is_major": "1",
+        "playerName": "Rick Schuller",
+        "player_num": "2065",
+        "Rounds": "2",
+        "CourseID": "715",
+        "Course": "Baltusrol GC",
+        "ShotLink": "2",
+        "SG:TOT": "-5.81",
+        "SG:T2G": "-4.95",
+        "SG:OTT": "-2.32",
+        "SG:APP": "-2.94",
+        "SG:BS": "-5.26",
+        "SG:ARG": "0.31",
+        "SG:P": "-0.86",
+        "SG:SG": "-0.55"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-6.309999942779541",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-5.309999942779541",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-5.809999942779541",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-5.809999942779541",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-5.809999942779541",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "76",
+        "PM": "78",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": "65",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-5.809999942779541",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:02.386Z",
+    "ok": true
+  }
+}

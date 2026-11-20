@@ -1,0 +1,148 @@
+{
+  "playerId": "37459",
+  "playerName": "Ryan Sullivan",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Ryan Sullivan",
+    "BirthPlace": "Atlanta, Georgia",
+    "BirthDate": "May 03, 1989",
+    "Age": "37",
+    "Height": "5ft 11in",
+    "Weight": "170 lbs",
+    "Nationality": "United States",
+    "Residence": "Winston-Salem, North Carolina",
+    "ProWins": "1",
+    "TurnedPro": "2013",
+    "PGAWins": "0",
+    "College": "University of North Carolina-Wilmington (2011, Business & Marketing)"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Ryan Sullivan",
+        "player_num": "37459",
+        "Year": "2019",
+        "Rounds": "2",
+        "SG:TOT": "-3.37",
+        "SG:T2G": "-4.41",
+        "SG:OTT": "-0.31",
+        "SG:APP": "-3.14",
+        "SG:BS": "-3.45",
+        "SG:ARG": "-0.96",
+        "SG:P": "1.04",
+        "Dr Distance": "270.0",
+        "Dr Accuracy %": "39.3",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2019-06-16",
+        "position": "CUT",
+        "roundPosition": "T141",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Ryan Sullivan",
+        "player_num": "37459",
+        "Rounds": "2",
+        "CourseID": "666",
+        "Course": "Pebble Beach Golf Links",
+        "ShotLink": "2",
+        "SG:TOT": "-3.37",
+        "SG:T2G": "-4.41",
+        "SG:OTT": "-0.31",
+        "SG:APP": "-3.14",
+        "SG:BS": "-3.45",
+        "SG:ARG": "-0.96",
+        "SG:P": "1.04",
+        "SG:SG": "0.08"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "1.0419999808073044",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.3100000023841858",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-6.429999828338623",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-3.3699999153614044",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-3.3699999153614044",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-3.3699999153614044",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "73",
+        "PM": "79",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": "22.2",
+        "100-150": null,
+        "150-200": null,
+        "200+": "58.9",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-3.3699999153614044",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:18.337Z",
+    "ok": true
+  }
+}

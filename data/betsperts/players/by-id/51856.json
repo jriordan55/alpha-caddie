@@ -1,0 +1,200 @@
+{
+  "playerId": "51856",
+  "playerName": "Tom Adrounie",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Tom Adrounie",
+    "BirthPlace": "",
+    "BirthDate": "April 23, 1989",
+    "Age": "37",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "United States",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Tom Adrounie",
+        "player_num": "51856",
+        "Year": "2024",
+        "Rounds": "2",
+        "SG:TOT": "-8.97",
+        "SG:T2G": "-7.53",
+        "SG:OTT": "-2.76",
+        "SG:APP": "-2.77",
+        "SG:BS": "-5.53",
+        "SG:ARG": "-2.00",
+        "SG:P": "-1.44",
+        "Dr Distance": "287.6",
+        "Dr Accuracy %": "32.1",
+        "Ball Speed": "168.91"
+      },
+      {
+        "playerName": "Tom Adrounie",
+        "player_num": "51856",
+        "Year": "2023",
+        "Rounds": "2",
+        "SG:TOT": "-4.43",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "39.3",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2024-04-07",
+        "position": "CUT",
+        "roundPosition": "153",
+        "TournamentName": "Valero Texas Open",
+        "is_major": "0",
+        "playerName": "Tom Adrounie",
+        "player_num": "51856",
+        "Rounds": "2",
+        "CourseID": "770",
+        "Course": "TPC San Antonio (Oaks)",
+        "ShotLink": "2",
+        "SG:TOT": "-8.97",
+        "SG:T2G": "-7.53",
+        "SG:OTT": "-2.76",
+        "SG:APP": "-2.77",
+        "SG:BS": "-5.53",
+        "SG:ARG": "-2.00",
+        "SG:P": "-1.44",
+        "SG:SG": "-3.44"
+      },
+      {
+        "Date": "2023-03-05",
+        "position": "CUT",
+        "roundPosition": "T109",
+        "TournamentName": "Puerto Rico Open",
+        "is_major": "0",
+        "playerName": "Tom Adrounie",
+        "player_num": "51856",
+        "Rounds": "2",
+        "CourseID": "742",
+        "Course": "Grand Reserve GC",
+        "ShotLink": "0",
+        "SG:TOT": "-4.43",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Poa Trivialis",
+        "StrokesGainedAverage": "-1.437999963760376",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-8.184999823570251",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-5.21999990940094",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-8.974999785423279",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-4.429999947547913",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-4.429999947547913",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-8.974999785423279",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-8.974999785423279",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-4.429999947547913",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "77.5",
+        "PM": "80.5",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": "28.4",
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-6.702499866485596",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:26:06.561Z",
+    "ok": true
+  }
+}

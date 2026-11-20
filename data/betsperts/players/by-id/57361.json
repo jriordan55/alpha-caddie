@@ -1,0 +1,158 @@
+{
+  "playerId": "57361",
+  "playerName": "Chandler Eaton",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Chandler Eaton",
+    "BirthPlace": "Atlanta, Georgia",
+    "BirthDate": "December 08, 1997",
+    "Age": "28",
+    "Height": "6ft 0in",
+    "Weight": "165 lbs",
+    "Nationality": "United States",
+    "Residence": "Alpharetta, Georgia",
+    "ProWins": "0",
+    "TurnedPro": "2020",
+    "PGAWins": "0",
+    "College": "Duke University "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Chandler Eaton",
+        "player_num": "57361",
+        "Year": "2019",
+        "Rounds": "4",
+        "SG:TOT": "-0.03",
+        "SG:T2G": "-1.18",
+        "SG:OTT": "-0.32",
+        "SG:APP": "-0.26",
+        "SG:BS": "-0.58",
+        "SG:ARG": "-0.61",
+        "SG:P": "1.15",
+        "Dr Distance": "264.9",
+        "Dr Accuracy %": "64.3",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2019-06-16",
+        "position": "T58",
+        "roundPosition": "T58",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Chandler Eaton",
+        "player_num": "57361",
+        "Rounds": "4",
+        "CourseID": "666",
+        "Course": "Pebble Beach Golf Links",
+        "ShotLink": "4",
+        "SG:TOT": "-0.03",
+        "SG:T2G": "-1.18",
+        "SG:OTT": "-0.32",
+        "SG:APP": "-0.26",
+        "SG:BS": "-0.58",
+        "SG:ARG": "-0.61",
+        "SG:P": "1.15",
+        "SG:SG": "0.55"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "25.0",
+        "SG TOT 2+": "25.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "1.1532500088214874",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "0.6899999976158142",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "2.569999933242798",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-0.5699999928474426",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-2.809999942779541",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-0.030000001192092896",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-0.030000001192092896",
+        "Rounds": "4"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-0.030000001192092896",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "72",
+        "PM": "72.5",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "38.1",
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-0.030000001192092896",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:20:10.674Z",
+    "ok": true
+  }
+}

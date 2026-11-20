@@ -1,0 +1,148 @@
+{
+  "playerId": "35408",
+  "playerName": "Riley Wheeldon",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ca-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Riley Wheeldon",
+    "BirthPlace": "Richmond, British Columbia, Canada",
+    "BirthDate": "October 10, 1990",
+    "Age": "36",
+    "Height": "5ft 11in",
+    "Weight": "170 lbs",
+    "Nationality": "Canada",
+    "Residence": "Carefree, Arizona",
+    "ProWins": null,
+    "TurnedPro": "2010",
+    "PGAWins": null,
+    "College": "University of Louisville "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Riley Wheeldon",
+        "player_num": "35408",
+        "Year": "2017",
+        "Rounds": "2",
+        "SG:TOT": "-2.50",
+        "SG:T2G": "-0.59",
+        "SG:OTT": "-0.58",
+        "SG:APP": "-1.27",
+        "SG:BS": "-1.85",
+        "SG:ARG": "1.26",
+        "SG:P": "-1.91",
+        "Dr Distance": "287.0",
+        "Dr Accuracy %": "57.1",
+        "Ball Speed": "165.77"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2017-07-30",
+        "position": "CUT",
+        "roundPosition": "T131",
+        "TournamentName": "RBC Canadian Open",
+        "is_major": "0",
+        "playerName": "Riley Wheeldon",
+        "player_num": "35408",
+        "Rounds": "2",
+        "CourseID": "32",
+        "Course": "Glen Abbey GC",
+        "ShotLink": "2",
+        "SG:TOT": "-2.50",
+        "SG:T2G": "-0.59",
+        "SG:OTT": "-0.58",
+        "SG:APP": "-1.27",
+        "SG:BS": "-1.85",
+        "SG:ARG": "1.26",
+        "SG:P": "-1.91",
+        "SG:SG": "-0.65"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-1.9095000624656677",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-3.880000114440918",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.1200000047683716",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-2.5000000596046448",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-2.5000000596046448",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-2.5000000596046448",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "72",
+        "PM": "74",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "31.9",
+        "200+": "54.2",
+        "200-250": "52",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-2.5000000596046448",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:03.653Z",
+    "ok": true
+  }
+}

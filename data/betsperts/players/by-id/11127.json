@@ -1,0 +1,153 @@
+{
+  "playerId": "11127",
+  "playerName": "Stephen Dodd",
+  "flag": null,
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Stephen Dodd",
+    "BirthPlace": "",
+    "BirthDate": "July 15, 1966",
+    "Age": "60",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "Wales",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Stephen Dodd",
+        "player_num": "11127",
+        "Year": "2022",
+        "Rounds": "2",
+        "SG:TOT": "-3.29",
+        "SG:T2G": "-3.74",
+        "SG:OTT": "-0.98",
+        "SG:APP": "-1.94",
+        "SG:BS": "-2.92",
+        "SG:ARG": "-0.82",
+        "SG:P": "0.45",
+        "Dr Distance": null,
+        "Dr Accuracy %": "56.2",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2022-07-17",
+        "position": "CUT",
+        "roundPosition": null,
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Stephen Dodd",
+        "player_num": "11127",
+        "Rounds": "2",
+        "CourseID": "668",
+        "Course": "St. Andrews GC (Old Course)",
+        "ShotLink": "2",
+        "SG:TOT": "-3.29",
+        "SG:T2G": "-3.74",
+        "SG:OTT": "-0.98",
+        "SG:APP": "-1.94",
+        "SG:BS": "-2.92",
+        "SG:ARG": "-0.82",
+        "SG:P": "0.45",
+        "SG:SG": "-0.37"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "0.44900000654160976",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-4.300000190734863",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-2.2799999713897705",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-3.290000081062317",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-2.2799999713897705",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-4.300000190734863",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-3.290000081062317",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "77",
+        "PM": "74",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-3.290000081062317",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:42.208Z",
+    "ok": true
+  }
+}

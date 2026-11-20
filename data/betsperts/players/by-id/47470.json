@@ -1,0 +1,215 @@
+{
+  "playerId": "47470",
+  "playerName": "Chad Sorensen",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Chad Sorensen",
+    "BirthPlace": null,
+    "BirthDate": "December 23, 1968",
+    "Age": "57",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Chad Sorensen",
+        "player_num": "47470",
+        "Year": "2016",
+        "Rounds": "3",
+        "SG:TOT": "-5.87",
+        "SG:T2G": "-3.10",
+        "SG:OTT": "0.93",
+        "SG:APP": "-2.49",
+        "SG:BS": "-1.56",
+        "SG:ARG": "-1.54",
+        "SG:P": "-3.07",
+        "Dr Distance": "280.1",
+        "Dr Accuracy %": "59.5",
+        "Ball Speed": "169.74"
+      },
+      {
+        "playerName": "Chad Sorensen",
+        "player_num": "47470",
+        "Year": "2015",
+        "Rounds": "2",
+        "SG:TOT": "-3.68",
+        "SG:T2G": "-3.74",
+        "SG:OTT": "-1.78",
+        "SG:APP": "-1.46",
+        "SG:BS": "-3.24",
+        "SG:ARG": "-0.50",
+        "SG:P": "0.06",
+        "Dr Distance": "272.5",
+        "Dr Accuracy %": "42.9",
+        "Ball Speed": "167.09"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2016-01-24",
+        "position": "CUT",
+        "roundPosition": null,
+        "TournamentName": "CareerBuilder Challenge",
+        "is_major": "0",
+        "playerName": "Chad Sorensen",
+        "player_num": "47470",
+        "Rounds": "3",
+        "CourseID": "233",
+        "Course": "Nicklaus Tournament Course",
+        "ShotLink": "1",
+        "SG:TOT": "-5.87",
+        "SG:T2G": "-3.10",
+        "SG:OTT": "0.93",
+        "SG:APP": "-2.49",
+        "SG:BS": "-1.56",
+        "SG:ARG": "-1.54",
+        "SG:P": "-3.07",
+        "SG:SG": "-4.61"
+      },
+      {
+        "Date": "2015-02-22",
+        "position": "CUT",
+        "roundPosition": "T129",
+        "TournamentName": "Northern Trust Open",
+        "is_major": "0",
+        "playerName": "Chad Sorensen",
+        "player_num": "47470",
+        "Rounds": "2",
+        "CourseID": "500",
+        "Course": "Riviera CC",
+        "ShotLink": "2",
+        "SG:TOT": "-3.68",
+        "SG:T2G": "-3.74",
+        "SG:OTT": "-1.78",
+        "SG:APP": "-1.46",
+        "SG:BS": "-3.24",
+        "SG:ARG": "-0.50",
+        "SG:P": "0.06",
+        "SG:SG": "-0.44"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "5"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "0.058500006794929504",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa Trivialis",
+        "StrokesGainedAverage": "-3.072999954223633",
+        "Rounds": "3"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-5.1000001430511475",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-2.6299999952316284",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-9.5",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-3.6750000715255737",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-5.870000044504802",
+        "Rounds": "3"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-3.6750000715255737",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-6.170000076293945",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-5.7200000286102295",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-3.6750000715255737",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-5.870000044504802",
+        "Rounds": "3"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "77",
+        "PM": "75.33333333333333",
+        "Rounds": "5"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "5",
+        "50-100": null,
+        "100-150": "32",
+        "150-200": "44.6",
+        "200+": "72.8",
+        "200-250": "72.9",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "West Coast",
+        "StrokesGainedAverage": "-4.9920000553131105",
+        "Rounds": "5"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:20:10.057Z",
+    "ok": true
+  }
+}

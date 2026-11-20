@@ -1,0 +1,210 @@
+{
+  "playerId": "33451",
+  "playerName": "Matt Hill",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ca-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Matt Hill",
+    "BirthPlace": "Sarnia, Ontario, Canada",
+    "BirthDate": "September 12, 1988",
+    "Age": "38",
+    "Height": "6ft 3in",
+    "Weight": "185 lbs",
+    "Nationality": "Canada",
+    "Residence": "Palm Beach Gardens, Florida",
+    "ProWins": "2",
+    "TurnedPro": "2010",
+    "PGAWins": "0",
+    "College": "North Carolina State University "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Matt Hill",
+        "player_num": "33451",
+        "Year": "2021",
+        "Rounds": "2",
+        "SG:TOT": "-2.02",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "50.0",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Matt Hill",
+        "player_num": "33451",
+        "Year": "2017",
+        "Rounds": "2",
+        "SG:TOT": "-3.00",
+        "SG:T2G": "-2.44",
+        "SG:OTT": "0.35",
+        "SG:APP": "-2.63",
+        "SG:BS": "-2.28",
+        "SG:ARG": "-0.16",
+        "SG:P": "-0.56",
+        "Dr Distance": "282.7",
+        "Dr Accuracy %": "50.0",
+        "Ball Speed": "164.39"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2021-10-31",
+        "position": "CUT",
+        "roundPosition": "T102",
+        "TournamentName": "Butterfield Bermuda Championship",
+        "is_major": "0",
+        "playerName": "Matt Hill",
+        "player_num": "33451",
+        "Rounds": "2",
+        "CourseID": "765",
+        "Course": "Port Royal GC",
+        "ShotLink": "0",
+        "SG:TOT": "-2.02",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2017-07-30",
+        "position": "CUT",
+        "roundPosition": "T136",
+        "TournamentName": "RBC Canadian Open",
+        "is_major": "0",
+        "playerName": "Matt Hill",
+        "player_num": "33451",
+        "Rounds": "2",
+        "CourseID": "32",
+        "Course": "Glen Abbey GC",
+        "ShotLink": "2",
+        "SG:TOT": "-3.00",
+        "SG:T2G": "-2.44",
+        "SG:OTT": "0.35",
+        "SG:APP": "-2.63",
+        "SG:BS": "-2.28",
+        "SG:ARG": "-0.16",
+        "SG:P": "-0.56",
+        "SG:SG": "-0.72"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.5619999915361404",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": null,
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.0849999785423279",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-3.9399999380111694",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-2.9999999403953552",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-2.024999976158142",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-1.2899999618530273",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-2.9199999570846558",
+        "Rounds": "3"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-2.024999976158142",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-2.9999999403953552",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "75",
+        "PM": "71.5",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": "57.8",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-2.024999976158142",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-2.9999999403953552",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:56.366Z",
+    "ok": true
+  }
+}

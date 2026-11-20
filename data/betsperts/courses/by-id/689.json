@@ -1,0 +1,162 @@
+{
+  "courseNum": "689",
+  "courseName": "Bethpage State Park (Black)",
+  "list": {
+    "CourseName": "Bethpage State Park (Black)",
+    "CourseNum": "689",
+    "CourseNums": [
+      689,
+      880
+    ]
+  },
+  "details": {
+    "CourseName": "Bethpage State Park (Black)",
+    "CourseNum": "689",
+    "Locations": [
+      "Northeast",
+      "New York"
+    ],
+    "SeasonHeld": "Summer",
+    "CourseTypes": [
+      "Parkland"
+    ],
+    "ParScore": "70",
+    "Yards": "7352",
+    "AVG": "105",
+    "CourseLength": "Long",
+    "Architects": [
+      "Albert Tillinghast"
+    ],
+    "RedesignArchitects": [
+      "Rees Jones"
+    ],
+    "Elevation": "125",
+    "CourseElevation": "Average",
+    "Bunkers": "76",
+    "BunkersRank": "Average",
+    "WaterHoles": "1",
+    "WaterDanger": "Low",
+    "ScoreRTP": "1.14",
+    "Difficulty": "Very Difficult",
+    "FwyGrass": "Rye",
+    "FwyWidth": "0",
+    "GreenSqFt": "6000",
+    "GreenSize": "Average",
+    "GreenGrass": "Bent/Poa",
+    "GreenStimp": "12",
+    "GreenSpeed": "Average",
+    "RoughType": "Blue/Poa/Rye",
+    "RoughGrass": "Rye",
+    "RoughLengthInc": "3.5",
+    "RoughLength": "Long",
+    "EventTypes": [
+      "36-Hole Cut",
+      "Major"
+    ],
+    "Tournaments": [
+      {
+        "Year": "2016",
+        "Tournament": "The Barclays"
+      },
+      {
+        "Year": "2019",
+        "Tournament": "PGA Championship"
+      }
+    ],
+    "CorrelatedCourse": [
+      "Winged Foot GC",
+      "Oak Hill CC",
+      "Baltusrol GC",
+      "Oakmont CC",
+      "The Country Club",
+      "Olympia Fields CC (North)",
+      "Ridgewood CC",
+      "Glen Oaks Club"
+    ],
+    "FieldSize": "Average Size Field",
+    "FieldStrength": "Very Strong",
+    "OTTClub": "Mixed",
+    "FwyPct": "57.6",
+    "FwyAccuracy": "Average",
+    "GainOTT": "Difficult",
+    "MissedFairwayPenalty": "High",
+    "RoughPenalty": "High",
+    "GIRAccuracy": "Difficult",
+    "GIRPct": "56.6",
+    "GainAPP": "Difficult",
+    "ScramblingFromRough": "Average",
+    "ScramblingFromShortGrass": "Average",
+    "SandSaves": "Average",
+    "GainARG": "Average",
+    "GainingPuttingInside15": "Difficult",
+    "GainingPuttingOutside15": "Difficult",
+    "3PuttAVD": "Difficult",
+    "GainPutting": "Very Difficult",
+    "Par3Scoring": "Difficult",
+    "Par4Scoring": "Difficult",
+    "Par5Scoring": "Difficult",
+    "ShotLink": "1"
+  },
+  "tournaments": [
+    {
+      "CourseNum": "689",
+      "TNum": "468",
+      "TourneyName": "Ryder Cup"
+    }
+  ],
+  "_meta": {
+    "pulledAt": "2026-11-20T22:18:24.741Z",
+    "detailStatus": 200,
+    "tournamentsStatus": 200
+  },
+  "auth": {
+    "holeBreakdown": [],
+    "correlated": [
+      {
+        "CourseNum": "238",
+        "CourseName": "Glen Oaks Club",
+        "CourseNums": "[238]"
+      },
+      {
+        "CourseNum": "514",
+        "CourseName": "Oak Hill CC",
+        "CourseNums": "[514, 558]"
+      },
+      {
+        "CourseNum": "608",
+        "CourseName": "Oakmont CC",
+        "CourseNums": "[608]"
+      },
+      {
+        "CourseNum": "654",
+        "CourseName": "The Country Club",
+        "CourseNums": "[654]"
+      },
+      {
+        "CourseNum": "715",
+        "CourseName": "Baltusrol GC",
+        "CourseNums": "[715]"
+      },
+      {
+        "CourseNum": "873",
+        "CourseName": "Ridgewood CC",
+        "CourseNums": "[873]"
+      },
+      {
+        "CourseNum": "891",
+        "CourseName": "Winged Foot GC",
+        "CourseNums": "[891]"
+      },
+      {
+        "CourseNum": "896",
+        "CourseName": "Olympia Fields CC (North)",
+        "CourseNums": "[896]"
+      }
+    ],
+    "_meta": {
+      "pulledAt": "2026-11-20T22:52:51.592Z",
+      "holeStatus": 200,
+      "correlatedStatus": 200
+    }
+  }
+}

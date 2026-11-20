@@ -1,0 +1,204 @@
+{
+  "playerId": "46238",
+  "playerName": "Thomas Campbell",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_nz-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Thomas Campbell",
+    "BirthPlace": null,
+    "BirthDate": "December 20, 1985",
+    "Age": "40",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "New Zealand",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Thomas Campbell",
+        "player_num": "46238",
+        "Year": "2026",
+        "Rounds": "2",
+        "SG:TOT": "-4.01",
+        "SG:T2G": "-3.82",
+        "SG:OTT": "-0.48",
+        "SG:APP": "-3.94",
+        "SG:BS": "-4.43",
+        "SG:ARG": "0.61",
+        "SG:P": "-0.20",
+        "Dr Distance": "287.4",
+        "Dr Accuracy %": "57.1",
+        "Ball Speed": "164.04"
+      },
+      {
+        "playerName": "Thomas Campbell",
+        "player_num": "46238",
+        "Year": "2025",
+        "Rounds": "2",
+        "SG:TOT": "-5.99",
+        "SG:T2G": "-6.52",
+        "SG:OTT": "-2.66",
+        "SG:APP": "-2.93",
+        "SG:BS": "-5.60",
+        "SG:ARG": "-0.93",
+        "SG:P": "0.53",
+        "Dr Distance": "288.2",
+        "Dr Accuracy %": "50.0",
+        "Ball Speed": "166.16"
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Thomas Campbell",
+        "player_num": "46238",
+        "Rounds": "2",
+        "SG:TOT": "-4.01",
+        "SG:T2G": "-3.82",
+        "SG:OTT": "-0.48",
+        "SG:APP": "-3.94",
+        "SG:BS": "-4.43",
+        "SG:ARG": "0.61",
+        "SG:P": "-0.20",
+        "SG:SG": "0.41"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-07-26",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "3M Open",
+        "is_major": "0",
+        "playerName": "Thomas Campbell",
+        "player_num": "46238",
+        "Rounds": "2",
+        "CourseID": "883",
+        "Course": "TPC Twin Cities",
+        "ShotLink": "2",
+        "SG:TOT": "-4.01",
+        "SG:T2G": "-3.82",
+        "SG:OTT": "-0.48",
+        "SG:APP": "-3.94",
+        "SG:BS": "-4.43",
+        "SG:ARG": "0.61",
+        "SG:P": "-0.20",
+        "SG:SG": "0.41"
+      },
+      {
+        "Date": "2025-07-27",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "3M Open",
+        "is_major": "0",
+        "playerName": "Thomas Campbell",
+        "player_num": "46238",
+        "Rounds": "2",
+        "CourseID": "883",
+        "Course": "TPC Twin Cities",
+        "ShotLink": "2",
+        "SG:TOT": "-5.99",
+        "SG:T2G": "-6.52",
+        "SG:OTT": "-2.66",
+        "SG:APP": "-2.93",
+        "SG:BS": "-5.60",
+        "SG:ARG": "-0.93",
+        "SG:P": "0.53",
+        "SG:SG": "-0.39"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "0.16750000044703484",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-3.0149999260902405",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-6.990000009536743",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-5.002499967813492",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-4.0149999260902405",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-5.990000009536743",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-5.002499967813492",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "76.5",
+        "PM": "72.5",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": "22.2",
+        "100-150": "28.7",
+        "150-200": "41.2",
+        "200+": "55",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-5.002499967813492",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:58.415Z",
+    "ok": true
+  }
+}

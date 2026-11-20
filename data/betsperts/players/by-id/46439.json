@@ -1,0 +1,272 @@
+{
+  "playerId": "46439",
+  "playerName": "Will Grimmer",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Will Grimmer",
+    "BirthPlace": "",
+    "BirthDate": "April 12, 1997",
+    "Age": "29",
+    "Height": "6ft 0in",
+    "Weight": "150 lbs",
+    "Nationality": "United States",
+    "Residence": "Cincinnati, Ohio",
+    "ProWins": "0",
+    "TurnedPro": "2019",
+    "PGAWins": "0",
+    "College": "Ohio State University (2019, Strategic Communications)"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Will Grimmer",
+        "player_num": "46439",
+        "Year": "2021",
+        "Rounds": "4",
+        "SG:TOT": "0.09",
+        "SG:T2G": "-1.18",
+        "SG:OTT": "-1.01",
+        "SG:APP": "-0.42",
+        "SG:BS": "-1.43",
+        "SG:ARG": "0.26",
+        "SG:P": "1.26",
+        "Dr Distance": "274.1",
+        "Dr Accuracy %": "64.3",
+        "Ball Speed": "162.20"
+      },
+      {
+        "playerName": "Will Grimmer",
+        "player_num": "46439",
+        "Year": "2019",
+        "Rounds": "2",
+        "SG:TOT": "-3.85",
+        "SG:T2G": "-4.21",
+        "SG:OTT": "-1.88",
+        "SG:APP": "-1.90",
+        "SG:BS": "-3.78",
+        "SG:ARG": "-0.44",
+        "SG:P": "0.36",
+        "Dr Distance": "264.4",
+        "Dr Accuracy %": "60.7",
+        "Ball Speed": "157.62"
+      },
+      {
+        "playerName": "Will Grimmer",
+        "player_num": "46439",
+        "Year": "2018",
+        "Rounds": "4",
+        "SG:TOT": "-1.36",
+        "SG:T2G": "-1.92",
+        "SG:OTT": "-1.25",
+        "SG:APP": "-0.51",
+        "SG:BS": "-1.76",
+        "SG:ARG": "-0.15",
+        "SG:P": "0.56",
+        "Dr Distance": "272.4",
+        "Dr Accuracy %": "82.1",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2021-07-18",
+        "position": "T47",
+        "roundPosition": "T47",
+        "TournamentName": "Barbasol Championship",
+        "is_major": "0",
+        "playerName": "Will Grimmer",
+        "player_num": "46439",
+        "Rounds": "4",
+        "CourseID": "884",
+        "Course": "Keene Trace GC",
+        "ShotLink": "4",
+        "SG:TOT": "0.09",
+        "SG:T2G": "-1.18",
+        "SG:OTT": "-1.01",
+        "SG:APP": "-0.42",
+        "SG:BS": "-1.43",
+        "SG:ARG": "0.26",
+        "SG:P": "1.26",
+        "SG:SG": "1.52"
+      },
+      {
+        "Date": "2019-06-02",
+        "position": "CUT",
+        "roundPosition": "T113",
+        "TournamentName": "the Memorial Tournament",
+        "is_major": "0",
+        "playerName": "Will Grimmer",
+        "player_num": "46439",
+        "Rounds": "2",
+        "CourseID": "23",
+        "Course": "Muirfield Village GC",
+        "ShotLink": "2",
+        "SG:TOT": "-3.85",
+        "SG:T2G": "-4.21",
+        "SG:OTT": "-1.88",
+        "SG:APP": "-1.90",
+        "SG:BS": "-3.78",
+        "SG:ARG": "-0.44",
+        "SG:P": "0.36",
+        "SG:SG": "-0.07"
+      },
+      {
+        "Date": "2018-06-17",
+        "position": "66",
+        "roundPosition": "66",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Will Grimmer",
+        "player_num": "46439",
+        "Rounds": "4",
+        "CourseID": "618",
+        "Course": "Shinnecock Hills GC",
+        "ShotLink": "4",
+        "SG:TOT": "-1.36",
+        "SG:T2G": "-1.92",
+        "SG:OTT": "-1.25",
+        "SG:APP": "-0.51",
+        "SG:BS": "-1.76",
+        "SG:ARG": "-0.15",
+        "SG:P": "0.56",
+        "SG:SG": "0.41"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "30.0",
+        "SG TOT 1+": "30.0",
+        "SG TOT 2+": "20.0",
+        "SG TOT 3+": "20.0",
+        "SG TOT 4+": "10.0",
+        "SG TOT 5+": "10.0",
+        "Rounds": "10"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "1.2612499743700027",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "2.2300000190734863",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-2.409999966621399",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-2.175000011920929",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-3.9450000859797",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-3.850000023841858",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-1.7766666238506634",
+        "Rounds": "3"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-1.3550000488758087",
+        "Rounds": "4"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "5.670000076293945",
+        "Rounds": "1"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-3.850000023841858",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-1.3550000488758087",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "0.0850000511854887",
+        "Rounds": "4"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Strong",
+        "StrokesGainedAverage": "-3.850000023841858",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-1.3550000488758087",
+        "Rounds": "4"
+      },
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "0.0850000511854887",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74",
+        "PM": "72.5",
+        "Rounds": "10"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "10",
+        "50-100": "21.4",
+        "100-150": "26.9",
+        "150-200": "38.4",
+        "200+": "64.3",
+        "200-250": "62.8",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-3.850000023841858",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-0.63499999884516",
+        "Rounds": "8"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:26:27.148Z",
+    "ok": true
+  }
+}

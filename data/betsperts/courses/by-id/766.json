@@ -1,0 +1,105 @@
+{
+  "courseNum": "766",
+  "courseName": "Sheshan International GC",
+  "list": {
+    "CourseName": "Sheshan International GC",
+    "CourseNum": "766",
+    "CourseNums": [
+      766
+    ]
+  },
+  "details": {
+    "CourseName": "Sheshan International GC",
+    "CourseNum": "766",
+    "Locations": [
+      "Asia",
+      "International"
+    ],
+    "SeasonHeld": "Fall Swing",
+    "CourseTypes": [
+      "Parkland"
+    ],
+    "ParScore": "72",
+    "Yards": "7261",
+    "AVG": "100.8",
+    "CourseLength": "Short",
+    "Architects": [
+      "Nelson, Haworth"
+    ],
+    "RedesignArchitects": [],
+    "Elevation": "13",
+    "CourseElevation": "Sea Level",
+    "Bunkers": "72",
+    "BunkersRank": "Average",
+    "WaterHoles": "11",
+    "WaterDanger": "High",
+    "ScoreRTP": "0.01",
+    "Difficulty": "Average",
+    "FwyGrass": "Paspalum",
+    "FwyWidth": "0",
+    "GreenSqFt": "5000",
+    "GreenSize": "Small",
+    "GreenGrass": "Bent",
+    "GreenStimp": "12",
+    "GreenSpeed": "Average",
+    "RoughType": "Paspalum/Rye/Bermuda",
+    "RoughGrass": "Paspalum",
+    "RoughLengthInc": "2.5",
+    "RoughLength": "Short",
+    "EventTypes": [
+      "No-Cut",
+      "WGC"
+    ],
+    "Tournaments": [
+      {
+        "Year": "2005-2018",
+        "Tournament": "WGC-HSBC Championship"
+      }
+    ],
+    "CorrelatedCourse": [],
+    "FieldSize": "Small Field",
+    "FieldStrength": "Average",
+    "OTTClub": "Mixed",
+    "FwyPct": "58.1",
+    "FwyAccuracy": "Average",
+    "GainOTT": "Average",
+    "MissedFairwayPenalty": "Average",
+    "RoughPenalty": "Average",
+    "GIRAccuracy": "Average",
+    "GIRPct": "63.7",
+    "GainAPP": "Average",
+    "ScramblingFromRough": "Average",
+    "ScramblingFromShortGrass": "Average",
+    "SandSaves": "Easy",
+    "GainARG": "Average",
+    "GainingPuttingInside15": "Easy",
+    "GainingPuttingOutside15": "Average",
+    "3PuttAVD": "Easy",
+    "GainPutting": "Easy",
+    "Par3Scoring": "Difficult",
+    "Par4Scoring": "Average",
+    "Par5Scoring": "Difficult",
+    "ShotLink": "0"
+  },
+  "tournaments": [
+    {
+      "CourseNum": "766",
+      "TNum": "489",
+      "TourneyName": "World Golf Championships-HSBC Champions"
+    }
+  ],
+  "_meta": {
+    "pulledAt": "2026-11-20T22:18:25.964Z",
+    "detailStatus": 200,
+    "tournamentsStatus": 200
+  },
+  "auth": {
+    "holeBreakdown": [],
+    "correlated": [],
+    "_meta": {
+      "pulledAt": "2026-11-20T22:52:52.618Z",
+      "holeStatus": 200,
+      "correlatedStatus": 200
+    }
+  }
+}

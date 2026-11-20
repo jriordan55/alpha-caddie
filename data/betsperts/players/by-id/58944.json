@@ -1,0 +1,220 @@
+{
+  "playerId": "58944",
+  "playerName": "Blake McShea",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Blake McShea",
+    "BirthPlace": "Zebulon, North Carolina",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "6ft 0in",
+    "Weight": "250 lbs",
+    "Nationality": "United States",
+    "Residence": "Wendell, North Carolina",
+    "ProWins": "0",
+    "TurnedPro": "2021",
+    "PGAWins": "0",
+    "College": "University of North Carolina-Wilmington 2021, Recreation, Sports and Leisure"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Blake McShea",
+        "player_num": "58944",
+        "Year": "2024",
+        "Rounds": "4",
+        "SG:TOT": "0.53",
+        "SG:T2G": "-0.93",
+        "SG:OTT": "-0.46",
+        "SG:APP": "0.22",
+        "SG:BS": "-0.24",
+        "SG:ARG": "-0.69",
+        "SG:P": "0.78",
+        "Dr Distance": "286.3",
+        "Dr Accuracy %": "55.4",
+        "Ball Speed": "177.62"
+      },
+      {
+        "playerName": "Blake McShea",
+        "player_num": "58944",
+        "Year": "2022",
+        "Rounds": "4",
+        "SG:TOT": "-0.90",
+        "SG:T2G": "-0.97",
+        "SG:OTT": "-0.39",
+        "SG:APP": "-0.22",
+        "SG:BS": "-0.61",
+        "SG:ARG": "-0.36",
+        "SG:P": "0.07",
+        "Dr Distance": "280.1",
+        "Dr Accuracy %": "57.1",
+        "Ball Speed": "176.61"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2024-11-24",
+        "position": "T35",
+        "roundPosition": "T35",
+        "TournamentName": "The RSM Classic",
+        "is_major": "0",
+        "playerName": "Blake McShea",
+        "player_num": "58944",
+        "Rounds": "4",
+        "CourseID": "776",
+        "Course": "Sea Island GC (Seaside)",
+        "ShotLink": "3",
+        "SG:TOT": "0.53",
+        "SG:T2G": "-0.93",
+        "SG:OTT": "-0.46",
+        "SG:APP": "0.22",
+        "SG:BS": "-0.24",
+        "SG:ARG": "-0.69",
+        "SG:P": "0.78",
+        "SG:SG": "0.09"
+      },
+      {
+        "Date": "2022-08-07",
+        "position": "T76",
+        "roundPosition": "T76",
+        "TournamentName": "Wyndham Championship",
+        "is_major": "0",
+        "playerName": "Blake McShea",
+        "player_num": "58944",
+        "Rounds": "4",
+        "CourseID": "752",
+        "Course": "Sedgefield CC",
+        "ShotLink": "4",
+        "SG:TOT": "-0.90",
+        "SG:T2G": "-0.97",
+        "SG:OTT": "-0.39",
+        "SG:APP": "-0.22",
+        "SG:BS": "-0.61",
+        "SG:ARG": "-0.36",
+        "SG:P": "0.07",
+        "SG:SG": "-0.29"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "37.5",
+        "SG TOT 2+": "37.5",
+        "SG TOT 3+": "25.0",
+        "SG TOT 4+": "12.5",
+        "SG TOT 5+": "0.0",
+        "Rounds": "12"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "0.3724285938910076",
+        "Rounds": "8"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.6349999904632568",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "3.7249999046325684",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-1.4149999618530273",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-2.4100000858306885",
+        "Rounds": "3"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-2.8233333428700766",
+        "Rounds": "3"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "1.3999999523162843",
+        "Rounds": "5"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "1.1999999682108562",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "0.7799999713897705",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-2.2100000381469727",
+        "Rounds": "3"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-0.9000000357627869",
+        "Rounds": "4"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "0.5324999690055847",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "69.75",
+        "PM": "69",
+        "Rounds": "12"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "12",
+        "50-100": null,
+        "100-150": "28.2",
+        "150-200": "31.5",
+        "200+": "47.5",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "0.5324999690055847",
+        "Rounds": "4"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-0.9000000357627869",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:30.313Z",
+    "ok": true
+  }
+}

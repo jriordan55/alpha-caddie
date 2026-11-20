@@ -1,0 +1,252 @@
+{
+  "playerId": "29954",
+  "playerName": "Robert Dinwiddie",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/St_Georges_Cross.svg_.png",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Robert Dinwiddie",
+    "BirthPlace": "",
+    "BirthDate": "December 29, 1982",
+    "Age": "43",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "England",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Robert Dinwiddie",
+        "player_num": "29954",
+        "Year": "2022",
+        "Rounds": "4",
+        "SG:TOT": "0.36",
+        "SG:T2G": "-0.16",
+        "SG:OTT": "-0.09",
+        "SG:APP": "-0.64",
+        "SG:BS": "-0.73",
+        "SG:ARG": "0.58",
+        "SG:P": "0.51",
+        "Dr Distance": null,
+        "Dr Accuracy %": "62.5",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Robert Dinwiddie",
+        "player_num": "29954",
+        "Year": "2017",
+        "Rounds": "2",
+        "SG:TOT": "-5.02",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "42.9",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Robert Dinwiddie",
+        "player_num": "29954",
+        "Year": "2015",
+        "Rounds": "2",
+        "SG:TOT": "-2.70",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "68.8",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2022-07-17",
+        "position": "T53",
+        "roundPosition": null,
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Robert Dinwiddie",
+        "player_num": "29954",
+        "Rounds": "4",
+        "CourseID": "668",
+        "Course": "St. Andrews GC (Old Course)",
+        "ShotLink": "4",
+        "SG:TOT": "0.36",
+        "SG:T2G": "-0.16",
+        "SG:OTT": "-0.09",
+        "SG:APP": "-0.64",
+        "SG:BS": "-0.73",
+        "SG:ARG": "0.58",
+        "SG:P": "0.51",
+        "SG:SG": "1.09"
+      },
+      {
+        "Date": "2017-07-23",
+        "position": "CUT",
+        "roundPosition": "T154",
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Robert Dinwiddie",
+        "player_num": "29954",
+        "Rounds": "2",
+        "CourseID": "541",
+        "Course": "Royal Birkdale GC",
+        "ShotLink": "0",
+        "SG:TOT": "-5.02",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2015-07-19",
+        "position": "CUT",
+        "roundPosition": "T138",
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Robert Dinwiddie",
+        "player_num": "29954",
+        "Rounds": "2",
+        "CourseID": "668",
+        "Course": "St. Andrews GC (Old Course)",
+        "ShotLink": "0",
+        "SG:TOT": "-2.70",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "37.5",
+        "SG TOT 1+": "12.5",
+        "SG TOT 2+": "12.5",
+        "SG TOT 3+": "12.5",
+        "SG TOT 4+": "12.5",
+        "SG TOT 5+": "12.5",
+        "Rounds": "8"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "0.5149999558925629",
+        "Rounds": "6"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.04666670163472494",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-4.963333288828532",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "0.3400000035762787",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "0.6800000071525574",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-3.123333235581716",
+        "Rounds": "3"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-0.9280000507831574",
+        "Rounds": "5"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-2.585000015795231",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "5.699999809265137",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-5.0249998569488525",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "0.6800000071525574",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-1.7512499950826168",
+        "Rounds": "8"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74.2",
+        "PM": "73",
+        "Rounds": "8"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "8",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-1.7512499950826168",
+        "Rounds": "8"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:05.961Z",
+    "ok": true
+  }
+}

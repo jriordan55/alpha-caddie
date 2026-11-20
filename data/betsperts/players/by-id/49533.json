@@ -1,0 +1,199 @@
+{
+  "playerId": "49533",
+  "playerName": "James Hart du Preez",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_sf-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "James Hart du Preez",
+    "BirthPlace": "",
+    "BirthDate": "October 13, 1995",
+    "Age": "31",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "South Africa",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "James Hart du Preez",
+        "player_num": "49533",
+        "Year": "2022",
+        "Rounds": "5",
+        "SG:TOT": "-2.66",
+        "SG:T2G": "-1.40",
+        "SG:OTT": "1.24",
+        "SG:APP": "-2.77",
+        "SG:BS": "-1.53",
+        "SG:ARG": "0.13",
+        "SG:P": "-1.08",
+        "Dr Distance": "320.1",
+        "Dr Accuracy %": "51.4",
+        "Ball Speed": "196.72"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2022-05-15",
+        "position": "CUT",
+        "roundPosition": "T111",
+        "TournamentName": "AT&T Byron Nelson",
+        "is_major": "0",
+        "playerName": "James Hart du Preez",
+        "player_num": "49533",
+        "Rounds": "2",
+        "CourseID": "894",
+        "Course": "TPC Craig Ranch",
+        "ShotLink": "2",
+        "SG:TOT": "-1.35",
+        "SG:T2G": "-0.50",
+        "SG:OTT": "1.24",
+        "SG:APP": "-1.62",
+        "SG:BS": "-0.38",
+        "SG:ARG": "-0.12",
+        "SG:P": "-0.85",
+        "SG:SG": "-0.97"
+      },
+      {
+        "Date": "2022-01-23",
+        "position": "CUT",
+        "roundPosition": "T154",
+        "TournamentName": "The American Express",
+        "is_major": "0",
+        "playerName": "James Hart du Preez",
+        "player_num": "49533",
+        "Rounds": "3",
+        "CourseID": "233",
+        "Course": "Nicklaus Tournament Course",
+        "ShotLink": "1",
+        "SG:TOT": "-3.54",
+        "SG:T2G": "-3.18",
+        "SG:OTT": "1.24",
+        "SG:APP": "-5.07",
+        "SG:BS": "-3.83",
+        "SG:ARG": "0.64",
+        "SG:P": "-1.55",
+        "SG:SG": "-0.91"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "20.0",
+        "SG TOT 1+": "20.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "5"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.8510000109672546",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa Trivialis",
+        "StrokesGainedAverage": "-1.5490000247955322",
+        "Rounds": "3"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-4.259999990463257",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.5450000166893005",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-1.7100000381469727",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-3.7899999618530273",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "1.0800000429153442",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-3.5366667111714682",
+        "Rounds": "3"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-3.2200000286102295",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-2.293333331743876",
+        "Rounds": "3"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-2.6640000104904176",
+        "Rounds": "5"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "72.66666666666667",
+        "PM": "74",
+        "Rounds": "5"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "5",
+        "50-100": null,
+        "100-150": "29.7",
+        "150-200": "43.8",
+        "200+": "53.4",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-1.3549999594688416",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "West Coast",
+        "StrokesGainedAverage": "-3.5366667111714682",
+        "Rounds": "3"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:19.564Z",
+    "ok": true
+  }
+}

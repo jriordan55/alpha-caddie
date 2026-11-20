@@ -1,0 +1,277 @@
+{
+  "playerId": "31121",
+  "playerName": "Berry Henson",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Berry Henson",
+    "BirthPlace": "",
+    "BirthDate": "July 04, 1979",
+    "Age": "47",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "United States",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Berry Henson",
+        "player_num": "31121",
+        "Year": "2023",
+        "Rounds": "2",
+        "SG:TOT": "-3.20",
+        "SG:T2G": "-2.52",
+        "SG:OTT": "-0.60",
+        "SG:APP": "-1.60",
+        "SG:BS": "-2.20",
+        "SG:ARG": "-0.33",
+        "SG:P": "-0.68",
+        "Dr Distance": "302.3",
+        "Dr Accuracy %": "50.0",
+        "Ball Speed": "182.21"
+      },
+      {
+        "playerName": "Berry Henson",
+        "player_num": "31121",
+        "Year": "2019",
+        "Rounds": "2",
+        "SG:TOT": "-2.67",
+        "SG:T2G": "-0.99",
+        "SG:OTT": "-1.08",
+        "SG:APP": "0.79",
+        "SG:BS": "-0.29",
+        "SG:ARG": "-0.69",
+        "SG:P": "-1.68",
+        "Dr Distance": "291.6",
+        "Dr Accuracy %": "57.1",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Berry Henson",
+        "player_num": "31121",
+        "Year": "2018",
+        "Rounds": "4",
+        "SG:TOT": "-2.60",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "62.5",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2023-06-18",
+        "position": "CUT",
+        "roundPosition": "T141",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Berry Henson",
+        "player_num": "31121",
+        "Rounds": "2",
+        "CourseID": "43",
+        "Course": "Los Angeles CC (North)",
+        "ShotLink": "2",
+        "SG:TOT": "-3.20",
+        "SG:T2G": "-2.52",
+        "SG:OTT": "-0.60",
+        "SG:APP": "-1.60",
+        "SG:BS": "-2.20",
+        "SG:ARG": "-0.33",
+        "SG:P": "-0.68",
+        "SG:SG": "-1.01"
+      },
+      {
+        "Date": "2019-07-21",
+        "position": "CUT",
+        "roundPosition": "T114",
+        "TournamentName": "Barbasol Championship",
+        "is_major": "0",
+        "playerName": "Berry Henson",
+        "player_num": "31121",
+        "Rounds": "2",
+        "CourseID": "884",
+        "Course": "Keene Trace GC",
+        "ShotLink": "2",
+        "SG:TOT": "-2.67",
+        "SG:T2G": "-0.99",
+        "SG:OTT": "-1.08",
+        "SG:APP": "0.79",
+        "SG:BS": "-0.29",
+        "SG:ARG": "-0.69",
+        "SG:P": "-1.68",
+        "SG:SG": "-2.37"
+      },
+      {
+        "Date": "2018-10-14",
+        "position": "T72",
+        "roundPosition": "T72",
+        "TournamentName": "CIMB Classic",
+        "is_major": "0",
+        "playerName": "Berry Henson",
+        "player_num": "31121",
+        "Rounds": "4",
+        "CourseID": "800",
+        "Course": "TPC Kuala Lumpur",
+        "ShotLink": "0",
+        "SG:TOT": "-2.60",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "8"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-1.68299999833107",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-0.6819999814033508",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.8833332856496174",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-3.2766666412353516",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-3.7899999618530273",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-2.859999895095825",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-2.619999885559082",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-2.6700000166893005",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-3.7799999713897705",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-2.5974999368190765",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-2.619999885559082",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-3.7799999713897705",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-2.6216666301091514",
+        "Rounds": "6"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-3.1999999284744263",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-2.6700000166893005",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-2.5974999368190765",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "72.75",
+        "PM": "73",
+        "Rounds": "8"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "8",
+        "50-100": null,
+        "100-150": "27.9",
+        "150-200": "32.5",
+        "200+": "55.3",
+        "200-250": "44.4",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-2.5974999368190765",
+        "Rounds": "4"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-2.9349999725818634",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:26.633Z",
+    "ok": true
+  }
+}

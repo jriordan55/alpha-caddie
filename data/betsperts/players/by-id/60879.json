@@ -1,0 +1,152 @@
+{
+  "playerId": "60879",
+  "playerName": "Jake Sollon",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Jake Sollon",
+    "BirthPlace": "Pittsburgh, Pennsylvania",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "6ft 0in",
+    "Weight": "195 lbs",
+    "Nationality": "United States",
+    "Residence": "Tampa, Florida",
+    "ProWins": null,
+    "TurnedPro": "2021",
+    "PGAWins": null,
+    "College": "University of Oregon "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Jake Sollon",
+        "player_num": "60879",
+        "Year": "2026",
+        "Rounds": "2",
+        "SG:TOT": "-3.74",
+        "SG:T2G": "-3.22",
+        "SG:OTT": "-0.46",
+        "SG:APP": "-0.55",
+        "SG:BS": "-1.01",
+        "SG:ARG": "-2.21",
+        "SG:P": "-0.52",
+        "Dr Distance": "310.8",
+        "Dr Accuracy %": "60.7",
+        "Ball Speed": "179.05"
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Jake Sollon",
+        "player_num": "60879",
+        "Rounds": "2",
+        "SG:TOT": "-3.74",
+        "SG:T2G": "-3.22",
+        "SG:OTT": "-0.46",
+        "SG:APP": "-0.55",
+        "SG:BS": "-1.01",
+        "SG:ARG": "-2.21",
+        "SG:P": "-0.52",
+        "SG:SG": "-2.72"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-06-21",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Jake Sollon",
+        "player_num": "60879",
+        "Rounds": "2",
+        "CourseID": "618",
+        "Course": "Shinnecock Hills GC",
+        "ShotLink": "2",
+        "SG:TOT": "-3.74",
+        "SG:T2G": "-3.22",
+        "SG:OTT": "-0.46",
+        "SG:APP": "-0.55",
+        "SG:BS": "-1.01",
+        "SG:ARG": "-2.21",
+        "SG:P": "-0.52",
+        "SG:SG": "-2.72"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "50.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-8.720000267028809",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "1.25",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-3.7350001335144043",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-3.7350001335144043",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-3.7350001335144043",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "71",
+        "PM": "82",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": "65.2",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-3.7350001335144043",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:18.407Z",
+    "ok": true
+  }
+}

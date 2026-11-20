@@ -1,0 +1,125 @@
+{
+  "courseNum": "887",
+  "courseName": "Kasumigaseki CC (East)",
+  "list": {
+    "CourseName": "Kasumigaseki CC (East)",
+    "CourseNum": "887",
+    "CourseNums": [
+      887
+    ]
+  },
+  "details": {
+    "CourseName": "Kasumigaseki CC (East)",
+    "CourseNum": "887",
+    "Locations": [
+      "Asia",
+      "International"
+    ],
+    "SeasonHeld": "",
+    "CourseTypes": [
+      "Parkland"
+    ],
+    "ParScore": "71",
+    "Yards": "7447",
+    "AVG": "104.9",
+    "CourseLength": "Long",
+    "Architects": [
+      "Kinya Fujita",
+      "Shiro Akaboshi"
+    ],
+    "RedesignArchitects": [
+      "Charles Alison",
+      "Tom Fazio"
+    ],
+    "Elevation": "200",
+    "CourseElevation": "Average",
+    "Bunkers": "63",
+    "BunkersRank": "Average",
+    "WaterHoles": "2",
+    "WaterDanger": "Low",
+    "ScoreRTP": "0",
+    "Difficulty": "",
+    "FwyGrass": "",
+    "FwyWidth": "0",
+    "GreenSqFt": "0",
+    "GreenSize": "",
+    "GreenGrass": "",
+    "GreenStimp": "0",
+    "GreenSpeed": "",
+    "RoughType": "",
+    "RoughGrass": "",
+    "RoughLengthInc": "0",
+    "RoughLength": "",
+    "EventTypes": [
+      "No-Cut",
+      "Olympics"
+    ],
+    "Tournaments": [],
+    "CorrelatedCourse": [
+      "Accordia Golf Narashino CC",
+      "Detroit GC",
+      "TPC River Highlands",
+      "Monterey Peninsula CC (Shore)"
+    ],
+    "FieldSize": "Small Field",
+    "FieldStrength": "Average",
+    "OTTClub": "",
+    "FwyPct": "0",
+    "FwyAccuracy": "",
+    "GainOTT": "",
+    "MissedFairwayPenalty": "",
+    "RoughPenalty": "",
+    "GIRAccuracy": "",
+    "GIRPct": "0",
+    "GainAPP": "",
+    "ScramblingFromRough": "",
+    "ScramblingFromShortGrass": "",
+    "SandSaves": "",
+    "GainARG": "",
+    "GainingPuttingInside15": "",
+    "GainingPuttingOutside15": "",
+    "3PuttAVD": "",
+    "GainPutting": "",
+    "Par3Scoring": "",
+    "Par4Scoring": "",
+    "Par5Scoring": "",
+    "ShotLink": "0"
+  },
+  "tournaments": [
+    {
+      "CourseNum": "887",
+      "TNum": "519",
+      "TourneyName": "Olympic Mens Golf Competition"
+    }
+  ],
+  "_meta": {
+    "pulledAt": "2026-11-20T22:18:25.294Z",
+    "detailStatus": 200,
+    "tournamentsStatus": 200
+  },
+  "auth": {
+    "holeBreakdown": [],
+    "correlated": [
+      {
+        "CourseNum": "503",
+        "CourseName": "TPC River Highlands",
+        "CourseNums": "[503]"
+      },
+      {
+        "CourseNum": "875",
+        "CourseName": "Accordia Golf Narashino CC",
+        "CourseNums": "[875]"
+      },
+      {
+        "CourseNum": "947",
+        "CourseName": "Detroit GC",
+        "CourseNums": "[947, 876]"
+      }
+    ],
+    "_meta": {
+      "pulledAt": "2026-11-20T22:52:52.029Z",
+      "holeStatus": 200,
+      "correlatedStatus": 200
+    }
+  }
+}

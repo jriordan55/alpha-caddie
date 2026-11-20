@@ -1,0 +1,236 @@
+{
+  "playerId": "8635",
+  "playerName": "Colin Montgomerie",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/04/Flag_of_Scotland.svg_.png",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Colin Montgomerie",
+    "BirthPlace": "Glasgow, Scotland",
+    "BirthDate": "June 23, 1963",
+    "Age": "63",
+    "Height": "6ft 1in",
+    "Weight": "210 lbs",
+    "Nationality": "Scotland",
+    "Residence": "England",
+    "ProWins": null,
+    "TurnedPro": "1987",
+    "PGAWins": null,
+    "College": "Houston Baptist University "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Colin Montgomerie",
+        "player_num": "8635",
+        "Year": "2016",
+        "Rounds": "4",
+        "SG:TOT": "-2.11",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "62.5",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Colin Montgomerie",
+        "player_num": "8635",
+        "Year": "2015",
+        "Rounds": "6",
+        "SG:TOT": "-0.89",
+        "SG:T2G": "-1.56",
+        "SG:OTT": "-0.71",
+        "SG:APP": "-1.18",
+        "SG:BS": "-1.89",
+        "SG:ARG": "0.33",
+        "SG:P": "0.10",
+        "Dr Distance": "262.0",
+        "Dr Accuracy %": "72.6",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2016-07-17",
+        "position": "78",
+        "roundPosition": "78",
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Colin Montgomerie",
+        "player_num": "8635",
+        "Rounds": "4",
+        "CourseID": "709",
+        "Course": "Royal Troon",
+        "ShotLink": "0",
+        "SG:TOT": "-2.11",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2015-08-16",
+        "position": "CUT",
+        "roundPosition": "T110",
+        "TournamentName": "PGA Championship",
+        "is_major": "1",
+        "playerName": "Colin Montgomerie",
+        "player_num": "8635",
+        "Rounds": "2",
+        "CourseID": "706",
+        "Course": "Whistling Straits",
+        "ShotLink": "2",
+        "SG:TOT": "-1.45",
+        "SG:T2G": "-1.56",
+        "SG:OTT": "-0.71",
+        "SG:APP": "-1.18",
+        "SG:BS": "-1.89",
+        "SG:ARG": "0.33",
+        "SG:P": "0.10",
+        "SG:SG": "0.43"
+      },
+      {
+        "Date": "2015-06-21",
+        "position": "T64",
+        "roundPosition": "T64",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Colin Montgomerie",
+        "player_num": "8635",
+        "Rounds": "4",
+        "CourseID": "818",
+        "Course": "Chambers Bay GC",
+        "ShotLink": "0",
+        "SG:TOT": "-0.60",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "40.0",
+        "SG TOT 1+": "30.0",
+        "SG TOT 2+": "10.0",
+        "SG TOT 3+": "10.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "15"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "0.10199999809265137",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": null,
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "0.30000003178914386",
+        "Rounds": "6"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.7433333198229471",
+        "Rounds": "5"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-2.2500000596046448",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-3.9550000429153442",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-1.454999953508377",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-2.1050000488758087",
+        "Rounds": "4"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-0.6024999916553497",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-1.454999953508377",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-1.3537500202655792",
+        "Rounds": "8"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-1.3740000069141387",
+        "Rounds": "10"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74.42857142857143",
+        "PM": "74.33333333333333",
+        "Rounds": "15"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "15",
+        "50-100": "47.6",
+        "100-150": "26.6",
+        "150-200": null,
+        "200+": "48.7",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-1.3740000069141387",
+        "Rounds": "10"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:20:32.957Z",
+    "ok": true
+  }
+}

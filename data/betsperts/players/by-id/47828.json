@@ -1,0 +1,148 @@
+{
+  "playerId": "47828",
+  "playerName": "Thomas Lim",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Thomas Lim",
+    "BirthPlace": null,
+    "BirthDate": "January 04, 1995",
+    "Age": "31",
+    "Height": "5ft 10in",
+    "Weight": "145 lbs",
+    "Nationality": "United States",
+    "Residence": "Moorpark, California",
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": "University of Oregon "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Thomas Lim",
+        "player_num": "47828",
+        "Year": "2015",
+        "Rounds": "2",
+        "SG:TOT": "-1.23",
+        "SG:T2G": "-2.24",
+        "SG:OTT": "-0.16",
+        "SG:APP": "-2.75",
+        "SG:BS": "-2.91",
+        "SG:ARG": "0.66",
+        "SG:P": "1.02",
+        "Dr Distance": "261.7",
+        "Dr Accuracy %": "60.7",
+        "Ball Speed": "156.05"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2015-05-24",
+        "position": "CUT",
+        "roundPosition": "T92",
+        "TournamentName": "Crowne Plaza Invitational",
+        "is_major": "0",
+        "playerName": "Thomas Lim",
+        "player_num": "47828",
+        "Rounds": "2",
+        "CourseID": "21",
+        "Course": "Colonial CC",
+        "ShotLink": "2",
+        "SG:TOT": "-1.23",
+        "SG:T2G": "-2.24",
+        "SG:OTT": "-0.16",
+        "SG:APP": "-2.75",
+        "SG:BS": "-2.91",
+        "SG:ARG": "0.66",
+        "SG:P": "1.02",
+        "SG:SG": "1.68"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "1.0170000176876783",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-2.009999990463257",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.44999998807907104",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-1.229999989271164",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-1.229999989271164",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-1.229999989271164",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "71",
+        "PM": "72",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": "47.4",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-1.229999989271164",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:59.852Z",
+    "ok": true
+  }
+}

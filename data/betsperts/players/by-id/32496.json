@@ -1,0 +1,148 @@
+{
+  "playerId": "32496",
+  "playerName": "Clayton Rask",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Clayton Rask",
+    "BirthPlace": "Elk River, Minnesota",
+    "BirthDate": "November 18, 1984",
+    "Age": "42",
+    "Height": "6ft 2in",
+    "Weight": "205 lbs",
+    "Nationality": "United States",
+    "Residence": "Locust Grove, Georgia",
+    "ProWins": null,
+    "TurnedPro": "2008",
+    "PGAWins": null,
+    "College": "University of Minnesota (2008, Communications) "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Clayton Rask",
+        "player_num": "32496",
+        "Year": "2016",
+        "Rounds": "2",
+        "SG:TOT": "-1.34",
+        "SG:T2G": "-1.04",
+        "SG:OTT": "-1.33",
+        "SG:APP": "-0.84",
+        "SG:BS": "-2.17",
+        "SG:ARG": "1.13",
+        "SG:P": "-0.30",
+        "Dr Distance": "295.5",
+        "Dr Accuracy %": "35.7",
+        "Ball Speed": "175.24"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2016-02-07",
+        "position": "CUT",
+        "roundPosition": "T91",
+        "TournamentName": "WM Phoenix Open",
+        "is_major": "0",
+        "playerName": "Clayton Rask",
+        "player_num": "32496",
+        "Rounds": "2",
+        "CourseID": "510",
+        "Course": "TPC Scottsdale",
+        "ShotLink": "2",
+        "SG:TOT": "-1.34",
+        "SG:T2G": "-1.04",
+        "SG:OTT": "-1.33",
+        "SG:APP": "-0.84",
+        "SG:BS": "-2.17",
+        "SG:ARG": "1.13",
+        "SG:P": "-0.30",
+        "SG:SG": "0.83"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Poa Trivialis",
+        "StrokesGainedAverage": "-0.3049999997019768",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.149999976158142",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.5299999713897705",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-1.3399999737739563",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-1.3399999737739563",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-1.3399999737739563",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "73",
+        "PM": "72",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "37.8",
+        "200+": "69",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "West Coast",
+        "StrokesGainedAverage": "-1.3399999737739563",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:20:29.715Z",
+    "ok": true
+  }
+}

@@ -1,0 +1,200 @@
+{
+  "playerId": "51895",
+  "playerName": "Ryan Cole",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Ryan Cole",
+    "BirthPlace": "Frederick, Maryland",
+    "BirthDate": "June 21, 1995",
+    "Age": "31",
+    "Height": "6ft 0in",
+    "Weight": "160 lbs",
+    "Nationality": "United States",
+    "Residence": "Naples, Florida",
+    "ProWins": null,
+    "TurnedPro": "2017",
+    "PGAWins": null,
+    "College": "James Madison University  (2017, Finance) "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Ryan Cole",
+        "player_num": "51895",
+        "Year": "2024",
+        "Rounds": "2",
+        "SG:TOT": "-0.82",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "46.4",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Ryan Cole",
+        "player_num": "51895",
+        "Year": "2023",
+        "Rounds": "2",
+        "SG:TOT": "-2.60",
+        "SG:T2G": "-0.47",
+        "SG:OTT": "0.76",
+        "SG:APP": "-0.23",
+        "SG:BS": "0.53",
+        "SG:ARG": "-1.00",
+        "SG:P": "-2.13",
+        "Dr Distance": "298.2",
+        "Dr Accuracy %": "67.9",
+        "Ball Speed": "168.93"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2024-03-10",
+        "position": "CUT",
+        "roundPosition": "T85",
+        "TournamentName": "Puerto Rico Open",
+        "is_major": "0",
+        "playerName": "Ryan Cole",
+        "player_num": "51895",
+        "Rounds": "2",
+        "CourseID": "742",
+        "Course": "Grand Reserve GC",
+        "ShotLink": "0",
+        "SG:TOT": "-0.82",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2023-05-07",
+        "position": "CUT",
+        "roundPosition": "T129",
+        "TournamentName": "Wells Fargo Championship",
+        "is_major": "0",
+        "playerName": "Ryan Cole",
+        "player_num": "51895",
+        "Rounds": "2",
+        "CourseID": "872",
+        "Course": "Quail Hollow Club",
+        "ShotLink": "2",
+        "SG:TOT": "-2.60",
+        "SG:T2G": "-0.47",
+        "SG:OTT": "0.76",
+        "SG:APP": "-0.23",
+        "SG:BS": "0.53",
+        "SG:ARG": "-1.00",
+        "SG:P": "-2.13",
+        "SG:SG": "-3.13"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "25.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Poa Trivialis",
+        "StrokesGainedAverage": "-2.1269999593496323",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "0.0350000262260437",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-3.4600000381469727",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-1.7125000059604645",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-5.920000076293945",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "0.7200000286102295",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-0.824999988079071",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Strong",
+        "StrokesGainedAverage": "-2.600000023841858",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-0.824999988079071",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74",
+        "PM": "71",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": "44.8",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-1.7125000059604645",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:15.387Z",
+    "ok": true
+  }
+}

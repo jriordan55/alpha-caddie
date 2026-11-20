@@ -1,0 +1,235 @@
+{
+  "playerId": "60021",
+  "playerName": "Patrick Welch",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Patrick Welch",
+    "BirthPlace": "",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "United States",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Patrick Welch",
+        "player_num": "60021",
+        "Year": "2023",
+        "Rounds": "2",
+        "SG:TOT": "-1.80",
+        "SG:T2G": "-0.62",
+        "SG:OTT": "0.13",
+        "SG:APP": "0.88",
+        "SG:BS": "1.01",
+        "SG:ARG": "-1.63",
+        "SG:P": "-0.17",
+        "Dr Distance": "291.4",
+        "Dr Accuracy %": "53.6",
+        "Ball Speed": "174.82"
+      },
+      {
+        "playerName": "Patrick Welch",
+        "player_num": "60021",
+        "Year": "2022",
+        "Rounds": "4",
+        "SG:TOT": "1.00",
+        "SG:T2G": "1.20",
+        "SG:OTT": "-0.01",
+        "SG:APP": "1.15",
+        "SG:BS": "1.15",
+        "SG:ARG": "0.06",
+        "SG:P": "-0.20",
+        "Dr Distance": "306.6",
+        "Dr Accuracy %": "64.3",
+        "Ball Speed": "172.19"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2023-01-28",
+        "position": "CUT",
+        "roundPosition": "T122",
+        "TournamentName": "Farmers Insurance Open",
+        "is_major": "0",
+        "playerName": "Patrick Welch",
+        "player_num": "60021",
+        "Rounds": "2",
+        "CourseID": "104",
+        "Course": "Torrey Pines GC (North)",
+        "ShotLink": "1",
+        "SG:TOT": "-1.80",
+        "SG:T2G": "-0.62",
+        "SG:OTT": "0.13",
+        "SG:APP": "0.88",
+        "SG:BS": "1.01",
+        "SG:ARG": "-1.63",
+        "SG:P": "-0.17",
+        "SG:SG": "-1.79"
+      },
+      {
+        "Date": "2022-10-09",
+        "position": "T28",
+        "roundPosition": "T28",
+        "TournamentName": "Shriners Childrens Open",
+        "is_major": "0",
+        "playerName": "Patrick Welch",
+        "player_num": "60021",
+        "Rounds": "4",
+        "CourseID": "538",
+        "Course": "TPC Summerlin",
+        "ShotLink": "4",
+        "SG:TOT": "1.00",
+        "SG:T2G": "1.20",
+        "SG:OTT": "-0.01",
+        "SG:APP": "1.15",
+        "SG:BS": "1.15",
+        "SG:ARG": "0.06",
+        "SG:P": "-0.20",
+        "SG:SG": "-0.15"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "33.3",
+        "SG TOT 1+": "33.3",
+        "SG TOT 2+": "33.3",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "6"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.2032499685883522",
+        "Rounds": "5"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "-0.16599999368190765",
+        "Rounds": "1"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.199999988079071",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "0.004999995231628418",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-0.12999999523162842",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "2.9100000858306885",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "0.004999995231628418",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-0.7799999713897705",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "0.3866666952768962",
+        "Rounds": "3"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-0.7799999713897705",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-2.819999933242798",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "2.8299999237060547",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "0.3866666952768962",
+        "Rounds": "3"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "0.9975000023841858",
+        "Rounds": "4"
+      },
+      {
+        "FieldStrength": "Strong",
+        "StrokesGainedAverage": "-1.7999999523162842",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "69",
+        "PM": "72",
+        "Rounds": "6"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "6",
+        "50-100": null,
+        "100-150": "22.3",
+        "150-200": null,
+        "200+": "58",
+        "200-250": null,
+        "250+": "84.6"
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "0.9975000023841858",
+        "Rounds": "4"
+      },
+      {
+        "SeasonHeld": "West Coast",
+        "StrokesGainedAverage": "-1.7999999523162842",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:24:41.412Z",
+    "ok": true
+  }
+}

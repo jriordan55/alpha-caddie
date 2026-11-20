@@ -1,0 +1,75 @@
+{
+  "playerId": "31677",
+  "playerName": "Jake Younan",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/as-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Jake Younan",
+    "BirthPlace": "Forster, New South Wales, Australia",
+    "BirthDate": "March 14, 1987",
+    "Age": "39",
+    "Height": "5ft 11in",
+    "Weight": "170 lbs",
+    "Nationality": "Australia",
+    "Residence": "Gilbert, Arizona",
+    "ProWins": null,
+    "TurnedPro": "2008",
+    "PGAWins": null,
+    "College": "Texas Tech "
+  },
+  "stats": {
+    "sgSummary": [],
+    "sgGuest": [],
+    "sgByEvent": [],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "0.4099999964237213",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-9.390000343322754",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [],
+    "byScoringCondition": [],
+    "byFieldStrength": [],
+    "amPmSplit": [
+      {
+        "AM": "81",
+        "PM": "71",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "34.9",
+        "150-200": null,
+        "200+": "53.7",
+        "200-250": "53.5",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": []
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:18.567Z",
+    "ok": true
+  }
+}

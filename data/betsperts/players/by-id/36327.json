@@ -1,0 +1,214 @@
+{
+  "playerId": "36327",
+  "playerName": "Justin Quiban",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_rp-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Justin Quiban",
+    "BirthPlace": "",
+    "BirthDate": "February 26, 1996",
+    "Age": "30",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "Philippines",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Justin Quiban",
+        "player_num": "36327",
+        "Year": "2026",
+        "Rounds": "2",
+        "SG:TOT": "-4.30",
+        "SG:T2G": "-2.65",
+        "SG:OTT": "0.10",
+        "SG:APP": "-2.44",
+        "SG:BS": "-2.35",
+        "SG:ARG": "-0.30",
+        "SG:P": "-1.65",
+        "Dr Distance": "307.0",
+        "Dr Accuracy %": "57.1",
+        "Ball Speed": "177.98"
+      },
+      {
+        "playerName": "Justin Quiban",
+        "player_num": "36327",
+        "Year": "2021",
+        "Rounds": "2",
+        "SG:TOT": "-2.51",
+        "SG:T2G": "-3.56",
+        "SG:OTT": "1.05",
+        "SG:APP": "-2.72",
+        "SG:BS": "-1.67",
+        "SG:ARG": "-1.89",
+        "SG:P": "1.05",
+        "Dr Distance": "296.3",
+        "Dr Accuracy %": "64.3",
+        "Ball Speed": "169.36"
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Justin Quiban",
+        "player_num": "36327",
+        "Rounds": "2",
+        "SG:TOT": "-4.30",
+        "SG:T2G": "-2.65",
+        "SG:OTT": "0.10",
+        "SG:APP": "-2.44",
+        "SG:BS": "-2.35",
+        "SG:ARG": "-0.30",
+        "SG:P": "-1.65",
+        "SG:SG": "-1.96"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-08-02",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "Rocket Classic",
+        "is_major": "0",
+        "playerName": "Justin Quiban",
+        "player_num": "36327",
+        "Rounds": "2",
+        "CourseID": "947",
+        "Course": "Detroit GC",
+        "ShotLink": "2",
+        "SG:TOT": "-4.30",
+        "SG:T2G": "-2.65",
+        "SG:OTT": "0.10",
+        "SG:APP": "-2.44",
+        "SG:BS": "-2.35",
+        "SG:ARG": "-0.30",
+        "SG:P": "-1.65",
+        "SG:SG": "-1.96"
+      },
+      {
+        "Date": "2021-07-25",
+        "position": "CUT",
+        "roundPosition": "T129",
+        "TournamentName": "3M Open",
+        "is_major": "0",
+        "playerName": "Justin Quiban",
+        "player_num": "36327",
+        "Rounds": "2",
+        "CourseID": "883",
+        "Course": "TPC Twin Cities",
+        "ShotLink": "2",
+        "SG:TOT": "-2.51",
+        "SG:T2G": "-3.56",
+        "SG:OTT": "1.05",
+        "SG:APP": "-2.72",
+        "SG:BS": "-1.67",
+        "SG:ARG": "-1.89",
+        "SG:P": "1.05",
+        "SG:SG": "-0.84"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.30149999260902405",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-2.6899999380111694",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-4.125",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-2.509999990463257",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-4.304999947547913",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-2.509999990463257",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-4.304999947547913",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-4.304999947547913",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-2.509999990463257",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74",
+        "PM": "72.5",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": "27.1",
+        "150-200": "41.1",
+        "200+": "48.4",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-3.4074999690055847",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:12.737Z",
+    "ok": true
+  }
+}

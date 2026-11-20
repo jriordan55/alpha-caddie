@@ -1,0 +1,148 @@
+{
+  "playerId": "52371",
+  "playerName": "Matthew Campbell",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Matthew Campbell",
+    "BirthPlace": "Rome, New York",
+    "BirthDate": "February 25, 1989",
+    "Age": "37",
+    "Height": "6ft 2in",
+    "Weight": "260 lbs",
+    "Nationality": "United States",
+    "Residence": "Tampa, Florida",
+    "ProWins": null,
+    "TurnedPro": "2012",
+    "PGAWins": null,
+    "College": "Newberry College  (2013, Leisure Services) "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Matthew Campbell",
+        "player_num": "52371",
+        "Year": "2017",
+        "Rounds": "2",
+        "SG:TOT": "-5.69",
+        "SG:T2G": "-5.57",
+        "SG:OTT": "-0.71",
+        "SG:APP": "-2.70",
+        "SG:BS": "-3.41",
+        "SG:ARG": "-2.15",
+        "SG:P": "-0.13",
+        "Dr Distance": "295.8",
+        "Dr Accuracy %": "60.7",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2017-06-18",
+        "position": "CUT",
+        "roundPosition": "153",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Matthew Campbell",
+        "player_num": "52371",
+        "Rounds": "2",
+        "CourseID": "236",
+        "Course": "Erin Hills",
+        "ShotLink": "2",
+        "SG:TOT": "-5.69",
+        "SG:T2G": "-5.57",
+        "SG:OTT": "-0.71",
+        "SG:APP": "-2.70",
+        "SG:BS": "-3.41",
+        "SG:ARG": "-2.15",
+        "SG:P": "-0.13",
+        "SG:SG": "-2.28"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.1289999783039093",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-3.609999895095825",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-7.769999980926514",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-5.689999938011169",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-5.689999938011169",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-5.689999938011169",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "77",
+        "PM": "81",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": "33.7",
+        "100-150": "34.5",
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-5.689999938011169",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:24:00.072Z",
+    "ok": true
+  }
+}

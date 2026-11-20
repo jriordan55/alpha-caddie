@@ -1,0 +1,210 @@
+{
+  "playerId": "47737",
+  "playerName": "Logan McCracken",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Logan McCracken",
+    "BirthPlace": "Oklahoma City, Oklahoma",
+    "BirthDate": "June 21, 1991",
+    "Age": "35",
+    "Height": "5ft 10in",
+    "Weight": "175 lbs",
+    "Nationality": "United States",
+    "Residence": "Tulsa, Oklahoma",
+    "ProWins": "0",
+    "TurnedPro": "2014",
+    "PGAWins": "0",
+    "College": "Texas Tech University; University of Tulsa  (2014, Communications) "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Logan McCracken",
+        "player_num": "47737",
+        "Year": "2023",
+        "Rounds": "2",
+        "SG:TOT": "-1.00",
+        "SG:T2G": "-1.82",
+        "SG:OTT": "-0.55",
+        "SG:APP": "-0.69",
+        "SG:BS": "-1.24",
+        "SG:ARG": "-0.58",
+        "SG:P": "0.82",
+        "Dr Distance": "293.8",
+        "Dr Accuracy %": "53.6",
+        "Ball Speed": "179.11"
+      },
+      {
+        "playerName": "Logan McCracken",
+        "player_num": "47737",
+        "Year": "2019",
+        "Rounds": "2",
+        "SG:TOT": "-0.60",
+        "SG:T2G": "0.18",
+        "SG:OTT": "0.26",
+        "SG:APP": "-1.52",
+        "SG:BS": "-1.26",
+        "SG:ARG": "1.44",
+        "SG:P": "-0.78",
+        "Dr Distance": "290.4",
+        "Dr Accuracy %": "53.6",
+        "Ball Speed": "178.45"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2023-05-14",
+        "position": "CUT",
+        "roundPosition": "T104",
+        "TournamentName": "AT&T Byron Nelson",
+        "is_major": "0",
+        "playerName": "Logan McCracken",
+        "player_num": "47737",
+        "Rounds": "2",
+        "CourseID": "921",
+        "Course": "TPC Craig Ranch",
+        "ShotLink": "2",
+        "SG:TOT": "-1.00",
+        "SG:T2G": "-1.82",
+        "SG:OTT": "-0.55",
+        "SG:APP": "-0.69",
+        "SG:BS": "-1.24",
+        "SG:ARG": "-0.58",
+        "SG:P": "0.82",
+        "SG:SG": "0.25"
+      },
+      {
+        "Date": "2019-10-13",
+        "position": "CUT",
+        "roundPosition": "T86",
+        "TournamentName": "Houston Open",
+        "is_major": "0",
+        "playerName": "Logan McCracken",
+        "player_num": "47737",
+        "Rounds": "2",
+        "CourseID": "729",
+        "Course": "GC of Houston",
+        "ShotLink": "2",
+        "SG:TOT": "-0.60",
+        "SG:T2G": "0.18",
+        "SG:OTT": "0.26",
+        "SG:APP": "-1.52",
+        "SG:BS": "-1.26",
+        "SG:ARG": "1.44",
+        "SG:P": "-0.78",
+        "SG:SG": "0.66"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "25.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "0.8240000158548355",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-0.7824999690055847",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.6399999856948853",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "0.04499995708465576",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-0.7975000143051147",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-0.6000000238418579",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "1.7999999523162842",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-3.7899999618530273",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-0.9950000047683716",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-0.6000000238418579",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74",
+        "PM": "69.5",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": "31.3",
+        "150-200": "38.5",
+        "200+": "64.6",
+        "200-250": null,
+        "250+": "99.4"
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-0.6000000238418579",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-0.9950000047683716",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:38.049Z",
+    "ok": true
+  }
+}

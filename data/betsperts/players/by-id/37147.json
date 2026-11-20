@@ -1,0 +1,138 @@
+{
+  "playerId": "37147",
+  "playerName": "Josh Whalen",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ca-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Josh Whalen",
+    "BirthPlace": "",
+    "BirthDate": "July 07, 1995",
+    "Age": "31",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "Canada",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Josh Whalen",
+        "player_num": "37147",
+        "Year": "2019",
+        "Rounds": "2",
+        "SG:TOT": "-7.02",
+        "SG:T2G": "-4.60",
+        "SG:OTT": "-0.90",
+        "SG:APP": "-2.94",
+        "SG:BS": "-3.85",
+        "SG:ARG": "-0.75",
+        "SG:P": "-2.42",
+        "Dr Distance": "285.4",
+        "Dr Accuracy %": "46.4",
+        "Ball Speed": "178.46"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2019-06-09",
+        "position": "CUT",
+        "roundPosition": "155",
+        "TournamentName": "RBC Canadian Open",
+        "is_major": "0",
+        "playerName": "Josh Whalen",
+        "player_num": "37147",
+        "Rounds": "2",
+        "CourseID": "874",
+        "Course": "Hamilton Golf & Country Club",
+        "ShotLink": "2",
+        "SG:TOT": "-7.02",
+        "SG:T2G": "-4.60",
+        "SG:OTT": "-0.90",
+        "SG:APP": "-2.94",
+        "SG:BS": "-3.85",
+        "SG:ARG": "-0.75",
+        "SG:P": "-2.42",
+        "SG:SG": "-3.17"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-9.59000015258789",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-4.449999809265137",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-7.019999980926514",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-7.019999980926514",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-7.019999980926514",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74",
+        "PM": "79",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "30.2",
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-7.019999980926514",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:07.590Z",
+    "ok": true
+  }
+}

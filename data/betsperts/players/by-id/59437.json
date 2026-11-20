@@ -1,0 +1,236 @@
+{
+  "playerId": "59437",
+  "playerName": "Luke Gannon",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Luke Gannon",
+    "BirthPlace": "Wichita, Kansas",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "6ft 2in",
+    "Weight": "210 lbs",
+    "Nationality": "United States",
+    "Residence": "Mahomet, Illinois",
+    "ProWins": "0",
+    "TurnedPro": "2019",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Luke Gannon",
+        "player_num": "59437",
+        "Year": "2022",
+        "Rounds": "4",
+        "SG:TOT": "-5.20",
+        "SG:T2G": "-2.98",
+        "SG:OTT": "-0.46",
+        "SG:APP": "-1.08",
+        "SG:BS": "-1.54",
+        "SG:ARG": "-1.44",
+        "SG:P": "-2.22",
+        "Dr Distance": "284.7",
+        "Dr Accuracy %": "57.1",
+        "Ball Speed": "165.30"
+      },
+      {
+        "playerName": "Luke Gannon",
+        "player_num": "59437",
+        "Year": "2021",
+        "Rounds": "2",
+        "SG:TOT": "-1.56",
+        "SG:T2G": "-1.54",
+        "SG:OTT": "0.50",
+        "SG:APP": "-0.64",
+        "SG:BS": "-0.14",
+        "SG:ARG": "-1.39",
+        "SG:P": "-0.03",
+        "Dr Distance": "300.1",
+        "Dr Accuracy %": "53.6",
+        "Ball Speed": "173.41"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2022-07-03",
+        "position": "CUT",
+        "roundPosition": "151",
+        "TournamentName": "John Deere Classic",
+        "is_major": "0",
+        "playerName": "Luke Gannon",
+        "player_num": "59437",
+        "Rounds": "2",
+        "CourseID": "669",
+        "Course": "TPC Deere Run",
+        "ShotLink": "2",
+        "SG:TOT": "-4.78",
+        "SG:T2G": "-2.61",
+        "SG:OTT": "-0.55",
+        "SG:APP": "-0.30",
+        "SG:BS": "-0.85",
+        "SG:ARG": "-1.76",
+        "SG:P": "-2.18",
+        "SG:SG": "-3.94"
+      },
+      {
+        "Date": "2022-06-19",
+        "position": "CUT",
+        "roundPosition": "T150",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Luke Gannon",
+        "player_num": "59437",
+        "Rounds": "2",
+        "CourseID": "654",
+        "Course": "The Country Club",
+        "ShotLink": "2",
+        "SG:TOT": "-5.62",
+        "SG:T2G": "-3.35",
+        "SG:OTT": "-0.37",
+        "SG:APP": "-1.85",
+        "SG:BS": "-2.23",
+        "SG:ARG": "-1.12",
+        "SG:P": "-2.27",
+        "SG:SG": "-3.39"
+      },
+      {
+        "Date": "2021-07-11",
+        "position": "CUT",
+        "roundPosition": "T113",
+        "TournamentName": "John Deere Classic",
+        "is_major": "0",
+        "playerName": "Luke Gannon",
+        "player_num": "59437",
+        "Rounds": "2",
+        "CourseID": "669",
+        "Course": "TPC Deere Run",
+        "ShotLink": "2",
+        "SG:TOT": "-1.56",
+        "SG:T2G": "-1.54",
+        "SG:OTT": "0.50",
+        "SG:APP": "-0.64",
+        "SG:BS": "-0.14",
+        "SG:ARG": "-1.39",
+        "SG:P": "-0.03",
+        "SG:SG": "-1.42"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "6"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-1.105249997228384",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "-2.268000066280365",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-2.350000021358331",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-5.630000034968059",
+        "Rounds": "3"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-5.620000123977661",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-3.1749999802559614",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-3.700000047683716",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-0.11999999731779099",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-5.620000123977661",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-4.439999938011169",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-5.620000123977661",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-3.1749999802559614",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "73.5",
+        "PM": "75.25",
+        "Rounds": "6"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "6",
+        "50-100": "21.7",
+        "100-150": "29.3",
+        "150-200": "38.1",
+        "200+": "54.6",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-3.9900000281631947",
+        "Rounds": "6"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:41.383Z",
+    "ok": true
+  }
+}

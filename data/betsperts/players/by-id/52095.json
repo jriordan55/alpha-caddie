@@ -1,0 +1,220 @@
+{
+  "playerId": "52095",
+  "playerName": "Christoffer Bring",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/da-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Christoffer Bring",
+    "BirthPlace": "",
+    "BirthDate": "November 17, 1998",
+    "Age": "28",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "Denmark",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Christoffer Bring",
+        "player_num": "52095",
+        "Year": "2023",
+        "Rounds": "4",
+        "SG:TOT": "1.83",
+        "SG:T2G": "1.37",
+        "SG:OTT": "0.71",
+        "SG:APP": "0.92",
+        "SG:BS": "1.63",
+        "SG:ARG": "-0.26",
+        "SG:P": "0.47",
+        "Dr Distance": "302.8",
+        "Dr Accuracy %": "57.1",
+        "Ball Speed": "176.19"
+      },
+      {
+        "playerName": "Christoffer Bring",
+        "player_num": "52095",
+        "Year": "2021",
+        "Rounds": "2",
+        "SG:TOT": "-2.83",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "50.0",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2023-07-16",
+        "position": "T16",
+        "roundPosition": "T16",
+        "TournamentName": "Barbasol Championship",
+        "is_major": "0",
+        "playerName": "Christoffer Bring",
+        "player_num": "52095",
+        "Rounds": "4",
+        "CourseID": "884",
+        "Course": "Keene Trace GC",
+        "ShotLink": "4",
+        "SG:TOT": "1.83",
+        "SG:T2G": "1.37",
+        "SG:OTT": "0.71",
+        "SG:APP": "0.92",
+        "SG:BS": "1.63",
+        "SG:ARG": "-0.26",
+        "SG:P": "0.47",
+        "SG:SG": "0.21"
+      },
+      {
+        "Date": "2021-07-18",
+        "position": "CUT",
+        "roundPosition": null,
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Christoffer Bring",
+        "player_num": "52095",
+        "Rounds": "2",
+        "CourseID": "778",
+        "Course": "Royal St. Georges GC",
+        "ShotLink": "0",
+        "SG:TOT": "-2.83",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "33.3",
+        "SG TOT 2+": "16.7",
+        "SG TOT 3+": "16.7",
+        "SG TOT 4+": "16.7",
+        "SG TOT 5+": "16.7",
+        "Rounds": "6"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "0.46700000762939453",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.1349999904632568",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "0.7549998760223389",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "0.5699999928474426",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "1.8799999952316284",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-2.825000047683716",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "1.8199999531110127",
+        "Rounds": "3"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "1.8799999952316284",
+        "Rounds": "1"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-2.825000047683716",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "2.444999933242798",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "1.2249999940395355",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-2.825000047683716",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "1.8349999636411667",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "69.66666666666667",
+        "PM": "70.33333333333333",
+        "Rounds": "6"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "6",
+        "50-100": "22.8",
+        "100-150": "29.1",
+        "150-200": "28.2",
+        "200+": "32",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "0.2816666265328725",
+        "Rounds": "6"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:20:28.142Z",
+    "ok": true
+  }
+}

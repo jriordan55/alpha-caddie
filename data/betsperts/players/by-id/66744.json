@@ -1,0 +1,148 @@
+{
+  "playerId": "66744",
+  "playerName": "Colin Prater",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Colin Prater",
+    "BirthPlace": null,
+    "BirthDate": "",
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Colin Prater",
+        "player_num": "66744",
+        "Year": "2024",
+        "Rounds": "2",
+        "SG:TOT": "-5.42",
+        "SG:T2G": "-2.34",
+        "SG:OTT": "-0.53",
+        "SG:APP": "-0.07",
+        "SG:BS": "-0.60",
+        "SG:ARG": "-1.74",
+        "SG:P": "-3.08",
+        "Dr Distance": "291.0",
+        "Dr Accuracy %": "67.9",
+        "Ball Speed": "170.31"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2024-06-16",
+        "position": "CUT",
+        "roundPosition": "152",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Colin Prater",
+        "player_num": "66744",
+        "Rounds": "2",
+        "CourseID": "528",
+        "Course": "Pinehurst No. 2",
+        "ShotLink": "2",
+        "SG:TOT": "-5.42",
+        "SG:T2G": "-2.34",
+        "SG:OTT": "-0.53",
+        "SG:APP": "-0.07",
+        "SG:BS": "-0.60",
+        "SG:ARG": "-1.74",
+        "SG:P": "-3.08",
+        "SG:SG": "-4.82"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-3.078999876976013",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-5.739999771118164",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-5.099999904632568",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-5.419999837875366",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-5.419999837875366",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-5.419999837875366",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "79",
+        "PM": "78",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-5.419999837875366",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:20:32.966Z",
+    "ok": true
+  }
+}

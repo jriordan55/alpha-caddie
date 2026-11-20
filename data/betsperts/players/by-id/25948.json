@@ -1,0 +1,148 @@
+{
+  "playerId": "25948",
+  "playerName": "Richard McEvoy",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/St_Georges_Cross.svg_.png",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Richard McEvoy",
+    "BirthPlace": "",
+    "BirthDate": "June 13, 1979",
+    "Age": "47",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "England",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Richard McEvoy",
+        "player_num": "25948",
+        "Year": "2022",
+        "Rounds": "2",
+        "SG:TOT": "-2.51",
+        "SG:T2G": "-1.75",
+        "SG:OTT": "0.05",
+        "SG:APP": "-2.06",
+        "SG:BS": "-2.01",
+        "SG:ARG": "0.26",
+        "SG:P": "-0.76",
+        "Dr Distance": "268.5",
+        "Dr Accuracy %": "85.7",
+        "Ball Speed": "158.82"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2022-07-10",
+        "position": "CUT",
+        "roundPosition": "T132",
+        "TournamentName": "Barbasol Championship",
+        "is_major": "0",
+        "playerName": "Richard McEvoy",
+        "player_num": "25948",
+        "Rounds": "2",
+        "CourseID": "884",
+        "Course": "Keene Trace GC",
+        "ShotLink": "2",
+        "SG:TOT": "-2.51",
+        "SG:T2G": "-1.75",
+        "SG:OTT": "0.05",
+        "SG:APP": "-2.06",
+        "SG:BS": "-2.01",
+        "SG:ARG": "0.26",
+        "SG:P": "-0.76",
+        "SG:SG": "-0.50"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.7569999992847443",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-2.130000114440918",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-2.880000114440918",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-2.505000114440918",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-2.505000114440918",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-2.505000114440918",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "72",
+        "PM": "72",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-2.505000114440918",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:00.464Z",
+    "ok": true
+  }
+}

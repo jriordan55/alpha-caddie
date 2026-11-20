@@ -1,0 +1,209 @@
+{
+  "playerId": "60014",
+  "playerName": "Carson Lundell",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2026/05/c_fillg_face_centerq_autof_autodpr_2.0h_220w_200d_stub_default_avatar_light-18.png",
+    "Name": "Carson Lundell",
+    "BirthPlace": "Alpine, Utah",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "6ft 0in",
+    "Weight": "165 lbs",
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": "BYU (2023, Communications)"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Carson Lundell",
+        "player_num": "60014",
+        "Year": "2026",
+        "Rounds": "2",
+        "SG:TOT": "-3.01",
+        "SG:T2G": "-3.44",
+        "SG:OTT": "-1.62",
+        "SG:APP": "-1.10",
+        "SG:BS": "-2.72",
+        "SG:ARG": "-0.72",
+        "SG:P": "0.44",
+        "Dr Distance": "302.1",
+        "Dr Accuracy %": "71.4",
+        "Ball Speed": "189.74"
+      },
+      {
+        "playerName": "Carson Lundell",
+        "player_num": "60014",
+        "Year": "2025",
+        "Rounds": "2",
+        "SG:TOT": "-2.11",
+        "SG:T2G": "-0.56",
+        "SG:OTT": "-1.38",
+        "SG:APP": "0.30",
+        "SG:BS": "-1.08",
+        "SG:ARG": "0.52",
+        "SG:P": "-1.54",
+        "Dr Distance": "306.6",
+        "Dr Accuracy %": "75.0",
+        "Ball Speed": "191.43"
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Carson Lundell",
+        "player_num": "60014",
+        "Rounds": "2",
+        "SG:TOT": "-3.01",
+        "SG:T2G": "-3.44",
+        "SG:OTT": "-1.62",
+        "SG:APP": "-1.10",
+        "SG:BS": "-2.72",
+        "SG:ARG": "-0.72",
+        "SG:P": "0.44",
+        "SG:SG": "-0.28"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-10-04",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "Bank of Utah Championship",
+        "is_major": "0",
+        "playerName": "Carson Lundell",
+        "player_num": "60014",
+        "Rounds": "2",
+        "CourseID": "930",
+        "Course": "Black Desert Resort",
+        "ShotLink": "2",
+        "SG:TOT": "-3.01",
+        "SG:T2G": "-3.44",
+        "SG:OTT": "-1.62",
+        "SG:APP": "-1.10",
+        "SG:BS": "-2.72",
+        "SG:ARG": "-0.72",
+        "SG:P": "0.44",
+        "SG:SG": "-0.28"
+      },
+      {
+        "Date": "2025-10-26",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "Bank of Utah Championship",
+        "is_major": "0",
+        "playerName": "Carson Lundell",
+        "player_num": "60014",
+        "Rounds": "2",
+        "CourseID": "930",
+        "Course": "Black Desert Resort",
+        "ShotLink": "2",
+        "SG:TOT": "-2.11",
+        "SG:T2G": "-0.56",
+        "SG:OTT": "-1.38",
+        "SG:APP": "0.30",
+        "SG:BS": "-1.08",
+        "SG:ARG": "0.52",
+        "SG:P": "-1.54",
+        "SG:SG": "-1.02"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "25.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.5509999990463257",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.8450000137090683",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-4.265000104904175",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-2.5550000593066216",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-4.480000019073486",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "0.27000001072883606",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-3.005000114440918",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-2.5550000593066216",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "71",
+        "PM": "72.5",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "36.3",
+        "200+": "41.2",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-2.5550000593066216",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:20:06.328Z",
+    "ok": true
+  }
+}

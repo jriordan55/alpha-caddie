@@ -1,0 +1,162 @@
+{
+  "playerId": "66776",
+  "playerName": "Brannon Fahrny",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Brannon Fahrny",
+    "BirthPlace": null,
+    "BirthDate": "",
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Brannon Fahrny",
+        "player_num": "66776",
+        "Year": "2026",
+        "Rounds": "2",
+        "SG:TOT": "-3.01",
+        "SG:T2G": "-1.95",
+        "SG:OTT": "-0.45",
+        "SG:APP": "-1.85",
+        "SG:BS": "-2.30",
+        "SG:ARG": "0.34",
+        "SG:P": "-1.06",
+        "Dr Distance": "308.0",
+        "Dr Accuracy %": "53.6",
+        "Ball Speed": "179.93"
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Brannon Fahrny",
+        "player_num": "66776",
+        "Rounds": "2",
+        "SG:TOT": "-3.01",
+        "SG:T2G": "-1.95",
+        "SG:OTT": "-0.45",
+        "SG:APP": "-1.85",
+        "SG:BS": "-2.30",
+        "SG:ARG": "0.34",
+        "SG:P": "-1.06",
+        "SG:SG": "-0.72"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-07-26",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "3M Open",
+        "is_major": "0",
+        "playerName": "Brannon Fahrny",
+        "player_num": "66776",
+        "Rounds": "2",
+        "CourseID": "883",
+        "Course": "TPC Twin Cities",
+        "ShotLink": "2",
+        "SG:TOT": "-3.01",
+        "SG:T2G": "-1.95",
+        "SG:OTT": "-0.45",
+        "SG:APP": "-1.85",
+        "SG:BS": "-2.30",
+        "SG:ARG": "0.34",
+        "SG:P": "-1.06",
+        "SG:SG": "-0.72"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-1.0610000044107437",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.9299999475479126",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-4.099999904632568",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-3.0149999260902405",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-3.0149999260902405",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-3.0149999260902405",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "72",
+        "PM": "74",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "35.8",
+        "150-200": null,
+        "200+": "55.7",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-3.0149999260902405",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:42.294Z",
+    "ok": true
+  }
+}

@@ -1,0 +1,143 @@
+{
+  "playerId": "35725",
+  "playerName": "Sebastian Szirmak",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ca-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Sebastian Szirmak",
+    "BirthPlace": "Toronto, Ontario, Canada",
+    "BirthDate": "March 13, 1990",
+    "Age": "36",
+    "Height": "6ft 3in",
+    "Weight": "190 lbs",
+    "Nationality": "Canada",
+    "Residence": "Toronto, Ontario, Canada",
+    "ProWins": null,
+    "TurnedPro": "2012",
+    "PGAWins": null,
+    "College": "University of New Orleans "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Sebastian Szirmak",
+        "player_num": "35725",
+        "Year": "2023",
+        "Rounds": "2",
+        "SG:TOT": "-3.80",
+        "SG:T2G": "-1.82",
+        "SG:OTT": "-1.14",
+        "SG:APP": "-1.60",
+        "SG:BS": "-2.74",
+        "SG:ARG": "0.92",
+        "SG:P": "-1.99",
+        "Dr Distance": "284.4",
+        "Dr Accuracy %": "20.0",
+        "Ball Speed": "179.70"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2023-06-11",
+        "position": "CUT",
+        "roundPosition": "T140",
+        "TournamentName": "RBC Canadian Open",
+        "is_major": "0",
+        "playerName": "Sebastian Szirmak",
+        "player_num": "35725",
+        "Rounds": "2",
+        "CourseID": "908",
+        "Course": "Oakdale Golf & Country Club",
+        "ShotLink": "2",
+        "SG:TOT": "-3.80",
+        "SG:T2G": "-1.82",
+        "SG:OTT": "-1.14",
+        "SG:APP": "-1.60",
+        "SG:BS": "-2.74",
+        "SG:ARG": "0.92",
+        "SG:P": "-1.99",
+        "SG:SG": "-1.06"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-8.569999694824219",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "0.9599999785423279",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-3.8049998581409454",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "0.9599999785423279",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-8.569999694824219",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-3.8049998581409454",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "81",
+        "PM": "71",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "55.1",
+        "200+": "87",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-3.8049998581409454",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:33.534Z",
+    "ok": true
+  }
+}

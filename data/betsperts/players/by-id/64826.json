@@ -1,0 +1,80 @@
+{
+  "playerId": "64826",
+  "playerName": "Celine Boutier",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_fr-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Celine Boutier",
+    "BirthPlace": null,
+    "BirthDate": "",
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "France",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [],
+    "sgGuest": [],
+    "sgByEvent": [],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": null,
+        "SG TOT 1+": null,
+        "SG TOT 2+": null,
+        "SG TOT 3+": null,
+        "SG TOT 4+": null,
+        "SG TOT 5+": null,
+        "Rounds": "3"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": null,
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": null,
+        "Rounds": "1"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": null,
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [],
+    "byScoringCondition": [],
+    "byFieldStrength": [],
+    "amPmSplit": [
+      {
+        "AM": null,
+        "PM": null,
+        "Rounds": "3"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "3",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": []
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:20:08.312Z",
+    "ok": true
+  }
+}

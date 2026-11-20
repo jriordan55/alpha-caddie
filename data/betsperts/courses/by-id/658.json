@@ -1,0 +1,108 @@
+{
+  "courseNum": "658",
+  "courseName": "Carnoustie GC",
+  "list": {
+    "CourseName": "Carnoustie GC",
+    "CourseNum": "658",
+    "CourseNums": [
+      658
+    ]
+  },
+  "details": {
+    "CourseName": "Carnoustie GC",
+    "CourseNum": "658",
+    "Locations": [
+      "UK/Ireland",
+      "International"
+    ],
+    "SeasonHeld": "Summer",
+    "CourseTypes": [
+      "Coastal",
+      "Ocean",
+      "Links"
+    ],
+    "ParScore": "71",
+    "Yards": "7402",
+    "AVG": "104.3",
+    "CourseLength": "Long",
+    "Architects": [
+      "Old Tom Morris",
+      "James Braid"
+    ],
+    "RedesignArchitects": [],
+    "Elevation": "23",
+    "CourseElevation": "Sea Level",
+    "Bunkers": "112",
+    "BunkersRank": "High",
+    "WaterHoles": "4",
+    "WaterDanger": "Low",
+    "ScoreRTP": "1.56",
+    "Difficulty": "Very Difficult",
+    "FwyGrass": "Fescue Mix",
+    "FwyWidth": "0",
+    "GreenSqFt": "7400",
+    "GreenSize": "Large",
+    "GreenGrass": "Bent/Poa",
+    "GreenStimp": "10",
+    "GreenSpeed": "Slow",
+    "RoughType": "Fescue/Wavy Hair",
+    "RoughGrass": "Fescue",
+    "RoughLengthInc": "3.5",
+    "RoughLength": "Long",
+    "EventTypes": [
+      "36-Hole Cut",
+      "Major"
+    ],
+    "Tournaments": [
+      {
+        "Year": "2018",
+        "Tournament": "The Open Championship"
+      }
+    ],
+    "CorrelatedCourse": [],
+    "FieldSize": "Full Field",
+    "FieldStrength": "Very Strong",
+    "OTTClub": "Driver Heavy",
+    "FwyPct": "53.7",
+    "FwyAccuracy": "Difficult",
+    "GainOTT": "Very Difficult",
+    "MissedFairwayPenalty": "High",
+    "RoughPenalty": "Average",
+    "GIRAccuracy": "Difficult",
+    "GIRPct": "59.2",
+    "GainAPP": "Difficult",
+    "ScramblingFromRough": "Difficult",
+    "ScramblingFromShortGrass": "Average",
+    "SandSaves": "Difficult",
+    "GainARG": "Very Difficult",
+    "GainingPuttingInside15": "Difficult",
+    "GainingPuttingOutside15": "Difficult",
+    "3PuttAVD": "Difficult",
+    "GainPutting": "Very Difficult",
+    "Par3Scoring": "Difficult",
+    "Par4Scoring": "Difficult",
+    "Par5Scoring": "Average",
+    "ShotLink": "0"
+  },
+  "tournaments": [
+    {
+      "CourseNum": "658",
+      "TNum": "100",
+      "TourneyName": "The Open Championship"
+    }
+  ],
+  "_meta": {
+    "pulledAt": "2026-11-20T22:18:24.768Z",
+    "detailStatus": 200,
+    "tournamentsStatus": 200
+  },
+  "auth": {
+    "holeBreakdown": [],
+    "correlated": [],
+    "_meta": {
+      "pulledAt": "2026-11-20T22:52:51.622Z",
+      "holeStatus": 200,
+      "correlatedStatus": 200
+    }
+  }
+}

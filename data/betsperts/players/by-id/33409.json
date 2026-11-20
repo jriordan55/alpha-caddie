@@ -1,0 +1,148 @@
+{
+  "playerId": "33409",
+  "playerName": "Josh Brock",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Josh Brock",
+    "BirthPlace": null,
+    "BirthDate": "November 09, 1988",
+    "Age": "38",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Josh Brock",
+        "player_num": "33409",
+        "Year": "2017",
+        "Rounds": "2",
+        "SG:TOT": "-5.09",
+        "SG:T2G": "-2.76",
+        "SG:OTT": "-0.22",
+        "SG:APP": "-1.31",
+        "SG:BS": "-1.53",
+        "SG:ARG": "-1.23",
+        "SG:P": "-2.33",
+        "Dr Distance": "285.2",
+        "Dr Accuracy %": "71.4",
+        "Ball Speed": "168.13"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2017-04-23",
+        "position": "CUT",
+        "roundPosition": "T152",
+        "TournamentName": "Valero Texas Open",
+        "is_major": "0",
+        "playerName": "Josh Brock",
+        "player_num": "33409",
+        "Rounds": "2",
+        "CourseID": "770",
+        "Course": "TPC San Antonio (Oaks)",
+        "ShotLink": "2",
+        "SG:TOT": "-5.09",
+        "SG:T2G": "-2.76",
+        "SG:OTT": "-0.22",
+        "SG:APP": "-1.31",
+        "SG:BS": "-1.53",
+        "SG:ARG": "-1.23",
+        "SG:P": "-2.33",
+        "SG:SG": "-3.56"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Poa Trivialis",
+        "StrokesGainedAverage": "-2.3274999260902405",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-4.139999866485596",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-6.03000020980835",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-5.085000038146973",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-5.085000038146973",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-5.085000038146973",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "79",
+        "PM": "76",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": "71.7",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-5.085000038146973",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:06.317Z",
+    "ok": true
+  }
+}

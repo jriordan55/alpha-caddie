@@ -1,0 +1,236 @@
+{
+  "playerId": "1553",
+  "playerName": "John Huston",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "John Huston",
+    "BirthPlace": "Mount Vernon, Illinois",
+    "BirthDate": "June 01, 1961",
+    "Age": "65",
+    "Height": "5ft 10in",
+    "Weight": "155 lbs",
+    "Nationality": "United States",
+    "Residence": "Palm Harbor, Florida",
+    "ProWins": "9",
+    "TurnedPro": "1983",
+    "PGAWins": "7",
+    "College": "Auburn University "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "John Huston",
+        "player_num": "1553",
+        "Year": "2022",
+        "Rounds": "4",
+        "SG:TOT": "-1.95",
+        "SG:T2G": "-1.18",
+        "SG:OTT": "0.26",
+        "SG:APP": "-1.05",
+        "SG:BS": "-0.79",
+        "SG:ARG": "-0.38",
+        "SG:P": "-0.78",
+        "Dr Distance": "278.2",
+        "Dr Accuracy %": "64.8",
+        "Ball Speed": "160.51"
+      },
+      {
+        "playerName": "John Huston",
+        "player_num": "1553",
+        "Year": "2018",
+        "Rounds": "2",
+        "SG:TOT": "-5.87",
+        "SG:T2G": "-4.59",
+        "SG:OTT": "0.45",
+        "SG:APP": "-3.42",
+        "SG:BS": "-2.97",
+        "SG:ARG": "-1.61",
+        "SG:P": "-1.29",
+        "Dr Distance": "282.3",
+        "Dr Accuracy %": "60.7",
+        "Ball Speed": "161.77"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2022-07-24",
+        "position": "CUT",
+        "roundPosition": "T104",
+        "TournamentName": "3M Open",
+        "is_major": "0",
+        "playerName": "John Huston",
+        "player_num": "1553",
+        "Rounds": "2",
+        "CourseID": "883",
+        "Course": "TPC Twin Cities",
+        "ShotLink": "2",
+        "SG:TOT": "-1.47",
+        "SG:T2G": "-0.36",
+        "SG:OTT": "0.54",
+        "SG:APP": "-1.32",
+        "SG:BS": "-0.78",
+        "SG:ARG": "0.42",
+        "SG:P": "-1.11",
+        "SG:SG": "-0.69"
+      },
+      {
+        "Date": "2022-06-12",
+        "position": "CUT",
+        "roundPosition": "T124",
+        "TournamentName": "RBC Canadian Open",
+        "is_major": "0",
+        "playerName": "John Huston",
+        "player_num": "1553",
+        "Rounds": "2",
+        "CourseID": "772",
+        "Course": "St. Georges G&CC",
+        "ShotLink": "2",
+        "SG:TOT": "-2.43",
+        "SG:T2G": "-1.99",
+        "SG:OTT": "-0.03",
+        "SG:APP": "-0.78",
+        "SG:BS": "-0.81",
+        "SG:ARG": "-1.19",
+        "SG:P": "-0.44",
+        "SG:SG": "-1.63"
+      },
+      {
+        "Date": "2018-07-22",
+        "position": "CUT",
+        "roundPosition": "T122",
+        "TournamentName": "Barbasol Championship",
+        "is_major": "0",
+        "playerName": "John Huston",
+        "player_num": "1553",
+        "Rounds": "2",
+        "CourseID": "823",
+        "Course": "Keene Trace GC",
+        "ShotLink": "2",
+        "SG:TOT": "-5.87",
+        "SG:T2G": "-4.59",
+        "SG:OTT": "0.45",
+        "SG:APP": "-3.42",
+        "SG:BS": "-2.97",
+        "SG:ARG": "-1.61",
+        "SG:P": "-1.29",
+        "SG:SG": "-2.90"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "6"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.9466666529575983",
+        "Rounds": "6"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-3.449999968210856",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-3.0666668117046356",
+        "Rounds": "3"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-1.4700000286102295",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-4.152500070631504",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-0.7200000286102295",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-2.3633332749207816",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-5.870000243186951",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-2.4349998980760574",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-5.870000243186951",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-1.4700000286102295",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "75.33333333333333",
+        "PM": "73.66666666666667",
+        "Rounds": "6"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "6",
+        "50-100": null,
+        "100-150": "25.5",
+        "150-200": "39.7",
+        "200+": "63.1",
+        "200-250": "59.2",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-2.4349998980760574",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-3.67000013589859",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:54.466Z",
+    "ok": true
+  }
+}

@@ -1,0 +1,138 @@
+{
+  "playerId": "33155",
+  "playerName": "James Allenby",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ca-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "James Allenby",
+    "BirthPlace": "Surrey, British Columbia, Canada",
+    "BirthDate": "September 30, 1984",
+    "Age": "42",
+    "Height": "6ft 2in",
+    "Weight": "190 lbs",
+    "Nationality": "Canada",
+    "Residence": "Langley, British Columbia, Canada",
+    "ProWins": "0",
+    "TurnedPro": "2009",
+    "PGAWins": "0",
+    "College": "Oregon State University "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "James Allenby",
+        "player_num": "33155",
+        "Year": "2019",
+        "Rounds": "2",
+        "SG:TOT": "-0.52",
+        "SG:T2G": "-0.61",
+        "SG:OTT": "-0.81",
+        "SG:APP": "-0.62",
+        "SG:BS": "-1.43",
+        "SG:ARG": "0.82",
+        "SG:P": "0.09",
+        "Dr Distance": "282.3",
+        "Dr Accuracy %": "60.7",
+        "Ball Speed": "170.15"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2019-06-09",
+        "position": "CUT",
+        "roundPosition": "T91",
+        "TournamentName": "RBC Canadian Open",
+        "is_major": "0",
+        "playerName": "James Allenby",
+        "player_num": "33155",
+        "Rounds": "2",
+        "CourseID": "874",
+        "Course": "Hamilton Golf & Country Club",
+        "ShotLink": "2",
+        "SG:TOT": "-0.52",
+        "SG:T2G": "-0.61",
+        "SG:OTT": "-0.81",
+        "SG:APP": "-0.62",
+        "SG:BS": "-1.43",
+        "SG:ARG": "0.82",
+        "SG:P": "0.09",
+        "SG:SG": "0.91"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.5899999737739563",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.44999998807907104",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-0.5199999809265137",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-0.5199999809265137",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-0.5199999809265137",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "70",
+        "PM": "70",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "33.1",
+        "150-200": "28.7",
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-0.5199999809265137",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:18.883Z",
+    "ok": true
+  }
+}

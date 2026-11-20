@@ -1,0 +1,148 @@
+{
+  "playerId": "25661",
+  "playerName": "Bryn Parry",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ca-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Bryn Parry",
+    "BirthPlace": null,
+    "BirthDate": "October 10, 1971",
+    "Age": "55",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "Canada",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Bryn Parry",
+        "player_num": "25661",
+        "Year": "2017",
+        "Rounds": "2",
+        "SG:TOT": "0.00",
+        "SG:T2G": "-0.48",
+        "SG:OTT": "-0.98",
+        "SG:APP": "1.09",
+        "SG:BS": "0.11",
+        "SG:ARG": "-0.59",
+        "SG:P": "0.47",
+        "Dr Distance": "273.9",
+        "Dr Accuracy %": "53.6",
+        "Ball Speed": "156.95"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2017-07-30",
+        "position": "CUT",
+        "roundPosition": "T77",
+        "TournamentName": "RBC Canadian Open",
+        "is_major": "0",
+        "playerName": "Bryn Parry",
+        "player_num": "25661",
+        "Rounds": "2",
+        "CourseID": "32",
+        "Course": "Glen Abbey GC",
+        "ShotLink": "2",
+        "SG:TOT": "0.00",
+        "SG:T2G": "-0.48",
+        "SG:OTT": "-0.98",
+        "SG:APP": "1.09",
+        "SG:BS": "0.11",
+        "SG:ARG": "-0.59",
+        "SG:P": "0.47",
+        "SG:SG": "-0.11"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "0.47199997305870056",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "0.11999999731779099",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.11999999731779099",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "0",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "0",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "0",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "71",
+        "PM": "70",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "20.3",
+        "150-200": "31.4",
+        "200+": "36.3",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "0",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:55.929Z",
+    "ok": true
+  }
+}

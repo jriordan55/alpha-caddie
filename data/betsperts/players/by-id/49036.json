@@ -1,0 +1,184 @@
+{
+  "playerId": "49036",
+  "playerName": "Lorenzo Scalise",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_it-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Lorenzo Scalise",
+    "BirthPlace": null,
+    "BirthDate": "July 18, 1995",
+    "Age": "31",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "Italy",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Lorenzo Scalise",
+        "player_num": "49036",
+        "Year": "2024",
+        "Rounds": "4",
+        "SG:TOT": "-0.69",
+        "SG:T2G": "-0.76",
+        "SG:OTT": "-0.71",
+        "SG:APP": "-0.40",
+        "SG:BS": "-1.11",
+        "SG:ARG": "0.35",
+        "SG:P": "-0.64",
+        "Dr Distance": "310.8",
+        "Dr Accuracy %": "42.9",
+        "Ball Speed": "171.46"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2024-07-21",
+        "position": "CUT",
+        "roundPosition": null,
+        "TournamentName": "Barracuda Championship",
+        "is_major": null,
+        "playerName": "Lorenzo Scalise",
+        "player_num": "49036",
+        "Rounds": "2",
+        "CourseID": "931",
+        "Course": "Tahoe Mountain Club (Old Greenwood)",
+        "ShotLink": "0",
+        "SG:TOT": "0.02",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2024-07-14",
+        "position": "CUT",
+        "roundPosition": "T109",
+        "TournamentName": "ISCO Championship",
+        "is_major": "0",
+        "playerName": "Lorenzo Scalise",
+        "player_num": "49036",
+        "Rounds": "2",
+        "CourseID": "884",
+        "Course": "Keene Trace GC",
+        "ShotLink": "2",
+        "SG:TOT": "-1.40",
+        "SG:T2G": "-0.76",
+        "SG:OTT": "-0.71",
+        "SG:APP": "-0.40",
+        "SG:BS": "-1.11",
+        "SG:ARG": "0.35",
+        "SG:P": "-0.64",
+        "SG:SG": "-0.29"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "50.0",
+        "SG TOT 2+": "25.0",
+        "SG TOT 3+": "25.0",
+        "SG TOT 4+": "25.0",
+        "SG TOT 5+": "25.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.6360000371932983",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "3.2499999403953552",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-4.620000123977661",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-5.03000020980835",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-1.3950000405311584",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "5.079999923706055",
+        "Rounds": "1"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "0.02499985694885254",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-1.3950000405311584",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-0.685000091791153",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "71.5",
+        "PM": "69",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": "17.2",
+        "100-150": "30",
+        "150-200": "32.9",
+        "200+": "48",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-0.685000091791153",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:38.895Z",
+    "ok": true
+  }
+}

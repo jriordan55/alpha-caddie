@@ -1,0 +1,272 @@
+{
+  "playerId": "47334",
+  "playerName": "Sam Fidone",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Sam Fidone",
+    "BirthPlace": "Lufkin, Texas",
+    "BirthDate": "March 29, 1993",
+    "Age": "33",
+    "Height": "5ft 9in",
+    "Weight": "165 lbs",
+    "Nationality": "United States",
+    "Residence": "Lufkin, Texas",
+    "ProWins": "0",
+    "TurnedPro": "2013",
+    "PGAWins": "0",
+    "College": "Southern Methodist University "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Sam Fidone",
+        "player_num": "47334",
+        "Year": "2021",
+        "Rounds": "4",
+        "SG:TOT": "0.40",
+        "SG:T2G": "-0.20",
+        "SG:OTT": "-0.16",
+        "SG:APP": "0.08",
+        "SG:BS": "-0.07",
+        "SG:ARG": "-0.13",
+        "SG:P": "0.60",
+        "Dr Distance": "286.8",
+        "Dr Accuracy %": "55.4",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Sam Fidone",
+        "player_num": "47334",
+        "Year": "2020",
+        "Rounds": "2",
+        "SG:TOT": "-2.19",
+        "SG:T2G": "-1.60",
+        "SG:OTT": "-0.30",
+        "SG:APP": "-0.09",
+        "SG:BS": "-0.39",
+        "SG:ARG": "-1.22",
+        "SG:P": "-0.59",
+        "Dr Distance": "290.5",
+        "Dr Accuracy %": "46.2",
+        "Ball Speed": "164.36"
+      },
+      {
+        "playerName": "Sam Fidone",
+        "player_num": "47334",
+        "Year": "2018",
+        "Rounds": "2",
+        "SG:TOT": "-3.40",
+        "SG:T2G": "-2.63",
+        "SG:OTT": "-0.17",
+        "SG:APP": "-1.84",
+        "SG:BS": "-2.00",
+        "SG:ARG": "-0.62",
+        "SG:P": "-0.77",
+        "Dr Distance": "292.0",
+        "Dr Accuracy %": "53.6",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2021-04-04",
+        "position": "T44",
+        "roundPosition": "T44",
+        "TournamentName": "Valero Texas Open",
+        "is_major": "0",
+        "playerName": "Sam Fidone",
+        "player_num": "47334",
+        "Rounds": "4",
+        "CourseID": "770",
+        "Course": "TPC San Antonio (Oaks)",
+        "ShotLink": "4",
+        "SG:TOT": "0.40",
+        "SG:T2G": "-0.20",
+        "SG:OTT": "-0.16",
+        "SG:APP": "0.08",
+        "SG:BS": "-0.07",
+        "SG:ARG": "-0.13",
+        "SG:P": "0.60",
+        "SG:SG": "0.47"
+      },
+      {
+        "Date": "2020-11-08",
+        "position": "CUT",
+        "roundPosition": "T103",
+        "TournamentName": "Houston Open",
+        "is_major": "0",
+        "playerName": "Sam Fidone",
+        "player_num": "47334",
+        "Rounds": "2",
+        "CourseID": "897",
+        "Course": "Memorial Park Golf Course",
+        "ShotLink": "2",
+        "SG:TOT": "-2.19",
+        "SG:T2G": "-1.60",
+        "SG:OTT": "-0.30",
+        "SG:APP": "-0.09",
+        "SG:BS": "-0.39",
+        "SG:ARG": "-1.22",
+        "SG:P": "-0.59",
+        "SG:SG": "-1.80"
+      },
+      {
+        "Date": "2018-07-29",
+        "position": "CUT",
+        "roundPosition": "T139",
+        "TournamentName": "RBC Canadian Open",
+        "is_major": "0",
+        "playerName": "Sam Fidone",
+        "player_num": "47334",
+        "Rounds": "2",
+        "CourseID": "32",
+        "Course": "Glen Abbey GC",
+        "ShotLink": "2",
+        "SG:TOT": "-3.40",
+        "SG:T2G": "-2.63",
+        "SG:OTT": "-0.17",
+        "SG:APP": "-1.84",
+        "SG:BS": "-2.00",
+        "SG:ARG": "-0.62",
+        "SG:P": "-0.77",
+        "SG:SG": "-1.39"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "25.0",
+        "SG TOT 1+": "25.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "8"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-0.5854999870061874",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa Trivialis",
+        "StrokesGainedAverage": "0.5977500155568123",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.3166666825612385",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-2.2366666396458945",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "1.2300000190734863",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-0.15000000596046448",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-0.4633333534002304",
+        "Rounds": "6"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-3.3999999165534973",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-0.7200000286102295",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "0.5400000065565109",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-1.7000000476837158",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-3.3999999165534973",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-0.4633333534002304",
+        "Rounds": "6"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-3.3999999165534973",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "73.25",
+        "PM": "72.5",
+        "Rounds": "8"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "8",
+        "50-100": "23.4",
+        "100-150": "27.5",
+        "150-200": "36.7",
+        "200+": "65.9",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-2.190000057220459",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "0.3999999985098839",
+        "Rounds": "4"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-3.3999999165534973",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:21.881Z",
+    "ok": true
+  }
+}

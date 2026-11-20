@@ -1,0 +1,203 @@
+{
+  "playerId": "60333",
+  "playerName": "Nicholas Marchese",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ca-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Nicholas Marchese",
+    "BirthPlace": null,
+    "BirthDate": "",
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "Canada",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Nicholas Marchese",
+        "player_num": "60333",
+        "Year": "2026",
+        "Rounds": "4",
+        "SG:TOT": "-3.97",
+        "SG:T2G": "-3.31",
+        "SG:OTT": "0.08",
+        "SG:APP": "-2.65",
+        "SG:BS": "-2.58",
+        "SG:ARG": "-0.73",
+        "SG:P": "-0.66",
+        "Dr Distance": "291.8",
+        "Dr Accuracy %": "75.0",
+        "Ball Speed": "176.32"
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Nicholas Marchese",
+        "player_num": "60333",
+        "Rounds": "4",
+        "SG:TOT": "-3.97",
+        "SG:T2G": "-3.31",
+        "SG:OTT": "0.08",
+        "SG:APP": "-2.65",
+        "SG:BS": "-2.58",
+        "SG:ARG": "-0.73",
+        "SG:P": "-0.66",
+        "SG:SG": "-1.39"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-11-08",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "World Wide Technology Championship",
+        "is_major": "0",
+        "playerName": "Nicholas Marchese",
+        "player_num": "60333",
+        "Rounds": "2",
+        "CourseID": "919",
+        "Course": "El Cardonal at Diamante",
+        "ShotLink": "2",
+        "SG:TOT": "-3.67",
+        "SG:T2G": "-2.14",
+        "SG:OTT": "0.38",
+        "SG:APP": "-1.70",
+        "SG:BS": "-1.32",
+        "SG:ARG": "-0.82",
+        "SG:P": "-1.53",
+        "SG:SG": "-2.35"
+      },
+      {
+        "Date": "2026-05-10",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "Myrtle Beach Classic",
+        "is_major": "0",
+        "playerName": "Nicholas Marchese",
+        "player_num": "60333",
+        "Rounds": "2",
+        "CourseID": "925",
+        "Course": "Dunes Golf & Beach Club",
+        "ShotLink": "2",
+        "SG:TOT": "-4.26",
+        "SG:T2G": "-4.47",
+        "SG:OTT": "-0.23",
+        "SG:APP": "-3.61",
+        "SG:BS": "-3.83",
+        "SG:ARG": "-0.64",
+        "SG:P": "0.21",
+        "SG:SG": "-0.43"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "0.2070000022649765",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-3.990000009536743",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-3.9450000524520874",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-3.9666666984558105",
+        "Rounds": "3"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-3.9700000286102295",
+        "Rounds": "1"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-4.559999942779541",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-3.9700000286102295",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-3.6700000762939453",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-3.9675000309944153",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74",
+        "PM": "74.5",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-3.6700000762939453",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-4.264999985694885",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:24:24.830Z",
+    "ok": true
+  }
+}

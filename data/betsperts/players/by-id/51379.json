@@ -1,0 +1,210 @@
+{
+  "playerId": "51379",
+  "playerName": "John Lyras",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/as-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "John Lyras",
+    "BirthPlace": "",
+    "BirthDate": "November 06, 1996",
+    "Age": "30",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "Australia",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "John Lyras",
+        "player_num": "51379",
+        "Year": "2021",
+        "Rounds": "2",
+        "SG:TOT": "-5.44",
+        "SG:T2G": "-6.49",
+        "SG:OTT": "-0.57",
+        "SG:APP": "-4.73",
+        "SG:BS": "-5.30",
+        "SG:ARG": "-1.18",
+        "SG:P": "1.04",
+        "Dr Distance": "297.8",
+        "Dr Accuracy %": "46.4",
+        "Ball Speed": "179.66"
+      },
+      {
+        "playerName": "John Lyras",
+        "player_num": "51379",
+        "Year": "2019",
+        "Rounds": "2",
+        "SG:TOT": "-3.28",
+        "SG:T2G": "-3.66",
+        "SG:OTT": "-4.16",
+        "SG:APP": "0.31",
+        "SG:BS": "-3.85",
+        "SG:ARG": "0.20",
+        "SG:P": "0.38",
+        "Dr Distance": "281.8",
+        "Dr Accuracy %": "35.7",
+        "Ball Speed": "178.89"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2021-05-16",
+        "position": "CUT",
+        "roundPosition": "T153",
+        "TournamentName": "AT&T Byron Nelson",
+        "is_major": "0",
+        "playerName": "John Lyras",
+        "player_num": "51379",
+        "Rounds": "2",
+        "CourseID": "894",
+        "Course": "TPC Craig Ranch",
+        "ShotLink": "2",
+        "SG:TOT": "-5.44",
+        "SG:T2G": "-6.49",
+        "SG:OTT": "-0.57",
+        "SG:APP": "-4.73",
+        "SG:BS": "-5.30",
+        "SG:ARG": "-1.18",
+        "SG:P": "1.04",
+        "SG:SG": "-0.14"
+      },
+      {
+        "Date": "2019-08-04",
+        "position": "CUT",
+        "roundPosition": "T142",
+        "TournamentName": "Wyndham Championship",
+        "is_major": "0",
+        "playerName": "John Lyras",
+        "player_num": "51379",
+        "Rounds": "2",
+        "CourseID": "752",
+        "Course": "Sedgefield CC",
+        "ShotLink": "2",
+        "SG:TOT": "-3.28",
+        "SG:T2G": "-3.66",
+        "SG:OTT": "-4.16",
+        "SG:APP": "0.31",
+        "SG:BS": "-3.85",
+        "SG:ARG": "0.20",
+        "SG:P": "0.38",
+        "SG:SG": "0.58"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "8"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "1.0439999997615814",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "0.37700000405311584",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-4.630000114440918",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-4.085000038146973",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": null,
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": null,
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-4.25",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-4.393333435058594",
+        "Rounds": "3"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-4.357500076293945",
+        "Rounds": "4"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-4.357500076293945",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "73",
+        "PM": "73.5",
+        "Rounds": "8"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "8",
+        "50-100": null,
+        "100-150": "26.1",
+        "150-200": "40.6",
+        "200+": "46.4",
+        "200-250": "47.3",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-5.440000057220459",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-3.2750000953674316",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:55.331Z",
+    "ok": true
+  }
+}

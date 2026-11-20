@@ -1,0 +1,204 @@
+{
+  "playerId": "25289",
+  "playerName": "Steven Jeffress",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/as-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Steven Jeffress",
+    "BirthPlace": null,
+    "BirthDate": "November 25, 1975",
+    "Age": "50",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "Australia",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Steven Jeffress",
+        "player_num": "25289",
+        "Year": "2015",
+        "Rounds": "8",
+        "SG:TOT": "-3.21",
+        "SG:T2G": "-1.70",
+        "SG:OTT": "-0.71",
+        "SG:APP": "-0.46",
+        "SG:BS": "-1.17",
+        "SG:ARG": "-0.53",
+        "SG:P": "-0.06",
+        "Dr Distance": "267.4",
+        "Dr Accuracy %": "58.9",
+        "Ball Speed": "155.66"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2015-11-08",
+        "position": "75",
+        "roundPosition": "75",
+        "TournamentName": "WGC - HSBC Champions",
+        "is_major": "0",
+        "playerName": "Steven Jeffress",
+        "player_num": "25289",
+        "Rounds": "4",
+        "CourseID": "766",
+        "Course": "Sheshan International GC",
+        "ShotLink": "0",
+        "SG:TOT": "-4.67",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2015-03-08",
+        "position": "T62",
+        "roundPosition": "T62",
+        "TournamentName": "WGC - Cadillac Championship",
+        "is_major": "0",
+        "playerName": "Steven Jeffress",
+        "player_num": "25289",
+        "Rounds": "4",
+        "CourseID": "8",
+        "Course": "Trump National Doral",
+        "ShotLink": "4",
+        "SG:TOT": "-1.76",
+        "SG:T2G": "-1.70",
+        "SG:OTT": "-0.71",
+        "SG:APP": "-0.46",
+        "SG:BS": "-1.17",
+        "SG:ARG": "-0.53",
+        "SG:P": "-0.06",
+        "SG:SG": "-0.59"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "12.5",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "8"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": null,
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-0.06225000321865082",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-4.030000030994415",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-3.284999966621399",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-4.269999861717224",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-1.2700000703334808",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-1.757499948143959",
+        "Rounds": "4"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-4.6700000166893005",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-4.6700000166893005",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-1.757499948143959",
+        "Rounds": "4"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Strong",
+        "StrokesGainedAverage": "-4.6700000166893005",
+        "Rounds": "4"
+      },
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-1.757499948143959",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "75.33333333333333",
+        "PM": "75",
+        "Rounds": "8"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "8",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "46.3",
+        "200+": "63.5",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-4.6700000166893005",
+        "Rounds": "4"
+      },
+      {
+        "SeasonHeld": "Florida",
+        "StrokesGainedAverage": "-1.757499948143959",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:48.915Z",
+    "ok": true
+  }
+}

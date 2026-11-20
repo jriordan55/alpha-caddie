@@ -1,0 +1,148 @@
+{
+  "playerId": "25883",
+  "playerName": "Kyung Nam Kang",
+  "flag": null,
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Kyung Nam Kang",
+    "BirthPlace": null,
+    "BirthDate": null,
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "Republic of Korea",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Kyung Nam Kang",
+        "player_num": "25883",
+        "Year": "2023",
+        "Rounds": "2",
+        "SG:TOT": "0.35",
+        "SG:T2G": "0.46",
+        "SG:OTT": "-0.10",
+        "SG:APP": "0.20",
+        "SG:BS": "0.10",
+        "SG:ARG": "0.36",
+        "SG:P": "-0.50",
+        "Dr Distance": null,
+        "Dr Accuracy %": "67.9",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2023-07-23",
+        "position": "CUT",
+        "roundPosition": null,
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Kyung Nam Kang",
+        "player_num": "25883",
+        "Rounds": "2",
+        "CourseID": "923",
+        "Course": "Royal Liverpool",
+        "ShotLink": "2",
+        "SG:TOT": "0.35",
+        "SG:T2G": "0.46",
+        "SG:OTT": "-0.10",
+        "SG:APP": "0.20",
+        "SG:BS": "0.10",
+        "SG:ARG": "0.36",
+        "SG:P": "-0.50",
+        "SG:SG": "-0.15"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "50.0",
+        "SG TOT 2+": "50.0",
+        "SG TOT 3+": "50.0",
+        "SG TOT 4+": "50.0",
+        "SG TOT 5+": "50.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.5045000314712524",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-4.75",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "5.449999809265137",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "0.34999990463256836",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "0.34999990463256836",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "0.34999990463256836",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "68",
+        "PM": "78",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "0.34999990463256836",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:30.662Z",
+    "ok": true
+  }
+}

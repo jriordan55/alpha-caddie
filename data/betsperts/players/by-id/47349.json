@@ -1,0 +1,148 @@
+{
+  "playerId": "47349",
+  "playerName": "Michael McGowan",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Michael McGowan",
+    "BirthPlace": "Pinehurst, North Carolina",
+    "BirthDate": "October 22, 1990",
+    "Age": "36",
+    "Height": "6ft 0in",
+    "Weight": "175 lbs",
+    "Nationality": "United States",
+    "Residence": "Southern Pines, North Carolina",
+    "ProWins": null,
+    "TurnedPro": "2015",
+    "PGAWins": null,
+    "College": "University of North Carolina-Chapel Hill 2013, Business Management"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Michael McGowan",
+        "player_num": "47349",
+        "Year": "2024",
+        "Rounds": "2",
+        "SG:TOT": "-2.42",
+        "SG:T2G": "-3.33",
+        "SG:OTT": "-1.04",
+        "SG:APP": "-1.10",
+        "SG:BS": "-2.14",
+        "SG:ARG": "-1.19",
+        "SG:P": "0.91",
+        "Dr Distance": "285.8",
+        "Dr Accuracy %": "71.4",
+        "Ball Speed": "174.35"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2024-06-16",
+        "position": "CUT",
+        "roundPosition": "T125",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Michael McGowan",
+        "player_num": "47349",
+        "Rounds": "2",
+        "CourseID": "528",
+        "Course": "Pinehurst No. 2",
+        "ShotLink": "2",
+        "SG:TOT": "-2.42",
+        "SG:T2G": "-3.33",
+        "SG:OTT": "-1.04",
+        "SG:APP": "-1.10",
+        "SG:BS": "-2.14",
+        "SG:ARG": "-1.19",
+        "SG:P": "0.91",
+        "SG:SG": "-0.28"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "0.9149999916553497",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-3.740000009536743",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.100000023841858",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-2.4200000166893005",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-2.4200000166893005",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-2.4200000166893005",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "77",
+        "PM": "74",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-2.4200000166893005",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:24:11.334Z",
+    "ok": true
+  }
+}

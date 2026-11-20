@@ -1,0 +1,158 @@
+{
+  "playerId": "32878",
+  "playerName": "Yeon Jin Jeong",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ks-flag-1.gif",
+  "profile": {
+    "ProfileImage": "0",
+    "Name": "Yeon Jin Jeong",
+    "BirthPlace": null,
+    "BirthDate": "February 02, 1990",
+    "Age": "36",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "South Korea",
+    "Residence": null,
+    "ProWins": "0",
+    "TurnedPro": null,
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Yeon Jin Jeong",
+        "player_num": "32878",
+        "Year": "2021",
+        "Rounds": "2",
+        "SG:TOT": "-4.73",
+        "SG:T2G": "-5.39",
+        "SG:OTT": "-3.49",
+        "SG:APP": "-0.10",
+        "SG:BS": "-3.60",
+        "SG:ARG": "-1.79",
+        "SG:P": "0.66",
+        "Dr Distance": "290.6",
+        "Dr Accuracy %": "46.4",
+        "Ball Speed": "168.83"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2021-10-10",
+        "position": "CUT",
+        "roundPosition": "139",
+        "TournamentName": "Shriners Childrens Open",
+        "is_major": "0",
+        "playerName": "Yeon Jin Jeong",
+        "player_num": "32878",
+        "Rounds": "2",
+        "CourseID": "538",
+        "Course": "TPC Summerlin",
+        "ShotLink": "2",
+        "SG:TOT": "-4.73",
+        "SG:T2G": "-5.39",
+        "SG:OTT": "-3.49",
+        "SG:APP": "-0.10",
+        "SG:BS": "-3.60",
+        "SG:ARG": "-1.79",
+        "SG:P": "0.66",
+        "SG:SG": "-1.13"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "6"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "0.6634999811649323",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-8.175000190734863",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-5.710000038146973",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-2.200000047683716",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-7.590000152587891",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-4.7250001430511475",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-4.7250001430511475",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-4.7250001430511475",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "79",
+        "PM": "77",
+        "Rounds": "6"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "6",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "40",
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-4.7250001430511475",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:26:31.456Z",
+    "ok": true
+  }
+}

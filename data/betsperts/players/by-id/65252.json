@@ -1,0 +1,185 @@
+{
+  "playerId": "65252",
+  "playerName": "Kyle Martin",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Kyle Martin",
+    "BirthPlace": null,
+    "BirthDate": "",
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Kyle Martin",
+        "player_num": "65252",
+        "Year": "2024",
+        "Rounds": "2",
+        "SG:TOT": "-3.55",
+        "SG:T2G": "-3.40",
+        "SG:OTT": "-0.79",
+        "SG:APP": "-2.20",
+        "SG:BS": "-2.99",
+        "SG:ARG": "-0.41",
+        "SG:P": "-0.16",
+        "Dr Distance": "278.6",
+        "Dr Accuracy %": "60.7",
+        "Ball Speed": "163.29"
+      },
+      {
+        "playerName": "Kyle Martin",
+        "player_num": "65252",
+        "Year": "2023",
+        "Rounds": "2",
+        "SG:TOT": "-2.44",
+        "SG:T2G": "-2.73",
+        "SG:OTT": "-0.85",
+        "SG:APP": "-2.09",
+        "SG:BS": "-2.95",
+        "SG:ARG": "0.22",
+        "SG:P": "0.29",
+        "Dr Distance": "281.6",
+        "Dr Accuracy %": "53.6",
+        "Ball Speed": "164.14"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2024-06-30",
+        "position": "CUT",
+        "roundPosition": "T148",
+        "TournamentName": "Rocket Mortgage Classic",
+        "is_major": "0",
+        "playerName": "Kyle Martin",
+        "player_num": "65252",
+        "Rounds": "2",
+        "CourseID": "876",
+        "Course": "Detroit GC",
+        "ShotLink": "2",
+        "SG:TOT": "-3.55",
+        "SG:T2G": "-3.40",
+        "SG:OTT": "-0.79",
+        "SG:APP": "-2.20",
+        "SG:BS": "-2.99",
+        "SG:ARG": "-0.41",
+        "SG:P": "-0.16",
+        "SG:SG": "-0.56"
+      },
+      {
+        "Date": "2023-07-02",
+        "position": "CUT",
+        "roundPosition": "T135",
+        "TournamentName": "Rocket Mortgage Classic",
+        "is_major": "0",
+        "playerName": "Kyle Martin",
+        "player_num": "65252",
+        "Rounds": "2",
+        "CourseID": "876",
+        "Course": "Detroit GC",
+        "ShotLink": "2",
+        "SG:TOT": "-2.44",
+        "SG:T2G": "-2.73",
+        "SG:OTT": "-0.85",
+        "SG:APP": "-2.09",
+        "SG:BS": "-2.95",
+        "SG:ARG": "0.22",
+        "SG:P": "0.29",
+        "SG:SG": "0.51"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "25.0",
+        "SG TOT 1+": "25.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-6.369999885559082",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "0.38499999791383743",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-2.9924999438226223",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-8.109999656677246",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-1.2866667062044144",
+        "Rounds": "3"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-2.43500005453825",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-3.5499998331069946",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "69.5",
+        "PM": "77",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": "30.9",
+        "150-200": "39.6",
+        "200+": "58.9",
+        "200-250": "50.8",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-2.9924999438226223",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:28.746Z",
+    "ok": true
+  }
+}

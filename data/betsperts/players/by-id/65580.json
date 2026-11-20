@@ -1,0 +1,215 @@
+{
+  "playerId": "65580",
+  "playerName": "Ben Warian",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Ben Warian",
+    "BirthPlace": null,
+    "BirthDate": "",
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": "University of Minnesota "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Ben Warian",
+        "player_num": "65580",
+        "Year": "2025",
+        "Rounds": "4",
+        "SG:TOT": "-1.35",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "48.2",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Ben Warian",
+        "player_num": "65580",
+        "Year": "2024",
+        "Rounds": "2",
+        "SG:TOT": "-0.79",
+        "SG:T2G": "-3.06",
+        "SG:OTT": "-1.73",
+        "SG:APP": "-1.67",
+        "SG:BS": "-3.41",
+        "SG:ARG": "0.35",
+        "SG:P": "2.27",
+        "Dr Distance": "289.3",
+        "Dr Accuracy %": "50.0",
+        "Ball Speed": "172.45"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2025-03-09",
+        "position": "T75",
+        "roundPosition": "T75",
+        "TournamentName": "Puerto Rico Open",
+        "is_major": "0",
+        "playerName": "Ben Warian",
+        "player_num": "65580",
+        "Rounds": "4",
+        "CourseID": "940",
+        "Course": "Grand Reserve GC",
+        "ShotLink": "0",
+        "SG:TOT": "-1.35",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2024-07-28",
+        "position": "CUT",
+        "roundPosition": "T95",
+        "TournamentName": "3M Open",
+        "is_major": "0",
+        "playerName": "Ben Warian",
+        "player_num": "65580",
+        "Rounds": "2",
+        "CourseID": "883",
+        "Course": "TPC Twin Cities",
+        "ShotLink": "2",
+        "SG:TOT": "-0.79",
+        "SG:T2G": "-3.06",
+        "SG:OTT": "-1.73",
+        "SG:APP": "-1.67",
+        "SG:BS": "-3.41",
+        "SG:ARG": "0.35",
+        "SG:P": "2.27",
+        "SG:SG": "2.62"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "33.3",
+        "SG TOT 1+": "33.3",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "6"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "2.2725000381469727",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.2250000238418579",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.5300000309944153",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-2.2899999618530273",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-3.180000066757202",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-0.7850000262260437",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-1.3525000214576721",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-0.7850000262260437",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-1.3525000214576721",
+        "Rounds": "4"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-1.3525000214576721",
+        "Rounds": "4"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-0.7850000262260437",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "70.66666666666667",
+        "PM": "71.66666666666667",
+        "Rounds": "6"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "6",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "44.4",
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-1.3525000214576721",
+        "Rounds": "4"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-0.7850000262260437",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:25.367Z",
+    "ok": true
+  }
+}

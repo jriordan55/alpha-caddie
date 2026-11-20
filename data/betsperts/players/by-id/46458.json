@@ -1,0 +1,148 @@
+{
+  "playerId": "46458",
+  "playerName": "Andrew Dorn",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Andrew Dorn",
+    "BirthPlace": "Cincinnati, Ohio",
+    "BirthDate": "July 24, 1992",
+    "Age": "34",
+    "Height": "5ft 10in",
+    "Weight": "185 lbs",
+    "Nationality": "United States",
+    "Residence": "Cincinnati, Ohio",
+    "ProWins": "0",
+    "TurnedPro": "2015",
+    "PGAWins": "0",
+    "College": "Coastal Carolina University 2015, Finance"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Andrew Dorn",
+        "player_num": "46458",
+        "Year": "2018",
+        "Rounds": "4",
+        "SG:TOT": "-0.39",
+        "SG:T2G": "-0.69",
+        "SG:OTT": "-0.14",
+        "SG:APP": "-0.71",
+        "SG:BS": "-0.85",
+        "SG:ARG": "0.17",
+        "SG:P": "0.30",
+        "Dr Distance": "290.5",
+        "Dr Accuracy %": "66.1",
+        "Ball Speed": "176.97"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2018-06-03",
+        "position": "T62",
+        "roundPosition": "T62",
+        "TournamentName": "the Memorial Tournament",
+        "is_major": "0",
+        "playerName": "Andrew Dorn",
+        "player_num": "46458",
+        "Rounds": "4",
+        "CourseID": "23",
+        "Course": "Muirfield Village GC",
+        "ShotLink": "4",
+        "SG:TOT": "-0.39",
+        "SG:T2G": "-0.69",
+        "SG:OTT": "-0.14",
+        "SG:APP": "-0.71",
+        "SG:BS": "-0.85",
+        "SG:ARG": "0.17",
+        "SG:P": "0.30",
+        "SG:SG": "0.47"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "25.0",
+        "SG TOT 2+": "25.0",
+        "SG TOT 3+": "25.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "3.559999942779541",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-3.5399999618530273",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-1.8300000429153442",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "0.27000001072883606",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-0.3850000128149986",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-0.3850000128149986",
+        "Rounds": "4"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Strong",
+        "StrokesGainedAverage": "-0.3850000128149986",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "73.5",
+        "PM": "70",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": "20.6",
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-0.3850000128149986",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:00.642Z",
+    "ok": true
+  }
+}

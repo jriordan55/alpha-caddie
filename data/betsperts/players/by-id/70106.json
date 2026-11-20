@@ -1,0 +1,193 @@
+{
+  "playerId": "70106",
+  "playerName": "Carson Bertagnole",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Carson Bertagnole",
+    "BirthPlace": null,
+    "BirthDate": "",
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Carson Bertagnole",
+        "player_num": "70106",
+        "Year": "2026",
+        "Rounds": "4",
+        "SG:TOT": "-3.47",
+        "SG:T2G": "-4.21",
+        "SG:OTT": "-0.08",
+        "SG:APP": "-3.16",
+        "SG:BS": "-3.25",
+        "SG:ARG": "-0.96",
+        "SG:P": "-0.52",
+        "Dr Distance": "301.2",
+        "Dr Accuracy %": "61.1",
+        "Ball Speed": "171.13"
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Carson Bertagnole",
+        "player_num": "70106",
+        "Rounds": "4",
+        "SG:TOT": "-3.47",
+        "SG:T2G": "-4.21",
+        "SG:OTT": "-0.08",
+        "SG:APP": "-3.16",
+        "SG:BS": "-3.25",
+        "SG:ARG": "-0.96",
+        "SG:P": "-0.52",
+        "SG:SG": "-1.48"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-09-20",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "Biltmore Championship Asheville",
+        "is_major": null,
+        "playerName": "Carson Bertagnole",
+        "player_num": "70106",
+        "Rounds": "2",
+        "CourseID": "942",
+        "Course": "The Cliffs at Walnut Cove",
+        "ShotLink": "2",
+        "SG:TOT": "-4.72",
+        "SG:T2G": "-4.21",
+        "SG:OTT": "-0.08",
+        "SG:APP": "-3.16",
+        "SG:BS": "-3.25",
+        "SG:ARG": "-0.96",
+        "SG:P": "-0.52",
+        "SG:SG": "-1.48"
+      },
+      {
+        "Date": "2026-03-08",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "Puerto Rico Open",
+        "is_major": "0",
+        "playerName": "Carson Bertagnole",
+        "player_num": "70106",
+        "Rounds": "2",
+        "CourseID": "940",
+        "Course": "Grand Reserve GC",
+        "ShotLink": "0",
+        "SG:TOT": "-2.22",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "25.0",
+        "SG TOT 1+": "25.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.6599999666213989",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-6.2799999713897705",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-2.2200000286102295",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-4.71999990940094",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "1.0399999618530273",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-4.973333279291789",
+        "Rounds": "3"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-2.2200000286102295",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-4.71999990940094",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "71.5",
+        "PM": "76.5",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": "20.5",
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-4.71999990940094",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-2.2200000286102295",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:20:06.040Z",
+    "ok": true
+  }
+}

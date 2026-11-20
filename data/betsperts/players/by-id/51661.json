@@ -1,0 +1,200 @@
+{
+  "playerId": "51661",
+  "playerName": "Nick Bachem",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_gm-flag.gif",
+  "profile": {
+    "ProfileImage": "0",
+    "Name": "Nick Bachem",
+    "BirthPlace": null,
+    "BirthDate": "September 27, 1999",
+    "Age": "27",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "Germany",
+    "Residence": null,
+    "ProWins": "0",
+    "TurnedPro": null,
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Nick Bachem",
+        "player_num": "51661",
+        "Year": "2024",
+        "Rounds": "4",
+        "SG:TOT": "1.21",
+        "SG:T2G": "0.72",
+        "SG:OTT": "0.89",
+        "SG:APP": "-0.33",
+        "SG:BS": "0.56",
+        "SG:ARG": "0.16",
+        "SG:P": "0.48",
+        "Dr Distance": "296.1",
+        "Dr Accuracy %": "61.5",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Nick Bachem",
+        "player_num": "51661",
+        "Year": "2023",
+        "Rounds": "2",
+        "SG:TOT": "-4.56",
+        "SG:T2G": "-2.26",
+        "SG:OTT": "0.12",
+        "SG:APP": "-1.84",
+        "SG:BS": "-1.72",
+        "SG:ARG": "-0.53",
+        "SG:P": "-2.28",
+        "Dr Distance": "301.5",
+        "Dr Accuracy %": "50.0",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2024-07-14",
+        "position": "T26",
+        "roundPosition": "T26",
+        "TournamentName": "Genesis Scottish Open",
+        "is_major": "0",
+        "playerName": "Nick Bachem",
+        "player_num": "51661",
+        "Rounds": "4",
+        "CourseID": "977",
+        "Course": "The Renaissance Club",
+        "ShotLink": "4",
+        "SG:TOT": "1.21",
+        "SG:T2G": "0.72",
+        "SG:OTT": "0.89",
+        "SG:APP": "-0.33",
+        "SG:BS": "0.56",
+        "SG:ARG": "0.16",
+        "SG:P": "0.48",
+        "SG:SG": "0.65"
+      },
+      {
+        "Date": "2023-07-16",
+        "position": "CUT",
+        "roundPosition": "T149",
+        "TournamentName": "Genesis Scottish Open",
+        "is_major": "0",
+        "playerName": "Nick Bachem",
+        "player_num": "51661",
+        "Rounds": "2",
+        "CourseID": "977",
+        "Course": "The Renaissance Club",
+        "ShotLink": "2",
+        "SG:TOT": "-4.56",
+        "SG:T2G": "-2.26",
+        "SG:OTT": "0.12",
+        "SG:APP": "-1.84",
+        "SG:BS": "-1.72",
+        "SG:ARG": "-0.53",
+        "SG:P": "-2.28",
+        "SG:SG": "-2.82"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "33.3",
+        "SG TOT 1+": "33.3",
+        "SG TOT 2+": "16.7",
+        "SG TOT 3+": "16.7",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "6"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.7949999570846558",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-2.92499996162951",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-0.30000001192092896",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "3.450000047683716",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-0.19999996796250344",
+        "Rounds": "5"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-3.2899999618530273",
+        "Rounds": "1"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-3.2899999618530273",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-1.1124999718740582",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "3.450000047683716",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Strong",
+        "StrokesGainedAverage": "-0.7149999669442574",
+        "Rounds": "6"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "69",
+        "PM": "71",
+        "Rounds": "6"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "6",
+        "50-100": "26.8",
+        "100-150": "24.3",
+        "150-200": "42",
+        "200+": "53.5",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-0.7149999669442574",
+        "Rounds": "6"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:24:24.979Z",
+    "ok": true
+  }
+}

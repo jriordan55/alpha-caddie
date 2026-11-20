@@ -1,0 +1,143 @@
+{
+  "playerId": "51336",
+  "playerName": "Maverick Antcliff",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/as-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Maverick Antcliff",
+    "BirthPlace": "",
+    "BirthDate": "April 07, 1993",
+    "Age": "33",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "Australia",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Maverick Antcliff",
+        "player_num": "51336",
+        "Year": "2022",
+        "Rounds": "2",
+        "SG:TOT": "-6.74",
+        "SG:T2G": "-3.59",
+        "SG:OTT": "-1.45",
+        "SG:APP": "-0.95",
+        "SG:BS": "-2.40",
+        "SG:ARG": "-1.18",
+        "SG:P": "-3.13",
+        "Dr Distance": null,
+        "Dr Accuracy %": "42.3",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2022-07-10",
+        "position": "CUT",
+        "roundPosition": "158",
+        "TournamentName": "Genesis Scottish Open",
+        "is_major": "0",
+        "playerName": "Maverick Antcliff",
+        "player_num": "51336",
+        "Rounds": "2",
+        "CourseID": "977",
+        "Course": "The Renaissance Club",
+        "ShotLink": "2",
+        "SG:TOT": "-6.74",
+        "SG:T2G": "-3.59",
+        "SG:OTT": "-1.45",
+        "SG:APP": "-0.95",
+        "SG:BS": "-2.40",
+        "SG:ARG": "-1.18",
+        "SG:P": "-3.13",
+        "SG:SG": "-4.32"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-10.010000228881836",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-3.4700000286102295",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-10.010000228881836",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-3.4700000286102295",
+        "Rounds": "1"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-6.740000128746033",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-6.740000128746033",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "76",
+        "PM": "82",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-6.740000128746033",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:24:03.998Z",
+    "ok": true
+  }
+}

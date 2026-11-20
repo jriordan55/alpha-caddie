@@ -1,0 +1,288 @@
+{
+  "playerId": "34414",
+  "playerName": "Chris Paisley",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/St_Georges_Cross.svg_.png",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Chris Paisley",
+    "BirthPlace": "Hexham, England",
+    "BirthDate": "March 24, 1986",
+    "Age": "40",
+    "Height": "5ft 9in",
+    "Weight": "161 lbs",
+    "Nationality": "England",
+    "Residence": "Hexham, England",
+    "ProWins": "1",
+    "TurnedPro": "2009",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Chris Paisley",
+        "player_num": "34414",
+        "Year": "2022",
+        "Rounds": "2",
+        "SG:TOT": "-0.51",
+        "SG:T2G": "-0.32",
+        "SG:OTT": "-1.74",
+        "SG:APP": "1.12",
+        "SG:BS": "-0.62",
+        "SG:ARG": "0.30",
+        "SG:P": "-0.19",
+        "Dr Distance": "280.5",
+        "Dr Accuracy %": "46.4",
+        "Ball Speed": "162.50"
+      },
+      {
+        "playerName": "Chris Paisley",
+        "player_num": "34414",
+        "Year": "2018",
+        "Rounds": "8",
+        "SG:TOT": "-1.09",
+        "SG:T2G": "-0.82",
+        "SG:OTT": "-0.84",
+        "SG:APP": "-0.07",
+        "SG:BS": "-0.92",
+        "SG:ARG": "0.10",
+        "SG:P": "-0.27",
+        "Dr Distance": "284.9",
+        "Dr Accuracy %": "56.2",
+        "Ball Speed": "164.52"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2022-07-10",
+        "position": "CUT",
+        "roundPosition": "T84",
+        "TournamentName": "Barbasol Championship",
+        "is_major": "0",
+        "playerName": "Chris Paisley",
+        "player_num": "34414",
+        "Rounds": "2",
+        "CourseID": "884",
+        "Course": "Keene Trace GC",
+        "ShotLink": "2",
+        "SG:TOT": "-0.51",
+        "SG:T2G": "-0.32",
+        "SG:OTT": "-1.74",
+        "SG:APP": "1.12",
+        "SG:BS": "-0.62",
+        "SG:ARG": "0.30",
+        "SG:P": "-0.19",
+        "SG:SG": "0.11"
+      },
+      {
+        "Date": "2018-05-06",
+        "position": "CUT",
+        "roundPosition": "T116",
+        "TournamentName": "Wells Fargo Championship",
+        "is_major": "0",
+        "playerName": "Chris Paisley",
+        "player_num": "34414",
+        "Rounds": "2",
+        "CourseID": "872",
+        "Course": "Quail Hollow Club",
+        "ShotLink": "2",
+        "SG:TOT": "-1.34",
+        "SG:T2G": "-1.57",
+        "SG:OTT": "-1.22",
+        "SG:APP": "-0.58",
+        "SG:BS": "-1.80",
+        "SG:ARG": "0.24",
+        "SG:P": "0.23",
+        "SG:SG": "0.47"
+      },
+      {
+        "Date": "2018-04-22",
+        "position": "CUT",
+        "roundPosition": "T131",
+        "TournamentName": "Valero Texas Open",
+        "is_major": "0",
+        "playerName": "Chris Paisley",
+        "player_num": "34414",
+        "Rounds": "2",
+        "CourseID": "770",
+        "Course": "TPC San Antonio (Oaks)",
+        "ShotLink": "2",
+        "SG:TOT": "-2.21",
+        "SG:T2G": "-0.73",
+        "SG:OTT": "-0.83",
+        "SG:APP": "0.34",
+        "SG:BS": "-0.49",
+        "SG:ARG": "-0.24",
+        "SG:P": "-1.48",
+        "SG:SG": "-1.72"
+      },
+      {
+        "Date": "2018-03-04",
+        "position": "T37",
+        "roundPosition": "T37",
+        "TournamentName": "WGC - Mexico",
+        "is_major": "0",
+        "playerName": "Chris Paisley",
+        "player_num": "34414",
+        "Rounds": "4",
+        "CourseID": "240",
+        "Course": "Club de Golf Chapultepec",
+        "ShotLink": "4",
+        "SG:TOT": "-0.40",
+        "SG:T2G": "-0.48",
+        "SG:OTT": "-0.66",
+        "SG:APP": "-0.02",
+        "SG:BS": "-0.69",
+        "SG:ARG": "0.20",
+        "SG:P": "0.08",
+        "SG:SG": "0.28"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "30.0",
+        "SG TOT 1+": "30.0",
+        "SG TOT 2+": "10.0",
+        "SG TOT 3+": "10.0",
+        "SG TOT 4+": "10.0",
+        "SG TOT 5+": "10.0",
+        "Rounds": "14"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.18649999797344208",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "0.08224999904632568",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa Trivialis",
+        "StrokesGainedAverage": "-0.6247500213503372",
+        "Rounds": "4"
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.0049999952316284",
+        "Rounds": "5"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.804999977350235",
+        "Rounds": "5"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-0.7200000286102295",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-1.75",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-0.4024999737739563",
+        "Rounds": "4"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-2.209999918937683",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-1.3350000381469727",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-0.5050000548362732",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-0.4024999737739563",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-1.7724999785423279",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-0.5050000548362732",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Strong",
+        "StrokesGainedAverage": "-1.3350000381469727",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-0.4024999737739563",
+        "Rounds": "4"
+      },
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-0.5050000548362732",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-2.209999918937683",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "70",
+        "PM": "75.25",
+        "Rounds": "14"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "14",
+        "50-100": "13.1",
+        "100-150": "26.7",
+        "150-200": "31.8",
+        "200+": "55.4",
+        "200-250": "46",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-1.087499976158142",
+        "Rounds": "8"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-0.5050000548362732",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:20:23.473Z",
+    "ok": true
+  }
+}

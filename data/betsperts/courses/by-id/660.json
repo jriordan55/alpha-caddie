@@ -1,0 +1,99 @@
+{
+  "courseNum": "660",
+  "courseName": "Montreux G&CC",
+  "list": {
+    "CourseName": "Montreux G&CC",
+    "CourseNum": "660",
+    "CourseNums": [
+      660
+    ]
+  },
+  "details": {
+    "CourseName": "Montreux G&CC",
+    "CourseNum": "660",
+    "Locations": [
+      "Nevada"
+    ],
+    "SeasonHeld": "",
+    "CourseTypes": [],
+    "ParScore": "0",
+    "Yards": "0",
+    "AVG": "0",
+    "CourseLength": "",
+    "Architects": [
+      "Jack Nicklaus"
+    ],
+    "RedesignArchitects": [],
+    "Elevation": "0",
+    "CourseElevation": "",
+    "Bunkers": "0",
+    "BunkersRank": "",
+    "WaterHoles": "0",
+    "WaterDanger": "",
+    "ScoreRTP": "0",
+    "Difficulty": "",
+    "FwyGrass": "",
+    "FwyWidth": "0",
+    "GreenSqFt": "0",
+    "GreenSize": "",
+    "GreenGrass": "",
+    "GreenStimp": "0",
+    "GreenSpeed": "",
+    "RoughType": "",
+    "RoughGrass": "Princeville Bentgrass",
+    "RoughLengthInc": "0",
+    "RoughLength": "",
+    "EventTypes": [],
+    "Tournaments": [
+      {
+        "Year": "2019",
+        "Tournament": "Barracuda Championship"
+      }
+    ],
+    "CorrelatedCourse": [],
+    "FieldSize": "",
+    "FieldStrength": "",
+    "OTTClub": "",
+    "FwyPct": "0",
+    "FwyAccuracy": "",
+    "GainOTT": "",
+    "MissedFairwayPenalty": "",
+    "RoughPenalty": "",
+    "GIRAccuracy": "",
+    "GIRPct": "0",
+    "GainAPP": "",
+    "ScramblingFromRough": "",
+    "ScramblingFromShortGrass": "",
+    "SandSaves": "",
+    "GainARG": "",
+    "GainingPuttingInside15": "",
+    "GainingPuttingOutside15": "",
+    "3PuttAVD": "",
+    "GainPutting": "",
+    "Par3Scoring": "",
+    "Par4Scoring": "",
+    "Par5Scoring": "",
+    "ShotLink": "0"
+  },
+  "tournaments": [
+    {
+      "CourseNum": "660",
+      "TNum": "472",
+      "TourneyName": "Barracuda Championship"
+    }
+  ],
+  "_meta": {
+    "pulledAt": "2026-11-20T22:18:25.466Z",
+    "detailStatus": 200,
+    "tournamentsStatus": 200
+  },
+  "auth": {
+    "holeBreakdown": [],
+    "correlated": [],
+    "_meta": {
+      "pulledAt": "2026-11-20T22:52:52.153Z",
+      "holeStatus": 200,
+      "correlatedStatus": 200
+    }
+  }
+}

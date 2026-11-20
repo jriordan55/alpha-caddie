@@ -1,0 +1,152 @@
+{
+  "playerId": "46155",
+  "playerName": "Taeksoo Kim",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Taeksoo Kim",
+    "BirthPlace": "Seoul, South Korea",
+    "BirthDate": "April 05, 1991",
+    "Age": "35",
+    "Height": "5ft 9in",
+    "Weight": "165 lbs",
+    "Nationality": "United States",
+    "Residence": "Meridian, Idaho",
+    "ProWins": null,
+    "TurnedPro": "2014",
+    "PGAWins": null,
+    "College": "Boise State University 2013, Media Communications"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Taeksoo Kim",
+        "player_num": "46155",
+        "Year": "2026",
+        "Rounds": "2",
+        "SG:TOT": "-5.23",
+        "SG:T2G": "-5.37",
+        "SG:OTT": "-1.44",
+        "SG:APP": "-2.35",
+        "SG:BS": "-3.79",
+        "SG:ARG": "-1.58",
+        "SG:P": "0.13",
+        "Dr Distance": "291.5",
+        "Dr Accuracy %": "53.6",
+        "Ball Speed": "163.61"
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Taeksoo Kim",
+        "player_num": "46155",
+        "Rounds": "2",
+        "SG:TOT": "-5.23",
+        "SG:T2G": "-5.37",
+        "SG:OTT": "-1.44",
+        "SG:APP": "-2.35",
+        "SG:BS": "-3.79",
+        "SG:ARG": "-1.58",
+        "SG:P": "0.13",
+        "SG:SG": "-1.45"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-06-21",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Taeksoo Kim",
+        "player_num": "46155",
+        "Rounds": "2",
+        "CourseID": "618",
+        "Course": "Shinnecock Hills GC",
+        "ShotLink": "2",
+        "SG:TOT": "-5.23",
+        "SG:T2G": "-5.37",
+        "SG:OTT": "-1.44",
+        "SG:APP": "-2.35",
+        "SG:BS": "-3.79",
+        "SG:ARG": "-1.58",
+        "SG:P": "0.13",
+        "SG:SG": "-1.45"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-5.71999979019165",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-4.75",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-5.234999895095825",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-5.234999895095825",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-5.234999895095825",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "77",
+        "PM": "79",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-5.234999895095825",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:52.845Z",
+    "ok": true
+  }
+}

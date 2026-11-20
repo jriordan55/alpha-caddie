@@ -1,0 +1,148 @@
+{
+  "playerId": "55575",
+  "playerName": "Blake Taylor",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Blake Taylor",
+    "BirthPlace": "",
+    "BirthDate": "January 13, 1998",
+    "Age": "28",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "United States",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Blake Taylor",
+        "player_num": "55575",
+        "Year": "2018",
+        "Rounds": "2",
+        "SG:TOT": "-1.51",
+        "SG:T2G": "-3.24",
+        "SG:OTT": "0.19",
+        "SG:APP": "-3.31",
+        "SG:BS": "-3.12",
+        "SG:ARG": "-0.12",
+        "SG:P": "1.73",
+        "Dr Distance": "288.4",
+        "Dr Accuracy %": "71.4",
+        "Ball Speed": "163.71"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2018-07-08",
+        "position": "CUT",
+        "roundPosition": "T117",
+        "TournamentName": "A Military Tribute at The Greenbrier",
+        "is_major": "0",
+        "playerName": "Blake Taylor",
+        "player_num": "55575",
+        "Rounds": "2",
+        "CourseID": "771",
+        "Course": "The Old White TPC",
+        "ShotLink": "2",
+        "SG:TOT": "-1.51",
+        "SG:T2G": "-3.24",
+        "SG:OTT": "0.19",
+        "SG:APP": "-3.31",
+        "SG:BS": "-3.12",
+        "SG:ARG": "-0.12",
+        "SG:P": "1.73",
+        "SG:SG": "1.61"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "1.7260000109672546",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.6600000262260437",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-2.359999895095825",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-1.5099999606609344",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-1.5099999606609344",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-1.5099999606609344",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "70",
+        "PM": "71",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "34.5",
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-1.5099999606609344",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:30.524Z",
+    "ok": true
+  }
+}

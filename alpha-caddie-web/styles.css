@@ -1,32 +1,54 @@
-:root {
+/*
+ * Theme tokens from Alpha Caddie reference comps:
+ *   Dark  — Strokes Gained Leaders + Lift/Clean/Place (charcoal + #00D27F)
+ *   Light — Iron Men + Wind Watch (paper #F2F0E9 + forest #006241)
+ */
+:root,
+html[data-theme="dark"] {
   color-scheme: dark;
-  /* Surfaces */
-  --golf-bg: #090b10;
-  --golf-elevated: #131720;
-  --golf-elevated-soft: #1a1f2b;
+  --golf-bg: #0a0c0e;
+  --golf-bg-rgb: 10, 12, 14;
+  --golf-elevated: #12161a;
+  --golf-elevated-soft: #1a1f24;
   --golf-border: rgba(255, 255, 255, 0.08);
-  --golf-card-border: rgba(255, 255, 255, 0.1);
-  /* Brand accent */
-  --golf-green: #10b981;
-  --golf-green-soft: #059669;
-  --golf-green-bright: #34d399;
-  --golf-text: #f1f5f9;
-  --golf-text-muted: #94a3b8;
-  --golf-text-subtle: #64748b;
-  --golf-danger: #f87171;
+  --golf-card-border: #1f2937;
+  --golf-green: #00d27f;
+  --golf-green-rgb: 0, 210, 127;
+  --golf-green-soft: #10b981;
+  --golf-green-bright: #00d27f;
+  --golf-green-muted: #064e3b;
+  --golf-green-bar-secondary: #88c9a1;
+  --golf-text: #ffffff;
+  --golf-text-muted: #8b9298;
+  --golf-text-subtle: #5f656a;
+  --golf-danger: #fca5a5;
+  --golf-danger-bg: #451a1a;
   --golf-ou-over: #fca5a5;
   --golf-warning: #fbbf24;
-  /* Focus / selection */
-  --golf-focus-ring: rgba(16, 185, 129, 0.45);
-  --golf-focus-surface: rgba(16, 185, 129, 0.12);
-  --golf-focus-border: rgba(16, 185, 129, 0.35);
-  /* Panel surfaces */
-  --golf-surface-deep: #0c0e14;
-  --golf-surface-mid: #10141c;
-  --golf-surface-alt: #141925;
-  --golf-surface-head: #1a2030;
-  --golf-surface-hover: #1e2536;
-  /* Layout & elevation */
+  --golf-chip-neutral: #1a1d1e;
+  --golf-bar-track: #333333;
+  --golf-bar-inactive: #3e454d;
+  --golf-focus-ring: rgba(var(--golf-green-rgb), 0.45);
+  --golf-focus-surface: rgba(var(--golf-green-rgb), 0.12);
+  --golf-focus-border: rgba(var(--golf-green-rgb), 0.35);
+  --golf-surface-deep: #090c0d;
+  --golf-surface-mid: #0f1418;
+  --golf-surface-alt: #151a1f;
+  --golf-surface-head: #1a1f24;
+  --golf-surface-hover: #22282e;
+  --golf-overlay-soft: rgba(255, 255, 255, 0.03);
+  --golf-overlay-mid: rgba(255, 255, 255, 0.06);
+  --golf-overlay-strong: rgba(255, 255, 255, 0.14);
+  --golf-nav-bg: rgba(var(--golf-bg-rgb), 0.88);
+  --golf-hero-glow: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(var(--golf-green-rgb), 0.1), transparent);
+  --golf-hero-glow-2: radial-gradient(ellipse 60% 40% at 100% 0%, rgba(0, 210, 127, 0.04), transparent);
+  --golf-pinstripe: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 11px,
+    rgba(255, 255, 255, 0.015) 11px,
+    rgba(255, 255, 255, 0.015) 12px
+  );
   --golf-radius-sm: 8px;
   --golf-radius-md: 12px;
   --golf-radius-lg: 16px;
@@ -36,6 +58,58 @@
   --golf-shadow-md: 0 4px 20px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.04);
   --golf-shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.45);
   --golf-content-max: 1280px;
+  --golf-logo-grad: linear-gradient(145deg, rgba(var(--golf-green-rgb), 0.28), rgba(var(--golf-bg-rgb), 0.92));
+}
+
+html[data-theme="light"] {
+  color-scheme: light;
+  --golf-bg: #f2f0e9;
+  --golf-bg-rgb: 242, 240, 233;
+  --golf-elevated: #ffffff;
+  --golf-elevated-soft: #f8f8f8;
+  --golf-border: #e0e0e0;
+  --golf-card-border: #e0e0e0;
+  --golf-green: #006241;
+  --golf-green-rgb: 0, 98, 65;
+  --golf-green-soft: #006644;
+  --golf-green-bright: #008552;
+  --golf-green-muted: #88c9a1;
+  --golf-green-bar-secondary: #88c9a1;
+  --golf-text: #1a1a1a;
+  --golf-text-muted: #707070;
+  --golf-text-subtle: #757575;
+  --golf-danger: #b91c1c;
+  --golf-danger-bg: #fee2e2;
+  --golf-ou-over: #dc2626;
+  --golf-warning: #b45309;
+  --golf-chip-neutral: #f0f0f0;
+  --golf-bar-track: #f0f0f0;
+  --golf-bar-inactive: #d1d5db;
+  --golf-focus-ring: rgba(var(--golf-green-rgb), 0.4);
+  --golf-focus-surface: rgba(var(--golf-green-rgb), 0.1);
+  --golf-focus-border: rgba(var(--golf-green-rgb), 0.32);
+  --golf-surface-deep: #ebe8df;
+  --golf-surface-mid: #ffffff;
+  --golf-surface-alt: #f8f8f8;
+  --golf-surface-head: #f4f2ec;
+  --golf-surface-hover: #ebe8df;
+  --golf-overlay-soft: rgba(0, 0, 0, 0.03);
+  --golf-overlay-mid: rgba(0, 0, 0, 0.05);
+  --golf-overlay-strong: rgba(0, 0, 0, 0.12);
+  --golf-nav-bg: rgba(var(--golf-bg-rgb), 0.92);
+  --golf-hero-glow: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(var(--golf-green-rgb), 0.08), transparent);
+  --golf-hero-glow-2: radial-gradient(ellipse 60% 40% at 100% 0%, rgba(0, 98, 65, 0.04), transparent);
+  --golf-pinstripe: repeating-linear-gradient(
+    -45deg,
+    transparent,
+    transparent 11px,
+    rgba(0, 0, 0, 0.02) 11px,
+    rgba(0, 0, 0, 0.02) 12px
+  );
+  --golf-shadow-sm: 0 1px 2px rgba(26, 26, 26, 0.06);
+  --golf-shadow-md: 0 4px 16px rgba(26, 26, 26, 0.08), 0 0 0 1px rgba(26, 26, 26, 0.04);
+  --golf-shadow-lg: 0 16px 40px rgba(26, 26, 26, 0.12);
+  --golf-logo-grad: linear-gradient(145deg, rgba(var(--golf-green-rgb), 0.18), #ffffff);
 }
 
 * { box-sizing: border-box; }
@@ -50,9 +124,7 @@ body {
   font-family: "Inter", "DM Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   background-color: var(--golf-bg);
-  background-image:
-    radial-gradient(ellipse 80% 50% at 50% -20%, rgba(16, 185, 129, 0.08), transparent),
-    radial-gradient(ellipse 60% 40% at 100% 0%, rgba(99, 102, 241, 0.05), transparent);
+  background-image: var(--golf-hero-glow), var(--golf-hero-glow-2), var(--golf-pinstripe);
   color: var(--golf-text);
   min-height: 100vh;
   min-height: 100dvh;
@@ -62,6 +134,7 @@ body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .app-nav {
@@ -73,7 +146,7 @@ body {
   padding-right: max(24px, env(safe-area-inset-right, 0px));
   padding-top: max(0px, env(safe-area-inset-top, 0px));
   border-bottom: 1px solid var(--golf-border);
-  background: rgba(9, 11, 16, 0.82);
+  background: var(--golf-nav-bg);
   backdrop-filter: blur(16px) saturate(1.2);
   -webkit-backdrop-filter: blur(16px) saturate(1.2);
   box-shadow: var(--golf-shadow-sm);
@@ -124,27 +197,63 @@ body {
   padding: 8px 14px;
   border-radius: var(--golf-radius-md);
   border: 1px solid var(--golf-border);
-  background: rgba(255, 255, 255, 0.03);
+  background: var(--golf-overlay-soft);
   transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
 }
 .nav-aux-link:hover {
   color: var(--golf-text);
-  border-color: rgba(255, 255, 255, 0.14);
-  background: rgba(255, 255, 255, 0.06);
+  border-color: var(--golf-overlay-strong);
+  background: var(--golf-overlay-mid);
 }
 .nav-aux-link:focus-visible {
   outline: 2px solid var(--golf-focus-ring);
   outline-offset: 2px;
+}
+.nav-theme-toggle {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 36px;
+  padding: 6px 12px;
+  border-radius: var(--golf-radius-md);
+  border: 1px solid var(--golf-border);
+  background: var(--golf-overlay-soft);
+  color: var(--golf-text-muted);
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+}
+.nav-theme-toggle:hover {
+  color: var(--golf-text);
+  border-color: var(--golf-focus-border);
+  background: var(--golf-focus-surface);
+}
+.nav-theme-toggle:focus-visible {
+  outline: 2px solid var(--golf-focus-ring);
+  outline-offset: 2px;
+}
+.nav-theme-toggle-icon {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: var(--golf-green);
+  box-shadow: 0 0 0 2px rgba(var(--golf-green-rgb), 0.25);
 }
 .nav-logo {
   flex-shrink: 0;
   width: 40px;
   height: 40px;
   border-radius: 12px;
-  background: linear-gradient(145deg, rgba(16, 185, 129, 0.22), rgba(9, 11, 16, 0.9));
+  background: var(--golf-logo-grad);
   box-shadow:
-    0 2px 8px rgba(0, 0, 0, 0.35),
-    inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+    0 2px 8px rgba(0, 0, 0, 0.2),
+    inset 0 0 0 1px var(--golf-overlay-mid);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -839,7 +948,7 @@ body {
 
 .btn-primary {
   background: linear-gradient(180deg, var(--golf-green-bright) 0%, var(--golf-green) 100%);
-  border: 1px solid rgba(16, 185, 129, 0.5);
+  border: 1px solid rgba(var(--golf-green-rgb), 0.5);
   color: #042f1e;
   font-weight: 600;
   padding: 9px 20px;
@@ -1679,7 +1788,7 @@ body {
 .data-table tbody tr:nth-child(odd) td { background: var(--golf-surface-alt); }
 .data-table tbody tr:hover td { background: var(--golf-focus-surface); }
 .data-table tbody tr.matchup-analysis-row-selected td {
-  background: rgba(16, 185, 129, 0.14);
+  background: rgba(var(--golf-green-rgb), 0.14);
   box-shadow: inset 0 0 0 1px var(--golf-focus-border);
 }
 .data-table .num { text-align: center; font-variant-numeric: tabular-nums; }
@@ -5428,7 +5537,7 @@ th.matchup-analysis-best-pick {
 
 /* === Production theme polish (global) === */
 ::selection {
-  background: rgba(16, 185, 129, 0.28);
+  background: rgba(var(--golf-green-rgb), 0.28);
   color: var(--golf-text);
 }
 
@@ -5800,8 +5909,8 @@ dialog,
 }
 .course-breakdown-insights-card {
   padding: 20px 22px 22px;
-  border: 1px solid rgba(16, 185, 129, 0.22);
-  background: linear-gradient(145deg, rgba(16, 185, 129, 0.07), rgba(15, 23, 42, 0.2));
+  border: 1px solid rgba(var(--golf-green-rgb), 0.22);
+  background: linear-gradient(145deg, rgba(var(--golf-green-rgb), 0.07), rgba(15, 23, 42, 0.2));
 }
 .course-breakdown-insights-head {
   display: flex;
@@ -5816,8 +5925,8 @@ dialog,
   width: 36px;
   height: 36px;
   border-radius: 10px;
-  background: rgba(16, 185, 129, 0.16);
-  color: #34d399;
+  background: rgba(var(--golf-green-rgb), 0.16);
+  color: var(--golf-green-bright);
   font-size: 1.1rem;
   flex: 0 0 auto;
 }
@@ -5988,8 +6097,8 @@ dialog,
   color: var(--golf-text);
 }
 .course-breakdown-impact-course {
-  background: rgba(16, 185, 129, 0.12);
-  border: 1px solid rgba(16, 185, 129, 0.25);
+  background: rgba(var(--golf-green-rgb), 0.12);
+  border: 1px solid rgba(var(--golf-green-rgb), 0.25);
   border-radius: 10px;
   padding: 12px 16px;
   color: var(--golf-green-bright);
@@ -6236,8 +6345,8 @@ dialog,
   color: #fca5a5;
 }
 .course-boxplot-badge.is-easier {
-  background: rgba(16, 185, 129, 0.12);
-  border-color: rgba(16, 185, 129, 0.35);
+  background: rgba(var(--golf-green-rgb), 0.12);
+  border-color: rgba(var(--golf-green-rgb), 0.35);
   color: var(--golf-green-bright);
 }
 .course-boxplot-badge-icon {
@@ -6316,7 +6425,7 @@ dialog,
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: rgba(16, 185, 129, 0.14);
+  background: rgba(var(--golf-green-rgb), 0.14);
   color: var(--golf-green-bright);
   font-size: 0.95rem;
   flex: 0 0 auto;
@@ -6402,8 +6511,8 @@ dialog,
   color: var(--golf-text);
 }
 .course-skill-penalty-pill {
-  background: rgba(16, 185, 129, 0.14);
-  border: 1px solid rgba(16, 185, 129, 0.28);
+  background: rgba(var(--golf-green-rgb), 0.14);
+  border: 1px solid rgba(var(--golf-green-rgb), 0.28);
   border-radius: 999px;
   padding: 6px 10px;
   font-size: 0.78rem;
@@ -6653,4 +6762,59 @@ dialog,
 }
 .live-stats-footnote {
   margin-top: 8px;
+}
+
+/* Theme utility chips (Strokes Gained Leaders / Iron Men comps) */
+.sg-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 3.25rem;
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  font-size: 0.8125rem;
+  line-height: 1.2;
+}
+.sg-chip--total {
+  background: transparent;
+  color: var(--golf-green);
+  font-weight: 700;
+}
+.sg-chip--strong {
+  background: var(--golf-green);
+  color: #ffffff;
+}
+.sg-chip--good {
+  background: var(--golf-green-muted);
+  color: #ffffff;
+}
+html[data-theme="light"] .sg-chip--good {
+  color: #0a3d2a;
+}
+.sg-chip--neutral {
+  background: var(--golf-chip-neutral);
+  color: var(--golf-text);
+}
+.sg-chip--bad {
+  background: var(--golf-danger-bg);
+  color: var(--golf-danger);
+}
+.theme-bar-track {
+  height: 8px;
+  border-radius: 999px;
+  background: var(--golf-bar-track);
+  overflow: hidden;
+}
+.theme-bar-fill {
+  height: 100%;
+  border-radius: 999px;
+  background: var(--golf-green);
+}
+.theme-bar-fill--secondary {
+  background: var(--golf-green-bar-secondary);
+}
+html[data-theme="light"] .ou-toggle-btn.active {
+  box-shadow: 0 1px 3px rgba(26, 26, 26, 0.12);
 }

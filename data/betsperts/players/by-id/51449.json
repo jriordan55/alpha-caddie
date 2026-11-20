@@ -1,0 +1,195 @@
+{
+  "playerId": "51449",
+  "playerName": "Dylan Newman",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Dylan Newman",
+    "BirthPlace": "",
+    "BirthDate": "June 08, 1991",
+    "Age": "35",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "United States",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Dylan Newman",
+        "player_num": "51449",
+        "Year": "2025",
+        "Rounds": "2",
+        "SG:TOT": "-3.91",
+        "SG:T2G": "-2.93",
+        "SG:OTT": "-0.91",
+        "SG:APP": "-2.08",
+        "SG:BS": "-2.99",
+        "SG:ARG": "0.05",
+        "SG:P": "-0.98",
+        "Dr Distance": "289.5",
+        "Dr Accuracy %": "67.9",
+        "Ball Speed": "168.45"
+      },
+      {
+        "playerName": "Dylan Newman",
+        "player_num": "51449",
+        "Year": "2022",
+        "Rounds": "2",
+        "SG:TOT": "-3.79",
+        "SG:T2G": "-6.08",
+        "SG:OTT": "-2.42",
+        "SG:APP": "0.08",
+        "SG:BS": "-2.34",
+        "SG:ARG": "-3.74",
+        "SG:P": "2.30",
+        "Dr Distance": "291.7",
+        "Dr Accuracy %": "46.4",
+        "Ball Speed": "162.74"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2025-05-18",
+        "position": "CUT",
+        "roundPosition": "T137",
+        "TournamentName": "PGA Championship",
+        "is_major": "1",
+        "playerName": "Dylan Newman",
+        "player_num": "51449",
+        "Rounds": "2",
+        "CourseID": "241",
+        "Course": "Quail Hollow Club",
+        "ShotLink": "2",
+        "SG:TOT": "-3.91",
+        "SG:T2G": "-2.93",
+        "SG:OTT": "-0.91",
+        "SG:APP": "-2.08",
+        "SG:BS": "-2.99",
+        "SG:ARG": "0.05",
+        "SG:P": "-0.98",
+        "SG:SG": "-0.92"
+      },
+      {
+        "Date": "2022-05-22",
+        "position": "CUT",
+        "roundPosition": "T135",
+        "TournamentName": "PGA Championship",
+        "is_major": "1",
+        "playerName": "Dylan Newman",
+        "player_num": "51449",
+        "Rounds": "2",
+        "CourseID": "611",
+        "Course": "Southern Hills CC",
+        "ShotLink": "2",
+        "SG:TOT": "-3.79",
+        "SG:T2G": "-6.08",
+        "SG:OTT": "-2.42",
+        "SG:APP": "0.08",
+        "SG:BS": "-2.34",
+        "SG:ARG": "-3.74",
+        "SG:P": "2.30",
+        "SG:SG": "-1.44"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "2.302000045776367",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa Trivialis",
+        "StrokesGainedAverage": "-0.9779999703168869",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-3.7050000429153442",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-3.990000009536743",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-3.8475000262260437",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-5.579999923706055",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-3.2700000603993735",
+        "Rounds": "3"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-3.8475000262260437",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "76.5",
+        "PM": "76.5",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "49.9",
+        "200+": "50.9",
+        "200-250": "50.7",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-3.8475000262260437",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:21:21.995Z",
+    "ok": true
+  }
+}

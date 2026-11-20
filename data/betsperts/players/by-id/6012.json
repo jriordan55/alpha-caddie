@@ -1,0 +1,148 @@
+{
+  "playerId": "6012",
+  "playerName": "Greg Kraft",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Greg Kraft",
+    "BirthPlace": "Detroit, Michigan",
+    "BirthDate": "April 04, 1964",
+    "Age": "62",
+    "Height": "5ft 11in",
+    "Weight": "180 lbs",
+    "Nationality": "United States",
+    "Residence": "Clearwater, Florida",
+    "ProWins": "2",
+    "TurnedPro": "1986",
+    "PGAWins": "1",
+    "College": "University of Tampa  (1986, Business) "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Greg Kraft",
+        "player_num": "6012",
+        "Year": "2018",
+        "Rounds": "2",
+        "SG:TOT": "-2.37",
+        "SG:T2G": "-2.97",
+        "SG:OTT": "-0.42",
+        "SG:APP": "-2.08",
+        "SG:BS": "-2.50",
+        "SG:ARG": "-0.47",
+        "SG:P": "0.60",
+        "Dr Distance": "271.1",
+        "Dr Accuracy %": "64.3",
+        "Ball Speed": "154.59"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2018-07-22",
+        "position": "CUT",
+        "roundPosition": "T103",
+        "TournamentName": "Barbasol Championship",
+        "is_major": "0",
+        "playerName": "Greg Kraft",
+        "player_num": "6012",
+        "Rounds": "2",
+        "CourseID": "823",
+        "Course": "Keene Trace GC",
+        "ShotLink": "2",
+        "SG:TOT": "-2.37",
+        "SG:T2G": "-2.97",
+        "SG:OTT": "-0.42",
+        "SG:APP": "-2.08",
+        "SG:BS": "-2.50",
+        "SG:ARG": "-0.47",
+        "SG:P": "0.60",
+        "SG:SG": "0.13"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "0.5950000062584877",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.6799999475479126",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-3.059999942779541",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-2.369999945163727",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-2.369999945163727",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-2.369999945163727",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": null,
+        "PM": "72.5",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "33.8",
+        "200+": "84.9",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-2.369999945163727",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:21:51.513Z",
+    "ok": true
+  }
+}

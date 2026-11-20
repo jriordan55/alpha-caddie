@@ -1,0 +1,209 @@
+{
+  "playerId": "65469",
+  "playerName": "Riley Lewis",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Riley Lewis",
+    "BirthPlace": "Orange, California",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "6ft 1in",
+    "Weight": "145 lbs",
+    "Nationality": "United States",
+    "Residence": "Prescott, Arizona",
+    "ProWins": null,
+    "TurnedPro": "2024",
+    "PGAWins": null,
+    "College": "Loyola Marymount University 2024, Information Systems and Business Analytics"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Riley Lewis",
+        "player_num": "65469",
+        "Year": "2025",
+        "Rounds": "6",
+        "SG:TOT": "-1.75",
+        "SG:T2G": "-1.65",
+        "SG:OTT": "0.04",
+        "SG:APP": "-1.72",
+        "SG:BS": "-1.68",
+        "SG:ARG": "0.03",
+        "SG:P": "-0.10",
+        "Dr Distance": "293.7",
+        "Dr Accuracy %": "65.0",
+        "Ball Speed": "173.66"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2025-06-15",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Riley Lewis",
+        "player_num": "65469",
+        "Rounds": "2",
+        "CourseID": "608",
+        "Course": "Oakmont CC",
+        "ShotLink": "2",
+        "SG:TOT": "-0.79",
+        "SG:T2G": "-0.23",
+        "SG:OTT": "1.26",
+        "SG:APP": "-1.69",
+        "SG:BS": "-0.43",
+        "SG:ARG": "0.20",
+        "SG:P": "-0.56",
+        "SG:SG": "-0.36"
+      },
+      {
+        "Date": "2025-02-23",
+        "position": "T76",
+        "roundPosition": "T76",
+        "TournamentName": "Mexico Open at Vidanta",
+        "is_major": "0",
+        "playerName": "Riley Lewis",
+        "player_num": "65469",
+        "Rounds": "4",
+        "CourseID": "978",
+        "Course": "Vidanta Vallarta",
+        "ShotLink": "4",
+        "SG:TOT": "-2.23",
+        "SG:T2G": "-2.36",
+        "SG:OTT": "-0.57",
+        "SG:APP": "-1.73",
+        "SG:BS": "-2.30",
+        "SG:ARG": "-0.06",
+        "SG:P": "0.13",
+        "SG:SG": "0.07"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "16.7",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "6"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "-0.5610000118613243",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.8800000101327896",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "0.07500000298023224",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-2.559999942779541",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-6.340000152587891",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-1.4799999743700027",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-2.9850000739097595",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-0.7900000065565109",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-3.3700000792741776",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-0.7900000065565109",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-1.0949999690055847",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-0.7900000065565109",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-2.232500024139881",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "73",
+        "PM": "73",
+        "Rounds": "6"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "6",
+        "50-100": "32",
+        "100-150": "20.2",
+        "150-200": "42.8",
+        "200+": "60.6",
+        "200-250": "51",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-2.232500024139881",
+        "Rounds": "4"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-0.7900000065565109",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:03.610Z",
+    "ok": true
+  }
+}

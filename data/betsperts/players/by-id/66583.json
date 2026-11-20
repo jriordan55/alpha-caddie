@@ -1,0 +1,209 @@
+{
+  "playerId": "66583",
+  "playerName": "Taisei Shimizu",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ja-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Taisei Shimizu",
+    "BirthPlace": null,
+    "BirthDate": "",
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "Japan",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Taisei Shimizu",
+        "player_num": "66583",
+        "Year": "2024",
+        "Rounds": "6",
+        "SG:TOT": "0.78",
+        "SG:T2G": "0.90",
+        "SG:OTT": "0.01",
+        "SG:APP": "0.86",
+        "SG:BS": "0.87",
+        "SG:ARG": "0.02",
+        "SG:P": "-0.11",
+        "Dr Distance": "288.2",
+        "Dr Accuracy %": "57.5",
+        "Ball Speed": "175.89"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2024-10-27",
+        "position": "T16",
+        "roundPosition": "T16",
+        "TournamentName": "ZOZO Championship",
+        "is_major": "0",
+        "playerName": "Taisei Shimizu",
+        "player_num": "66583",
+        "Rounds": "4",
+        "CourseID": "875",
+        "Course": "Accordia Golf Narashino CC",
+        "ShotLink": "4",
+        "SG:TOT": "1.14",
+        "SG:T2G": "1.07",
+        "SG:OTT": "0.00",
+        "SG:APP": "0.74",
+        "SG:BS": "0.74",
+        "SG:ARG": "0.33",
+        "SG:P": "0.06",
+        "SG:SG": "0.40"
+      },
+      {
+        "Date": "2024-06-16",
+        "position": "CUT",
+        "roundPosition": "T75",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Taisei Shimizu",
+        "player_num": "66583",
+        "Rounds": "2",
+        "CourseID": "528",
+        "Course": "Pinehurst No. 2",
+        "ShotLink": "2",
+        "SG:TOT": "0.08",
+        "SG:T2G": "0.54",
+        "SG:OTT": "0.03",
+        "SG:APP": "1.11",
+        "SG:BS": "1.14",
+        "SG:ARG": "-0.60",
+        "SG:P": "-0.46",
+        "SG:SG": "-1.06"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "66.7",
+        "SG TOT 1+": "50.0",
+        "SG TOT 2+": "33.3",
+        "SG TOT 3+": "16.7",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "6"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "0.06300000846385956",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-0.45749998092651367",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "2.6950000524520874",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.10999995470046997",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-0.8999999761581421",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "0.4300000071525574",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "1.1350000351667404",
+        "Rounds": "4"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "0.08000004291534424",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "2.505000054836273",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "0.08000004291534424",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-0.23499998450279236",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "0.08000004291534424",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "1.1350000351667404",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "70.5",
+        "PM": "68.75",
+        "Rounds": "6"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "6",
+        "50-100": null,
+        "100-150": "15.4",
+        "150-200": "29.9",
+        "200+": "46.6",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "1.1350000351667404",
+        "Rounds": "4"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "0.08000004291534424",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:54.053Z",
+    "ok": true
+  }
+}

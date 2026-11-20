@@ -1,0 +1,215 @@
+{
+  "playerId": "46628",
+  "playerName": "Jeremy Wells",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Jeremy Wells",
+    "BirthPlace": null,
+    "BirthDate": "August 14, 1990",
+    "Age": "36",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Jeremy Wells",
+        "player_num": "46628",
+        "Year": "2024",
+        "Rounds": "4",
+        "SG:TOT": "-2.21",
+        "SG:T2G": "-2.32",
+        "SG:OTT": "-1.02",
+        "SG:APP": "-1.34",
+        "SG:BS": "-2.37",
+        "SG:ARG": "0.05",
+        "SG:P": "0.11",
+        "Dr Distance": "285.4",
+        "Dr Accuracy %": "51.8",
+        "Ball Speed": "174.17"
+      },
+      {
+        "playerName": "Jeremy Wells",
+        "player_num": "46628",
+        "Year": "2023",
+        "Rounds": "2",
+        "SG:TOT": "-2.75",
+        "SG:T2G": "-1.88",
+        "SG:OTT": "-0.29",
+        "SG:APP": "-1.31",
+        "SG:BS": "-1.60",
+        "SG:ARG": "-0.28",
+        "SG:P": "-0.87",
+        "Dr Distance": "295.5",
+        "Dr Accuracy %": "46.4",
+        "Ball Speed": "173.47"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2024-05-19",
+        "position": "77",
+        "roundPosition": "77",
+        "TournamentName": "PGA Championship",
+        "is_major": "1",
+        "playerName": "Jeremy Wells",
+        "player_num": "46628",
+        "Rounds": "4",
+        "CourseID": "671",
+        "Course": "Valhalla Golf Club",
+        "ShotLink": "4",
+        "SG:TOT": "-2.21",
+        "SG:T2G": "-2.32",
+        "SG:OTT": "-1.02",
+        "SG:APP": "-1.34",
+        "SG:BS": "-2.37",
+        "SG:ARG": "0.05",
+        "SG:P": "0.11",
+        "SG:SG": "0.15"
+      },
+      {
+        "Date": "2023-05-21",
+        "position": "CUT",
+        "roundPosition": "T127",
+        "TournamentName": "PGA Championship",
+        "is_major": "1",
+        "playerName": "Jeremy Wells",
+        "player_num": "46628",
+        "Rounds": "2",
+        "CourseID": "514",
+        "Course": "Oak Hill CC",
+        "ShotLink": "2",
+        "SG:TOT": "-2.75",
+        "SG:T2G": "-1.88",
+        "SG:OTT": "-0.29",
+        "SG:APP": "-1.31",
+        "SG:BS": "-1.60",
+        "SG:ARG": "-0.28",
+        "SG:P": "-0.87",
+        "SG:SG": "-1.15"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "33.3",
+        "SG TOT 1+": "16.7",
+        "SG TOT 2+": "16.7",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "6"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.21966666976610819",
+        "Rounds": "6"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "0.9799999892711639",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-2.5649999137967825",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-5.449999809265137",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-5.739999771118164",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-5.179999828338623",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-1.835999920219183",
+        "Rounds": "5"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "1.1649999860674143",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-5.449999809265137",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-2.749999910593033",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-5.739999771118164",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-2.3933332382390895",
+        "Rounds": "6"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "72.66666666666667",
+        "PM": "74.66666666666667",
+        "Rounds": "6"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "6",
+        "50-100": "19.4",
+        "100-150": "24.4",
+        "150-200": "45.2",
+        "200+": "54.1",
+        "200-250": "53.4",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-2.3933332382390895",
+        "Rounds": "6"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:41.279Z",
+    "ok": true
+  }
+}

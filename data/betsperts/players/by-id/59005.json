@@ -1,0 +1,138 @@
+{
+  "playerId": "59005",
+  "playerName": "Evan Brown",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Evan Brown",
+    "BirthPlace": "Newark, Delaware",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "6ft 5in",
+    "Weight": "260 lbs",
+    "Nationality": "United States",
+    "Residence": "Hilton Head Island, South Carolina",
+    "ProWins": null,
+    "TurnedPro": "2022",
+    "PGAWins": null,
+    "College": "Loyola University Maryland 2021, BA in Finance"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Evan Brown",
+        "player_num": "59005",
+        "Year": "2025",
+        "Rounds": "2",
+        "SG:TOT": "-5.64",
+        "SG:T2G": "-5.34",
+        "SG:OTT": "-0.89",
+        "SG:APP": "-2.77",
+        "SG:BS": "-3.66",
+        "SG:ARG": "-1.68",
+        "SG:P": "-0.30",
+        "Dr Distance": "301.3",
+        "Dr Accuracy %": "53.6",
+        "Ball Speed": "182.22"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2025-06-29",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "Rocket Classic",
+        "is_major": "0",
+        "playerName": "Evan Brown",
+        "player_num": "59005",
+        "Rounds": "2",
+        "CourseID": "876",
+        "Course": "Detroit GC",
+        "ShotLink": "2",
+        "SG:TOT": "-5.64",
+        "SG:T2G": "-5.34",
+        "SG:OTT": "-0.89",
+        "SG:APP": "-2.77",
+        "SG:BS": "-3.66",
+        "SG:ARG": "-1.68",
+        "SG:P": "-0.30",
+        "SG:SG": "-1.98"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-4.900000095367432",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-6.380000114440918",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-5.640000104904175",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-5.640000104904175",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-5.640000104904175",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74",
+        "PM": "76",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "46.6",
+        "150-200": null,
+        "200+": "60",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-5.640000104904175",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:21:33.152Z",
+    "ok": true
+  }
+}

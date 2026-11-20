@@ -1,0 +1,158 @@
+{
+  "playerId": "49451",
+  "playerName": "Blake Morris",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Blake Morris",
+    "BirthPlace": "Waterbury, Connecticut",
+    "BirthDate": "January 22, 1992",
+    "Age": "34",
+    "Height": "5ft 11in",
+    "Weight": "175 lbs",
+    "Nationality": "United States",
+    "Residence": "Jupiter, Florida",
+    "ProWins": "0",
+    "TurnedPro": "2016",
+    "PGAWins": "0",
+    "College": "University of Mississippi "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Blake Morris",
+        "player_num": "49451",
+        "Year": "2018",
+        "Rounds": "2",
+        "SG:TOT": "-0.03",
+        "SG:T2G": "-0.63",
+        "SG:OTT": "-1.37",
+        "SG:APP": "0.29",
+        "SG:BS": "-1.08",
+        "SG:ARG": "0.44",
+        "SG:P": "1.52",
+        "Dr Distance": "269.1",
+        "Dr Accuracy %": "78.6",
+        "Ball Speed": "166.79"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2018-11-18",
+        "position": "CUT",
+        "roundPosition": "T79",
+        "TournamentName": "The RSM Classic",
+        "is_major": "0",
+        "playerName": "Blake Morris",
+        "player_num": "49451",
+        "Rounds": "2",
+        "CourseID": "776",
+        "Course": "Sea Island GC (Seaside)",
+        "ShotLink": "1",
+        "SG:TOT": "-0.03",
+        "SG:T2G": "-0.63",
+        "SG:OTT": "-1.37",
+        "SG:APP": "0.29",
+        "SG:BS": "-1.08",
+        "SG:ARG": "0.44",
+        "SG:P": "1.52",
+        "SG:SG": "1.96"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "1.5160000324249268",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.949999988079071",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "0.8799999952316284",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "0.8799999952316284",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-0.949999988079071",
+        "Rounds": "1"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "0.8799999952316284",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-0.949999988079071",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-0.034999996423721313",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "69",
+        "PM": "72",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-0.034999996423721313",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:30.307Z",
+    "ok": true
+  }
+}

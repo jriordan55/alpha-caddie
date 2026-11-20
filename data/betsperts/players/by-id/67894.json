@@ -1,0 +1,153 @@
+{
+  "playerId": "67894",
+  "playerName": "Jacob Modleski",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Jacob Modleski",
+    "BirthPlace": null,
+    "BirthDate": "",
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Jacob Modleski",
+        "player_num": "67894",
+        "Year": "2024",
+        "Rounds": "2",
+        "SG:TOT": "-2.88",
+        "SG:T2G": "-0.29",
+        "SG:OTT": "0.18",
+        "SG:APP": "1.00",
+        "SG:BS": "1.18",
+        "SG:ARG": "-1.47",
+        "SG:P": "0.50",
+        "Dr Distance": "278.4",
+        "Dr Accuracy %": "53.6",
+        "Ball Speed": "169.73"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2024-11-24",
+        "position": "CUT",
+        "roundPosition": "T144",
+        "TournamentName": "The RSM Classic",
+        "is_major": "0",
+        "playerName": "Jacob Modleski",
+        "player_num": "67894",
+        "Rounds": "2",
+        "CourseID": "776",
+        "Course": "Sea Island GC (Seaside)",
+        "ShotLink": "1",
+        "SG:TOT": "-2.88",
+        "SG:T2G": "-0.29",
+        "SG:OTT": "0.18",
+        "SG:APP": "1.00",
+        "SG:BS": "1.18",
+        "SG:ARG": "-1.47",
+        "SG:P": "0.50",
+        "SG:SG": "-0.97"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "0.5019999742507935",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-5.96999979019165",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "0.20999999344348907",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-2.8799998983740807",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-5.96999979019165",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "0.20999999344348907",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-2.8799998983740807",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "73",
+        "PM": "77",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-2.8799998983740807",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:15.014Z",
+    "ok": true
+  }
+}

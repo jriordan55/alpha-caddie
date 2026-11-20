@@ -1,0 +1,219 @@
+{
+  "playerId": "51735",
+  "playerName": "Evan Bowser",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Evan Bowser",
+    "BirthPlace": "Dearborn, Michigan",
+    "BirthDate": "November 15, 1994",
+    "Age": "32",
+    "Height": "5ft 9in",
+    "Weight": "175 lbs",
+    "Nationality": "United States",
+    "Residence": "Dearborn, Michigan",
+    "ProWins": null,
+    "TurnedPro": "2017",
+    "PGAWins": null,
+    "College": "Oakland University  (Finance, 2016) "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Evan Bowser",
+        "player_num": "51735",
+        "Year": "2026",
+        "Rounds": "2",
+        "SG:TOT": "-7.68",
+        "SG:T2G": "-6.46",
+        "SG:OTT": "-2.23",
+        "SG:APP": "-3.14",
+        "SG:BS": "-5.36",
+        "SG:ARG": "-1.09",
+        "SG:P": "-1.22",
+        "Dr Distance": "276.3",
+        "Dr Accuracy %": "71.4",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Evan Bowser",
+        "player_num": "51735",
+        "Year": "2024",
+        "Rounds": "2",
+        "SG:TOT": "-1.34",
+        "SG:T2G": "-2.36",
+        "SG:OTT": "-1.34",
+        "SG:APP": "-1.44",
+        "SG:BS": "-2.78",
+        "SG:ARG": "0.42",
+        "SG:P": "1.02",
+        "Dr Distance": "272.5",
+        "Dr Accuracy %": "64.3",
+        "Ball Speed": "163.16"
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Evan Bowser",
+        "player_num": "51735",
+        "Rounds": "2",
+        "SG:TOT": "-7.68",
+        "SG:T2G": "-6.46",
+        "SG:OTT": "-2.23",
+        "SG:APP": "-3.14",
+        "SG:BS": "-5.36",
+        "SG:ARG": "-1.09",
+        "SG:P": "-1.22",
+        "SG:SG": "-2.31"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-07-19",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "Corales Puntacana Championship",
+        "is_major": "0",
+        "playerName": "Evan Bowser",
+        "player_num": "51735",
+        "Rounds": "2",
+        "CourseID": "244",
+        "Course": "Corales Golf Course",
+        "ShotLink": "2",
+        "SG:TOT": "-7.68",
+        "SG:T2G": "-6.46",
+        "SG:OTT": "-2.23",
+        "SG:APP": "-3.14",
+        "SG:BS": "-5.36",
+        "SG:ARG": "-1.09",
+        "SG:P": "-1.22",
+        "SG:SG": "-2.31"
+      },
+      {
+        "Date": "2024-05-19",
+        "position": "CUT",
+        "roundPosition": "T69",
+        "TournamentName": "PGA Championship",
+        "is_major": "1",
+        "playerName": "Evan Bowser",
+        "player_num": "51735",
+        "Rounds": "2",
+        "CourseID": "671",
+        "Course": "Valhalla Golf Club",
+        "ShotLink": "2",
+        "SG:TOT": "-1.34",
+        "SG:T2G": "-2.36",
+        "SG:OTT": "-1.34",
+        "SG:APP": "-1.44",
+        "SG:BS": "-2.78",
+        "SG:ARG": "0.42",
+        "SG:P": "1.02",
+        "SG:SG": "1.44"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "1.0195000171661377",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-4.40500009059906",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-4.605000138282776",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-7.675000190734863",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-1.3350000381469727",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-1.3350000381469727",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-7.675000190734863",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-1.3350000381469727",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-7.675000190734863",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "76",
+        "PM": "75",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": "35",
+        "150-200": "36.4",
+        "200+": "59.7",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-1.3350000381469727",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-7.675000190734863",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:21:32.962Z",
+    "ok": true
+  }
+}

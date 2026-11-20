@@ -1,0 +1,198 @@
+{
+  "playerId": "68991",
+  "playerName": "William Sides",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "William Sides",
+    "BirthPlace": null,
+    "BirthDate": "",
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "William Sides",
+        "player_num": "68991",
+        "Year": "2026",
+        "Rounds": "4",
+        "SG:TOT": "-1.35",
+        "SG:T2G": "-0.43",
+        "SG:OTT": "-0.01",
+        "SG:APP": "0.83",
+        "SG:BS": "0.82",
+        "SG:ARG": "-1.26",
+        "SG:P": "-0.92",
+        "Dr Distance": "289.6",
+        "Dr Accuracy %": "73.2",
+        "Ball Speed": "173.49"
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "William Sides",
+        "player_num": "68991",
+        "Rounds": "4",
+        "SG:TOT": "-1.35",
+        "SG:T2G": "-0.43",
+        "SG:OTT": "-0.01",
+        "SG:APP": "0.83",
+        "SG:BS": "0.82",
+        "SG:ARG": "-1.26",
+        "SG:P": "-0.92",
+        "SG:SG": "-2.17"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-11-15",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "Austin Championship",
+        "is_major": "0",
+        "playerName": "William Sides",
+        "player_num": "68991",
+        "Rounds": "2",
+        "CourseID": "943",
+        "Course": "Fazio Canyons",
+        "ShotLink": "2",
+        "SG:TOT": "-2.26",
+        "SG:T2G": "-1.00",
+        "SG:OTT": "-0.70",
+        "SG:APP": "1.20",
+        "SG:BS": "0.50",
+        "SG:ARG": "-1.50",
+        "SG:P": "-1.26",
+        "SG:SG": "-2.76"
+      },
+      {
+        "Date": "2026-05-24",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "The CJ CUP Byron Nelson",
+        "is_major": "0",
+        "playerName": "William Sides",
+        "player_num": "68991",
+        "Rounds": "2",
+        "CourseID": "921",
+        "Course": "TPC Craig Ranch",
+        "ShotLink": "2",
+        "SG:TOT": "-0.45",
+        "SG:T2G": "0.14",
+        "SG:OTT": "0.69",
+        "SG:APP": "0.46",
+        "SG:BS": "1.15",
+        "SG:ARG": "-1.01",
+        "SG:P": "-0.58",
+        "SG:SG": "-1.59"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "50.0",
+        "SG TOT 2+": "25.0",
+        "SG TOT 3+": "25.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.5825000405311584",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-1.2559999898076057",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-4.894999980926514",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "2.190000057220459",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-1.3524999618530273",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-1.3524999618530273",
+        "Rounds": "4"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-0.4450000524520874",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-2.2599998712539673",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "67",
+        "PM": "74.5",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": "49.7",
+        "200-250": "48.2",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-2.2599998712539673",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-0.4450000524520874",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:26:28.906Z",
+    "ok": true
+  }
+}

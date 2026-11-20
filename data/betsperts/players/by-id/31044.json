@@ -1,0 +1,138 @@
+{
+  "playerId": "31044",
+  "playerName": "Matt Harmon",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Matt Harmon",
+    "BirthPlace": "Grand Haven, Michigan",
+    "BirthDate": "April 04, 1985",
+    "Age": "41",
+    "Height": "6ft 2in",
+    "Weight": "195 lbs",
+    "Nationality": "United States",
+    "Residence": "Hudsonville, Michigan",
+    "ProWins": "1",
+    "TurnedPro": "2007",
+    "PGAWins": "0",
+    "College": "Michigan State University "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Matt Harmon",
+        "player_num": "31044",
+        "Year": "2019",
+        "Rounds": "2",
+        "SG:TOT": "-1.33",
+        "SG:T2G": "-0.95",
+        "SG:OTT": "-1.12",
+        "SG:APP": "-0.32",
+        "SG:BS": "-1.44",
+        "SG:ARG": "0.49",
+        "SG:P": "-0.39",
+        "Dr Distance": "306.4",
+        "Dr Accuracy %": "46.4",
+        "Ball Speed": "182.14"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2019-06-30",
+        "position": "CUT",
+        "roundPosition": "T110",
+        "TournamentName": "Rocket Mortgage Classic",
+        "is_major": "0",
+        "playerName": "Matt Harmon",
+        "player_num": "31044",
+        "Rounds": "2",
+        "CourseID": "876",
+        "Course": "Detroit GC",
+        "ShotLink": "2",
+        "SG:TOT": "-1.33",
+        "SG:T2G": "-0.95",
+        "SG:OTT": "-1.12",
+        "SG:APP": "-0.32",
+        "SG:BS": "-1.44",
+        "SG:ARG": "0.49",
+        "SG:P": "-0.39",
+        "SG:SG": "0.10"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.2899999618530273",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.3799999952316284",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-1.3349999785423279",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-1.3349999785423279",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-1.3349999785423279",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "71",
+        "PM": "72",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "19.4",
+        "150-200": "33.8",
+        "200+": "46.4",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-1.3349999785423279",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:56.199Z",
+    "ok": true
+  }
+}

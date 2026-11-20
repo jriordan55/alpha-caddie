@@ -1,0 +1,145 @@
+{
+  "courseNum": "43",
+  "courseName": "Los Angeles CC (North)",
+  "list": {
+    "CourseName": "Los Angeles CC (North)",
+    "CourseNum": "43",
+    "CourseNums": [
+      43
+    ]
+  },
+  "details": {
+    "CourseName": "Los Angeles CC (North)",
+    "CourseNum": "43",
+    "Locations": [
+      "West",
+      "California"
+    ],
+    "SeasonHeld": "Spring",
+    "CourseTypes": [
+      "Parkland"
+    ],
+    "ParScore": "70",
+    "Yards": "7421",
+    "AVG": "106",
+    "CourseLength": "Very Long",
+    "Architects": [
+      "George Thomas"
+    ],
+    "RedesignArchitects": [
+      "Gil Hanse"
+    ],
+    "Elevation": "403",
+    "CourseElevation": "Average",
+    "Bunkers": "67",
+    "BunkersRank": "Average",
+    "WaterHoles": "0",
+    "WaterDanger": "Low",
+    "ScoreRTP": "1.78",
+    "Difficulty": "Very Difficult",
+    "FwyGrass": "Bermuda",
+    "FwyWidth": "0",
+    "GreenSqFt": "6500",
+    "GreenSize": "Average",
+    "GreenGrass": "Bermuda",
+    "GreenStimp": "13",
+    "GreenSpeed": "Fast",
+    "RoughType": "Bermuda",
+    "RoughGrass": "Bermuda",
+    "RoughLengthInc": "3.5",
+    "RoughLength": "Long",
+    "EventTypes": [
+      "36-Hole Cut",
+      "Major"
+    ],
+    "Tournaments": [
+      {
+        "Year": "2023",
+        "Tournament": "U.S. Open"
+      }
+    ],
+    "CorrelatedCourse": [
+      "Shinnecock Hills GC",
+      "Augusta National GC",
+      "Memorial Park Golf Course",
+      "Pinehurst No. 2",
+      "Southern Hills CC",
+      "Congaree Golf Club"
+    ],
+    "FieldSize": "Full Field",
+    "FieldStrength": "Very Strong",
+    "OTTClub": "Driver Heavy",
+    "FwyPct": "0",
+    "FwyAccuracy": "Easy",
+    "GainOTT": "Very Easy",
+    "MissedFairwayPenalty": "High",
+    "RoughPenalty": "High",
+    "GIRAccuracy": "Average",
+    "GIRPct": "0",
+    "GainAPP": "Easy",
+    "ScramblingFromRough": "Difficult",
+    "ScramblingFromShortGrass": "Difficult",
+    "SandSaves": "Difficult",
+    "GainARG": "Very Difficult",
+    "GainingPuttingInside15": "Difficult",
+    "GainingPuttingOutside15": "Difficult",
+    "3PuttAVD": "Difficult",
+    "GainPutting": "Very Difficult",
+    "Par3Scoring": "Difficult",
+    "Par4Scoring": "Difficult",
+    "Par5Scoring": "Difficult",
+    "ShotLink": "1"
+  },
+  "tournaments": [
+    {
+      "CourseNum": "43",
+      "TNum": "26",
+      "TourneyName": "U.S. Open"
+    }
+  ],
+  "_meta": {
+    "pulledAt": "2026-11-20T22:18:25.379Z",
+    "detailStatus": 200,
+    "tournamentsStatus": 200
+  },
+  "auth": {
+    "holeBreakdown": [],
+    "correlated": [
+      {
+        "CourseNum": "14",
+        "CourseName": "Augusta National GC",
+        "CourseNums": "[14]"
+      },
+      {
+        "CourseNum": "528",
+        "CourseName": "Pinehurst No. 2",
+        "CourseNums": "[528]"
+      },
+      {
+        "CourseNum": "611",
+        "CourseName": "Southern Hills CC",
+        "CourseNums": "[611]"
+      },
+      {
+        "CourseNum": "618",
+        "CourseName": "Shinnecock Hills GC",
+        "CourseNums": "[618]"
+      },
+      {
+        "CourseNum": "897",
+        "CourseName": "Memorial Park Golf Course",
+        "CourseNums": "[897]"
+      },
+      {
+        "CourseNum": "902",
+        "CourseName": "Congaree Golf Club",
+        "CourseNums": "[902]"
+      }
+    ],
+    "_meta": {
+      "pulledAt": "2026-11-20T22:52:52.085Z",
+      "holeStatus": 200,
+      "correlatedStatus": 200
+    }
+  }
+}

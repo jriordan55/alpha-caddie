@@ -1,0 +1,143 @@
+{
+  "courseNum": "942",
+  "courseName": "The Cliffs at Walnut Cove",
+  "list": {
+    "CourseName": "The Cliffs at Walnut Cove",
+    "CourseNum": "942",
+    "CourseNums": [
+      942
+    ]
+  },
+  "details": {
+    "CourseName": "The Cliffs at Walnut Cove",
+    "CourseNum": "942",
+    "Locations": [
+      "Southeast",
+      "North Carolina"
+    ],
+    "SeasonHeld": "",
+    "CourseTypes": [
+      "Mountain",
+      "Parkland"
+    ],
+    "ParScore": "71",
+    "Yards": "7249",
+    "AVG": "102.1",
+    "CourseLength": "Short",
+    "Architects": [
+      "Jack Nicklaus"
+    ],
+    "RedesignArchitects": [],
+    "Elevation": "2200",
+    "CourseElevation": "High",
+    "Bunkers": "77",
+    "BunkersRank": "Average",
+    "WaterHoles": "7",
+    "WaterDanger": "Average",
+    "ScoreRTP": "0",
+    "Difficulty": "",
+    "FwyGrass": "Bent",
+    "FwyWidth": "0",
+    "GreenSqFt": "5500",
+    "GreenSize": "Small",
+    "GreenGrass": "Bent/Poa",
+    "GreenStimp": "12",
+    "GreenSpeed": "Average",
+    "RoughType": "",
+    "RoughGrass": "Bluegrass",
+    "RoughLengthInc": "4",
+    "RoughLength": "Long",
+    "EventTypes": [
+      "36-Hole Cut"
+    ],
+    "Tournaments": [
+      {
+        "Year": "2026",
+        "Tournament": "Biltmore Championship Asheville"
+      }
+    ],
+    "CorrelatedCourse": [
+      "TPC Toronto at Osprey Valley (North)",
+      "Detroit GC",
+      "TPC River Highlands",
+      "Silverado Resort (North)",
+      "Oakdale Golf & Country Club",
+      "TPC Deere Run"
+    ],
+    "FieldSize": "Average Size Field",
+    "FieldStrength": "",
+    "OTTClub": "",
+    "FwyPct": "0",
+    "FwyAccuracy": "",
+    "GainOTT": "",
+    "MissedFairwayPenalty": "",
+    "RoughPenalty": "",
+    "GIRAccuracy": "",
+    "GIRPct": "0",
+    "GainAPP": "",
+    "ScramblingFromRough": "",
+    "ScramblingFromShortGrass": "",
+    "SandSaves": "",
+    "GainARG": "",
+    "GainingPuttingInside15": "",
+    "GainingPuttingOutside15": "",
+    "3PuttAVD": "",
+    "GainPutting": "",
+    "Par3Scoring": "",
+    "Par4Scoring": "",
+    "Par5Scoring": "",
+    "ShotLink": "1"
+  },
+  "tournaments": [
+    {
+      "CourseNum": "942",
+      "TNum": "557",
+      "TourneyName": "Biltmore Championship Asheville"
+    }
+  ],
+  "_meta": {
+    "pulledAt": "2026-11-20T22:18:26.070Z",
+    "detailStatus": 200,
+    "tournamentsStatus": 200
+  },
+  "auth": {
+    "holeBreakdown": [],
+    "correlated": [
+      {
+        "CourseNum": "503",
+        "CourseName": "TPC River Highlands",
+        "CourseNums": "[503]"
+      },
+      {
+        "CourseNum": "669",
+        "CourseName": "TPC Deere Run",
+        "CourseNums": "[669]"
+      },
+      {
+        "CourseNum": "908",
+        "CourseName": "Oakdale Golf & Country Club",
+        "CourseNums": "[908]"
+      },
+      {
+        "CourseNum": "926",
+        "CourseName": "Silverado Resort (North)",
+        "CourseNums": "[926, 552]"
+      },
+      {
+        "CourseNum": "935",
+        "CourseName": "TPC Toronto at Osprey Valley (North)",
+        "CourseNums": "[935]"
+      },
+      {
+        "CourseNum": "947",
+        "CourseName": "Detroit GC",
+        "CourseNums": "[947, 876]"
+      }
+    ],
+    "_meta": {
+      "pulledAt": "2026-11-20T22:52:52.722Z",
+      "holeStatus": 200,
+      "correlatedStatus": 200
+    }
+  }
+}

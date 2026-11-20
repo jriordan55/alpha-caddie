@@ -1,0 +1,148 @@
+{
+  "playerId": "23633",
+  "playerName": "Phil Schmitt",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Phil Schmitt",
+    "BirthPlace": "",
+    "BirthDate": "May 14, 1973",
+    "Age": "53",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "United States",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Phil Schmitt",
+        "player_num": "23633",
+        "Year": "2017",
+        "Rounds": "2",
+        "SG:TOT": "-2.91",
+        "SG:T2G": "-2.59",
+        "SG:OTT": "-0.96",
+        "SG:APP": "-1.04",
+        "SG:BS": "-1.99",
+        "SG:ARG": "-0.59",
+        "SG:P": "-0.32",
+        "Dr Distance": "279.0",
+        "Dr Accuracy %": "46.4",
+        "Ball Speed": "164.67"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2017-10-29",
+        "position": "CUT",
+        "roundPosition": "T112",
+        "TournamentName": "Sanderson Farms Championship",
+        "is_major": "0",
+        "playerName": "Phil Schmitt",
+        "player_num": "23633",
+        "Rounds": "2",
+        "CourseID": "746",
+        "Course": "The Country Club of Jackson",
+        "ShotLink": "2",
+        "SG:TOT": "-2.91",
+        "SG:T2G": "-2.59",
+        "SG:OTT": "-0.96",
+        "SG:APP": "-1.04",
+        "SG:BS": "-1.99",
+        "SG:ARG": "-0.59",
+        "SG:P": "-0.32",
+        "SG:SG": "-0.91"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "6"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-0.31599998474121094",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-4.525000095367432",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-4.369999945163727",
+        "Rounds": "3"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-2.9050000309944153",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-2.9050000309944153",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-2.9050000309944153",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "76",
+        "PM": "76",
+        "Rounds": "6"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "6",
+        "50-100": null,
+        "100-150": "33.5",
+        "150-200": "38.9",
+        "200+": "85.5",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-2.9050000309944153",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:24:50.222Z",
+    "ok": true
+  }
+}

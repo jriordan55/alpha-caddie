@@ -1,0 +1,158 @@
+{
+  "playerId": "23718",
+  "playerName": "Nathan Green",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/as-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Nathan Green",
+    "BirthPlace": "Newcastle, New South Wales, Australia",
+    "BirthDate": "May 13, 1975",
+    "Age": "51",
+    "Height": "5ft 8in",
+    "Weight": "175 lbs",
+    "Nationality": "Australia",
+    "Residence": "Toronto, New South Wales, Australia",
+    "ProWins": null,
+    "TurnedPro": "1998",
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Nathan Green",
+        "player_num": "23718",
+        "Year": "2015",
+        "Rounds": "3",
+        "SG:TOT": "-4.46",
+        "SG:T2G": "-4.71",
+        "SG:OTT": "-0.36",
+        "SG:APP": "-3.65",
+        "SG:BS": "-4.01",
+        "SG:ARG": "-0.70",
+        "SG:P": "-0.23",
+        "Dr Distance": "252.0",
+        "Dr Accuracy %": "63.4",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2015-02-15",
+        "position": "CUT",
+        "roundPosition": "T150",
+        "TournamentName": "AT&T Pebble Beach Pro-Am",
+        "is_major": "0",
+        "playerName": "Nathan Green",
+        "player_num": "23718",
+        "Rounds": "3",
+        "CourseID": "205",
+        "Course": "Spyglass Hill",
+        "ShotLink": "1",
+        "SG:TOT": "-4.46",
+        "SG:T2G": "-4.71",
+        "SG:OTT": "-0.36",
+        "SG:APP": "-3.65",
+        "SG:BS": "-4.01",
+        "SG:ARG": "-0.70",
+        "SG:P": "-0.23",
+        "SG:SG": "-0.93"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "3"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "-0.23499999940395355",
+        "Rounds": "3"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-4.940000057220459",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-3.8299999237060547",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-4.610000133514404",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-4.460000038146973",
+        "Rounds": "3"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-4.610000133514404",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-4.384999990463257",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-4.460000038146973",
+        "Rounds": "3"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "76",
+        "PM": "74",
+        "Rounds": "3"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "3",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": "61.9",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "West Coast",
+        "StrokesGainedAverage": "-4.460000038146973",
+        "Rounds": "3"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:24:22.239Z",
+    "ok": true
+  }
+}

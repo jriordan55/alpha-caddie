@@ -1,0 +1,162 @@
+{
+  "playerId": "70869",
+  "playerName": "Sihan Sandhu",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Sihan Sandhu",
+    "BirthPlace": null,
+    "BirthDate": "",
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Sihan Sandhu",
+        "player_num": "70869",
+        "Year": "2026",
+        "Rounds": "2",
+        "SG:TOT": "-1.02",
+        "SG:T2G": "-1.39",
+        "SG:OTT": "-0.56",
+        "SG:APP": "-0.87",
+        "SG:BS": "-1.43",
+        "SG:ARG": "0.04",
+        "SG:P": "0.38",
+        "Dr Distance": "292.8",
+        "Dr Accuracy %": "64.3",
+        "Ball Speed": "174.91"
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Sihan Sandhu",
+        "player_num": "70869",
+        "Rounds": "2",
+        "SG:TOT": "-1.02",
+        "SG:T2G": "-1.39",
+        "SG:OTT": "-0.56",
+        "SG:APP": "-0.87",
+        "SG:BS": "-1.43",
+        "SG:ARG": "0.04",
+        "SG:P": "0.38",
+        "SG:SG": "0.42"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-07-26",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "3M Open",
+        "is_major": "0",
+        "playerName": "Sihan Sandhu",
+        "player_num": "70869",
+        "Rounds": "2",
+        "CourseID": "883",
+        "Course": "TPC Twin Cities",
+        "ShotLink": "2",
+        "SG:TOT": "-1.02",
+        "SG:T2G": "-1.39",
+        "SG:OTT": "-0.56",
+        "SG:APP": "-0.87",
+        "SG:BS": "-1.43",
+        "SG:ARG": "0.04",
+        "SG:P": "0.38",
+        "SG:SG": "0.42"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "0.37950001657009125",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.9300000071525574",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.100000023841858",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-1.0150000154972076",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-1.0150000154972076",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-1.0150000154972076",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "71",
+        "PM": "71",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "35.5",
+        "150-200": null,
+        "200+": "37.3",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-1.0150000154972076",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:37.891Z",
+    "ok": true
+  }
+}

@@ -1,0 +1,195 @@
+{
+  "playerId": "52571",
+  "playerName": "Marc-Étienne Bussières",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ca-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Marc-Étienne Bussières",
+    "BirthPlace": "",
+    "BirthDate": "August 21, 1986",
+    "Age": "40",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "Canada",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Marc-Étienne Bussières",
+        "player_num": "52571",
+        "Year": "2019",
+        "Rounds": "2",
+        "SG:TOT": "-3.02",
+        "SG:T2G": "-2.34",
+        "SG:OTT": "-0.40",
+        "SG:APP": "-2.78",
+        "SG:BS": "-3.19",
+        "SG:ARG": "0.84",
+        "SG:P": "-0.67",
+        "Dr Distance": "278.0",
+        "Dr Accuracy %": "57.1",
+        "Ball Speed": "163.88"
+      },
+      {
+        "playerName": "Marc-Étienne Bussières",
+        "player_num": "52571",
+        "Year": "2018",
+        "Rounds": "2",
+        "SG:TOT": "-3.90",
+        "SG:T2G": "-2.20",
+        "SG:OTT": "-0.17",
+        "SG:APP": "-0.80",
+        "SG:BS": "-0.97",
+        "SG:ARG": "-1.23",
+        "SG:P": "-1.70",
+        "Dr Distance": "291.2",
+        "Dr Accuracy %": "53.6",
+        "Ball Speed": "160.92"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2019-06-09",
+        "position": "CUT",
+        "roundPosition": "T141",
+        "TournamentName": "RBC Canadian Open",
+        "is_major": "0",
+        "playerName": "Marc-Étienne Bussières",
+        "player_num": "52571",
+        "Rounds": "2",
+        "CourseID": "874",
+        "Course": "Hamilton Golf & Country Club",
+        "ShotLink": "2",
+        "SG:TOT": "-3.02",
+        "SG:T2G": "-2.34",
+        "SG:OTT": "-0.40",
+        "SG:APP": "-2.78",
+        "SG:BS": "-3.19",
+        "SG:ARG": "0.84",
+        "SG:P": "-0.67",
+        "SG:SG": "0.17"
+      },
+      {
+        "Date": "2018-07-29",
+        "position": "CUT",
+        "roundPosition": "T142",
+        "TournamentName": "RBC Canadian Open",
+        "is_major": "0",
+        "playerName": "Marc-Étienne Bussières",
+        "player_num": "52571",
+        "Rounds": "2",
+        "CourseID": "32",
+        "Course": "Glen Abbey GC",
+        "ShotLink": "2",
+        "SG:TOT": "-3.90",
+        "SG:T2G": "-2.20",
+        "SG:OTT": "-0.17",
+        "SG:APP": "-0.80",
+        "SG:BS": "-0.97",
+        "SG:ARG": "-1.23",
+        "SG:P": "-1.70",
+        "SG:SG": "-2.93"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-4.605000019073486",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-2.315000057220459",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-3.899999976158142",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-3.0200001001358032",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-3.0200001001358032",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-3.899999976158142",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-3.0200001001358032",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-3.899999976158142",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "73",
+        "PM": "74",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": "30.8",
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-3.0200001001358032",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-3.899999976158142",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:45.706Z",
+    "ok": true
+  }
+}

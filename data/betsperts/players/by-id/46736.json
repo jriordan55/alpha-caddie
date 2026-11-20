@@ -1,0 +1,148 @@
+{
+  "playerId": "46736",
+  "playerName": "Austin James",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ca-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Austin James",
+    "BirthPlace": "Bath, Ontario, Canada",
+    "BirthDate": "October 09, 1995",
+    "Age": "31",
+    "Height": "6ft 4in",
+    "Weight": "225 lbs",
+    "Nationality": "Canada",
+    "Residence": "Bath, Ontario, Canada",
+    "ProWins": null,
+    "TurnedPro": "2017",
+    "PGAWins": null,
+    "College": "Charleston Southern University 2017, Social Science"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Austin James",
+        "player_num": "46736",
+        "Year": "2017",
+        "Rounds": "2",
+        "SG:TOT": "-1.00",
+        "SG:T2G": "-0.41",
+        "SG:OTT": "-0.05",
+        "SG:APP": "-0.00",
+        "SG:BS": "-0.05",
+        "SG:ARG": "-0.36",
+        "SG:P": "-0.59",
+        "Dr Distance": "293.5",
+        "Dr Accuracy %": "46.4",
+        "Ball Speed": "177.65"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2017-07-30",
+        "position": "CUT",
+        "roundPosition": "T109",
+        "TournamentName": "RBC Canadian Open",
+        "is_major": "0",
+        "playerName": "Austin James",
+        "player_num": "46736",
+        "Rounds": "2",
+        "CourseID": "32",
+        "Course": "Glen Abbey GC",
+        "ShotLink": "2",
+        "SG:TOT": "-1.00",
+        "SG:T2G": "-0.41",
+        "SG:OTT": "-0.05",
+        "SG:APP": "-0.00",
+        "SG:BS": "-0.05",
+        "SG:ARG": "-0.36",
+        "SG:P": "-0.59",
+        "SG:SG": "-0.95"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.5900000035762787",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.8799999952316284",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.1200000047683716",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-1",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-1",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-1",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "71",
+        "PM": "72",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "21.2",
+        "150-200": null,
+        "200+": "54.5",
+        "200-250": "54.5",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-1",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:16.671Z",
+    "ok": true
+  }
+}

@@ -1,0 +1,199 @@
+{
+  "playerId": "30237",
+  "playerName": "Cory Renfrew",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ca-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Cory Renfrew",
+    "BirthPlace": "Victoria, British Columbia, Canada",
+    "BirthDate": "April 03, 1986",
+    "Age": "40",
+    "Height": "6ft 0in",
+    "Weight": "175 lbs",
+    "Nationality": "Canada",
+    "Residence": "Victoria, British Columbia, Canada",
+    "ProWins": null,
+    "TurnedPro": "2011",
+    "PGAWins": null,
+    "College": "University of British Columbia  (2010, Psychology) "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Cory Renfrew",
+        "player_num": "30237",
+        "Year": "2015",
+        "Rounds": "6",
+        "SG:TOT": "-0.55",
+        "SG:T2G": "-0.54",
+        "SG:OTT": "0.05",
+        "SG:APP": "-0.52",
+        "SG:BS": "-0.47",
+        "SG:ARG": "-0.07",
+        "SG:P": "-0.01",
+        "Dr Distance": "283.8",
+        "Dr Accuracy %": "54.8",
+        "Ball Speed": "164.95"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2015-10-18",
+        "position": "CUT",
+        "roundPosition": "T101",
+        "TournamentName": "Frys.com Open",
+        "is_major": "0",
+        "playerName": "Cory Renfrew",
+        "player_num": "30237",
+        "Rounds": "2",
+        "CourseID": "552",
+        "Course": "Silverado Resort (North)",
+        "ShotLink": "2",
+        "SG:TOT": "-1.20",
+        "SG:T2G": "-1.18",
+        "SG:OTT": "-0.33",
+        "SG:APP": "-0.21",
+        "SG:BS": "-0.54",
+        "SG:ARG": "-0.64",
+        "SG:P": "-0.03",
+        "SG:SG": "-0.66"
+      },
+      {
+        "Date": "2015-02-01",
+        "position": "T59",
+        "roundPosition": "T59",
+        "TournamentName": "WM Phoenix Open",
+        "is_major": "0",
+        "playerName": "Cory Renfrew",
+        "player_num": "30237",
+        "Rounds": "4",
+        "CourseID": "510",
+        "Course": "TPC Scottsdale",
+        "ShotLink": "4",
+        "SG:TOT": "-0.22",
+        "SG:T2G": "-0.22",
+        "SG:OTT": "0.24",
+        "SG:APP": "-0.67",
+        "SG:BS": "-0.43",
+        "SG:ARG": "0.21",
+        "SG:P": "0.01",
+        "SG:SG": "0.22"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "33.3",
+        "SG TOT 1+": "16.7",
+        "SG TOT 2+": "16.7",
+        "SG TOT 3+": "16.7",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "6"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Poa Trivialis",
+        "StrokesGainedAverage": "0.005000025033950806",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.7800000011920929",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.5650000125169754",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-4.449999809265137",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "3.859999895095825",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-0.2174999862909317",
+        "Rounds": "4"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-1.2049999982118607",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-0.2174999862909317",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-1.2049999982118607",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-0.2174999862909317",
+        "Rounds": "4"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-1.2049999982118607",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "73",
+        "PM": "70.5",
+        "Rounds": "6"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "6",
+        "50-100": "16.5",
+        "100-150": "26.9",
+        "150-200": "38.8",
+        "200+": "66.8",
+        "200-250": "59.2",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-1.2049999982118607",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "West Coast",
+        "StrokesGainedAverage": "-0.2174999862909317",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:20:36.910Z",
+    "ok": true
+  }
+}

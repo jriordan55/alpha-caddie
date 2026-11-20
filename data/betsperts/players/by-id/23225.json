@@ -1,0 +1,148 @@
+{
+  "playerId": "23225",
+  "playerName": "Paul Earnest",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Paul Earnest",
+    "BirthPlace": null,
+    "BirthDate": "June 19, 1964",
+    "Age": "62",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Paul Earnest",
+        "player_num": "23225",
+        "Year": "2017",
+        "Rounds": "2",
+        "SG:TOT": "-7.82",
+        "SG:T2G": "-5.70",
+        "SG:OTT": "-2.90",
+        "SG:APP": "-1.60",
+        "SG:BS": "-4.49",
+        "SG:ARG": "-1.21",
+        "SG:P": "-2.12",
+        "Dr Distance": "271.5",
+        "Dr Accuracy %": "50.0",
+        "Ball Speed": "156.28"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2017-05-21",
+        "position": "CUT",
+        "roundPosition": "156",
+        "TournamentName": "AT&T Byron Nelson",
+        "is_major": "0",
+        "playerName": "Paul Earnest",
+        "player_num": "23225",
+        "Rounds": "2",
+        "CourseID": "19",
+        "Course": "TPC Four Seasons Resort",
+        "ShotLink": "2",
+        "SG:TOT": "-7.82",
+        "SG:T2G": "-5.70",
+        "SG:OTT": "-2.90",
+        "SG:APP": "-1.60",
+        "SG:BS": "-4.49",
+        "SG:ARG": "-1.21",
+        "SG:P": "-2.12",
+        "SG:SG": "-3.33"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-2.119499981403351",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-7.079999923706055",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-8.569999694824219",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-7.824999809265137",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-7.824999809265137",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-7.824999809265137",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "79",
+        "PM": "79",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": "22.2",
+        "100-150": null,
+        "150-200": "40.1",
+        "200+": "54.5",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-7.824999809265137",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:24:43.030Z",
+    "ok": true
+  }
+}

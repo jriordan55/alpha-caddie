@@ -1,0 +1,148 @@
+{
+  "playerId": "50390",
+  "playerName": "Steve Cutler",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Steve Cutler",
+    "BirthPlace": null,
+    "BirthDate": "May 27, 1980",
+    "Age": "46",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Steve Cutler",
+        "player_num": "50390",
+        "Year": "2016",
+        "Rounds": "2",
+        "SG:TOT": "-4.63",
+        "SG:T2G": "-3.08",
+        "SG:OTT": "-0.11",
+        "SG:APP": "-2.80",
+        "SG:BS": "-2.92",
+        "SG:ARG": "-0.16",
+        "SG:P": "-1.55",
+        "Dr Distance": "276.0",
+        "Dr Accuracy %": "71.4",
+        "Ball Speed": "166.91"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2016-07-17",
+        "position": "CUT",
+        "roundPosition": "T128",
+        "TournamentName": "Barbasol Championship",
+        "is_major": "0",
+        "playerName": "Steve Cutler",
+        "player_num": "50390",
+        "Rounds": "2",
+        "CourseID": "819",
+        "Course": "RTJ Trail (Grand National)",
+        "ShotLink": "2",
+        "SG:TOT": "-4.63",
+        "SG:T2G": "-3.08",
+        "SG:OTT": "-0.11",
+        "SG:APP": "-2.80",
+        "SG:BS": "-2.92",
+        "SG:ARG": "-0.16",
+        "SG:P": "-1.55",
+        "SG:SG": "-1.71"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-1.5450000166893005",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-6.670000076293945",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-2.5899999141693115",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-4.629999995231628",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-4.629999995231628",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-4.629999995231628",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "77",
+        "PM": "72",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": "47.7",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-4.629999995231628",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:44.622Z",
+    "ok": true
+  }
+}

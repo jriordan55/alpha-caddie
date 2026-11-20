@@ -1,0 +1,143 @@
+{
+  "playerId": "49191",
+  "playerName": "Cory Cooper",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Cory Cooper",
+    "BirthPlace": null,
+    "BirthDate": "July 03, 1986",
+    "Age": "40",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Cory Cooper",
+        "player_num": "49191",
+        "Year": "2015",
+        "Rounds": "1",
+        "SG:TOT": "-4.13",
+        "SG:T2G": "-7.31",
+        "SG:OTT": "-1.53",
+        "SG:APP": "-5.92",
+        "SG:BS": "-7.45",
+        "SG:ARG": "0.14",
+        "SG:P": "3.18",
+        "Dr Distance": "268.6",
+        "Dr Accuracy %": "14.3",
+        "Ball Speed": "162.35"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2015-11-08",
+        "position": "W/D",
+        "roundPosition": "T117",
+        "TournamentName": "Sanderson Farms Championship",
+        "is_major": "0",
+        "playerName": "Cory Cooper",
+        "player_num": "49191",
+        "Rounds": "1",
+        "CourseID": "746",
+        "Course": "The Country Club of Jackson",
+        "ShotLink": "1",
+        "SG:TOT": "-4.13",
+        "SG:T2G": "-7.31",
+        "SG:OTT": "-1.53",
+        "SG:APP": "-5.92",
+        "SG:BS": "-7.45",
+        "SG:ARG": "0.14",
+        "SG:P": "3.18",
+        "SG:SG": "3.32"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "1"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "3.177999973297119",
+        "Rounds": "1"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-4.130000114440918",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-4.130000114440918",
+        "Rounds": "1"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-4.130000114440918",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-4.130000114440918",
+        "Rounds": "1"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": null,
+        "PM": "74",
+        "Rounds": "1"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "1",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "50.3",
+        "200+": "75.4",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-4.130000114440918",
+        "Rounds": "1"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:20:36.841Z",
+    "ok": true
+  }
+}

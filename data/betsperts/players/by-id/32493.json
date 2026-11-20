@@ -1,0 +1,236 @@
+{
+  "playerId": "32493",
+  "playerName": "Gary Stal",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_fr-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Gary Stal",
+    "BirthPlace": "Decines, France",
+    "BirthDate": "February 09, 1992",
+    "Age": "34",
+    "Height": "5ft 9in",
+    "Weight": "152 lbs",
+    "Nationality": "France",
+    "Residence": "Villette-dAnthon, France",
+    "ProWins": null,
+    "TurnedPro": "2012",
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Gary Stal",
+        "player_num": "32493",
+        "Year": "2016",
+        "Rounds": "2",
+        "SG:TOT": "0.41",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "50.0",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Gary Stal",
+        "player_num": "32493",
+        "Year": "2015",
+        "Rounds": "8",
+        "SG:TOT": "-2.52",
+        "SG:T2G": "-2.15",
+        "SG:OTT": "-0.46",
+        "SG:APP": "-1.44",
+        "SG:BS": "-1.90",
+        "SG:ARG": "-0.25",
+        "SG:P": "-0.37",
+        "Dr Distance": "287.4",
+        "Dr Accuracy %": "47.3",
+        "Ball Speed": "164.62"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2016-06-19",
+        "position": "CUT",
+        "roundPosition": "T68",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Gary Stal",
+        "player_num": "32493",
+        "Rounds": "2",
+        "CourseID": "608",
+        "Course": "Oakmont CC",
+        "ShotLink": "0",
+        "SG:TOT": "0.41",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2015-08-09",
+        "position": "T63",
+        "roundPosition": "T63",
+        "TournamentName": "WGC - Bridgestone Invitational",
+        "is_major": "0",
+        "playerName": "Gary Stal",
+        "player_num": "32493",
+        "Rounds": "4",
+        "CourseID": "36",
+        "Course": "Firestone CC (South)",
+        "ShotLink": "4",
+        "SG:TOT": "-1.78",
+        "SG:T2G": "-1.34",
+        "SG:OTT": "-0.22",
+        "SG:APP": "-1.05",
+        "SG:BS": "-1.28",
+        "SG:ARG": "-0.06",
+        "SG:P": "-0.44",
+        "SG:SG": "-0.51"
+      },
+      {
+        "Date": "2015-03-08",
+        "position": "70",
+        "roundPosition": "70",
+        "TournamentName": "WGC - Cadillac Championship",
+        "is_major": "0",
+        "playerName": "Gary Stal",
+        "player_num": "32493",
+        "Rounds": "4",
+        "CourseID": "8",
+        "Course": "Trump National Doral",
+        "ShotLink": "4",
+        "SG:TOT": "-3.26",
+        "SG:T2G": "-2.96",
+        "SG:OTT": "-0.69",
+        "SG:APP": "-1.83",
+        "SG:BS": "-2.52",
+        "SG:ARG": "-0.44",
+        "SG:P": "-0.30",
+        "SG:SG": "-0.74"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "10.0",
+        "SG TOT 1+": "10.0",
+        "SG TOT 2+": "10.0",
+        "SG TOT 3+": "10.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "10"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-0.30275000259280205",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": null,
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "0.3166666825612386",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-3.313333431879679",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-3.4399999380111694",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-1.7299999594688416",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "0.41499996185302734",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-3.2574999928474426",
+        "Rounds": "4"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-1.782499998807907",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-1.9330000042915345",
+        "Rounds": "10"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-1.9330000042915345",
+        "Rounds": "10"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74.16666666666667",
+        "PM": "74.75",
+        "Rounds": "10"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "10",
+        "50-100": "30.9",
+        "100-150": "31.1",
+        "150-200": "39.9",
+        "200+": "64.2",
+        "200-250": "49.2",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Florida",
+        "StrokesGainedAverage": "-3.2574999928474426",
+        "Rounds": "4"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-1.050000011920929",
+        "Rounds": "6"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:21:42.743Z",
+    "ok": true
+  }
+}

@@ -1,0 +1,153 @@
+{
+  "playerId": "54338",
+  "playerName": "Chris French",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Chris French",
+    "BirthPlace": null,
+    "BirthDate": "December 08, 1985",
+    "Age": "40",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Chris French",
+        "player_num": "54338",
+        "Year": "2023",
+        "Rounds": "2",
+        "SG:TOT": "-4.25",
+        "SG:T2G": "-2.95",
+        "SG:OTT": "-0.38",
+        "SG:APP": "-2.14",
+        "SG:BS": "-2.52",
+        "SG:ARG": "-0.43",
+        "SG:P": "-1.30",
+        "Dr Distance": "276.2",
+        "Dr Accuracy %": "46.4",
+        "Ball Speed": "163.20"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2023-05-21",
+        "position": "CUT",
+        "roundPosition": "145",
+        "TournamentName": "PGA Championship",
+        "is_major": "1",
+        "playerName": "Chris French",
+        "player_num": "54338",
+        "Rounds": "2",
+        "CourseID": "514",
+        "Course": "Oak Hill CC",
+        "ShotLink": "2",
+        "SG:TOT": "-4.25",
+        "SG:T2G": "-2.95",
+        "SG:OTT": "-0.38",
+        "SG:APP": "-2.14",
+        "SG:BS": "-2.52",
+        "SG:ARG": "-0.43",
+        "SG:P": "-1.30",
+        "SG:SG": "-1.73"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-1.3019999861717224",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-4.320000171661377",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-4.179999828338623",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-4.179999828338623",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-4.320000171661377",
+        "Rounds": "1"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-4.25",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-4.25",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "78",
+        "PM": "77",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "41",
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-4.25",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:20:19.882Z",
+    "ok": true
+  }
+}

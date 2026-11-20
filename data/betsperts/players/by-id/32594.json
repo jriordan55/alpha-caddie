@@ -1,0 +1,242 @@
+{
+  "playerId": "32594",
+  "playerName": "Oliver Farr",
+  "flag": null,
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Oliver Farr",
+    "BirthPlace": "",
+    "BirthDate": "March 25, 1988",
+    "Age": "38",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "Wales",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Oliver Farr",
+        "player_num": "32594",
+        "Year": "2023",
+        "Rounds": "2",
+        "SG:TOT": "-3.65",
+        "SG:T2G": "-1.87",
+        "SG:OTT": "-0.80",
+        "SG:APP": "-0.96",
+        "SG:BS": "-1.76",
+        "SG:ARG": "-0.11",
+        "SG:P": "-1.19",
+        "Dr Distance": null,
+        "Dr Accuracy %": "42.9",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Oliver Farr",
+        "player_num": "32594",
+        "Year": "2022",
+        "Rounds": "2",
+        "SG:TOT": "-2.79",
+        "SG:T2G": "-2.25",
+        "SG:OTT": "-1.38",
+        "SG:APP": "0.35",
+        "SG:BS": "-1.03",
+        "SG:ARG": "-1.22",
+        "SG:P": "-0.54",
+        "Dr Distance": null,
+        "Dr Accuracy %": "65.6",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Oliver Farr",
+        "player_num": "32594",
+        "Year": "2015",
+        "Rounds": "2",
+        "SG:TOT": "-1.91",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "82.1",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2023-07-23",
+        "position": "CUT",
+        "roundPosition": null,
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Oliver Farr",
+        "player_num": "32594",
+        "Rounds": "2",
+        "CourseID": "923",
+        "Course": "Royal Liverpool",
+        "ShotLink": "2",
+        "SG:TOT": "-3.65",
+        "SG:T2G": "-1.87",
+        "SG:OTT": "-0.80",
+        "SG:APP": "-0.96",
+        "SG:BS": "-1.76",
+        "SG:ARG": "-0.11",
+        "SG:P": "-1.19",
+        "SG:SG": "-1.30"
+      },
+      {
+        "Date": "2022-07-17",
+        "position": "CUT",
+        "roundPosition": null,
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Oliver Farr",
+        "player_num": "32594",
+        "Rounds": "2",
+        "CourseID": "668",
+        "Course": "St. Andrews GC (Old Course)",
+        "ShotLink": "2",
+        "SG:TOT": "-2.79",
+        "SG:T2G": "-2.25",
+        "SG:OTT": "-1.38",
+        "SG:APP": "0.35",
+        "SG:BS": "-1.03",
+        "SG:ARG": "-1.22",
+        "SG:P": "-0.54",
+        "SG:SG": "-1.76"
+      },
+      {
+        "Date": "2015-06-21",
+        "position": "CUT",
+        "roundPosition": "T119",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Oliver Farr",
+        "player_num": "32594",
+        "Rounds": "2",
+        "CourseID": "100",
+        "Course": "Chambers Bay GC 2",
+        "ShotLink": "0",
+        "SG:TOT": "-1.91",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "6"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.867249995470047",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": null,
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.4433333178361256",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-4.12666670481364",
+        "Rounds": "3"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-3.2200000286102295",
+        "Rounds": "4"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-1.9149999767541885",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-2.2799999713897705",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-3.299999952316284",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-2.78250003606081",
+        "Rounds": "4"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-2.7850000113248825",
+        "Rounds": "6"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74.33333333333333",
+        "PM": "77",
+        "Rounds": "6"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "6",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-2.7850000113248825",
+        "Rounds": "6"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:24:33.041Z",
+    "ok": true
+  }
+}

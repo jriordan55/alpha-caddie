@@ -1,0 +1,148 @@
+{
+  "playerId": "60518",
+  "playerName": "Luke Gifford",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Luke Gifford",
+    "BirthPlace": "Boca Raton, Florida",
+    "BirthDate": "March 17, 2000",
+    "Age": "26",
+    "Height": "6ft 3in",
+    "Weight": "225 lbs",
+    "Nationality": "United States",
+    "Residence": "Boca Raton, Florida",
+    "ProWins": null,
+    "TurnedPro": "2023",
+    "PGAWins": null,
+    "College": "Pepperdine University "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Luke Gifford",
+        "player_num": "60518",
+        "Year": "2025",
+        "Rounds": "2",
+        "SG:TOT": "-3.52",
+        "SG:T2G": "-2.42",
+        "SG:OTT": "-0.91",
+        "SG:APP": "-0.47",
+        "SG:BS": "-1.38",
+        "SG:ARG": "-1.05",
+        "SG:P": "-1.09",
+        "Dr Distance": "292.6",
+        "Dr Accuracy %": "57.7",
+        "Ball Speed": "174.09"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2025-02-23",
+        "position": "CUT",
+        "roundPosition": "T122",
+        "TournamentName": "Mexico Open at Vidanta",
+        "is_major": "0",
+        "playerName": "Luke Gifford",
+        "player_num": "60518",
+        "Rounds": "2",
+        "CourseID": "978",
+        "Course": "Vidanta Vallarta",
+        "ShotLink": "2",
+        "SG:TOT": "-3.52",
+        "SG:T2G": "-2.42",
+        "SG:OTT": "-0.91",
+        "SG:APP": "-0.47",
+        "SG:BS": "-1.38",
+        "SG:ARG": "-1.05",
+        "SG:P": "-1.09",
+        "SG:SG": "-2.14"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-2.4000000953674316",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-4.630000114440918",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-2.4000000953674316",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-4.630000114440918",
+        "Rounds": "1"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-2.4000000953674316",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-4.630000114440918",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-3.515000104904175",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "72",
+        "PM": "74",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": "72.7",
+        "200-250": "63.6",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-3.515000104904175",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:41.665Z",
+    "ok": true
+  }
+}

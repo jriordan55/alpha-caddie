@@ -1,0 +1,161 @@
+{
+  "courseNum": "943",
+  "courseName": "Fazio Canyons",
+  "list": {
+    "CourseName": "Fazio Canyons",
+    "CourseNum": "943",
+    "CourseNums": [
+      943
+    ]
+  },
+  "details": {
+    "CourseName": "Fazio Canyons",
+    "CourseNum": "943",
+    "Locations": [
+      "South",
+      "Texas"
+    ],
+    "SeasonHeld": "",
+    "CourseTypes": [
+      "Parkland",
+      "Resort"
+    ],
+    "ParScore": "72",
+    "Yards": "7451",
+    "AVG": "103.5",
+    "CourseLength": "Average",
+    "Architects": [
+      "Tom Fazio"
+    ],
+    "RedesignArchitects": [],
+    "Elevation": "974",
+    "CourseElevation": "Average",
+    "Bunkers": "42",
+    "BunkersRank": "Low",
+    "WaterHoles": "5",
+    "WaterDanger": "Average",
+    "ScoreRTP": "0",
+    "Difficulty": "",
+    "FwyGrass": "Bermuda",
+    "FwyWidth": "0",
+    "GreenSqFt": "6708",
+    "GreenSize": "Average",
+    "GreenGrass": "Bermuda",
+    "GreenStimp": "12",
+    "GreenSpeed": "Average",
+    "RoughType": "",
+    "RoughGrass": "Bermuda",
+    "RoughLengthInc": "2.5",
+    "RoughLength": "Average",
+    "EventTypes": [
+      "36-Hole Cut"
+    ],
+    "Tournaments": [
+      {
+        "Year": "2026",
+        "Tournament": "Austin Championship"
+      }
+    ],
+    "CorrelatedCourse": [
+      "TPC San Antonio (Oaks)",
+      "TPC Craig Ranch",
+      "Memorial Park Golf Course",
+      "The Country Club of Jackson",
+      "East Lake GC",
+      "Sedgefield CC",
+      "TPC Southwind",
+      "Dunes Golf & Beach Club",
+      "Sea Island GC (Seaside)"
+    ],
+    "FieldSize": "",
+    "FieldStrength": "",
+    "OTTClub": "",
+    "FwyPct": "0",
+    "FwyAccuracy": "",
+    "GainOTT": "",
+    "MissedFairwayPenalty": "",
+    "RoughPenalty": "",
+    "GIRAccuracy": "",
+    "GIRPct": "0",
+    "GainAPP": "",
+    "ScramblingFromRough": "",
+    "ScramblingFromShortGrass": "",
+    "SandSaves": "",
+    "GainARG": "",
+    "GainingPuttingInside15": "",
+    "GainingPuttingOutside15": "",
+    "3PuttAVD": "",
+    "GainPutting": "",
+    "Par3Scoring": "",
+    "Par4Scoring": "",
+    "Par5Scoring": "",
+    "ShotLink": "0"
+  },
+  "tournaments": [
+    {
+      "CourseNum": "943",
+      "TNum": "558",
+      "TourneyName": "Austin Championship presented by Compliance Solutions"
+    }
+  ],
+  "_meta": {
+    "pulledAt": "2026-11-20T22:18:25.127Z",
+    "detailStatus": 200,
+    "tournamentsStatus": 200
+  },
+  "auth": {
+    "holeBreakdown": [],
+    "correlated": [
+      {
+        "CourseNum": "513",
+        "CourseName": "TPC Southwind",
+        "CourseNums": "[513]"
+      },
+      {
+        "CourseNum": "688",
+        "CourseName": "East Lake GC",
+        "CourseNums": "[688, 933]"
+      },
+      {
+        "CourseNum": "746",
+        "CourseName": "The Country Club of Jackson",
+        "CourseNums": "[746]"
+      },
+      {
+        "CourseNum": "752",
+        "CourseName": "Sedgefield CC",
+        "CourseNums": "[752]"
+      },
+      {
+        "CourseNum": "770",
+        "CourseName": "TPC San Antonio (Oaks)",
+        "CourseNums": "[770]"
+      },
+      {
+        "CourseNum": "776",
+        "CourseName": "Sea Island GC (Seaside)",
+        "CourseNums": "[776]"
+      },
+      {
+        "CourseNum": "897",
+        "CourseName": "Memorial Park Golf Course",
+        "CourseNums": "[897]"
+      },
+      {
+        "CourseNum": "921",
+        "CourseName": "TPC Craig Ranch",
+        "CourseNums": "[921, 894, 944]"
+      },
+      {
+        "CourseNum": "925",
+        "CourseName": "Dunes Golf & Beach Club",
+        "CourseNums": "[925]"
+      }
+    ],
+    "_meta": {
+      "pulledAt": "2026-11-20T22:52:51.890Z",
+      "holeStatus": 200,
+      "correlatedStatus": 200
+    }
+  }
+}

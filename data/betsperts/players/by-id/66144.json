@@ -1,0 +1,153 @@
+{
+  "playerId": "66144",
+  "playerName": "Maxwell Ford",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Maxwell Ford",
+    "BirthPlace": "Atlanta, Georgia",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "5ft 11in",
+    "Weight": "170 lbs",
+    "Nationality": "United States",
+    "Residence": "Chapel Hill, North Carolina",
+    "ProWins": null,
+    "TurnedPro": "2025",
+    "PGAWins": null,
+    "College": "University of North Carolina-Chapel Hill "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Maxwell Ford",
+        "player_num": "66144",
+        "Year": "2023",
+        "Rounds": "2",
+        "SG:TOT": "-1.94",
+        "SG:T2G": "-0.40",
+        "SG:OTT": "0.19",
+        "SG:APP": "0.51",
+        "SG:BS": "0.69",
+        "SG:ARG": "-1.10",
+        "SG:P": "0.18",
+        "Dr Distance": "308.2",
+        "Dr Accuracy %": "67.9",
+        "Ball Speed": "180.05"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2023-11-19",
+        "position": "CUT",
+        "roundPosition": "T121",
+        "TournamentName": "The RSM Classic",
+        "is_major": "0",
+        "playerName": "Maxwell Ford",
+        "player_num": "66144",
+        "Rounds": "2",
+        "CourseID": "776",
+        "Course": "Sea Island GC (Seaside)",
+        "ShotLink": "1",
+        "SG:TOT": "-1.94",
+        "SG:T2G": "-0.40",
+        "SG:OTT": "0.19",
+        "SG:APP": "0.51",
+        "SG:BS": "0.69",
+        "SG:ARG": "-1.10",
+        "SG:P": "0.18",
+        "SG:SG": "-0.92"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "0.18000000715255737",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-3.6500000953674316",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.2199999988079071",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-1.9350000470876694",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-3.6500000953674316",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-0.2199999988079071",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-1.9350000470876694",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74",
+        "PM": "68",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "22.6",
+        "150-200": null,
+        "200+": "60.8",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-1.9350000470876694",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:24:05.769Z",
+    "ok": true
+  }
+}

@@ -1,0 +1,148 @@
+{
+  "playerId": "34073",
+  "playerName": "Creighton Honeck",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Creighton Honeck",
+    "BirthPlace": null,
+    "BirthDate": "February 01, 1985",
+    "Age": "41",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Creighton Honeck",
+        "player_num": "34073",
+        "Year": "2015",
+        "Rounds": "2",
+        "SG:TOT": "-0.90",
+        "SG:T2G": "-1.27",
+        "SG:OTT": "2.08",
+        "SG:APP": "-2.92",
+        "SG:BS": "-0.84",
+        "SG:ARG": "-0.43",
+        "SG:P": "1.79",
+        "Dr Distance": "294.6",
+        "Dr Accuracy %": "70.4",
+        "Ball Speed": "170.84"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2015-05-31",
+        "position": "CUT",
+        "roundPosition": "T100",
+        "TournamentName": "AT&T Byron Nelson",
+        "is_major": "0",
+        "playerName": "Creighton Honeck",
+        "player_num": "34073",
+        "Rounds": "2",
+        "CourseID": "822",
+        "Course": "TPC Four Seasons Resort",
+        "ShotLink": "2",
+        "SG:TOT": "-0.90",
+        "SG:T2G": "-1.27",
+        "SG:OTT": "2.08",
+        "SG:APP": "-2.92",
+        "SG:BS": "-0.84",
+        "SG:ARG": "-0.43",
+        "SG:P": "1.79",
+        "SG:SG": "1.36"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "1.7879999876022339",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "0.5199999809265137",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-2.319999933242798",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-0.8999999761581421",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-0.8999999761581421",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-0.8999999761581421",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "70",
+        "PM": "70",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "40.4",
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-0.8999999761581421",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:20:39.700Z",
+    "ok": true
+  }
+}

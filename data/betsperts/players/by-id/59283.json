@@ -1,0 +1,205 @@
+{
+  "playerId": "59283",
+  "playerName": "George Kneiser",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "George Kneiser",
+    "BirthPlace": "Milwaukee, Wisconsin",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "5ft 10in",
+    "Weight": "185 lbs",
+    "Nationality": "United States",
+    "Residence": "Oconomowoc, Wisconsin",
+    "ProWins": null,
+    "TurnedPro": "2020",
+    "PGAWins": null,
+    "College": "University of Wisconsin-Green Bay 2020, Business Administration"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "George Kneiser",
+        "player_num": "59283",
+        "Year": "2025",
+        "Rounds": "2",
+        "SG:TOT": "-5.29",
+        "SG:T2G": "-2.59",
+        "SG:OTT": "-0.61",
+        "SG:APP": "-0.75",
+        "SG:BS": "-1.37",
+        "SG:ARG": "-1.22",
+        "SG:P": "-2.71",
+        "Dr Distance": "295.0",
+        "Dr Accuracy %": "50.0",
+        "Ball Speed": "175.60"
+      },
+      {
+        "playerName": "George Kneiser",
+        "player_num": "59283",
+        "Year": "2024",
+        "Rounds": "2",
+        "SG:TOT": "-3.09",
+        "SG:T2G": "-2.11",
+        "SG:OTT": "-0.06",
+        "SG:APP": "-2.59",
+        "SG:BS": "-2.65",
+        "SG:ARG": "0.54",
+        "SG:P": "-0.98",
+        "Dr Distance": "271.2",
+        "Dr Accuracy %": "71.4",
+        "Ball Speed": "172.90"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2025-06-15",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "George Kneiser",
+        "player_num": "59283",
+        "Rounds": "2",
+        "CourseID": "608",
+        "Course": "Oakmont CC",
+        "ShotLink": "2",
+        "SG:TOT": "-5.29",
+        "SG:T2G": "-2.59",
+        "SG:OTT": "-0.61",
+        "SG:APP": "-0.75",
+        "SG:BS": "-1.37",
+        "SG:ARG": "-1.22",
+        "SG:P": "-2.71",
+        "SG:SG": "-3.92"
+      },
+      {
+        "Date": "2024-08-11",
+        "position": "CUT",
+        "roundPosition": "T140",
+        "TournamentName": "Wyndham Championship",
+        "is_major": "0",
+        "playerName": "George Kneiser",
+        "player_num": "59283",
+        "Rounds": "2",
+        "CourseID": "752",
+        "Course": "Sedgefield CC",
+        "ShotLink": "2",
+        "SG:TOT": "-3.09",
+        "SG:T2G": "-2.11",
+        "SG:OTT": "-0.06",
+        "SG:APP": "-2.59",
+        "SG:BS": "-2.65",
+        "SG:ARG": "0.54",
+        "SG:P": "-0.98",
+        "SG:SG": "-0.44"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "25.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-0.9830000251531601",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "-2.705499976873398",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-6.31000018119812",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-2.069999895989895",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-5.289999961853027",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-3.0900001153349876",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-3.0900001153349876",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-5.289999961853027",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-3.0900001153349876",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-5.289999961853027",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "77",
+        "PM": "75",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": "36.3",
+        "150-200": "39.6",
+        "200+": "56.2",
+        "200-250": "54.2",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-4.1900000385940075",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:21:46.664Z",
+    "ok": true
+  }
+}

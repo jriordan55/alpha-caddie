@@ -1,0 +1,158 @@
+{
+  "playerId": "46823",
+  "playerName": "Jeremy Gandon",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_fr-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Jeremy Gandon",
+    "BirthPlace": "Valence, France",
+    "BirthDate": "December 04, 1996",
+    "Age": "29",
+    "Height": "6ft 0in",
+    "Weight": "195 lbs",
+    "Nationality": "France",
+    "Residence": "Dallas, Texas",
+    "ProWins": "0",
+    "TurnedPro": "2019",
+    "PGAWins": "0",
+    "College": "Kansas State University 2019, Finance"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Jeremy Gandon",
+        "player_num": "46823",
+        "Year": "2019",
+        "Rounds": "4",
+        "SG:TOT": "-0.63",
+        "SG:T2G": "-0.45",
+        "SG:OTT": "-0.13",
+        "SG:APP": "-0.51",
+        "SG:BS": "-0.65",
+        "SG:ARG": "0.19",
+        "SG:P": "-0.18",
+        "Dr Distance": "295.5",
+        "Dr Accuracy %": "48.2",
+        "Ball Speed": "177.53"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2019-10-13",
+        "position": "T66",
+        "roundPosition": "T66",
+        "TournamentName": "Houston Open",
+        "is_major": "0",
+        "playerName": "Jeremy Gandon",
+        "player_num": "46823",
+        "Rounds": "4",
+        "CourseID": "729",
+        "Course": "GC of Houston",
+        "ShotLink": "4",
+        "SG:TOT": "-0.63",
+        "SG:T2G": "-0.45",
+        "SG:OTT": "-0.13",
+        "SG:APP": "-0.51",
+        "SG:BS": "-0.65",
+        "SG:ARG": "0.19",
+        "SG:P": "-0.18",
+        "SG:SG": "0.02"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "25.0",
+        "SG TOT 1+": "25.0",
+        "SG TOT 2+": "25.0",
+        "SG TOT 3+": "25.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-0.1755000203847885",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "3.509999990463257",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-2.7100000381469727",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-1.0099999904632568",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-2.309999942779541",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-0.6299999952316284",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-0.6299999952316284",
+        "Rounds": "4"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-0.6299999952316284",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "70.5",
+        "PM": "74.5",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "42.5",
+        "200+": "50.4",
+        "200-250": "45.9",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-0.6299999952316284",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:40.318Z",
+    "ok": true
+  }
+}

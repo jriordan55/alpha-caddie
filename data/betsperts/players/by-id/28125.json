@@ -1,0 +1,168 @@
+{
+  "playerId": "28125",
+  "playerName": "Josh Geary",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_nz-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Josh Geary",
+    "BirthPlace": "Invercargill, New Zealand",
+    "BirthDate": "November 12, 1984",
+    "Age": "42",
+    "Height": "5ft 9in",
+    "Weight": "170 lbs",
+    "Nationality": "New Zealand",
+    "Residence": "Tauranga, New Zealand",
+    "ProWins": "7",
+    "TurnedPro": "2007",
+    "PGAWins": "0",
+    "College": "Polytech Junior College (Sports and Recreation, 2005) "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Josh Geary",
+        "player_num": "28125",
+        "Year": "2022",
+        "Rounds": "4",
+        "SG:TOT": "0.44",
+        "SG:T2G": "0.01",
+        "SG:OTT": "0.52",
+        "SG:APP": "-0.50",
+        "SG:BS": "0.02",
+        "SG:ARG": "-0.01",
+        "SG:P": "0.44",
+        "Dr Distance": "290.6",
+        "Dr Accuracy %": "64.3",
+        "Ball Speed": "172.41"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2022-07-10",
+        "position": "T50",
+        "roundPosition": "T50",
+        "TournamentName": "Barbasol Championship",
+        "is_major": "0",
+        "playerName": "Josh Geary",
+        "player_num": "28125",
+        "Rounds": "4",
+        "CourseID": "884",
+        "Course": "Keene Trace GC",
+        "ShotLink": "4",
+        "SG:TOT": "0.44",
+        "SG:T2G": "0.01",
+        "SG:OTT": "0.52",
+        "SG:APP": "-0.50",
+        "SG:BS": "0.02",
+        "SG:ARG": "-0.01",
+        "SG:P": "0.44",
+        "SG:SG": "0.43"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "75.0",
+        "SG TOT 1+": "25.0",
+        "SG TOT 2+": "25.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "0.4372499957680702",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.1299999952316284",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "2.119999885559082",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "0.1899999976158142",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "0.6000000238418579",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "0.6000000238418579",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "0.3933332959810893",
+        "Rounds": "3"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "0.6000000238418579",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "0.3933332959810893",
+        "Rounds": "3"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "0.44499997794628143",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "69",
+        "PM": "71",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": "24.5",
+        "150-200": "38",
+        "200+": "50.9",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "0.44499997794628143",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:06.665Z",
+    "ok": true
+  }
+}

@@ -1,0 +1,148 @@
+{
+  "playerId": "46673",
+  "playerName": "Tomoyo Ikemura",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ja-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Tomoyo Ikemura",
+    "BirthPlace": "",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "Japan",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Tomoyo Ikemura",
+        "player_num": "46673",
+        "Year": "2020",
+        "Rounds": "2",
+        "SG:TOT": "-3.38",
+        "SG:T2G": "-2.44",
+        "SG:OTT": "1.03",
+        "SG:APP": "-3.61",
+        "SG:BS": "-2.58",
+        "SG:ARG": "0.14",
+        "SG:P": "-0.94",
+        "Dr Distance": "290.3",
+        "Dr Accuracy %": "60.7",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2020-01-12",
+        "position": "CUT",
+        "roundPosition": "T127",
+        "TournamentName": "Sony Open",
+        "is_major": "0",
+        "playerName": "Tomoyo Ikemura",
+        "player_num": "46673",
+        "Rounds": "2",
+        "CourseID": "6",
+        "Course": "Waialae CC",
+        "ShotLink": "2",
+        "SG:TOT": "-3.38",
+        "SG:T2G": "-2.44",
+        "SG:OTT": "1.03",
+        "SG:APP": "-3.61",
+        "SG:BS": "-2.58",
+        "SG:ARG": "0.14",
+        "SG:P": "-0.94",
+        "SG:SG": "-0.79"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-0.9354999959468842",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-4.010000228881836",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-2.740000009536743",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-3.3750001192092896",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-3.3750001192092896",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-3.3750001192092896",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "76",
+        "PM": "73",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": "44.1",
+        "100-150": null,
+        "150-200": "47",
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Aloha",
+        "StrokesGainedAverage": "-3.3750001192092896",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:26:10.980Z",
+    "ok": true
+  }
+}

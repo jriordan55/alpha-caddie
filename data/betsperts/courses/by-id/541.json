@@ -1,0 +1,178 @@
+{
+  "courseNum": "541",
+  "courseName": "Royal Birkdale GC",
+  "list": {
+    "CourseName": "Royal Birkdale GC",
+    "CourseNum": "541",
+    "CourseNums": [
+      541
+    ]
+  },
+  "details": {
+    "CourseName": "Royal Birkdale GC",
+    "CourseNum": "541",
+    "Locations": [
+      "UK/Ireland",
+      "International"
+    ],
+    "SeasonHeld": "Summer",
+    "CourseTypes": [
+      "Coastal",
+      "Ocean",
+      "Links"
+    ],
+    "ParScore": "70",
+    "Yards": "7223",
+    "AVG": "103.2",
+    "CourseLength": "Average",
+    "Architects": [
+      "Fred Hawtree",
+      "J.H. Taylor"
+    ],
+    "RedesignArchitects": [
+      "Tom Mackenzie"
+    ],
+    "Elevation": "48",
+    "CourseElevation": "Sea Level",
+    "Bunkers": "110",
+    "BunkersRank": "High",
+    "WaterHoles": "1",
+    "WaterDanger": "Low",
+    "ScoreRTP": "1.85",
+    "Difficulty": "Very Difficult",
+    "FwyGrass": "Fescue Mix",
+    "FwyWidth": "0",
+    "GreenSqFt": "5200",
+    "GreenSize": "Small",
+    "GreenGrass": "Native",
+    "GreenStimp": "10.5",
+    "GreenSpeed": "Slow",
+    "RoughType": "Fescue",
+    "RoughGrass": "Fescue",
+    "RoughLengthInc": "5",
+    "RoughLength": "Long",
+    "EventTypes": [
+      "36-Hole Cut",
+      "Major"
+    ],
+    "Tournaments": [
+      {
+        "Year": "2017",
+        "Tournament": "The Open Championship"
+      }
+    ],
+    "CorrelatedCourse": [
+      "Royal Liverpool",
+      "Royal Troon",
+      "Royal St. Georges GC",
+      "Carnoustie GC",
+      "The Renaissance Club",
+      "St. Andrews GC (Old Course)",
+      "Royal Portrush GC",
+      "Shinnecock Hills GC",
+      "Ocean Course at Kiawah Island",
+      "Erin Hills",
+      "Pebble Beach Golf Links"
+    ],
+    "FieldSize": "Full Field",
+    "FieldStrength": "Very Strong",
+    "OTTClub": "Mixed",
+    "FwyPct": "49.2",
+    "FwyAccuracy": "Difficult",
+    "GainOTT": "Difficult",
+    "MissedFairwayPenalty": "High",
+    "RoughPenalty": "High",
+    "GIRAccuracy": "Difficult",
+    "GIRPct": "59.9",
+    "GainAPP": "Very Difficult",
+    "ScramblingFromRough": "Difficult",
+    "ScramblingFromShortGrass": "Average",
+    "SandSaves": "Average",
+    "GainARG": "Difficult",
+    "GainingPuttingInside15": "Difficult",
+    "GainingPuttingOutside15": "Average",
+    "3PuttAVD": "Difficult",
+    "GainPutting": "Difficult",
+    "Par3Scoring": "Difficult",
+    "Par4Scoring": "Difficult",
+    "Par5Scoring": "Average",
+    "ShotLink": "1"
+  },
+  "tournaments": [
+    {
+      "CourseNum": "541",
+      "TNum": "100",
+      "TourneyName": "The Open Championship"
+    }
+  ],
+  "_meta": {
+    "pulledAt": "2026-11-20T22:18:25.809Z",
+    "detailStatus": 200,
+    "tournamentsStatus": 200
+  },
+  "auth": {
+    "holeBreakdown": [],
+    "correlated": [
+      {
+        "CourseNum": "5",
+        "CourseName": "Pebble Beach Golf Links",
+        "CourseNums": "[5, 666]"
+      },
+      {
+        "CourseNum": "236",
+        "CourseName": "Erin Hills",
+        "CourseNums": "[236]"
+      },
+      {
+        "CourseNum": "618",
+        "CourseName": "Shinnecock Hills GC",
+        "CourseNums": "[618]"
+      },
+      {
+        "CourseNum": "658",
+        "CourseName": "Carnoustie GC",
+        "CourseNums": "[658]"
+      },
+      {
+        "CourseNum": "668",
+        "CourseName": "St. Andrews GC (Old Course)",
+        "CourseNums": "[668]"
+      },
+      {
+        "CourseNum": "697",
+        "CourseName": "Ocean Course at Kiawah Island",
+        "CourseNums": "[697]"
+      },
+      {
+        "CourseNum": "709",
+        "CourseName": "Royal Troon",
+        "CourseNums": "[709]"
+      },
+      {
+        "CourseNum": "778",
+        "CourseName": "Royal St. Georges GC",
+        "CourseNums": "[778]"
+      },
+      {
+        "CourseNum": "885",
+        "CourseName": "Royal Portrush GC",
+        "CourseNums": "[885]"
+      },
+      {
+        "CourseNum": "923",
+        "CourseName": "Royal Liverpool",
+        "CourseNums": "[923, 724]"
+      },
+      {
+        "CourseNum": "945",
+        "CourseName": "The Renaissance Club",
+        "CourseNums": "[945, 977]"
+      }
+    ],
+    "_meta": {
+      "pulledAt": "2026-11-20T22:52:52.447Z",
+      "holeStatus": 200,
+      "correlatedStatus": 200
+    }
+  }
+}

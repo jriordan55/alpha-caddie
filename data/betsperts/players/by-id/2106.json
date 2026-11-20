@@ -1,0 +1,571 @@
+{
+  "playerId": "2106",
+  "playerName": "Chris Smith",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "0",
+    "Name": "Chris Smith",
+    "BirthPlace": "Indianapolis, Indiana",
+    "BirthDate": "April 15, 1969",
+    "Age": "57",
+    "Height": "5ft 11in",
+    "Weight": "190 lbs",
+    "Nationality": "United States",
+    "Residence": "Peru, Indiana",
+    "ProWins": "1",
+    "TurnedPro": "1991",
+    "PGAWins": "1",
+    "College": "Ohio State University (1991, Economics) "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Chris Smith",
+        "player_num": "2106",
+        "Year": "2019",
+        "Rounds": "2",
+        "SG:TOT": "-1.45",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "53.6",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Chris Smith",
+        "player_num": "2106",
+        "Year": "2018",
+        "Rounds": "2",
+        "SG:TOT": "-3.87",
+        "SG:T2G": "-2.27",
+        "SG:OTT": "-0.25",
+        "SG:APP": "-1.83",
+        "SG:BS": "-2.08",
+        "SG:ARG": "-0.18",
+        "SG:P": "-1.61",
+        "Dr Distance": "283.6",
+        "Dr Accuracy %": "57.1",
+        "Ball Speed": "167.06"
+      },
+      {
+        "playerName": "Chris Smith",
+        "player_num": "2106",
+        "Year": "2017",
+        "Rounds": "3",
+        "SG:TOT": "-0.90",
+        "SG:T2G": "-0.24",
+        "SG:OTT": "-0.28",
+        "SG:APP": "0.47",
+        "SG:BS": "0.19",
+        "SG:ARG": "-0.43",
+        "SG:P": "-0.66",
+        "Dr Distance": "277.4",
+        "Dr Accuracy %": "59.5",
+        "Ball Speed": "166.20"
+      },
+      {
+        "playerName": "Chris Smith",
+        "player_num": "2106",
+        "Year": "2016",
+        "Rounds": "4",
+        "SG:TOT": "-3.37",
+        "SG:T2G": "-2.10",
+        "SG:OTT": "-0.68",
+        "SG:APP": "-0.45",
+        "SG:BS": "-1.13",
+        "SG:ARG": "-0.97",
+        "SG:P": "-1.27",
+        "Dr Distance": "284.9",
+        "Dr Accuracy %": "64.3",
+        "Ball Speed": "166.59"
+      },
+      {
+        "playerName": "Chris Smith",
+        "player_num": "2106",
+        "Year": "2015",
+        "Rounds": "25",
+        "SG:TOT": "-1.38",
+        "SG:T2G": "-1.08",
+        "SG:OTT": "-0.02",
+        "SG:APP": "0.09",
+        "SG:BS": "0.07",
+        "SG:ARG": "-1.15",
+        "SG:P": "-0.74",
+        "Dr Distance": "281.9",
+        "Dr Accuracy %": "61.8",
+        "Ball Speed": "168.69"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2019-02-24",
+        "position": "CUT",
+        "roundPosition": "T97",
+        "TournamentName": "Puerto Rico Open",
+        "is_major": "0",
+        "playerName": "Chris Smith",
+        "player_num": "2106",
+        "Rounds": "2",
+        "CourseID": "742",
+        "Course": "Grand Reserve GC",
+        "ShotLink": "0",
+        "SG:TOT": "-1.45",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2018-07-22",
+        "position": "CUT",
+        "roundPosition": "T117",
+        "TournamentName": "Barbasol Championship",
+        "is_major": "0",
+        "playerName": "Chris Smith",
+        "player_num": "2106",
+        "Rounds": "2",
+        "CourseID": "823",
+        "Course": "Keene Trace GC",
+        "ShotLink": "2",
+        "SG:TOT": "-3.87",
+        "SG:T2G": "-2.27",
+        "SG:OTT": "-0.25",
+        "SG:APP": "-1.83",
+        "SG:BS": "-2.08",
+        "SG:ARG": "-0.18",
+        "SG:P": "-1.61",
+        "SG:SG": "-1.79"
+      },
+      {
+        "Date": "2017-07-23",
+        "position": "T73",
+        "roundPosition": "T73",
+        "TournamentName": "Barbasol Championship",
+        "is_major": "0",
+        "playerName": "Chris Smith",
+        "player_num": "2106",
+        "Rounds": "3",
+        "CourseID": "819",
+        "Course": "RTJ Trail (Grand National)",
+        "ShotLink": "3",
+        "SG:TOT": "-0.90",
+        "SG:T2G": "-0.24",
+        "SG:OTT": "-0.28",
+        "SG:APP": "0.47",
+        "SG:BS": "0.19",
+        "SG:ARG": "-0.43",
+        "SG:P": "-0.66",
+        "SG:SG": "-1.09"
+      },
+      {
+        "Date": "2016-08-14",
+        "position": "CUT",
+        "roundPosition": "T137",
+        "TournamentName": "John Deere Classic",
+        "is_major": "0",
+        "playerName": "Chris Smith",
+        "player_num": "2106",
+        "Rounds": "2",
+        "CourseID": "669",
+        "Course": "TPC Deere Run",
+        "ShotLink": "2",
+        "SG:TOT": "-3.33",
+        "SG:T2G": "-2.80",
+        "SG:OTT": "-0.80",
+        "SG:APP": "-0.65",
+        "SG:BS": "-1.45",
+        "SG:ARG": "-1.34",
+        "SG:P": "-0.54",
+        "SG:SG": "-1.88"
+      },
+      {
+        "Date": "2016-06-12",
+        "position": "CUT",
+        "roundPosition": "T141",
+        "TournamentName": "FedEx St. Jude Classic",
+        "is_major": "0",
+        "playerName": "Chris Smith",
+        "player_num": "2106",
+        "Rounds": "2",
+        "CourseID": "513",
+        "Course": "TPC Southwind",
+        "ShotLink": "2",
+        "SG:TOT": "-3.41",
+        "SG:T2G": "-1.40",
+        "SG:OTT": "-0.55",
+        "SG:APP": "-0.25",
+        "SG:BS": "-0.80",
+        "SG:ARG": "-0.60",
+        "SG:P": "-2.01",
+        "SG:SG": "-2.60"
+      },
+      {
+        "Date": "2015-11-22",
+        "position": "CUT",
+        "roundPosition": "155",
+        "TournamentName": "The RSM Classic",
+        "is_major": "0",
+        "playerName": "Chris Smith",
+        "player_num": "2106",
+        "Rounds": "2",
+        "CourseID": "231",
+        "Course": "Sea Island GC (Plantation)",
+        "ShotLink": "1",
+        "SG:TOT": "-7.27",
+        "SG:T2G": "-5.33",
+        "SG:OTT": "-3.41",
+        "SG:APP": "-1.39",
+        "SG:BS": "-4.80",
+        "SG:ARG": "-0.52",
+        "SG:P": "-2.08",
+        "SG:SG": "-2.60"
+      },
+      {
+        "Date": "2015-11-08",
+        "position": "CUT",
+        "roundPosition": "T113",
+        "TournamentName": "Sanderson Farms Championship",
+        "is_major": "0",
+        "playerName": "Chris Smith",
+        "player_num": "2106",
+        "Rounds": "2",
+        "CourseID": "746",
+        "Course": "The Country Club of Jackson",
+        "ShotLink": "2",
+        "SG:TOT": "-3.09",
+        "SG:T2G": "-1.80",
+        "SG:OTT": "1.00",
+        "SG:APP": "-0.89",
+        "SG:BS": "0.11",
+        "SG:ARG": "-1.91",
+        "SG:P": "-1.29",
+        "SG:SG": "-3.19"
+      },
+      {
+        "Date": "2015-07-19",
+        "position": "T66",
+        "roundPosition": "T66",
+        "TournamentName": "Barbasol Championship",
+        "is_major": "0",
+        "playerName": "Chris Smith",
+        "player_num": "2106",
+        "Rounds": "4",
+        "CourseID": "819",
+        "Course": "RTJ Trail (Grand National)",
+        "ShotLink": "4",
+        "SG:TOT": "-0.45",
+        "SG:T2G": "-0.25",
+        "SG:OTT": "0.72",
+        "SG:APP": "0.54",
+        "SG:BS": "1.26",
+        "SG:ARG": "-1.50",
+        "SG:P": "-0.20",
+        "SG:SG": "-1.70"
+      },
+      {
+        "Date": "2015-07-12",
+        "position": "CUT",
+        "roundPosition": "T98",
+        "TournamentName": "John Deere Classic",
+        "is_major": "0",
+        "playerName": "Chris Smith",
+        "player_num": "2106",
+        "Rounds": "2",
+        "CourseID": "669",
+        "Course": "TPC Deere Run",
+        "ShotLink": "2",
+        "SG:TOT": "-0.81",
+        "SG:T2G": "-0.03",
+        "SG:OTT": "0.39",
+        "SG:APP": "-0.11",
+        "SG:BS": "0.27",
+        "SG:ARG": "-0.31",
+        "SG:P": "-0.78",
+        "SG:SG": "-1.09"
+      },
+      {
+        "Date": "2015-06-14",
+        "position": "T12",
+        "roundPosition": "T12",
+        "TournamentName": "FedEx St. Jude Classic",
+        "is_major": "0",
+        "playerName": "Chris Smith",
+        "player_num": "2106",
+        "Rounds": "4",
+        "CourseID": "513",
+        "Course": "TPC Southwind",
+        "ShotLink": "4",
+        "SG:TOT": "2.31",
+        "SG:T2G": "0.99",
+        "SG:OTT": "-0.05",
+        "SG:APP": "1.40",
+        "SG:BS": "1.35",
+        "SG:ARG": "-0.36",
+        "SG:P": "1.31",
+        "SG:SG": "0.95"
+      },
+      {
+        "Date": "2015-05-31",
+        "position": "CUT",
+        "roundPosition": "T124",
+        "TournamentName": "AT&T Byron Nelson",
+        "is_major": "0",
+        "playerName": "Chris Smith",
+        "player_num": "2106",
+        "Rounds": "2",
+        "CourseID": "822",
+        "Course": "TPC Four Seasons Resort",
+        "ShotLink": "2",
+        "SG:TOT": "-1.90",
+        "SG:T2G": "-0.79",
+        "SG:OTT": "-0.39",
+        "SG:APP": "0.55",
+        "SG:BS": "0.15",
+        "SG:ARG": "-0.94",
+        "SG:P": "-1.69",
+        "SG:SG": "-2.63"
+      },
+      {
+        "Date": "2015-03-15",
+        "position": "CUT",
+        "roundPosition": "T141",
+        "TournamentName": "Valspar Championship",
+        "is_major": "0",
+        "playerName": "Chris Smith",
+        "player_num": "2106",
+        "Rounds": "2",
+        "CourseID": "665",
+        "Course": "Innisbrook Resort (Copperhead)",
+        "ShotLink": "2",
+        "SG:TOT": "-5.39",
+        "SG:T2G": "-2.57",
+        "SG:OTT": "-0.42",
+        "SG:APP": "-0.79",
+        "SG:BS": "-1.21",
+        "SG:ARG": "-1.35",
+        "SG:P": "-2.83",
+        "SG:SG": "-4.18"
+      },
+      {
+        "Date": "2015-03-08",
+        "position": "T10",
+        "roundPosition": "T10",
+        "TournamentName": "Puerto Rico Open",
+        "is_major": "0",
+        "playerName": "Chris Smith",
+        "player_num": "2106",
+        "Rounds": "4",
+        "CourseID": "742",
+        "Course": "Grand Reserve GC",
+        "ShotLink": "0",
+        "SG:TOT": "1.57",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2015-02-15",
+        "position": "CUT",
+        "roundPosition": "T147",
+        "TournamentName": "AT&T Pebble Beach Pro-Am",
+        "is_major": "0",
+        "playerName": "Chris Smith",
+        "player_num": "2106",
+        "Rounds": "3",
+        "CourseID": "205",
+        "Course": "Spyglass Hill",
+        "ShotLink": "1",
+        "SG:TOT": "-3.79",
+        "SG:T2G": "-6.47",
+        "SG:OTT": "-1.20",
+        "SG:APP": "-1.82",
+        "SG:BS": "-3.02",
+        "SG:ARG": "-3.45",
+        "SG:P": "-3.47",
+        "SG:SG": "-6.92"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "35.0",
+        "SG TOT 1+": "17.5",
+        "SG TOT 2+": "15.0",
+        "SG TOT 3+": "10.0",
+        "SG TOT 4+": "5.0",
+        "SG TOT 5+": "2.5",
+        "Rounds": "48"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-1.0765714517661504",
+        "Rounds": "8"
+      },
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-0.38662501494400203",
+        "Rounds": "17"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "-3.4709999561309814",
+        "Rounds": "3"
+      },
+      {
+        "GreenSurface": "Poa Trivialis",
+        "StrokesGainedAverage": "-2.8289999961853027",
+        "Rounds": "2"
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-2.4319999774297076",
+        "Rounds": "18"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.5940000196297963",
+        "Rounds": "18"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "0.49666670337319374",
+        "Rounds": "7"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-0.7900000214576721",
+        "Rounds": "5"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "",
+        "StrokesGainedAverage": null,
+        "Rounds": "8"
+      },
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-1.2010526488486089",
+        "Rounds": "19"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "0.560000037153562",
+        "Rounds": "6"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-3.3471428666796004",
+        "Rounds": "7"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-4.627499878406525",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-1.6750000268220901",
+        "Rounds": "6"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-0.1758333301792542",
+        "Rounds": "12"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-4.046666701634725",
+        "Rounds": "9"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-2.3794117359554066",
+        "Rounds": "17"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-5.394999980926514",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-1.110476180201485",
+        "Rounds": "29"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-2.099230764577022",
+        "Rounds": "13"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "71.72727272727273",
+        "PM": "72.83333333333333",
+        "Rounds": "48"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "48",
+        "50-100": null,
+        "100-150": "24.1",
+        "150-200": "35.6",
+        "200+": "60.1",
+        "200-250": "53.5",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-5.175000071525574",
+        "Rounds": "4"
+      },
+      {
+        "SeasonHeld": "Florida",
+        "StrokesGainedAverage": "-5.394999980926514",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "0.14142856374382973",
+        "Rounds": "14"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-1.5776923023737395",
+        "Rounds": "21"
+      },
+      {
+        "SeasonHeld": "West Coast",
+        "StrokesGainedAverage": "-3.793333133061727",
+        "Rounds": "3"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:20:25.536Z",
+    "ok": true
+  }
+}

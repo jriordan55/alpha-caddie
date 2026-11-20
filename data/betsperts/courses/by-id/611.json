@@ -1,0 +1,157 @@
+{
+  "courseNum": "611",
+  "courseName": "Southern Hills CC",
+  "list": {
+    "CourseName": "Southern Hills CC",
+    "CourseNum": "611",
+    "CourseNums": [
+      611
+    ]
+  },
+  "details": {
+    "CourseName": "Southern Hills CC",
+    "CourseNum": "611",
+    "Locations": [
+      "Midwest",
+      "Oklahoma"
+    ],
+    "SeasonHeld": "Spring",
+    "CourseTypes": [
+      "Parkland"
+    ],
+    "ParScore": "70",
+    "Yards": "7556",
+    "AVG": "107.9",
+    "CourseLength": "Very Long",
+    "Architects": [
+      "Perry Maxwell"
+    ],
+    "RedesignArchitects": [
+      "Gil Hanse"
+    ],
+    "Elevation": "1093",
+    "CourseElevation": "Average",
+    "Bunkers": "87",
+    "BunkersRank": "Average",
+    "WaterHoles": "15",
+    "WaterDanger": "High",
+    "ScoreRTP": "2.46",
+    "Difficulty": "Very Difficult",
+    "FwyGrass": "Bermuda",
+    "FwyWidth": "0",
+    "GreenSqFt": "5047",
+    "GreenSize": "Small",
+    "GreenGrass": "Bent",
+    "GreenStimp": "11.5",
+    "GreenSpeed": "Average",
+    "RoughType": "Bermuda",
+    "RoughGrass": "Bermuda",
+    "RoughLengthInc": "2.3",
+    "RoughLength": "Average",
+    "EventTypes": [
+      "36-Hole Cut",
+      "Major"
+    ],
+    "Tournaments": [
+      {
+        "Year": "2022",
+        "Tournament": "PGA Championship"
+      }
+    ],
+    "CorrelatedCourse": [
+      "Augusta National GC",
+      "Shinnecock Hills GC",
+      "Ocean Course at Kiawah Island",
+      "Colonial CC",
+      "Memorial Park Golf Course",
+      "Bay Hill Club & Lodge",
+      "Congaree Golf Club",
+      "Riviera CC"
+    ],
+    "FieldSize": "Full Field",
+    "FieldStrength": "Very Strong",
+    "OTTClub": "Driver Heavy",
+    "FwyPct": "62",
+    "FwyAccuracy": "Average",
+    "GainOTT": "Easy",
+    "MissedFairwayPenalty": "Low",
+    "RoughPenalty": "Average",
+    "GIRAccuracy": "Difficult",
+    "GIRPct": "54.3",
+    "GainAPP": "Very Difficult",
+    "ScramblingFromRough": "Difficult",
+    "ScramblingFromShortGrass": "Difficult",
+    "SandSaves": "Difficult",
+    "GainARG": "Difficult",
+    "GainingPuttingInside15": "Difficult",
+    "GainingPuttingOutside15": "Average",
+    "3PuttAVD": "Average",
+    "GainPutting": "Difficult",
+    "Par3Scoring": "Difficult",
+    "Par4Scoring": "Difficult",
+    "Par5Scoring": "Difficult",
+    "ShotLink": "1"
+  },
+  "tournaments": [
+    {
+      "CourseNum": "611",
+      "TNum": "33",
+      "TourneyName": "PGA Championship"
+    }
+  ],
+  "_meta": {
+    "pulledAt": "2026-11-20T22:18:25.985Z",
+    "detailStatus": 200,
+    "tournamentsStatus": 200
+  },
+  "auth": {
+    "holeBreakdown": [],
+    "correlated": [
+      {
+        "CourseNum": "9",
+        "CourseName": "Bay Hill Club & Lodge",
+        "CourseNums": "[9]"
+      },
+      {
+        "CourseNum": "14",
+        "CourseName": "Augusta National GC",
+        "CourseNums": "[14]"
+      },
+      {
+        "CourseNum": "21",
+        "CourseName": "Colonial CC",
+        "CourseNums": "[21]"
+      },
+      {
+        "CourseNum": "500",
+        "CourseName": "Riviera CC",
+        "CourseNums": "[500]"
+      },
+      {
+        "CourseNum": "618",
+        "CourseName": "Shinnecock Hills GC",
+        "CourseNums": "[618]"
+      },
+      {
+        "CourseNum": "697",
+        "CourseName": "Ocean Course at Kiawah Island",
+        "CourseNums": "[697]"
+      },
+      {
+        "CourseNum": "897",
+        "CourseName": "Memorial Park Golf Course",
+        "CourseNums": "[897]"
+      },
+      {
+        "CourseNum": "902",
+        "CourseName": "Congaree Golf Club",
+        "CourseNums": "[902]"
+      }
+    ],
+    "_meta": {
+      "pulledAt": "2026-11-20T22:52:52.647Z",
+      "holeStatus": 200,
+      "correlatedStatus": 200
+    }
+  }
+}

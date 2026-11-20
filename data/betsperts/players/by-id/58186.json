@@ -1,0 +1,219 @@
+{
+  "playerId": "58186",
+  "playerName": "George Duangmanee",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "George Duangmanee",
+    "BirthPlace": null,
+    "BirthDate": "November 15, 2001",
+    "Age": "25",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "George Duangmanee",
+        "player_num": "58186",
+        "Year": "2025",
+        "Rounds": "6",
+        "SG:TOT": "-5.59",
+        "SG:T2G": "-3.35",
+        "SG:OTT": "-0.80",
+        "SG:APP": "-1.29",
+        "SG:BS": "-2.09",
+        "SG:ARG": "-1.26",
+        "SG:P": "-2.25",
+        "Dr Distance": "296.0",
+        "Dr Accuracy %": "44.0",
+        "Ball Speed": "182.79"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2025-06-15",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "George Duangmanee",
+        "player_num": "58186",
+        "Rounds": "2",
+        "CourseID": "608",
+        "Course": "Oakmont CC",
+        "ShotLink": "2",
+        "SG:TOT": "-12.79",
+        "SG:T2G": "-9.47",
+        "SG:OTT": "-2.23",
+        "SG:APP": "-4.16",
+        "SG:BS": "-6.39",
+        "SG:ARG": "-3.08",
+        "SG:P": "-3.32",
+        "SG:SG": "-6.41"
+      },
+      {
+        "Date": "2025-05-11",
+        "position": "T67",
+        "roundPosition": "T67",
+        "TournamentName": "Myrtle Beach Classic",
+        "is_major": "0",
+        "playerName": "George Duangmanee",
+        "player_num": "58186",
+        "Rounds": "4",
+        "CourseID": "925",
+        "Course": "Dunes Golf & Beach Club",
+        "ShotLink": "4",
+        "SG:TOT": "-1.99",
+        "SG:T2G": "-0.28",
+        "SG:OTT": "-0.09",
+        "SG:APP": "0.15",
+        "SG:BS": "0.06",
+        "SG:ARG": "-0.34",
+        "SG:P": "-1.71",
+        "SG:SG": "-2.06"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "16.7",
+        "SG TOT 1+": "16.7",
+        "SG TOT 2+": "16.7",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "6"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-1.7132500112056732",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "-3.322999954223633",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-4.669999837875366",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-7.305000126361847",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-4.039999961853027",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-5.559999942779541",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-0.8033333222071329",
+        "Rounds": "3"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-5.559999942779541",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-12.789999961853027",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-2.2149999737739563",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "2.0199999809265137",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-12.789999961853027",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-5.559999942779541",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-12.789999961853027",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-1.992499977350235",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "77.33333333333333",
+        "PM": "77.33333333333333",
+        "Rounds": "6"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "6",
+        "50-100": null,
+        "100-150": "23.8",
+        "150-200": "43.9",
+        "200+": "61.2",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-1.992499977350235",
+        "Rounds": "4"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-12.789999961853027",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:21:46.558Z",
+    "ok": true
+  }
+}

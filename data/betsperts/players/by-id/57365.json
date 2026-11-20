@@ -1,0 +1,219 @@
+{
+  "playerId": "57365",
+  "playerName": "Spencer Tibbits",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Spencer Tibbits",
+    "BirthPlace": "",
+    "BirthDate": "March 10, 1999",
+    "Age": "27",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "United States",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Spencer Tibbits",
+        "player_num": "57365",
+        "Year": "2026",
+        "Rounds": "4",
+        "SG:TOT": "-0.11",
+        "SG:T2G": "-0.70",
+        "SG:OTT": "-0.64",
+        "SG:APP": "-1.39",
+        "SG:BS": "-2.02",
+        "SG:ARG": "1.32",
+        "SG:P": "0.59",
+        "Dr Distance": "298.4",
+        "Dr Accuracy %": "62.5",
+        "Ball Speed": "171.72"
+      },
+      {
+        "playerName": "Spencer Tibbits",
+        "player_num": "57365",
+        "Year": "2019",
+        "Rounds": "2",
+        "SG:TOT": "0.13",
+        "SG:T2G": "-0.18",
+        "SG:OTT": "0.05",
+        "SG:APP": "-1.40",
+        "SG:BS": "-1.35",
+        "SG:ARG": "1.17",
+        "SG:P": "0.31",
+        "Dr Distance": "272.9",
+        "Dr Accuracy %": "53.6",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Spencer Tibbits",
+        "player_num": "57365",
+        "Rounds": "4",
+        "SG:TOT": "-0.11",
+        "SG:T2G": "-0.70",
+        "SG:OTT": "-0.64",
+        "SG:APP": "-1.39",
+        "SG:BS": "-2.02",
+        "SG:ARG": "1.32",
+        "SG:P": "0.59",
+        "SG:SG": "1.91"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-06-21",
+        "position": "T61",
+        "roundPosition": "T61",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Spencer Tibbits",
+        "player_num": "57365",
+        "Rounds": "4",
+        "CourseID": "618",
+        "Course": "Shinnecock Hills GC",
+        "ShotLink": "4",
+        "SG:TOT": "-0.11",
+        "SG:T2G": "-0.70",
+        "SG:OTT": "-0.64",
+        "SG:APP": "-1.39",
+        "SG:BS": "-2.02",
+        "SG:ARG": "1.32",
+        "SG:P": "0.59",
+        "SG:SG": "1.91"
+      },
+      {
+        "Date": "2019-06-16",
+        "position": "CUT",
+        "roundPosition": "T80",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Spencer Tibbits",
+        "player_num": "57365",
+        "Rounds": "2",
+        "CourseID": "666",
+        "Course": "Pebble Beach Golf Links",
+        "ShotLink": "2",
+        "SG:TOT": "0.13",
+        "SG:T2G": "-0.18",
+        "SG:OTT": "0.05",
+        "SG:APP": "-1.40",
+        "SG:BS": "-1.35",
+        "SG:ARG": "1.17",
+        "SG:P": "0.31",
+        "SG:SG": "1.48"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "33.3",
+        "SG TOT 1+": "33.3",
+        "SG TOT 2+": "16.7",
+        "SG TOT 3+": "16.7",
+        "SG TOT 4+": "16.7",
+        "SG TOT 5+": "16.7",
+        "Rounds": "6"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "0.30699998140335083",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "1.9850001335144043",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.0899999737739563",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-2.369999885559082",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-1.6100000143051147",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "0.1300000548362732",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-0.11249992251396179",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-1.6100000143051147",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "0.2840000867843628",
+        "Rounds": "5"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-0.03166659673055013",
+        "Rounds": "6"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "73.5",
+        "PM": "71",
+        "Rounds": "6"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "6",
+        "50-100": "32.9",
+        "100-150": "32",
+        "150-200": "42.8",
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-0.03166659673055013",
+        "Rounds": "6"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:40.318Z",
+    "ok": true
+  }
+}

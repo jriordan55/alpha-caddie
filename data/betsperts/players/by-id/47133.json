@@ -1,0 +1,153 @@
+{
+  "playerId": "47133",
+  "playerName": "Ben Geyer",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Ben Geyer",
+    "BirthPlace": "Woodland, California",
+    "BirthDate": "December 12, 1991",
+    "Age": "34",
+    "Height": "6ft 0in",
+    "Weight": "175 lbs",
+    "Nationality": "United States",
+    "Residence": "Arbuckle, California",
+    "ProWins": null,
+    "TurnedPro": "2013",
+    "PGAWins": null,
+    "College": "St. Marys College  (2013, Business Administration) "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Ben Geyer",
+        "player_num": "47133",
+        "Year": "2015",
+        "Rounds": "2",
+        "SG:TOT": "-1.21",
+        "SG:T2G": "-3.29",
+        "SG:OTT": "-0.26",
+        "SG:APP": "-1.16",
+        "SG:BS": "-1.42",
+        "SG:ARG": "-1.86",
+        "SG:P": "2.08",
+        "Dr Distance": "275.1",
+        "Dr Accuracy %": "57.1",
+        "Ball Speed": "162.62"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2015-10-18",
+        "position": "CUT",
+        "roundPosition": "T101",
+        "TournamentName": "Frys.com Open",
+        "is_major": "0",
+        "playerName": "Ben Geyer",
+        "player_num": "47133",
+        "Rounds": "2",
+        "CourseID": "552",
+        "Course": "Silverado Resort (North)",
+        "ShotLink": "2",
+        "SG:TOT": "-1.21",
+        "SG:T2G": "-3.29",
+        "SG:OTT": "-0.26",
+        "SG:APP": "-1.16",
+        "SG:BS": "-1.42",
+        "SG:ARG": "-1.86",
+        "SG:P": "2.08",
+        "SG:SG": "0.22"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "50.0",
+        "SG TOT 2+": "50.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "2.740000009536743",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-5.150000095367432",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "",
+        "StrokesGainedAverage": null,
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-1.2050000429153442",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-1.2050000429153442",
+        "Rounds": "4"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": null,
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-1.2050000429153442",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "68",
+        "PM": "77",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": "22.8",
+        "150-200": "37.8",
+        "200+": "51.7",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-1.2050000429153442",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": null,
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:23.470Z",
+    "ok": true
+  }
+}

@@ -1,0 +1,143 @@
+{
+  "playerId": "45779",
+  "playerName": "Brett Webster",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ca-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Brett Webster",
+    "BirthPlace": null,
+    "BirthDate": "June 02, 1988",
+    "Age": "38",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "Canada",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Brett Webster",
+        "player_num": "45779",
+        "Year": "2025",
+        "Rounds": "2",
+        "SG:TOT": "-2.85",
+        "SG:T2G": "-4.28",
+        "SG:OTT": "-1.45",
+        "SG:APP": "-1.74",
+        "SG:BS": "-3.20",
+        "SG:ARG": "-1.08",
+        "SG:P": "1.42",
+        "Dr Distance": "278.5",
+        "Dr Accuracy %": "57.1",
+        "Ball Speed": "163.00"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2025-06-08",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "RBC Canadian Open",
+        "is_major": "0",
+        "playerName": "Brett Webster",
+        "player_num": "45779",
+        "Rounds": "2",
+        "CourseID": "935",
+        "Course": "TPC Toronto at Osprey Valley (North)",
+        "ShotLink": "2",
+        "SG:TOT": "-2.85",
+        "SG:T2G": "-4.28",
+        "SG:OTT": "-1.45",
+        "SG:APP": "-1.74",
+        "SG:BS": "-3.20",
+        "SG:ARG": "-1.08",
+        "SG:P": "1.42",
+        "SG:SG": "0.34"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "0.7599999904632568",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-6.46999979019165",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-2.8549998998641968",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-6.46999979019165",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "0.7599999904632568",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-2.8549998998641968",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "76",
+        "PM": "68",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "40.7",
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-2.8549998998641968",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:46.882Z",
+    "ok": true
+  }
+}

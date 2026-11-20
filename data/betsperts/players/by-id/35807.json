@@ -1,0 +1,148 @@
+{
+  "playerId": "35807",
+  "playerName": "José Toledo",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_gt-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "José Toledo",
+    "BirthPlace": "Guatemala City, Guatemala",
+    "BirthDate": "May 12, 1986",
+    "Age": "40",
+    "Height": "5ft 10in",
+    "Weight": "170 lbs",
+    "Nationality": "Guatemala",
+    "Residence": "Guatemala City, Guatemala",
+    "ProWins": null,
+    "TurnedPro": "2010",
+    "PGAWins": null,
+    "College": "University of New Orleans 2009, Business Administration"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "José Toledo",
+        "player_num": "35807",
+        "Year": "2023",
+        "Rounds": "2",
+        "SG:TOT": "-1.02",
+        "SG:T2G": "-1.97",
+        "SG:OTT": "0.56",
+        "SG:APP": "-1.77",
+        "SG:BS": "-1.21",
+        "SG:ARG": "-0.76",
+        "SG:P": "0.95",
+        "Dr Distance": "304.3",
+        "Dr Accuracy %": "65.4",
+        "Ball Speed": "172.59"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2023-04-30",
+        "position": "CUT",
+        "roundPosition": "T97",
+        "TournamentName": "Mexico Open at Vidanta",
+        "is_major": "0",
+        "playerName": "José Toledo",
+        "player_num": "35807",
+        "Rounds": "2",
+        "CourseID": "978",
+        "Course": "Vidanta Vallarta",
+        "ShotLink": "2",
+        "SG:TOT": "-1.02",
+        "SG:T2G": "-1.97",
+        "SG:OTT": "0.56",
+        "SG:APP": "-1.77",
+        "SG:BS": "-1.21",
+        "SG:ARG": "-0.76",
+        "SG:P": "0.95",
+        "SG:SG": "0.19"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "50.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "1.2000000476837158",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-3.240000009536743",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-3.240000009536743",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "1.2000000476837158",
+        "Rounds": "1"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-3.240000009536743",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "1.2000000476837158",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-1.0199999809265137",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "69",
+        "PM": "74",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": "73",
+        "200-250": "60.6",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-1.0199999809265137",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:04.448Z",
+    "ok": true
+  }
+}

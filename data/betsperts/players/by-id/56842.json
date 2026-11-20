@@ -1,0 +1,148 @@
+{
+  "playerId": "56842",
+  "playerName": "Casey Pyne",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Casey Pyne",
+    "BirthPlace": "",
+    "BirthDate": "July 13, 1988",
+    "Age": "38",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "United States",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Casey Pyne",
+        "player_num": "56842",
+        "Year": "2022",
+        "Rounds": "2",
+        "SG:TOT": "-5.79",
+        "SG:T2G": "-2.90",
+        "SG:OTT": "-1.65",
+        "SG:APP": "-1.42",
+        "SG:BS": "-3.06",
+        "SG:ARG": "0.16",
+        "SG:P": "-2.88",
+        "Dr Distance": "281.2",
+        "Dr Accuracy %": "53.6",
+        "Ball Speed": "160.27"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2022-05-22",
+        "position": "CUT",
+        "roundPosition": "T150",
+        "TournamentName": "PGA Championship",
+        "is_major": "1",
+        "playerName": "Casey Pyne",
+        "player_num": "56842",
+        "Rounds": "2",
+        "CourseID": "611",
+        "Course": "Southern Hills CC",
+        "ShotLink": "2",
+        "SG:TOT": "-5.79",
+        "SG:T2G": "-2.90",
+        "SG:OTT": "-1.65",
+        "SG:APP": "-1.42",
+        "SG:BS": "-3.06",
+        "SG:ARG": "0.16",
+        "SG:P": "-2.88",
+        "SG:SG": "-2.72"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-2.877499997615814",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-6.170000076293945",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-5.400000095367432",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-5.7850000858306885",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-5.7850000858306885",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-5.7850000858306885",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "79",
+        "PM": "78",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "27",
+        "150-200": null,
+        "200+": "62.5",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-5.7850000858306885",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:20:07.825Z",
+    "ok": true
+  }
+}

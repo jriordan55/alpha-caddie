@@ -1,0 +1,143 @@
+{
+  "playerId": "61534",
+  "playerName": "Jeffrey Guan",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/as-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Jeffrey Guan",
+    "BirthPlace": null,
+    "BirthDate": "",
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "Australia",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Jeffrey Guan",
+        "player_num": "61534",
+        "Year": "2024",
+        "Rounds": "2",
+        "SG:TOT": "-0.79",
+        "SG:T2G": "-0.82",
+        "SG:OTT": "-0.39",
+        "SG:APP": "-0.55",
+        "SG:BS": "-0.94",
+        "SG:ARG": "0.12",
+        "SG:P": "0.04",
+        "Dr Distance": "294.9",
+        "Dr Accuracy %": "42.9",
+        "Ball Speed": "172.79"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2024-09-15",
+        "position": "CUT",
+        "roundPosition": "T84",
+        "TournamentName": "Procore Championship",
+        "is_major": "0",
+        "playerName": "Jeffrey Guan",
+        "player_num": "61534",
+        "Rounds": "2",
+        "CourseID": "926",
+        "Course": "Silverado Resort (North)",
+        "ShotLink": "2",
+        "SG:TOT": "-0.79",
+        "SG:T2G": "-0.82",
+        "SG:OTT": "-0.39",
+        "SG:APP": "-0.55",
+        "SG:BS": "-0.94",
+        "SG:ARG": "0.12",
+        "SG:P": "0.04",
+        "SG:SG": "0.16"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "50.0",
+        "SG TOT 2+": "50.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "2.4000000953674316",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-3.9800000190734863",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-0.7899999618530273",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "2.4000000953674316",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-3.9800000190734863",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-0.7899999618530273",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "69",
+        "PM": "75",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "28.5",
+        "150-200": "41.5",
+        "200+": "57.9",
+        "200-250": "60.8",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-0.7899999618530273",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:39.248Z",
+    "ok": true
+  }
+}

@@ -1,0 +1,236 @@
+{
+  "playerId": "19795",
+  "playerName": "Kelly Mitchum",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Kelly Mitchum",
+    "BirthPlace": "",
+    "BirthDate": "April 04, 1971",
+    "Age": "55",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "United States",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Kelly Mitchum",
+        "player_num": "19795",
+        "Year": "2021",
+        "Rounds": "2",
+        "SG:TOT": "-6.55",
+        "SG:T2G": "-7.46",
+        "SG:OTT": "-4.09",
+        "SG:APP": "-3.44",
+        "SG:BS": "-7.53",
+        "SG:ARG": "0.06",
+        "SG:P": "0.90",
+        "Dr Distance": "265.5",
+        "Dr Accuracy %": "57.1",
+        "Ball Speed": "154.12"
+      },
+      {
+        "playerName": "Kelly Mitchum",
+        "player_num": "19795",
+        "Year": "2016",
+        "Rounds": "4",
+        "SG:TOT": "-2.85",
+        "SG:T2G": "-1.66",
+        "SG:OTT": "-1.28",
+        "SG:APP": "-1.21",
+        "SG:BS": "-2.49",
+        "SG:ARG": "0.83",
+        "SG:P": "-1.19",
+        "Dr Distance": "257.0",
+        "Dr Accuracy %": "57.1",
+        "Ball Speed": "152.39"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2021-06-13",
+        "position": "CUT",
+        "roundPosition": "147",
+        "TournamentName": "Palmetto Championship at Congaree",
+        "is_major": "0",
+        "playerName": "Kelly Mitchum",
+        "player_num": "19795",
+        "Rounds": "2",
+        "CourseID": "902",
+        "Course": "Congaree Golf Club",
+        "ShotLink": "2",
+        "SG:TOT": "-6.55",
+        "SG:T2G": "-7.46",
+        "SG:OTT": "-4.09",
+        "SG:APP": "-3.44",
+        "SG:BS": "-7.53",
+        "SG:ARG": "0.06",
+        "SG:P": "0.90",
+        "SG:SG": "0.97"
+      },
+      {
+        "Date": "2016-05-08",
+        "position": "CUT",
+        "roundPosition": "T132",
+        "TournamentName": "Wells Fargo Championship",
+        "is_major": "0",
+        "playerName": "Kelly Mitchum",
+        "player_num": "19795",
+        "Rounds": "2",
+        "CourseID": "698",
+        "Course": "Quail Hollow Club",
+        "ShotLink": "2",
+        "SG:TOT": "-2.10",
+        "SG:T2G": "-0.62",
+        "SG:OTT": "-0.75",
+        "SG:APP": "-1.17",
+        "SG:BS": "-1.92",
+        "SG:ARG": "1.30",
+        "SG:P": "-1.47",
+        "SG:SG": "-0.17"
+      },
+      {
+        "Date": "2016-04-17",
+        "position": "CUT",
+        "roundPosition": "T119",
+        "TournamentName": "RBC Heritage",
+        "is_major": "0",
+        "playerName": "Kelly Mitchum",
+        "player_num": "19795",
+        "Rounds": "2",
+        "CourseID": "12",
+        "Course": "Harbour Town Golf Links",
+        "ShotLink": "2",
+        "SG:TOT": "-3.61",
+        "SG:T2G": "-2.69",
+        "SG:OTT": "-1.81",
+        "SG:APP": "-1.24",
+        "SG:BS": "-3.06",
+        "SG:ARG": "0.37",
+        "SG:P": "-0.91",
+        "SG:SG": "-0.55"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "16.7",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "6"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-0.004750002175569534",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa Trivialis",
+        "StrokesGainedAverage": "-1.4704999402165413",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-4.896666685740153",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-3.273333246509234",
+        "Rounds": "3"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-6.96999979019165",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-3.4433333228031793",
+        "Rounds": "3"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-3.6050000190734863",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-6.554999828338623",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-2.850000035017729",
+        "Rounds": "4"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-3.6050000190734863",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Strong",
+        "StrokesGainedAverage": "-2.0950000509619713",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-6.554999828338623",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "76",
+        "PM": "77",
+        "Rounds": "6"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "6",
+        "50-100": "27.9",
+        "100-150": null,
+        "150-200": "46.5",
+        "200+": "66.8",
+        "200-250": "66.2",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-4.084999966124694",
+        "Rounds": "6"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:17.718Z",
+    "ok": true
+  }
+}

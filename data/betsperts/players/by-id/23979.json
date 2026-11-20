@@ -1,0 +1,148 @@
+{
+  "playerId": "23979",
+  "playerName": "Judd Gibb",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Judd Gibb",
+    "BirthPlace": "",
+    "BirthDate": "April 09, 1969",
+    "Age": "57",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "United States",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Judd Gibb",
+        "player_num": "23979",
+        "Year": "2020",
+        "Rounds": "2",
+        "SG:TOT": "-9.28",
+        "SG:T2G": "-5.17",
+        "SG:OTT": "-0.88",
+        "SG:APP": "-2.23",
+        "SG:BS": "-3.12",
+        "SG:ARG": "-2.05",
+        "SG:P": "-4.11",
+        "Dr Distance": "267.8",
+        "Dr Accuracy %": "64.3",
+        "Ball Speed": "157.56"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2020-08-09",
+        "position": "CUT",
+        "roundPosition": "T154",
+        "TournamentName": "PGA Championship",
+        "is_major": "1",
+        "playerName": "Judd Gibb",
+        "player_num": "23979",
+        "Rounds": "2",
+        "CourseID": "895",
+        "Course": "TPC Harding Park",
+        "ShotLink": "2",
+        "SG:TOT": "-9.28",
+        "SG:T2G": "-5.17",
+        "SG:OTT": "-0.88",
+        "SG:APP": "-2.23",
+        "SG:BS": "-3.12",
+        "SG:ARG": "-2.05",
+        "SG:P": "-4.11",
+        "SG:SG": "-6.16"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-4.111500024795532",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-5.880000114440918",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-12.670000076293945",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-9.275000095367432",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-9.275000095367432",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-9.275000095367432",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "84",
+        "PM": "77",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "52.2",
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-9.275000095367432",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:09.137Z",
+    "ok": true
+  }
+}

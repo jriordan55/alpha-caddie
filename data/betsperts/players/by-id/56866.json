@@ -1,0 +1,148 @@
+{
+  "playerId": "56866",
+  "playerName": "Rufus Brijalba",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Rufus Brijalba",
+    "BirthPlace": "",
+    "BirthDate": "September 20, 1983",
+    "Age": "43",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "United States",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Rufus Brijalba",
+        "player_num": "56866",
+        "Year": "2019",
+        "Rounds": "2",
+        "SG:TOT": "-3.02",
+        "SG:T2G": "-1.86",
+        "SG:OTT": "0.04",
+        "SG:APP": "-0.13",
+        "SG:BS": "-0.09",
+        "SG:ARG": "-1.77",
+        "SG:P": "-1.16",
+        "Dr Distance": "286.7",
+        "Dr Accuracy %": "60.7",
+        "Ball Speed": "162.29"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2019-04-07",
+        "position": "CUT",
+        "roundPosition": "T130",
+        "TournamentName": "Valero Texas Open",
+        "is_major": "0",
+        "playerName": "Rufus Brijalba",
+        "player_num": "56866",
+        "Rounds": "2",
+        "CourseID": "770",
+        "Course": "TPC San Antonio (Oaks)",
+        "ShotLink": "2",
+        "SG:TOT": "-3.02",
+        "SG:T2G": "-1.86",
+        "SG:OTT": "0.04",
+        "SG:APP": "-0.13",
+        "SG:BS": "-0.09",
+        "SG:ARG": "-1.77",
+        "SG:P": "-1.16",
+        "SG:SG": "-2.94"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Poa Trivialis",
+        "StrokesGainedAverage": "-1.164000004529953",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.600000023841858",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-4.440000057220459",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-3.0200000405311584",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-3.0200000405311584",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-3.0200000405311584",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "76",
+        "PM": "73",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "23.5",
+        "150-200": "38",
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-3.0200000405311584",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:12.850Z",
+    "ok": true
+  }
+}

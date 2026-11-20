@@ -1,0 +1,231 @@
+{
+  "playerId": "32252",
+  "playerName": "Nino Bertasio",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_it-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Nino Bertasio",
+    "BirthPlace": "",
+    "BirthDate": "July 30, 1988",
+    "Age": "38",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "Italy",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Nino Bertasio",
+        "player_num": "32252",
+        "Year": "2022",
+        "Rounds": "6",
+        "SG:TOT": "1.32",
+        "SG:T2G": "-2.55",
+        "SG:OTT": "-2.25",
+        "SG:APP": "-0.14",
+        "SG:BS": "-2.39",
+        "SG:ARG": "-0.17",
+        "SG:P": "2.83",
+        "Dr Distance": null,
+        "Dr Accuracy %": "38.5",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Nino Bertasio",
+        "player_num": "32252",
+        "Year": "2019",
+        "Rounds": "4",
+        "SG:TOT": "-1.08",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "53.6",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2022-07-17",
+        "position": "T20",
+        "roundPosition": null,
+        "TournamentName": "Barracuda Championship",
+        "is_major": null,
+        "playerName": "Nino Bertasio",
+        "player_num": "32252",
+        "Rounds": "4",
+        "CourseID": "890",
+        "Course": "Tahoe Mountain Club (Old Greenwood)",
+        "ShotLink": "0",
+        "SG:TOT": "1.85",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2022-07-10",
+        "position": "CUT",
+        "roundPosition": "T73",
+        "TournamentName": "Genesis Scottish Open",
+        "is_major": "0",
+        "playerName": "Nino Bertasio",
+        "player_num": "32252",
+        "Rounds": "2",
+        "CourseID": "977",
+        "Course": "The Renaissance Club",
+        "ShotLink": "2",
+        "SG:TOT": "0.26",
+        "SG:T2G": "-2.55",
+        "SG:OTT": "-2.25",
+        "SG:APP": "-0.14",
+        "SG:BS": "-2.39",
+        "SG:ARG": "-0.17",
+        "SG:P": "2.83",
+        "SG:SG": "2.67"
+      },
+      {
+        "Date": "2019-07-21",
+        "position": "T72",
+        "roundPosition": "T72",
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Nino Bertasio",
+        "player_num": "32252",
+        "Rounds": "4",
+        "CourseID": "885",
+        "Course": "Royal Portrush GC",
+        "ShotLink": "0",
+        "SG:TOT": "-1.08",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "60.0",
+        "SG TOT 1+": "40.0",
+        "SG TOT 2+": "20.0",
+        "SG TOT 3+": "20.0",
+        "SG TOT 4+": "10.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "14"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "2.1633333365122476",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "1.1099999348322551",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-3.03000009059906",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-0.06999999284744263",
+        "Rounds": "3"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-0.46600000858306884",
+        "Rounds": "5"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "1.8549999296665192",
+        "Rounds": "4"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-1.4700000286102295",
+        "Rounds": "1"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "1.8549999296665192",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-1.0800000131130219",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "0.25999999046325684",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-0.6333333452542623",
+        "Rounds": "6"
+      },
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "1.8549999296665192",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "72.75",
+        "PM": "73",
+        "Rounds": "14"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "14",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "0.36199996471405027",
+        "Rounds": "10"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:24:30.924Z",
+    "ok": true
+  }
+}

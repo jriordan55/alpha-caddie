@@ -1,0 +1,247 @@
+{
+  "playerId": "55954",
+  "playerName": "Lukas Euler",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_gm-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Lukas Euler",
+    "BirthPlace": "Dieburg, Hessen, Germany",
+    "BirthDate": "May 12, 1996",
+    "Age": "30",
+    "Height": "6ft 2in",
+    "Weight": "198 lbs",
+    "Nationality": "Germany",
+    "Residence": "Scottsdale, Arizona",
+    "ProWins": "0",
+    "TurnedPro": "2019",
+    "PGAWins": "0",
+    "College": "University of Kentucky 2019, Finance"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Lukas Euler",
+        "player_num": "55954",
+        "Year": "2022",
+        "Rounds": "2",
+        "SG:TOT": "-2.68",
+        "SG:T2G": "-1.98",
+        "SG:OTT": "-1.70",
+        "SG:APP": "0.29",
+        "SG:BS": "-1.42",
+        "SG:ARG": "-0.56",
+        "SG:P": "-0.70",
+        "Dr Distance": "286.1",
+        "Dr Accuracy %": "46.2",
+        "Ball Speed": "171.18"
+      },
+      {
+        "playerName": "Lukas Euler",
+        "player_num": "55954",
+        "Year": "2019",
+        "Rounds": "4",
+        "SG:TOT": "-1.57",
+        "SG:T2G": "-1.88",
+        "SG:OTT": "-0.44",
+        "SG:APP": "-1.92",
+        "SG:BS": "-2.36",
+        "SG:ARG": "0.48",
+        "SG:P": "0.31",
+        "Dr Distance": "276.2",
+        "Dr Accuracy %": "50.0",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2022-11-13",
+        "position": "CUT",
+        "roundPosition": "T107",
+        "TournamentName": "Houston Open",
+        "is_major": "0",
+        "playerName": "Lukas Euler",
+        "player_num": "55954",
+        "Rounds": "2",
+        "CourseID": "897",
+        "Course": "Memorial Park Golf Course",
+        "ShotLink": "2",
+        "SG:TOT": "-2.68",
+        "SG:T2G": "-1.98",
+        "SG:OTT": "-1.70",
+        "SG:APP": "0.29",
+        "SG:BS": "-1.42",
+        "SG:ARG": "-0.56",
+        "SG:P": "-0.70",
+        "SG:SG": "-1.27"
+      },
+      {
+        "Date": "2019-07-21",
+        "position": "CUT",
+        "roundPosition": "T80",
+        "TournamentName": "Barbasol Championship",
+        "is_major": "0",
+        "playerName": "Lukas Euler",
+        "player_num": "55954",
+        "Rounds": "2",
+        "CourseID": "884",
+        "Course": "Keene Trace GC",
+        "ShotLink": "2",
+        "SG:TOT": "-0.67",
+        "SG:T2G": "-1.00",
+        "SG:OTT": "0.55",
+        "SG:APP": "-0.88",
+        "SG:BS": "-0.34",
+        "SG:ARG": "-0.66",
+        "SG:P": "0.33",
+        "SG:SG": "-0.33"
+      },
+      {
+        "Date": "2019-02-17",
+        "position": "CUT",
+        "roundPosition": "T126",
+        "TournamentName": "The Genesis Invitational",
+        "is_major": "0",
+        "playerName": "Lukas Euler",
+        "player_num": "55954",
+        "Rounds": "2",
+        "CourseID": "500",
+        "Course": "Riviera CC",
+        "ShotLink": "2",
+        "SG:TOT": "-2.47",
+        "SG:T2G": "-2.76",
+        "SG:OTT": "-1.43",
+        "SG:APP": "-2.95",
+        "SG:BS": "-4.38",
+        "SG:ARG": "1.62",
+        "SG:P": "0.29",
+        "SG:SG": "1.91"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "16.7",
+        "SG TOT 1+": "16.7",
+        "SG TOT 2+": "16.7",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "6"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "0.3330000042915344",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-0.7035000026226044",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "0.2929999828338623",
+        "Rounds": "2"
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-2.2533332904179892",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.6266667048136394",
+        "Rounds": "3"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-2.1200000047683716",
+        "Rounds": "3"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-1.7599999904632568",
+        "Rounds": "3"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-3.940000057220459",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-2.1200000047683716",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-0.6699999570846558",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-2.6800000071525574",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-2.4700000286102295",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-0.6699999570846558",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "73.33333333333333",
+        "PM": "71.33333333333333",
+        "Rounds": "6"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "6",
+        "50-100": "14.5",
+        "100-150": "25.8",
+        "150-200": "41.1",
+        "200+": "65.4",
+        "200-250": "58.9",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-2.6800000071525574",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-0.6699999570846558",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "West Coast",
+        "StrokesGainedAverage": "-2.4700000286102295",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:40.718Z",
+    "ok": true
+  }
+}

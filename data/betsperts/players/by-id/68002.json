@@ -1,0 +1,209 @@
+{
+  "playerId": "68002",
+  "playerName": "Gerardo Gomez",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_mx-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Gerardo Gomez",
+    "BirthPlace": null,
+    "BirthDate": "",
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "Mexico",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Gerardo Gomez",
+        "player_num": "68002",
+        "Year": "2026",
+        "Rounds": "2",
+        "SG:TOT": "-5.04",
+        "SG:T2G": "-3.45",
+        "SG:OTT": "-2.14",
+        "SG:APP": "-0.31",
+        "SG:BS": "-2.45",
+        "SG:ARG": "-1.00",
+        "SG:P": "-1.59",
+        "Dr Distance": "282.9",
+        "Dr Accuracy %": "69.2",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Gerardo Gomez",
+        "player_num": "68002",
+        "Year": "2025",
+        "Rounds": "2",
+        "SG:TOT": "-1.02",
+        "SG:T2G": "-0.09",
+        "SG:OTT": "0.24",
+        "SG:APP": "-0.44",
+        "SG:BS": "-0.20",
+        "SG:ARG": "0.11",
+        "SG:P": "-0.92",
+        "Dr Distance": "286.0",
+        "Dr Accuracy %": "88.5",
+        "Ball Speed": "166.13"
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Gerardo Gomez",
+        "player_num": "68002",
+        "Rounds": "2",
+        "SG:TOT": "-5.04",
+        "SG:T2G": "-3.45",
+        "SG:OTT": "-2.14",
+        "SG:APP": "-0.31",
+        "SG:BS": "-2.45",
+        "SG:ARG": "-1.00",
+        "SG:P": "-1.59",
+        "SG:SG": "-2.59"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-11-01",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "Mexico Open at Vidanta",
+        "is_major": "0",
+        "playerName": "Gerardo Gomez",
+        "player_num": "68002",
+        "Rounds": "2",
+        "CourseID": "978",
+        "Course": "Vidanta Vallarta",
+        "ShotLink": "2",
+        "SG:TOT": "-5.04",
+        "SG:T2G": "-3.45",
+        "SG:OTT": "-2.14",
+        "SG:APP": "-0.31",
+        "SG:BS": "-2.45",
+        "SG:ARG": "-1.00",
+        "SG:P": "-1.59",
+        "SG:SG": "-2.59"
+      },
+      {
+        "Date": "2025-02-23",
+        "position": "CUT",
+        "roundPosition": "T92",
+        "TournamentName": "Mexico Open at Vidanta",
+        "is_major": "0",
+        "playerName": "Gerardo Gomez",
+        "player_num": "68002",
+        "Rounds": "2",
+        "CourseID": "978",
+        "Course": "Vidanta Vallarta",
+        "ShotLink": "2",
+        "SG:TOT": "-1.02",
+        "SG:T2G": "-0.09",
+        "SG:OTT": "0.24",
+        "SG:APP": "-0.44",
+        "SG:BS": "-0.20",
+        "SG:ARG": "0.11",
+        "SG:P": "-0.92",
+        "SG:SG": "-0.82"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-2.0750000029802322",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-3.9799999594688416",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-2.0750000029802322",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-1.6299999952316284",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-6.329999923706055",
+        "Rounds": "1"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-0.4000000059604645",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-3.903333306312561",
+        "Rounds": "3"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-3.027499981224537",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "72.5",
+        "PM": "72",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": "17",
+        "100-150": "25.7",
+        "150-200": null,
+        "200+": "51.8",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-5.039999961853027",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-1.0150000005960464",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:21:47.561Z",
+    "ok": true
+  }
+}

@@ -1,0 +1,148 @@
+{
+  "playerId": "54345",
+  "playerName": "Ryan Wenzler",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Ryan Wenzler",
+    "BirthPlace": "Dayton, Ohio",
+    "BirthDate": "April 13, 1995",
+    "Age": "31",
+    "Height": "6ft 2in",
+    "Weight": "180 lbs",
+    "Nationality": "United States",
+    "Residence": "Dayton, Ohio",
+    "ProWins": "0",
+    "TurnedPro": "2018",
+    "PGAWins": "0",
+    "College": "Wright State University 2017, Finance"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Ryan Wenzler",
+        "player_num": "54345",
+        "Year": "2018",
+        "Rounds": "2",
+        "SG:TOT": "-2.87",
+        "SG:T2G": "-1.32",
+        "SG:OTT": "-0.03",
+        "SG:APP": "-0.42",
+        "SG:BS": "-0.45",
+        "SG:ARG": "-0.87",
+        "SG:P": "-1.55",
+        "Dr Distance": "285.1",
+        "Dr Accuracy %": "64.3",
+        "Ball Speed": "168.12"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2018-07-22",
+        "position": "CUT",
+        "roundPosition": "T110",
+        "TournamentName": "Barbasol Championship",
+        "is_major": "0",
+        "playerName": "Ryan Wenzler",
+        "player_num": "54345",
+        "Rounds": "2",
+        "CourseID": "823",
+        "Course": "Keene Trace GC",
+        "ShotLink": "2",
+        "SG:TOT": "-2.87",
+        "SG:T2G": "-1.32",
+        "SG:OTT": "-0.03",
+        "SG:APP": "-0.42",
+        "SG:BS": "-0.45",
+        "SG:ARG": "-0.87",
+        "SG:P": "-1.55",
+        "SG:SG": "-2.42"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-1.5519999265670776",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "0.3199999928474426",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-6.059999942779541",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-2.869999974966049",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-2.869999974966049",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-2.869999974966049",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": null,
+        "PM": "73",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "33.6",
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-2.869999974966049",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:18.477Z",
+    "ok": true
+  }
+}

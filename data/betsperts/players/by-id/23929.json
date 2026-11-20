@@ -1,0 +1,189 @@
+{
+  "playerId": "23929",
+  "playerName": "Paul Scaletta",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Paul Scaletta",
+    "BirthPlace": null,
+    "BirthDate": "May 06, 1975",
+    "Age": "51",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Paul Scaletta",
+        "player_num": "23929",
+        "Year": "2015",
+        "Rounds": "3",
+        "SG:TOT": "-3.72",
+        "SG:T2G": "2.34",
+        "SG:OTT": "-1.56",
+        "SG:APP": "3.66",
+        "SG:BS": "2.10",
+        "SG:ARG": "0.24",
+        "SG:P": "-5.03",
+        "Dr Distance": "271.1",
+        "Dr Accuracy %": "47.6",
+        "Ball Speed": "162.46"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2015-03-08",
+        "position": "CUT",
+        "roundPosition": "T125",
+        "TournamentName": "Puerto Rico Open",
+        "is_major": "0",
+        "playerName": "Paul Scaletta",
+        "player_num": "23929",
+        "Rounds": "2",
+        "CourseID": "742",
+        "Course": "Grand Reserve GC",
+        "ShotLink": "0",
+        "SG:TOT": "-4.22",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2015-03-01",
+        "position": "DQ",
+        "roundPosition": "T118",
+        "TournamentName": "The Honda Classic",
+        "is_major": "0",
+        "playerName": "Paul Scaletta",
+        "player_num": "23929",
+        "Rounds": "1",
+        "CourseID": "734",
+        "Course": "PGA National (Champion)",
+        "ShotLink": "1",
+        "SG:TOT": "-2.70",
+        "SG:T2G": "2.34",
+        "SG:OTT": "-1.56",
+        "SG:APP": "3.66",
+        "SG:BS": "2.10",
+        "SG:ARG": "0.24",
+        "SG:P": "-5.03",
+        "SG:SG": "-4.80"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "3"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-5.033999919891357",
+        "Rounds": "1"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-4.34499990940094",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-2.4600000381469727",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-4.224999904632568",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-2.700000047683716",
+        "Rounds": "1"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-4.224999904632568",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-2.700000047683716",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Strong",
+        "StrokesGainedAverage": "-2.700000047683716",
+        "Rounds": "1"
+      },
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-4.224999904632568",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "77.5",
+        "PM": "75",
+        "Rounds": "3"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "3",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Florida",
+        "StrokesGainedAverage": "-2.700000047683716",
+        "Rounds": "1"
+      },
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-4.224999904632568",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:24:44.853Z",
+    "ok": true
+  }
+}

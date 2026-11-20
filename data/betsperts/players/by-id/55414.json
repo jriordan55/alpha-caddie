@@ -1,0 +1,138 @@
+{
+  "playerId": "55414",
+  "playerName": "Franklin Huang",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Franklin Huang",
+    "BirthPlace": "San Diego, California",
+    "BirthDate": "March 28, 1996",
+    "Age": "30",
+    "Height": "5ft 7in",
+    "Weight": "135 lbs",
+    "Nationality": "United States",
+    "Residence": "Austin, Texas",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": "Stanford University 2018, Mathematical and Computational Science"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Franklin Huang",
+        "player_num": "55414",
+        "Year": "2018",
+        "Rounds": "2",
+        "SG:TOT": "-3.97",
+        "SG:T2G": "-4.71",
+        "SG:OTT": "-1.38",
+        "SG:APP": "-3.04",
+        "SG:BS": "-4.43",
+        "SG:ARG": "-0.28",
+        "SG:P": "0.74",
+        "Dr Distance": "280.6",
+        "Dr Accuracy %": "75.0",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2018-06-17",
+        "position": "CUT",
+        "roundPosition": "T136",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Franklin Huang",
+        "player_num": "55414",
+        "Rounds": "2",
+        "CourseID": "618",
+        "Course": "Shinnecock Hills GC",
+        "ShotLink": "2",
+        "SG:TOT": "-3.97",
+        "SG:T2G": "-4.71",
+        "SG:OTT": "-1.38",
+        "SG:APP": "-3.04",
+        "SG:BS": "-4.43",
+        "SG:ARG": "-0.28",
+        "SG:P": "0.74",
+        "SG:SG": "0.46"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-5.53000020980835",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-2.4000000953674316",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-3.9650001525878906",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-3.9650001525878906",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-3.9650001525878906",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "76",
+        "PM": "82",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-3.9650001525878906",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:21:37.727Z",
+    "ok": true
+  }
+}

@@ -1,0 +1,262 @@
+{
+  "playerId": "51563",
+  "playerName": "Jovan Rebula",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_sf-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Jovan Rebula",
+    "BirthPlace": "George, South Africa",
+    "BirthDate": "July 22, 1997",
+    "Age": "29",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "South Africa",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "2021",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Jovan Rebula",
+        "player_num": "51563",
+        "Year": "2019",
+        "Rounds": "6",
+        "SG:TOT": "-1.76",
+        "SG:T2G": "-0.78",
+        "SG:OTT": "-0.29",
+        "SG:APP": "-1.26",
+        "SG:BS": "-1.54",
+        "SG:ARG": "0.76",
+        "SG:P": "-0.08",
+        "Dr Distance": "275.1",
+        "Dr Accuracy %": "57.1",
+        "Ball Speed": "165.91"
+      },
+      {
+        "playerName": "Jovan Rebula",
+        "player_num": "51563",
+        "Year": "2018",
+        "Rounds": "2",
+        "SG:TOT": "-6.02",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "33.3",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2019-06-16",
+        "position": "CUT",
+        "roundPosition": "T88",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Jovan Rebula",
+        "player_num": "51563",
+        "Rounds": "2",
+        "CourseID": "666",
+        "Course": "Pebble Beach Golf Links",
+        "ShotLink": "2",
+        "SG:TOT": "-0.37",
+        "SG:T2G": "-0.93",
+        "SG:OTT": "-0.18",
+        "SG:APP": "-1.24",
+        "SG:BS": "-1.42",
+        "SG:ARG": "0.48",
+        "SG:P": "0.56",
+        "SG:SG": "1.05"
+      },
+      {
+        "Date": "2019-06-02",
+        "position": "CUT",
+        "roundPosition": "T84",
+        "TournamentName": "the Memorial Tournament",
+        "is_major": "0",
+        "playerName": "Jovan Rebula",
+        "player_num": "51563",
+        "Rounds": "2",
+        "CourseID": "23",
+        "Course": "Muirfield Village GC",
+        "ShotLink": "2",
+        "SG:TOT": "-1.35",
+        "SG:T2G": "-0.63",
+        "SG:OTT": "-0.39",
+        "SG:APP": "-1.28",
+        "SG:BS": "-1.67",
+        "SG:ARG": "1.03",
+        "SG:P": "-0.71",
+        "SG:SG": "0.32"
+      },
+      {
+        "Date": "2019-04-14",
+        "position": "CUT",
+        "roundPosition": "T80",
+        "TournamentName": "Masters Tournament",
+        "is_major": "1",
+        "playerName": "Jovan Rebula",
+        "player_num": "51563",
+        "Rounds": "2",
+        "CourseID": "14",
+        "Course": "Augusta National GC",
+        "ShotLink": "2",
+        "SG:TOT": "-3.57",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2018-07-22",
+        "position": "CUT",
+        "roundPosition": "T153",
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Jovan Rebula",
+        "player_num": "51563",
+        "Rounds": "2",
+        "CourseID": "658",
+        "Course": "Carnoustie GC",
+        "ShotLink": "0",
+        "SG:TOT": "-6.02",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "25.0",
+        "SG TOT 1+": "25.0",
+        "SG TOT 2+": "25.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "8"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": null,
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "0.5615000128746033",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-2.182499974966049",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-3.4725000262260437",
+        "Rounds": "4"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-1.3499999046325684",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-4.795000046491623",
+        "Rounds": "4"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-0.3700000047683716",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-3.574999988079071",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-1.3499999046325684",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-3.192500054836273",
+        "Rounds": "4"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Strong",
+        "StrokesGainedAverage": "-1.3499999046325684",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-3.3200000325838723",
+        "Rounds": "6"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74.25",
+        "PM": "76.5",
+        "Rounds": "8"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "8",
+        "50-100": null,
+        "100-150": "26.1",
+        "150-200": "38.2",
+        "200+": "58.1",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-2.4624999463558197",
+        "Rounds": "4"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-3.192500054836273",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:08.477Z",
+    "ok": true
+  }
+}

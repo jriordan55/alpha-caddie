@@ -1,0 +1,85 @@
+{
+  "playerId": "23783",
+  "playerName": "Felipe Aguilar",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ci-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Felipe Aguilar",
+    "BirthPlace": "Valdiva, Chile",
+    "BirthDate": "November 07, 1974",
+    "Age": "52",
+    "Height": null,
+    "Weight": "158 lbs",
+    "Nationality": "Chile",
+    "Residence": "Santiago, Chile",
+    "ProWins": null,
+    "TurnedPro": "1999",
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [],
+    "sgGuest": [],
+    "sgByEvent": [],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "25.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "8"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-2.7200000286102295",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.600000023841858",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "1.7999999523162842",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "0.4099999964237213",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [],
+    "byScoringCondition": [],
+    "byFieldStrength": [],
+    "amPmSplit": [
+      {
+        "AM": "74",
+        "PM": "72.5",
+        "Rounds": "8"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "8",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": []
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:21:34.685Z",
+    "ok": true
+  }
+}

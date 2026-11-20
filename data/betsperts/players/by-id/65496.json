@@ -1,0 +1,250 @@
+{
+  "playerId": "65496",
+  "playerName": "Cole Sherwood",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Cole Sherwood",
+    "BirthPlace": "",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "",
+    "Weight": "",
+    "Nationality": "UNITED STATES",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "2024",
+    "PGAWins": "0",
+    "College": "Vanderbilt University"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Cole Sherwood",
+        "player_num": "65496",
+        "Year": "2026",
+        "Rounds": "2",
+        "SG:TOT": "-0.26",
+        "SG:T2G": "-1.72",
+        "SG:OTT": "-0.01",
+        "SG:APP": "-1.29",
+        "SG:BS": "-1.30",
+        "SG:ARG": "-0.42",
+        "SG:P": "1.46",
+        "Dr Distance": "298.1",
+        "Dr Accuracy %": "78.6",
+        "Ball Speed": "180.27"
+      },
+      {
+        "playerName": "Cole Sherwood",
+        "player_num": "65496",
+        "Year": "2024",
+        "Rounds": "4",
+        "SG:TOT": "-1.65",
+        "SG:T2G": "-1.66",
+        "SG:OTT": "-1.08",
+        "SG:APP": "0.38",
+        "SG:BS": "-0.69",
+        "SG:ARG": "-0.97",
+        "SG:P": "0.02",
+        "Dr Distance": "302.5",
+        "Dr Accuracy %": "44.6",
+        "Ball Speed": "181.08"
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Cole Sherwood",
+        "player_num": "65496",
+        "Rounds": "2",
+        "SG:TOT": "-0.26",
+        "SG:T2G": "-1.72",
+        "SG:OTT": "-0.01",
+        "SG:APP": "-1.29",
+        "SG:BS": "-1.30",
+        "SG:ARG": "-0.42",
+        "SG:P": "1.46",
+        "SG:SG": "1.04"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-11-15",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "Austin Championship",
+        "is_major": "0",
+        "playerName": "Cole Sherwood",
+        "player_num": "65496",
+        "Rounds": "2",
+        "CourseID": "943",
+        "Course": "Fazio Canyons",
+        "ShotLink": "2",
+        "SG:TOT": "-0.26",
+        "SG:T2G": "-1.72",
+        "SG:OTT": "-0.01",
+        "SG:APP": "-1.29",
+        "SG:BS": "-1.30",
+        "SG:ARG": "-0.42",
+        "SG:P": "1.46",
+        "SG:SG": "1.04"
+      },
+      {
+        "Date": "2024-09-15",
+        "position": "CUT",
+        "roundPosition": "T84",
+        "TournamentName": "Procore Championship",
+        "is_major": "0",
+        "playerName": "Cole Sherwood",
+        "player_num": "65496",
+        "Rounds": "2",
+        "CourseID": "926",
+        "Course": "Silverado Resort (North)",
+        "ShotLink": "2",
+        "SG:TOT": "-0.79",
+        "SG:T2G": "-2.41",
+        "SG:OTT": "-2.82",
+        "SG:APP": "0.51",
+        "SG:BS": "-2.32",
+        "SG:ARG": "-0.09",
+        "SG:P": "1.62",
+        "SG:SG": "1.53"
+      },
+      {
+        "Date": "2024-07-07",
+        "position": "CUT",
+        "roundPosition": "T130",
+        "TournamentName": "John Deere Classic",
+        "is_major": "0",
+        "playerName": "Cole Sherwood",
+        "player_num": "65496",
+        "Rounds": "2",
+        "CourseID": "669",
+        "Course": "TPC Deere Run",
+        "ShotLink": "2",
+        "SG:TOT": "-2.50",
+        "SG:T2G": "-0.92",
+        "SG:OTT": "0.67",
+        "SG:APP": "0.26",
+        "SG:BS": "0.93",
+        "SG:ARG": "-1.85",
+        "SG:P": "-1.58",
+        "SG:SG": "-3.43"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "33.3",
+        "SG TOT 1+": "16.7",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "6"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-1.5830000042915344",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "1.4594999551773071",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.42000003655751544",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.9466666380564372",
+        "Rounds": "3"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-0.25999999046325684",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-2.5",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-0.7900000214576721",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "1.399999976158142",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-2.5299999713897705",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-1.146666685740153",
+        "Rounds": "3"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-1.1833333373069763",
+        "Rounds": "6"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "72.33333333333333",
+        "PM": "70.33333333333333",
+        "Rounds": "6"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "6",
+        "50-100": "21.2",
+        "100-150": "34.4",
+        "150-200": "34.9",
+        "200+": "48.7",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-0.5250000059604645",
+        "Rounds": "4"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-2.5",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:20:31.949Z",
+    "ok": true
+  }
+}

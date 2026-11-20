@@ -1,0 +1,204 @@
+{
+  "playerId": "52322",
+  "playerName": "John Murphy",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ei-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "John Murphy",
+    "BirthPlace": "",
+    "BirthDate": "June 12, 1998",
+    "Age": "28",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "Ireland",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "John Murphy",
+        "player_num": "52322",
+        "Year": "2022",
+        "Rounds": "5",
+        "SG:TOT": "-1.65",
+        "SG:T2G": "-0.41",
+        "SG:OTT": "-0.39",
+        "SG:APP": "0.57",
+        "SG:BS": "0.18",
+        "SG:ARG": "-0.59",
+        "SG:P": "-1.06",
+        "Dr Distance": "288.8",
+        "Dr Accuracy %": "65.2",
+        "Ball Speed": "179.12"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2022-05-15",
+        "position": "CUT",
+        "roundPosition": "T140",
+        "TournamentName": "AT&T Byron Nelson",
+        "is_major": "0",
+        "playerName": "John Murphy",
+        "player_num": "52322",
+        "Rounds": "2",
+        "CourseID": "894",
+        "Course": "TPC Craig Ranch",
+        "ShotLink": "2",
+        "SG:TOT": "-2.85",
+        "SG:T2G": "-2.29",
+        "SG:OTT": "-0.84",
+        "SG:APP": "-0.34",
+        "SG:BS": "-1.17",
+        "SG:ARG": "-1.12",
+        "SG:P": "-0.57",
+        "SG:SG": "-1.68"
+      },
+      {
+        "Date": "2022-02-06",
+        "position": "CUT",
+        "roundPosition": "T104",
+        "TournamentName": "AT&T Pebble Beach Pro-Am",
+        "is_major": "0",
+        "playerName": "John Murphy",
+        "player_num": "52322",
+        "Rounds": "3",
+        "CourseID": "769",
+        "Course": "Monterey Peninsula Country Club (Shore)",
+        "ShotLink": "1",
+        "SG:TOT": "-0.85",
+        "SG:T2G": "3.35",
+        "SG:OTT": "0.51",
+        "SG:APP": "2.38",
+        "SG:BS": "2.89",
+        "SG:ARG": "0.46",
+        "SG:P": "-2.05",
+        "SG:SG": "-1.59"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "40.0",
+        "SG TOT 1+": "20.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "5"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.5660000257194042",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "-2.049999952316284",
+        "Rounds": "3"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-4.2799999713897705",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "0.6899999752640724",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-1.0800000429153442",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-5.789999961853027",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "0.07999999821186066",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-0.8500000238418579",
+        "Rounds": "3"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-1.925000011920929",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-1.4700000037749608",
+        "Rounds": "3"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-2.8549999818205833",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-0.8500000238418579",
+        "Rounds": "3"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "73.33333333333333",
+        "PM": "70.5",
+        "Rounds": "5"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "5",
+        "50-100": null,
+        "100-150": "27.6",
+        "150-200": null,
+        "200+": "47.6",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-2.8549999818205833",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "West Coast",
+        "StrokesGainedAverage": "-0.8500000238418579",
+        "Rounds": "3"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:56.156Z",
+    "ok": true
+  }
+}

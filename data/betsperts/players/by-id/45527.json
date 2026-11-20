@@ -1,0 +1,153 @@
+{
+  "playerId": "45527",
+  "playerName": "Kevin Aylwin",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Kevin Aylwin",
+    "BirthPlace": "Daytona Beach, Florida",
+    "BirthDate": "March 07, 1989",
+    "Age": "37",
+    "Height": "6ft 0in",
+    "Weight": "135 lbs",
+    "Nationality": "United States",
+    "Residence": "Jacksonville, Florida",
+    "ProWins": null,
+    "TurnedPro": "2013",
+    "PGAWins": null,
+    "College": "University of North Florida  (2013, Business Management) "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Kevin Aylwin",
+        "player_num": "45527",
+        "Year": "2024",
+        "Rounds": "2",
+        "SG:TOT": "-1.54",
+        "SG:T2G": "-0.81",
+        "SG:OTT": "-0.63",
+        "SG:APP": "0.55",
+        "SG:BS": "-0.08",
+        "SG:ARG": "-0.73",
+        "SG:P": "-0.72",
+        "Dr Distance": "262.0",
+        "Dr Accuracy %": "53.8",
+        "Ball Speed": "159.72"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2024-03-24",
+        "position": "CUT",
+        "roundPosition": "T117",
+        "TournamentName": "Valspar Championship",
+        "is_major": "0",
+        "playerName": "Kevin Aylwin",
+        "player_num": "45527",
+        "Rounds": "2",
+        "CourseID": "665",
+        "Course": "Innisbrook Resort (Copperhead)",
+        "ShotLink": "2",
+        "SG:TOT": "-1.54",
+        "SG:T2G": "-0.81",
+        "SG:OTT": "-0.63",
+        "SG:APP": "0.55",
+        "SG:BS": "-0.08",
+        "SG:ARG": "-0.73",
+        "SG:P": "-0.72",
+        "SG:SG": "-1.45"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Poa Trivialis",
+        "StrokesGainedAverage": "-0.718000017106533",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-3.930000066757202",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "0.8600000143051147",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-1.5350000262260437",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-3.930000066757202",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "0.8600000143051147",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-1.5350000262260437",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "71",
+        "PM": "75",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "39.1",
+        "200+": "37.7",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Florida",
+        "StrokesGainedAverage": "-1.5350000262260437",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:20.288Z",
+    "ok": true
+  }
+}

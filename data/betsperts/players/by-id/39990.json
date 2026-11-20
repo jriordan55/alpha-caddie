@@ -1,0 +1,138 @@
+{
+  "playerId": "39990",
+  "playerName": "Kyle Bilodeau",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Kyle Bilodeau",
+    "BirthPlace": null,
+    "BirthDate": "July 08, 1985",
+    "Age": "41",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Kyle Bilodeau",
+        "player_num": "39990",
+        "Year": "2015",
+        "Rounds": "2",
+        "SG:TOT": "-8.43",
+        "SG:T2G": "-8.07",
+        "SG:OTT": "-3.36",
+        "SG:APP": "-3.26",
+        "SG:BS": "-6.62",
+        "SG:ARG": "-1.45",
+        "SG:P": "-0.36",
+        "Dr Distance": "260.7",
+        "Dr Accuracy %": "39.3",
+        "Ball Speed": "155.44"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2015-06-28",
+        "position": "CUT",
+        "roundPosition": "155",
+        "TournamentName": "Travelers Championship",
+        "is_major": "0",
+        "playerName": "Kyle Bilodeau",
+        "player_num": "39990",
+        "Rounds": "2",
+        "CourseID": "503",
+        "Course": "TPC River Highlands",
+        "ShotLink": "2",
+        "SG:TOT": "-8.43",
+        "SG:T2G": "-8.07",
+        "SG:OTT": "-3.36",
+        "SG:APP": "-3.26",
+        "SG:BS": "-6.62",
+        "SG:ARG": "-1.45",
+        "SG:P": "-0.36",
+        "SG:SG": "-1.81"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-6.920000076293945",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-9.949999809265137",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-8.434999942779541",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-8.434999942779541",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-8.434999942779541",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "80",
+        "PM": "76",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": "33.7",
+        "100-150": "26.7",
+        "150-200": "46.6",
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-8.434999942779541",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:28.024Z",
+    "ok": true
+  }
+}

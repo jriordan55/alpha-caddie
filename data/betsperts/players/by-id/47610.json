@@ -1,0 +1,158 @@
+{
+  "playerId": "47610",
+  "playerName": "Tyler Light",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Tyler Light",
+    "BirthPlace": "Massillion, Ohio",
+    "BirthDate": "August 08, 1990",
+    "Age": "36",
+    "Height": "6ft 0in",
+    "Weight": "193 lbs",
+    "Nationality": "United States",
+    "Residence": "Massillion, Ohio",
+    "ProWins": null,
+    "TurnedPro": "2014",
+    "PGAWins": null,
+    "College": "Malone University  (2014, Business Administration) "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Tyler Light",
+        "player_num": "47610",
+        "Year": "2017",
+        "Rounds": "4",
+        "SG:TOT": "-2.61",
+        "SG:T2G": "-3.00",
+        "SG:OTT": "0.68",
+        "SG:APP": "-2.48",
+        "SG:BS": "-1.79",
+        "SG:ARG": "-1.20",
+        "SG:P": "0.38",
+        "Dr Distance": "308.9",
+        "Dr Accuracy %": "62.5",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2017-06-18",
+        "position": "67",
+        "roundPosition": "67",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Tyler Light",
+        "player_num": "47610",
+        "Rounds": "4",
+        "CourseID": "236",
+        "Course": "Erin Hills",
+        "ShotLink": "4",
+        "SG:TOT": "-2.61",
+        "SG:T2G": "-3.00",
+        "SG:OTT": "0.68",
+        "SG:APP": "-2.48",
+        "SG:BS": "-1.79",
+        "SG:ARG": "-1.20",
+        "SG:P": "0.38",
+        "SG:SG": "-0.82"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "25.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "0.38300001807510853",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "0.38999998569488525",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "1.2300000190734863",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-5.980000019073486",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-6.070000171661377",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-2.607500046491623",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-2.607500046491623",
+        "Rounds": "4"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-2.607500046491623",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "77",
+        "PM": "72",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": "23.8",
+        "100-150": null,
+        "150-200": "52",
+        "200+": "69.8",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-2.607500046491623",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:26:17.286Z",
+    "ok": true
+  }
+}

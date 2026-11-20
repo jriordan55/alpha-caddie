@@ -1,0 +1,148 @@
+{
+  "playerId": "58624",
+  "playerName": "William Buhl",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "William Buhl",
+    "BirthPlace": "",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "United States",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "William Buhl",
+        "player_num": "58624",
+        "Year": "2022",
+        "Rounds": "2",
+        "SG:TOT": "-11.93",
+        "SG:T2G": "-9.64",
+        "SG:OTT": "-2.33",
+        "SG:APP": "-3.63",
+        "SG:BS": "-5.96",
+        "SG:ARG": "-3.68",
+        "SG:P": "-2.29",
+        "Dr Distance": "272.7",
+        "Dr Accuracy %": "53.8",
+        "Ball Speed": "160.84"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2022-06-12",
+        "position": "CUT",
+        "roundPosition": "152",
+        "TournamentName": "RBC Canadian Open",
+        "is_major": "0",
+        "playerName": "William Buhl",
+        "player_num": "58624",
+        "Rounds": "2",
+        "CourseID": "772",
+        "Course": "St. Georges G&CC",
+        "ShotLink": "2",
+        "SG:TOT": "-11.93",
+        "SG:T2G": "-9.64",
+        "SG:OTT": "-2.33",
+        "SG:APP": "-3.63",
+        "SG:BS": "-5.96",
+        "SG:ARG": "-3.68",
+        "SG:P": "-2.29",
+        "SG:SG": "-5.97"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-2.2934999465942383",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-9.449999809265137",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-14.420000076293945",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-11.934999942779541",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-11.934999942779541",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-11.934999942779541",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "86",
+        "PM": "81",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "58.7",
+        "200+": "56.5",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-11.934999942779541",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:26:28.093Z",
+    "ok": true
+  }
+}

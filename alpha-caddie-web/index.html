@@ -1,9 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <title>AlphaCaddie</title>
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem("alphacaddie-theme");
+        if (t !== "light" && t !== "dark") {
+          t = window.matchMedia("(prefers-color-scheme: light)").matches ? "light" : "dark";
+        }
+        document.documentElement.setAttribute("data-theme", t);
+      } catch (e) {
+        document.documentElement.setAttribute("data-theme", "dark");
+      }
+    })();
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
@@ -13,7 +26,7 @@
     onload="this.media='all'"
   />
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" /></noscript>
-  <link rel="stylesheet" href="styles.css?v=20" />
+  <link rel="stylesheet" href="styles.css?v=21" />
 </head>
 <body>
   <header class="app-nav">
@@ -41,6 +54,10 @@
         <button type="button" class="ou-toggle-btn active" data-proj-tour="pga" role="tab" aria-selected="true">PGA</button>
         <button type="button" class="ou-toggle-btn" data-proj-tour="euro" role="tab" aria-selected="false">DP World</button>
       </div>
+      <button type="button" class="nav-theme-toggle" id="nav-theme-toggle" aria-label="Toggle light and dark theme" title="Toggle theme">
+        <span class="nav-theme-toggle-icon" aria-hidden="true"></span>
+        <span class="nav-theme-toggle-label" id="nav-theme-toggle-label">Dark</span>
+      </button>
     </div>
   </header>
 
@@ -1413,6 +1430,6 @@
     </div>
   </dialog>
 
-  <script src="app.js?v=374"></script>
+  <script src="app.js?v=375"></script>
 </body>
 </html>

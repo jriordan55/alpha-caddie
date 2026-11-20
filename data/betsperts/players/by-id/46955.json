@@ -1,0 +1,195 @@
+{
+  "playerId": "46955",
+  "playerName": "Haydn Barron",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/as-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Haydn Barron",
+    "BirthPlace": null,
+    "BirthDate": null,
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "Australia",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Haydn Barron",
+        "player_num": "46955",
+        "Year": "2024",
+        "Rounds": "2",
+        "SG:TOT": "-1.40",
+        "SG:T2G": "-0.83",
+        "SG:OTT": "1.16",
+        "SG:APP": "-2.63",
+        "SG:BS": "-1.47",
+        "SG:ARG": "0.64",
+        "SG:P": "-0.56",
+        "Dr Distance": "308.4",
+        "Dr Accuracy %": "75.0",
+        "Ball Speed": "183.93"
+      },
+      {
+        "playerName": "Haydn Barron",
+        "player_num": "46955",
+        "Year": "2023",
+        "Rounds": "2",
+        "SG:TOT": "-2.15",
+        "SG:T2G": "-2.94",
+        "SG:OTT": "-0.45",
+        "SG:APP": "-1.59",
+        "SG:BS": "-2.04",
+        "SG:ARG": "-0.90",
+        "SG:P": "0.61",
+        "Dr Distance": null,
+        "Dr Accuracy %": "50.0",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2024-07-14",
+        "position": "CUT",
+        "roundPosition": "T109",
+        "TournamentName": "ISCO Championship",
+        "is_major": "0",
+        "playerName": "Haydn Barron",
+        "player_num": "46955",
+        "Rounds": "2",
+        "CourseID": "884",
+        "Course": "Keene Trace GC",
+        "ShotLink": "2",
+        "SG:TOT": "-1.40",
+        "SG:T2G": "-0.83",
+        "SG:OTT": "1.16",
+        "SG:APP": "-2.63",
+        "SG:BS": "-1.47",
+        "SG:ARG": "0.64",
+        "SG:P": "-0.56",
+        "SG:SG": "0.07"
+      },
+      {
+        "Date": "2023-07-23",
+        "position": "CUT",
+        "roundPosition": null,
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Haydn Barron",
+        "player_num": "46955",
+        "Rounds": "2",
+        "CourseID": "923",
+        "Course": "Royal Liverpool",
+        "ShotLink": "2",
+        "SG:TOT": "-2.15",
+        "SG:T2G": "-2.94",
+        "SG:OTT": "-0.45",
+        "SG:APP": "-1.59",
+        "SG:BS": "-2.04",
+        "SG:ARG": "-0.90",
+        "SG:P": "0.61",
+        "SG:SG": "-0.29"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "0.022250006906688213",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.6649999916553497",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-2.8799999952316284",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-1.772499993443489",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-2.149999976158142",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-1.395000010728836",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-2.149999976158142",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-1.395000010728836",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "72",
+        "PM": "74",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": "22.1",
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-1.772499993443489",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:21:59.346Z",
+    "ok": true
+  }
+}

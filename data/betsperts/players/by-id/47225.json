@@ -1,0 +1,199 @@
+{
+  "playerId": "47225",
+  "playerName": "Ryan Kennedy",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Ryan Kennedy",
+    "BirthPlace": "Woodland, California",
+    "BirthDate": "October 04, 1978",
+    "Age": "48",
+    "Height": "5ft 10in",
+    "Weight": "210 lbs",
+    "Nationality": "United States",
+    "Residence": "Ventura, California",
+    "ProWins": null,
+    "TurnedPro": "2000",
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Ryan Kennedy",
+        "player_num": "47225",
+        "Year": "2015",
+        "Rounds": "5",
+        "SG:TOT": "-8.49",
+        "SG:T2G": "-8.19",
+        "SG:OTT": "-2.27",
+        "SG:APP": "-2.79",
+        "SG:BS": "-5.06",
+        "SG:ARG": "-3.13",
+        "SG:P": "-0.09",
+        "Dr Distance": "275.1",
+        "Dr Accuracy %": "40.6",
+        "Ball Speed": "166.54"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2015-08-16",
+        "position": "CUT",
+        "roundPosition": "T153",
+        "TournamentName": "PGA Championship",
+        "is_major": "1",
+        "playerName": "Ryan Kennedy",
+        "player_num": "47225",
+        "Rounds": "2",
+        "CourseID": "706",
+        "Course": "Whistling Straits",
+        "ShotLink": "2",
+        "SG:TOT": "-10.95",
+        "SG:T2G": "-11.26",
+        "SG:OTT": "-1.08",
+        "SG:APP": "-5.66",
+        "SG:BS": "-6.73",
+        "SG:ARG": "-4.52",
+        "SG:P": "0.30",
+        "SG:SG": "-4.22"
+      },
+      {
+        "Date": "2015-01-25",
+        "position": "CUT",
+        "roundPosition": "154",
+        "TournamentName": "Humana Challenge",
+        "is_major": "0",
+        "playerName": "Ryan Kennedy",
+        "player_num": "47225",
+        "Rounds": "3",
+        "CourseID": "763",
+        "Course": "Nicklaus Tournament Course",
+        "ShotLink": "1",
+        "SG:TOT": "-6.84",
+        "SG:T2G": "-2.07",
+        "SG:OTT": "-4.65",
+        "SG:APP": "2.94",
+        "SG:BS": "-1.72",
+        "SG:ARG": "-0.35",
+        "SG:P": "-0.86",
+        "SG:SG": "-1.21"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "5"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "0.30000001192092896",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa Trivialis",
+        "StrokesGainedAverage": "-0.8569999933242798",
+        "Rounds": "3"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-3.884999990463257",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-14.549999713897705",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-5.570000171661377",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-10.954999685287476",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-6.84333340326945",
+        "Rounds": "3"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-10.954999685287476",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-6.84333340326945",
+        "Rounds": "3"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-10.954999685287476",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-6.84333340326945",
+        "Rounds": "3"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "81.5",
+        "PM": "78.66666666666667",
+        "Rounds": "5"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "5",
+        "50-100": "22.4",
+        "100-150": "31.1",
+        "150-200": "42.4",
+        "200+": "63.4",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-10.954999685287476",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "West Coast",
+        "StrokesGainedAverage": "-6.84333340326945",
+        "Rounds": "3"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:16.600Z",
+    "ok": true
+  }
+}

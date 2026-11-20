@@ -1,0 +1,168 @@
+{
+  "playerId": "63371",
+  "playerName": "Chanmin Jung",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ks-flag-1.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Chanmin Jung",
+    "BirthPlace": "Busan, South Korea",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "6ft 2in",
+    "Weight": "264 lbs",
+    "Nationality": "South Korea",
+    "Residence": "Busan, South Korea",
+    "ProWins": "0",
+    "TurnedPro": "2019",
+    "PGAWins": "0",
+    "College": "Yonsei University "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Chanmin Jung",
+        "player_num": "63371",
+        "Year": "2022",
+        "Rounds": "4",
+        "SG:TOT": "-2.78",
+        "SG:T2G": "-2.38",
+        "SG:OTT": "0.30",
+        "SG:APP": "-1.84",
+        "SG:BS": "-1.54",
+        "SG:ARG": "-0.84",
+        "SG:P": "-0.41",
+        "Dr Distance": "309.3",
+        "Dr Accuracy %": "57.1",
+        "Ball Speed": "183.07"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2022-10-23",
+        "position": "T72",
+        "roundPosition": "T72",
+        "TournamentName": "The CJ CUP",
+        "is_major": "0",
+        "playerName": "Chanmin Jung",
+        "player_num": "63371",
+        "Rounds": "4",
+        "CourseID": "902",
+        "Course": "Congaree Golf Club",
+        "ShotLink": "4",
+        "SG:TOT": "-2.78",
+        "SG:T2G": "-2.38",
+        "SG:OTT": "0.30",
+        "SG:APP": "-1.84",
+        "SG:BS": "-1.54",
+        "SG:ARG": "-0.84",
+        "SG:P": "-0.41",
+        "SG:SG": "-1.25"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-0.40700002014636993",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-3.7699999809265137",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-4.329999923706055",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-1.7699999809265137",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-1.2699999809265137",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-3.049999952316284",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-2.5199999809265137",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-1.5199999809265137",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-4.049999952316284",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Strong",
+        "StrokesGainedAverage": "-2.784999966621399",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "73",
+        "PM": "74",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "36.8",
+        "200+": "48.7",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-2.784999966621399",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:20:11.312Z",
+    "ok": true
+  }
+}

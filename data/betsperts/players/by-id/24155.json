@@ -1,0 +1,158 @@
+{
+  "playerId": "24155",
+  "playerName": "Ryan Hogue",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Ryan Hogue",
+    "BirthPlace": "",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "United States",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Ryan Hogue",
+        "player_num": "24155",
+        "Year": "2017",
+        "Rounds": "4",
+        "SG:TOT": "-0.28",
+        "SG:T2G": "-0.97",
+        "SG:OTT": "-1.77",
+        "SG:APP": "0.14",
+        "SG:BS": "-1.63",
+        "SG:ARG": "0.66",
+        "SG:P": "0.69",
+        "Dr Distance": "283.9",
+        "Dr Accuracy %": "33.9",
+        "Ball Speed": "163.71"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2017-11-05",
+        "position": "T63",
+        "roundPosition": "T63",
+        "TournamentName": "Shriners Childrens Open",
+        "is_major": "0",
+        "playerName": "Ryan Hogue",
+        "player_num": "24155",
+        "Rounds": "4",
+        "CourseID": "538",
+        "Course": "TPC Summerlin",
+        "ShotLink": "4",
+        "SG:TOT": "-0.28",
+        "SG:T2G": "-0.97",
+        "SG:OTT": "-1.77",
+        "SG:APP": "0.14",
+        "SG:BS": "-1.63",
+        "SG:ARG": "0.66",
+        "SG:P": "0.69",
+        "SG:SG": "1.35"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "25.0",
+        "SG TOT 1+": "25.0",
+        "SG TOT 2+": "25.0",
+        "SG TOT 3+": "25.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "0.6875000596046448",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "3.1700000762939453",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.7200000286102295",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-2.809999942779541",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-0.7699999809265137",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-0.2824999690055847",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-0.2824999690055847",
+        "Rounds": "4"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-0.2824999690055847",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "71.5",
+        "PM": "72",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": "43.5",
+        "150-200": "43.3",
+        "200+": "50.7",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-0.2824999690055847",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:16.434Z",
+    "ok": true
+  }
+}

@@ -1,0 +1,162 @@
+{
+  "playerId": "63552",
+  "playerName": "Daniel Azallion",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Daniel Azallion",
+    "BirthPlace": null,
+    "BirthDate": "",
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": "2024",
+    "PGAWins": null,
+    "College": "Virginia Tech "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Daniel Azallion",
+        "player_num": "63552",
+        "Year": "2026",
+        "Rounds": "2",
+        "SG:TOT": "-3.31",
+        "SG:T2G": "-1.90",
+        "SG:OTT": "-0.05",
+        "SG:APP": "-2.24",
+        "SG:BS": "-2.29",
+        "SG:ARG": "0.39",
+        "SG:P": "-1.41",
+        "Dr Distance": "296.8",
+        "Dr Accuracy %": "60.7",
+        "Ball Speed": "170.45"
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Daniel Azallion",
+        "player_num": "63552",
+        "Rounds": "2",
+        "SG:TOT": "-3.31",
+        "SG:T2G": "-1.90",
+        "SG:OTT": "-0.05",
+        "SG:APP": "-2.24",
+        "SG:BS": "-2.29",
+        "SG:ARG": "0.39",
+        "SG:P": "-1.41",
+        "SG:SG": "-1.02"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-08-02",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "Rocket Classic",
+        "is_major": "0",
+        "playerName": "Daniel Azallion",
+        "player_num": "63552",
+        "Rounds": "2",
+        "CourseID": "947",
+        "Course": "Detroit GC",
+        "ShotLink": "2",
+        "SG:TOT": "-3.31",
+        "SG:T2G": "-1.90",
+        "SG:OTT": "-0.05",
+        "SG:APP": "-2.24",
+        "SG:BS": "-2.29",
+        "SG:ARG": "0.39",
+        "SG:P": "-1.41",
+        "SG:SG": "-1.02"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-1.405500054359436",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-4.800000190734863",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.809999942779541",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-3.305000066757202",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-3.305000066757202",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-3.305000066757202",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74",
+        "PM": "71",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "36.5",
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-3.305000066757202",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:20:45.425Z",
+    "ok": true
+  }
+}

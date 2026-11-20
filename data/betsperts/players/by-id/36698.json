@@ -1,0 +1,252 @@
+{
+  "playerId": "36698",
+  "playerName": "Andy Zhang",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ch-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Andy Zhang",
+    "BirthPlace": "Beijing, China",
+    "BirthDate": "December 14, 1997",
+    "Age": "28",
+    "Height": "6ft 0in",
+    "Weight": "185 lbs",
+    "Nationality": "China",
+    "Residence": "Winter Garden, Florida",
+    "ProWins": "0",
+    "TurnedPro": "2018",
+    "PGAWins": "0",
+    "College": "University of Florida "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Andy Zhang",
+        "player_num": "36698",
+        "Year": "2023",
+        "Rounds": "2",
+        "SG:TOT": "-0.84",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "46.4",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Andy Zhang",
+        "player_num": "36698",
+        "Year": "2020",
+        "Rounds": "4",
+        "SG:TOT": "-1.37",
+        "SG:T2G": "0.12",
+        "SG:OTT": "-0.62",
+        "SG:APP": "0.81",
+        "SG:BS": "0.19",
+        "SG:ARG": "-0.08",
+        "SG:P": "-1.48",
+        "Dr Distance": "288.0",
+        "Dr Accuracy %": "41.1",
+        "Ball Speed": "170.22"
+      },
+      {
+        "playerName": "Andy Zhang",
+        "player_num": "36698",
+        "Year": "2019",
+        "Rounds": "4",
+        "SG:TOT": "1.37",
+        "SG:T2G": "0.66",
+        "SG:OTT": "-0.24",
+        "SG:APP": "0.48",
+        "SG:BS": "0.24",
+        "SG:ARG": "0.43",
+        "SG:P": "0.71",
+        "Dr Distance": "280.5",
+        "Dr Accuracy %": "53.6",
+        "Ball Speed": "169.45"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2023-11-12",
+        "position": "CUT",
+        "roundPosition": "T93",
+        "TournamentName": "Butterfield Bermuda Championship",
+        "is_major": "0",
+        "playerName": "Andy Zhang",
+        "player_num": "36698",
+        "Rounds": "2",
+        "CourseID": "765",
+        "Course": "Port Royal GC",
+        "ShotLink": "0",
+        "SG:TOT": "-0.84",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2020-09-13",
+        "position": "71",
+        "roundPosition": "71",
+        "TournamentName": "Safeway Open",
+        "is_major": "0",
+        "playerName": "Andy Zhang",
+        "player_num": "36698",
+        "Rounds": "4",
+        "CourseID": "552",
+        "Course": "Silverado Resort (North)",
+        "ShotLink": "4",
+        "SG:TOT": "-1.37",
+        "SG:T2G": "0.12",
+        "SG:OTT": "-0.62",
+        "SG:APP": "0.81",
+        "SG:BS": "0.19",
+        "SG:ARG": "-0.08",
+        "SG:P": "-1.48",
+        "SG:SG": "-1.56"
+      },
+      {
+        "Date": "2019-10-13",
+        "position": "T23",
+        "roundPosition": "T23",
+        "TournamentName": "Houston Open",
+        "is_major": "0",
+        "playerName": "Andy Zhang",
+        "player_num": "36698",
+        "Rounds": "4",
+        "CourseID": "729",
+        "Course": "GC of Houston",
+        "ShotLink": "4",
+        "SG:TOT": "1.37",
+        "SG:T2G": "0.66",
+        "SG:OTT": "-0.24",
+        "SG:APP": "0.48",
+        "SG:BS": "0.24",
+        "SG:ARG": "0.43",
+        "SG:P": "0.71",
+        "SG:SG": "1.13"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "30.0",
+        "SG TOT 2+": "30.0",
+        "SG TOT 3+": "20.0",
+        "SG TOT 4+": "10.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "10"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "0.7054999656975269",
+        "Rounds": "6"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "2.8833332856496177",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.276666671037674",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-0.6949999928474426",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-2.5399999618530273",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "1.3700000122189522",
+        "Rounds": "4"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-1.1883333524068196",
+        "Rounds": "6"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "1.3700000122189522",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "4.619999885559082",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-2.35",
+        "Rounds": "5"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-1.3650000095367432",
+        "Rounds": "4"
+      },
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "0.6349999954303106",
+        "Rounds": "6"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "70.57142857142857",
+        "PM": "71",
+        "Rounds": "10"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "10",
+        "50-100": "16.1",
+        "100-150": "23.3",
+        "150-200": "32.4",
+        "200+": "62.2",
+        "200-250": "47.4",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-0.16500000655651093",
+        "Rounds": "10"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:06.723Z",
+    "ok": true
+  }
+}

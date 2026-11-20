@@ -1,0 +1,772 @@
+{
+  "service_name": "get_list_of_tournament",
+  "message": "",
+  "global_error": "",
+  "error": [],
+  "data": [
+    {
+      "Tnum": "1",
+      "TourneyName": "Chrysler Classic of Tucson",
+      "Year": "2006",
+      "SlugName": "",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "2",
+      "TourneyName": "The American Express",
+      "Year": "2026",
+      "SlugName": "the-american-express",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "3",
+      "TourneyName": "WM Phoenix Open",
+      "Year": "2026",
+      "SlugName": "wm-phoenix-open",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "4",
+      "TourneyName": "Farmers Insurance Open",
+      "Year": "2026",
+      "SlugName": "farmers-insurance-open",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "5",
+      "TourneyName": "AT&T Pebble Beach Pro-Am",
+      "Year": "2026",
+      "SlugName": "at-t-pebble-beach-pro-am",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "6",
+      "TourneyName": "Sony Open in Hawaii",
+      "Year": "2026",
+      "SlugName": "sony-open-in-hawaii",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "7",
+      "TourneyName": "The Genesis Invitational",
+      "Year": "2026",
+      "SlugName": "the-genesis-invitational",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "8",
+      "TourneyName": "Ford Championship at Doral",
+      "Year": "2006",
+      "SlugName": "",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "9",
+      "TourneyName": "Arnold Palmer Invitational presented by Mastercard",
+      "Year": "2026",
+      "SlugName": "arnold-palmer-invitational-presented-by-mastercard",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "10",
+      "TourneyName": "Cognizant Classic",
+      "Year": "2026",
+      "SlugName": "cognizant-classic",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "11",
+      "TourneyName": "THE PLAYERS Championship",
+      "Year": "2026",
+      "SlugName": "the-players-championship",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "12",
+      "TourneyName": "RBC Heritage",
+      "Year": "2026",
+      "SlugName": "rbc-heritage",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "13",
+      "TourneyName": "Wyndham Championship",
+      "Year": "2026",
+      "SlugName": "wyndham-championship",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "14",
+      "TourneyName": "Masters Tournament",
+      "Year": "2026",
+      "SlugName": "masters-tournament",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "16",
+      "TourneyName": "The Sentry",
+      "Year": "2025",
+      "SlugName": "the-sentry",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "18",
+      "TourneyName": "Zurich Classic of New Orleans",
+      "Year": "2026",
+      "SlugName": "zurich-classic-of-new-orleans",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "19",
+      "TourneyName": "THE CJ CUP Byron Nelson",
+      "Year": "2026",
+      "SlugName": "at-t-byron-nelson",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "20",
+      "TourneyName": "Texas Childrens Houston Open",
+      "Year": "2026",
+      "SlugName": "texas-childrens-houston-open",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "21",
+      "TourneyName": "Charles Schwab Challenge",
+      "Year": "2026",
+      "SlugName": "charles-schwab-challenge",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "22",
+      "TourneyName": "AT&T Classic",
+      "Year": "2008",
+      "SlugName": "",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "23",
+      "TourneyName": "the Memorial Tournament presented by Workday",
+      "Year": "2026",
+      "SlugName": "the-memorial-tournament",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "24",
+      "TourneyName": "Booz Allen Classic",
+      "Year": "2006",
+      "SlugName": "",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "25",
+      "TourneyName": "FedEx St. Jude Classic",
+      "Year": "2018",
+      "SlugName": "fedex-st-jude-classic",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "26",
+      "TourneyName": "U.S. Open",
+      "Year": "2026",
+      "SlugName": "u-s-open",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "27",
+      "TourneyName": "FedEx St. Jude Championship",
+      "Year": "2026",
+      "SlugName": "fedex-st.-jude-championship",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "28",
+      "TourneyName": "BMW Championship",
+      "Year": "2026",
+      "SlugName": "bmw-championship",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "29",
+      "TourneyName": "U.S. Bank Championship in Milwaukee",
+      "Year": "2009",
+      "SlugName": "",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "30",
+      "TourneyName": "John Deere Classic",
+      "Year": "2026",
+      "SlugName": "john-deere-classic",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "32",
+      "TourneyName": "RBC Canadian Open",
+      "Year": "2026",
+      "SlugName": "rbc-canadian-open",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "33",
+      "TourneyName": "PGA Championship",
+      "Year": "2026",
+      "SlugName": "pga-championship",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "34",
+      "TourneyName": "Travelers Championship",
+      "Year": "2026",
+      "SlugName": "travelers-championship",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "35",
+      "TourneyName": "Buick Open",
+      "Year": "2009",
+      "SlugName": "",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "37",
+      "TourneyName": "B.C. Open presented by Turning Stone Resort",
+      "Year": "2006",
+      "SlugName": "",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "41",
+      "TourneyName": "Valero Texas Open",
+      "Year": "2026",
+      "SlugName": "valero-texas-open",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "45",
+      "TourneyName": "Childrens Miracle Network Hospitals Classic",
+      "Year": "2012",
+      "SlugName": "",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "47",
+      "TourneyName": "Shriners Childrens Open",
+      "Year": "2024",
+      "SlugName": "shriners-childrens-open",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "51",
+      "TourneyName": "LG SKINS GAME",
+      "Year": "2008",
+      "SlugName": "",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "54",
+      "TourneyName": "Sanderson Farms Championship",
+      "Year": "2025",
+      "SlugName": "",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "56",
+      "TourneyName": "The INTERNATIONAL",
+      "Year": "2006",
+      "SlugName": "",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "58",
+      "TourneyName": "QBE Shootout",
+      "Year": "2023",
+      "SlugName": "qbe-shootout",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "60",
+      "TourneyName": "TOUR Championship",
+      "Year": "2026",
+      "SlugName": "tour-championship",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "88",
+      "TourneyName": "PGA TOUR Q-School presented by Korn Ferry",
+      "Year": "2026",
+      "SlugName": "",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "100",
+      "TourneyName": "The Open Championship",
+      "Year": "2026",
+      "SlugName": "the-open-championship",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "169",
+      "TourneyName": "ISPS Handa Melbourne World Cup of Golf",
+      "Year": "2019",
+      "SlugName": "",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "324",
+      "TourneyName": "Wendys 3-Tour Challenge",
+      "Year": "2014",
+      "SlugName": "",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "457",
+      "TourneyName": "World Wide Technology Championship",
+      "Year": "2026",
+      "SlugName": "",
+      "CurrentActive": "460"
+    },
+    {
+      "Tnum": "464",
+      "TourneyName": "Procore Championship",
+      "Year": "2025",
+      "SlugName": "procore-championship",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "468",
+      "TourneyName": "Ryder Cup",
+      "Year": "2025",
+      "SlugName": "ryder-cup",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "470",
+      "TourneyName": "World Golf Championships-Dell Technologies Match Play",
+      "Year": "2023",
+      "SlugName": "world-golf-championships-dell-technologies-match-play",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "471",
+      "TourneyName": "Quicken Loans National",
+      "Year": "2018",
+      "SlugName": "quicken-loans-national",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "472",
+      "TourneyName": "Barracuda Championship",
+      "Year": "2025",
+      "SlugName": "barracuda-championship",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "473",
+      "TourneyName": "World Golf Championships-Workday Championship at The Concession",
+      "Year": "2021",
+      "SlugName": "world-golf-championships-workday-championship-at-the-concession",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "474",
+      "TourneyName": "84 LUMBER Classic",
+      "Year": "2006",
+      "SlugName": "",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "475",
+      "TourneyName": "Valspar Championship",
+      "Year": "2026",
+      "SlugName": "valspar-championship",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "476",
+      "TourneyName": "World Golf Championships-FedEx St. Jude Invitational",
+      "Year": "2021",
+      "SlugName": "world-golf-championships-fedex-st-jude-invitational",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "478",
+      "TourneyName": "Hero World Challenge",
+      "Year": "2026",
+      "SlugName": "",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "480",
+      "TourneyName": "Truist Championship",
+      "Year": "2026",
+      "SlugName": "truist-championship",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "481",
+      "TourneyName": "Turning Stone Resort Championship",
+      "Year": "2010",
+      "SlugName": "",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "482",
+      "TourneyName": "Ginn sur Mer Classic",
+      "Year": "2008",
+      "SlugName": "",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "483",
+      "TourneyName": "Puerto Rico Open",
+      "Year": "2026",
+      "SlugName": "puerto-rico-open",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "485",
+      "TourneyName": "Tavistock Cup",
+      "Year": "2013",
+      "SlugName": "",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "486",
+      "TourneyName": "CVS Health Charity Classic",
+      "Year": "2019",
+      "SlugName": "",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "488",
+      "TourneyName": "Kiwi Challenge",
+      "Year": "2009",
+      "SlugName": "",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "489",
+      "TourneyName": "World Golf Championships-HSBC Champions",
+      "Year": "2020",
+      "SlugName": "world-golf-championships-hsbc-champions",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "490",
+      "TourneyName": "A Military Tribute at The Greenbrier",
+      "Year": "2020",
+      "SlugName": "a-military-tribute-at-the-greenbrier",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "493",
+      "TourneyName": "The RSM Classic",
+      "Year": "2026",
+      "SlugName": "",
+      "CurrentActive": "480"
+    },
+    {
+      "Tnum": "494",
+      "TourneyName": "CIMB Classic",
+      "Year": "2019",
+      "SlugName": "cimb-classic",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "500",
+      "TourneyName": "Presidents Cup",
+      "Year": "2026",
+      "SlugName": "presidents-cup",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "504",
+      "TourneyName": "PGA Grand Slam of Golf",
+      "Year": "2015",
+      "SlugName": "",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "505",
+      "TourneyName": "Dell Technologies Championship",
+      "Year": "2018",
+      "SlugName": "dell-technologies-championship",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "506",
+      "TourneyName": "Shinhan Korea Golf Championship",
+      "Year": "2004",
+      "SlugName": "",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "508",
+      "TourneyName": "Tommy Bahama Challenge",
+      "Year": "2005",
+      "SlugName": "",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "509",
+      "TourneyName": "Tyco Golf Skills Challenge",
+      "Year": "2012",
+      "SlugName": "",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "510",
+      "TourneyName": "Bard Capital Challenge",
+      "Year": "2005",
+      "SlugName": "",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "518",
+      "TourneyName": "ISCO Championship",
+      "Year": "2026",
+      "SlugName": "isco-championship",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "519",
+      "TourneyName": "Men’s Olympic Golf Competition",
+      "Year": "2024",
+      "SlugName": "olympics",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "521",
+      "TourneyName": "THE CJ CUP in South Carolina",
+      "Year": "2023",
+      "SlugName": "the-cj-cup-in-south-carolina",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "522",
+      "TourneyName": "Corales Puntacana Championship",
+      "Year": "2026",
+      "SlugName": "corales-puntacana-championship",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "523",
+      "TourneyName": "Puerto Rico Open Charity Day",
+      "Year": "2018",
+      "SlugName": "",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "524",
+      "TourneyName": "Rocket Classic",
+      "Year": "2026",
+      "SlugName": "rocket-mortgage-classic",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "525",
+      "TourneyName": "3M Open",
+      "Year": "2026",
+      "SlugName": "3m-open",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "526",
+      "TourneyName": "Tiger vs. Phil",
+      "Year": "2019",
+      "SlugName": "",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "527",
+      "TourneyName": "Baycurrent Classic",
+      "Year": "2026",
+      "SlugName": "",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "528",
+      "TourneyName": "Butterfield Bermuda Championship",
+      "Year": "2026",
+      "SlugName": "",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "530",
+      "TourneyName": "MGM Resorts The Challenge: Japan Skins",
+      "Year": "2020",
+      "SlugName": "",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "531",
+      "TourneyName": "TaylorMade Driving Relief",
+      "Year": "2020",
+      "SlugName": "",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "532",
+      "TourneyName": "Capital Ones The Match: Champions for Charity",
+      "Year": "2020",
+      "SlugName": "",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "533",
+      "TourneyName": "Workday Charity Open",
+      "Year": "2020",
+      "SlugName": "workday-charity-open",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "534",
+      "TourneyName": "Corales Puntacana Resort & Club Championship (2021)",
+      "Year": "2021",
+      "SlugName": "corales-puntacana-resort-club-championship-2021",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "535",
+      "TourneyName": "U.S. Open (2021)",
+      "Year": "2021",
+      "SlugName": "u-s-open-2021",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "536",
+      "TourneyName": "Masters Tournament (2021)",
+      "Year": "2021",
+      "SlugName": "masters-tournament-2021",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "538",
+      "TourneyName": "Palmetto Championship at Congaree",
+      "Year": "2021",
+      "SlugName": "palmetto-championship-at-congaree",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "540",
+      "TourneyName": "VidantaWorld Mexico Open",
+      "Year": "2026",
+      "SlugName": "",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "541",
+      "TourneyName": "Genesis Scottish Open",
+      "Year": "2026",
+      "SlugName": "genesis-scottish-open",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "543",
+      "TourneyName": "Fortinet Championship",
+      "Year": "2023",
+      "SlugName": "fortinet-championship",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "544",
+      "TourneyName": "Sanderson Farms Championship",
+      "Year": "2023",
+      "SlugName": "sanderson-farms-championship",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "545",
+      "TourneyName": "Shriners Childrens Open",
+      "Year": "2023",
+      "SlugName": "shriners-childrens-open",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "546",
+      "TourneyName": "ZOZO CHAMPIONSHIP",
+      "Year": "2023",
+      "SlugName": "zozo-championship",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "547",
+      "TourneyName": "World Wide Technology Championship",
+      "Year": "2023",
+      "SlugName": "world-wide-technology-championship-at-mayakoba",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "548",
+      "TourneyName": "Butterfield Bermuda Championship",
+      "Year": "2023",
+      "SlugName": "butterfield-bermuda-championship",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "549",
+      "TourneyName": "The RSM Classic",
+      "Year": "2023",
+      "SlugName": "the-rsm-classic",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "550",
+      "TourneyName": "Hero World Challenge",
+      "Year": "2023",
+      "SlugName": "hero-world-challenge",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "551",
+      "TourneyName": "Grant Thornton Invitational",
+      "Year": "2026",
+      "SlugName": "",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "553",
+      "TourneyName": "ONEflight Myrtle Beach Classic",
+      "Year": "2026",
+      "SlugName": "myrtle-beach-classic",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "554",
+      "TourneyName": "Bank of Utah Championship",
+      "Year": "2026",
+      "SlugName": "",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "556",
+      "TourneyName": "Cadillac Championship",
+      "Year": "2026",
+      "SlugName": "cadillac-championship",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "557",
+      "TourneyName": "Biltmore Championship Asheville",
+      "Year": "2026",
+      "SlugName": "",
+      "CurrentActive": "0"
+    },
+    {
+      "Tnum": "558",
+      "TourneyName": "Austin Championship presented by Compliance Solutions",
+      "Year": "2026",
+      "SlugName": "",
+      "CurrentActive": "470"
+    },
+    {
+      "Tnum": "580",
+      "TourneyName": "Wells Fargo Championship",
+      "Year": "2023",
+      "SlugName": "wells-fargo-championship",
+      "CurrentActive": "0"
+    }
+  ],
+  "response_code": 200
+}

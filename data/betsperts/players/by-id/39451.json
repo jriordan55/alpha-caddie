@@ -1,0 +1,148 @@
+{
+  "playerId": "39451",
+  "playerName": "Alex Redfield",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Alex Redfield",
+    "BirthPlace": "Columbus, Ohio",
+    "BirthDate": "May 17, 1989",
+    "Age": "37",
+    "Height": "5ft 10in",
+    "Weight": "175 lbs",
+    "Nationality": "United States",
+    "Residence": "Powell, Ohio",
+    "ProWins": null,
+    "TurnedPro": "2013",
+    "PGAWins": null,
+    "College": "Ohio State University  (2012, Political Science) "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Alex Redfield",
+        "player_num": "39451",
+        "Year": "2016",
+        "Rounds": "2",
+        "SG:TOT": "-3.13",
+        "SG:T2G": "-1.86",
+        "SG:OTT": "-0.23",
+        "SG:APP": "-0.85",
+        "SG:BS": "-1.08",
+        "SG:ARG": "-0.79",
+        "SG:P": "-1.26",
+        "Dr Distance": "291.4",
+        "Dr Accuracy %": "50.0",
+        "Ball Speed": "169.43"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2016-07-17",
+        "position": "CUT",
+        "roundPosition": "T120",
+        "TournamentName": "Barbasol Championship",
+        "is_major": "0",
+        "playerName": "Alex Redfield",
+        "player_num": "39451",
+        "Rounds": "2",
+        "CourseID": "819",
+        "Course": "RTJ Trail (Grand National)",
+        "ShotLink": "2",
+        "SG:TOT": "-3.13",
+        "SG:T2G": "-1.86",
+        "SG:OTT": "-0.23",
+        "SG:APP": "-0.85",
+        "SG:BS": "-1.08",
+        "SG:ARG": "-0.79",
+        "SG:P": "-1.26",
+        "SG:SG": "-2.05"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "50.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-1.2639999389648438",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-7.670000076293945",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "1.409999966621399",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-3.130000054836273",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-3.130000054836273",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-3.130000054836273",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "68",
+        "PM": "78",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "31.6",
+        "150-200": null,
+        "200+": "53",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-3.130000054836273",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:18:54.233Z",
+    "ok": true
+  }
+}

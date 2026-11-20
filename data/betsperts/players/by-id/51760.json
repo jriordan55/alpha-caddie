@@ -1,0 +1,148 @@
+{
+  "playerId": "51760",
+  "playerName": "Tucker Wadkins",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Tucker Wadkins",
+    "BirthPlace": "",
+    "BirthDate": "August 19, 1992",
+    "Age": "34",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "United States",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Tucker Wadkins",
+        "player_num": "51760",
+        "Year": "2019",
+        "Rounds": "2",
+        "SG:TOT": "-6.04",
+        "SG:T2G": "-4.69",
+        "SG:OTT": "0.19",
+        "SG:APP": "-4.02",
+        "SG:BS": "-3.83",
+        "SG:ARG": "-0.87",
+        "SG:P": "-1.35",
+        "Dr Distance": "278.5",
+        "Dr Accuracy %": "46.4",
+        "Ball Speed": "167.50"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2019-05-26",
+        "position": "CUT",
+        "roundPosition": "117",
+        "TournamentName": "Charles Schwab Challenge",
+        "is_major": "0",
+        "playerName": "Tucker Wadkins",
+        "player_num": "51760",
+        "Rounds": "2",
+        "CourseID": "21",
+        "Course": "Colonial CC",
+        "ShotLink": "2",
+        "SG:TOT": "-6.04",
+        "SG:T2G": "-4.69",
+        "SG:OTT": "0.19",
+        "SG:APP": "-4.02",
+        "SG:BS": "-3.83",
+        "SG:ARG": "-0.87",
+        "SG:P": "-1.35",
+        "SG:SG": "-2.22"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-1.352999985218048",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-4.739999771118164",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-7.349999904632568",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-6.044999837875366",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-6.044999837875366",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-6.044999837875366",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "76",
+        "PM": "78",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "42.3",
+        "150-200": "39.4",
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-6.044999837875366",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:26:16.100Z",
+    "ok": true
+  }
+}

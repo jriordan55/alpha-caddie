@@ -1,0 +1,232 @@
+{
+  "playerId": "20721",
+  "playerName": "Darren Fichardt",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_sf-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Darren Fichardt",
+    "BirthPlace": "Pretoria, South Africa",
+    "BirthDate": "May 13, 1975",
+    "Age": "51",
+    "Height": "5ft 8in",
+    "Weight": "165 lbs",
+    "Nationality": "South Africa",
+    "Residence": "Centurion, South Africa",
+    "ProWins": null,
+    "TurnedPro": "1994",
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Darren Fichardt",
+        "player_num": "20721",
+        "Year": "2025",
+        "Rounds": "2",
+        "SG:TOT": "-2.28",
+        "SG:T2G": "-0.12",
+        "SG:OTT": "0.11",
+        "SG:APP": "-1.99",
+        "SG:BS": "-1.89",
+        "SG:ARG": "1.77",
+        "SG:P": "-2.16",
+        "Dr Distance": null,
+        "Dr Accuracy %": "60.7",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Darren Fichardt",
+        "player_num": "20721",
+        "Year": "2024",
+        "Rounds": "4",
+        "SG:TOT": "-2.90",
+        "SG:T2G": "-1.67",
+        "SG:OTT": "-0.17",
+        "SG:APP": "-1.48",
+        "SG:BS": "-1.66",
+        "SG:ARG": "-0.02",
+        "SG:P": "-1.23",
+        "Dr Distance": null,
+        "Dr Accuracy %": "58.9",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Darren Fichardt",
+        "player_num": "20721",
+        "Year": "2017",
+        "Rounds": "2",
+        "SG:TOT": "-3.02",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "39.3",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2025-07-20",
+        "position": "CUT",
+        "roundPosition": null,
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Darren Fichardt",
+        "player_num": "20721",
+        "Rounds": "2",
+        "CourseID": "885",
+        "Course": "Royal Portrush GC",
+        "ShotLink": "2",
+        "SG:TOT": "-2.28",
+        "SG:T2G": "-0.12",
+        "SG:OTT": "0.11",
+        "SG:APP": "-1.99",
+        "SG:BS": "-1.89",
+        "SG:ARG": "1.77",
+        "SG:P": "-2.16",
+        "SG:SG": "-0.39"
+      },
+      {
+        "Date": "2024-07-21",
+        "position": "80",
+        "roundPosition": null,
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Darren Fichardt",
+        "player_num": "20721",
+        "Rounds": "4",
+        "CourseID": "709",
+        "Course": "Royal Troon",
+        "ShotLink": "4",
+        "SG:TOT": "-2.90",
+        "SG:T2G": "-1.67",
+        "SG:OTT": "-0.17",
+        "SG:APP": "-1.48",
+        "SG:BS": "-1.66",
+        "SG:ARG": "-0.02",
+        "SG:P": "-1.23",
+        "SG:SG": "-1.25"
+      },
+      {
+        "Date": "2017-07-23",
+        "position": "CUT",
+        "roundPosition": "T137",
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Darren Fichardt",
+        "player_num": "20721",
+        "Rounds": "2",
+        "CourseID": "541",
+        "Course": "Royal Birkdale GC",
+        "ShotLink": "0",
+        "SG:TOT": "-3.02",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "33.3",
+        "SG TOT 1+": "8.3",
+        "SG TOT 2+": "8.3",
+        "SG TOT 3+": "8.3",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "12"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.8299999982118607",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.6999999731779099",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-4.379999995231628",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-4.7200000286102295",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-2.6499999538064003",
+        "Rounds": "4"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-2.9024999737739563",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-3.57499997317791",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-2.5099999606609344",
+        "Rounds": "6"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-2.7762499637901783",
+        "Rounds": "8"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "76.125",
+        "PM": "73.75",
+        "Rounds": "12"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "12",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-2.7762499637901783",
+        "Rounds": "8"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:20:54.513Z",
+    "ok": true
+  }
+}

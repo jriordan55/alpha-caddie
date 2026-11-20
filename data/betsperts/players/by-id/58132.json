@@ -1,0 +1,265 @@
+{
+  "playerId": "58132",
+  "playerName": "Kieron van Wyk",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_sf-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Kieron van Wyk",
+    "BirthPlace": null,
+    "BirthDate": "January 15, 2002",
+    "Age": "24",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "South Africa",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": "College of Charleston "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Kieron van Wyk",
+        "player_num": "58132",
+        "Year": "2026",
+        "Rounds": "2",
+        "SG:TOT": "-3.72",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "64.3",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Kieron van Wyk",
+        "player_num": "58132",
+        "Year": "2025",
+        "Rounds": "6",
+        "SG:TOT": "1.54",
+        "SG:T2G": "2.08",
+        "SG:OTT": "1.13",
+        "SG:APP": "0.51",
+        "SG:BS": "1.64",
+        "SG:ARG": "0.44",
+        "SG:P": "-2.27",
+        "Dr Distance": "285.4",
+        "Dr Accuracy %": "64.6",
+        "Ball Speed": "173.60"
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Kieron van Wyk",
+        "player_num": "58132",
+        "Rounds": "2",
+        "SG:TOT": "-3.72",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-03-08",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "Puerto Rico Open",
+        "is_major": "0",
+        "playerName": "Kieron van Wyk",
+        "player_num": "58132",
+        "Rounds": "2",
+        "CourseID": "940",
+        "Course": "Grand Reserve GC",
+        "ShotLink": "0",
+        "SG:TOT": "-3.72",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2025-03-23",
+        "position": "CUT",
+        "roundPosition": "T79",
+        "TournamentName": "Valspar Championship",
+        "is_major": "0",
+        "playerName": "Kieron van Wyk",
+        "player_num": "58132",
+        "Rounds": "2",
+        "CourseID": "665",
+        "Course": "Innisbrook Resort (Copperhead)",
+        "ShotLink": "2",
+        "SG:TOT": "-0.19",
+        "SG:T2G": "2.08",
+        "SG:OTT": "1.13",
+        "SG:APP": "0.51",
+        "SG:BS": "1.64",
+        "SG:ARG": "0.44",
+        "SG:P": "-2.27",
+        "SG:SG": "-1.83"
+      },
+      {
+        "Date": "2025-03-09",
+        "position": "T4",
+        "roundPosition": "T4",
+        "TournamentName": "Puerto Rico Open",
+        "is_major": "0",
+        "playerName": "Kieron van Wyk",
+        "player_num": "58132",
+        "Rounds": "4",
+        "CourseID": "940",
+        "Course": "Grand Reserve GC",
+        "ShotLink": "0",
+        "SG:TOT": "2.40",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "37.5",
+        "SG TOT 2+": "25.0",
+        "SG TOT 3+": "25.0",
+        "SG TOT 4+": "12.5",
+        "SG TOT 5+": "0.0",
+        "Rounds": "8"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Poa Trivialis",
+        "StrokesGainedAverage": "-2.2709999680519104",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.07999998331069946",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.8400000110268593",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "4.710000038146973",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-0.18000000715255737",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "0.3583333392937978",
+        "Rounds": "6"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-0.1899999938905239",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-2.9600000381469727",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "0.07000000029802322",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-4.480000019073486",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-0.44999998807907104",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "2.3975000232458115",
+        "Rounds": "4"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-0.1899999938905239",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "0.3583333392937978",
+        "Rounds": "6"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "72",
+        "PM": "69.6",
+        "Rounds": "8"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "8",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": "61.5",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Florida",
+        "StrokesGainedAverage": "-0.1899999938905239",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "0.3583333392937978",
+        "Rounds": "6"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:24.204Z",
+    "ok": true
+  }
+}

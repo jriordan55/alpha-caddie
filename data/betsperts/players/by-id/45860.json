@@ -1,0 +1,262 @@
+{
+  "playerId": "45860",
+  "playerName": "Case Cochran",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Case Cochran",
+    "BirthPlace": "Paducah, Kentucky",
+    "BirthDate": "April 05, 1989",
+    "Age": "37",
+    "Height": "6ft 4in",
+    "Weight": "195 lbs",
+    "Nationality": "United States",
+    "Residence": "Dallas, Texas",
+    "ProWins": "0",
+    "TurnedPro": "2013",
+    "PGAWins": "0",
+    "College": "Texas A&M University 2013"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Case Cochran",
+        "player_num": "45860",
+        "Year": "2021",
+        "Rounds": "2",
+        "SG:TOT": "-0.95",
+        "SG:T2G": "-0.78",
+        "SG:OTT": "-1.68",
+        "SG:APP": "0.47",
+        "SG:BS": "-1.22",
+        "SG:ARG": "0.44",
+        "SG:P": "-0.18",
+        "Dr Distance": "279.5",
+        "Dr Accuracy %": "46.4",
+        "Ball Speed": "177.01"
+      },
+      {
+        "playerName": "Case Cochran",
+        "player_num": "45860",
+        "Year": "2019",
+        "Rounds": "4",
+        "SG:TOT": "0.25",
+        "SG:T2G": "0.37",
+        "SG:OTT": "-0.34",
+        "SG:APP": "1.00",
+        "SG:BS": "0.66",
+        "SG:ARG": "-0.28",
+        "SG:P": "-0.12",
+        "Dr Distance": "295.1",
+        "Dr Accuracy %": "48.2",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Case Cochran",
+        "player_num": "45860",
+        "Year": "2016",
+        "Rounds": "2",
+        "SG:TOT": "-1.22",
+        "SG:T2G": "-1.28",
+        "SG:OTT": "-0.34",
+        "SG:APP": "-0.78",
+        "SG:BS": "-1.12",
+        "SG:ARG": "-0.16",
+        "SG:P": "0.06",
+        "Dr Distance": "285.9",
+        "Dr Accuracy %": "50.0",
+        "Ball Speed": "172.22"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2021-07-18",
+        "position": "CUT",
+        "roundPosition": "T85",
+        "TournamentName": "Barbasol Championship",
+        "is_major": "0",
+        "playerName": "Case Cochran",
+        "player_num": "45860",
+        "Rounds": "2",
+        "CourseID": "884",
+        "Course": "Keene Trace GC",
+        "ShotLink": "2",
+        "SG:TOT": "-0.95",
+        "SG:T2G": "-0.78",
+        "SG:OTT": "-1.68",
+        "SG:APP": "0.47",
+        "SG:BS": "-1.22",
+        "SG:ARG": "0.44",
+        "SG:P": "-0.18",
+        "SG:SG": "0.26"
+      },
+      {
+        "Date": "2019-07-21",
+        "position": "T45",
+        "roundPosition": "T45",
+        "TournamentName": "Barbasol Championship",
+        "is_major": "0",
+        "playerName": "Case Cochran",
+        "player_num": "45860",
+        "Rounds": "4",
+        "CourseID": "884",
+        "Course": "Keene Trace GC",
+        "ShotLink": "4",
+        "SG:TOT": "0.25",
+        "SG:T2G": "0.37",
+        "SG:OTT": "-0.34",
+        "SG:APP": "1.00",
+        "SG:BS": "0.66",
+        "SG:ARG": "-0.28",
+        "SG:P": "-0.12",
+        "SG:SG": "-0.41"
+      },
+      {
+        "Date": "2016-04-03",
+        "position": "CUT",
+        "roundPosition": "T106",
+        "TournamentName": "Houston Open",
+        "is_major": "0",
+        "playerName": "Case Cochran",
+        "player_num": "45860",
+        "Rounds": "2",
+        "CourseID": "729",
+        "Course": "GC of Houston",
+        "ShotLink": "2",
+        "SG:TOT": "-1.22",
+        "SG:T2G": "-1.28",
+        "SG:OTT": "-0.34",
+        "SG:APP": "-0.78",
+        "SG:BS": "-1.12",
+        "SG:ARG": "-0.16",
+        "SG:P": "0.06",
+        "SG:SG": "-0.10"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "37.5",
+        "SG TOT 1+": "25.0",
+        "SG TOT 2+": "12.5",
+        "SG TOT 3+": "12.5",
+        "SG TOT 4+": "12.5",
+        "SG TOT 5+": "12.5",
+        "Rounds": "8"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.14249999821186066",
+        "Rounds": "6"
+      },
+      {
+        "GreenSurface": "Poa Trivialis",
+        "StrokesGainedAverage": "0.06399999558925629",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.8600000143051147",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "1.9633334055542946",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "1.2000000476837158",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-4.869999885559082",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-1.220000047236681",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "0.28200007081031797",
+        "Rounds": "5"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-2.3299999237060547",
+        "Rounds": "1"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-1.220000047236681",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-0.15333326160907745",
+        "Rounds": "6"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-1.220000047236681",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-0.15333326160907745",
+        "Rounds": "6"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "67",
+        "PM": "71.6",
+        "Rounds": "8"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "8",
+        "50-100": "18.5",
+        "100-150": "28",
+        "150-200": "35.3",
+        "200+": "52.1",
+        "200-250": "49.6",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-1.220000047236681",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-0.15333326160907745",
+        "Rounds": "6"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:20:07.116Z",
+    "ok": true
+  }
+}

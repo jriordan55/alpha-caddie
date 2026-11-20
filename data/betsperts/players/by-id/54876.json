@@ -1,0 +1,148 @@
+{
+  "playerId": "54876",
+  "playerName": "Chen Guxin",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ch-flag.gif",
+  "profile": {
+    "ProfileImage": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2026/05/c_fillg_face_centerq_autof_autodpr_2.0h_220w_200d_stub_default_avatar_light-22.png",
+    "Name": "Chen Guxin",
+    "BirthPlace": "Haikou, Hainan, China",
+    "BirthDate": "June 15, 2003",
+    "Age": "23",
+    "Height": "6ft 0in",
+    "Weight": "176 lbs",
+    "Nationality": "China",
+    "Residence": "Zhuzhou, Hunan, China",
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Chen Guxin",
+        "player_num": "54876",
+        "Year": "2024",
+        "Rounds": "2",
+        "SG:TOT": "-1.89",
+        "SG:T2G": "-0.38",
+        "SG:OTT": "-0.92",
+        "SG:APP": "-0.05",
+        "SG:BS": "-0.97",
+        "SG:ARG": "0.59",
+        "SG:P": "-1.52",
+        "Dr Distance": "283.7",
+        "Dr Accuracy %": "53.6",
+        "Ball Speed": "162.14"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2024-07-14",
+        "position": "CUT",
+        "roundPosition": "T120",
+        "TournamentName": "ISCO Championship",
+        "is_major": "0",
+        "playerName": "Chen Guxin",
+        "player_num": "54876",
+        "Rounds": "2",
+        "CourseID": "884",
+        "Course": "Keene Trace GC",
+        "ShotLink": "2",
+        "SG:TOT": "-1.89",
+        "SG:T2G": "-0.38",
+        "SG:OTT": "-0.92",
+        "SG:APP": "-0.05",
+        "SG:BS": "-0.97",
+        "SG:ARG": "0.59",
+        "SG:P": "-1.52",
+        "SG:SG": "-0.93"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-1.5229999870061874",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-2.5799999237060547",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.2100000381469727",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-1.8949999809265137",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-1.8949999809265137",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-1.8949999809265137",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "70",
+        "PM": "72",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "26.6",
+        "150-200": "30.2",
+        "200+": "75.8",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-1.8949999809265137",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:20:15.757Z",
+    "ok": true
+  }
+}

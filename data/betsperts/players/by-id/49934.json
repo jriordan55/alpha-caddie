@@ -1,0 +1,148 @@
+{
+  "playerId": "49934",
+  "playerName": "Patrick Grimes",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Patrick Grimes",
+    "BirthPlace": "Menlo Park, California",
+    "BirthDate": "December 09, 1992",
+    "Age": "33",
+    "Height": "5ft 11in",
+    "Weight": "None lbs",
+    "Nationality": "United States",
+    "Residence": "Menlo Park, California",
+    "ProWins": "0",
+    "TurnedPro": "2015",
+    "PGAWins": "0",
+    "College": "Stanford University 2015, Psychology"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Patrick Grimes",
+        "player_num": "49934",
+        "Year": "2021",
+        "Rounds": "2",
+        "SG:TOT": "-9.24",
+        "SG:T2G": "-6.31",
+        "SG:OTT": "-1.26",
+        "SG:APP": "-4.12",
+        "SG:BS": "-5.39",
+        "SG:ARG": "-0.92",
+        "SG:P": "-2.93",
+        "Dr Distance": "292.4",
+        "Dr Accuracy %": "42.9",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2021-04-04",
+        "position": "CUT",
+        "roundPosition": "142",
+        "TournamentName": "Valero Texas Open",
+        "is_major": "0",
+        "playerName": "Patrick Grimes",
+        "player_num": "49934",
+        "Rounds": "2",
+        "CourseID": "770",
+        "Course": "TPC San Antonio (Oaks)",
+        "ShotLink": "2",
+        "SG:TOT": "-9.24",
+        "SG:T2G": "-6.31",
+        "SG:OTT": "-1.26",
+        "SG:APP": "-4.12",
+        "SG:BS": "-5.39",
+        "SG:ARG": "-0.92",
+        "SG:P": "-2.93",
+        "SG:SG": "-3.85"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Poa Trivialis",
+        "StrokesGainedAverage": "-2.9329999685287476",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-11.630000114440918",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-6.849999904632568",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-9.240000009536743",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-9.240000009536743",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-9.240000009536743",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "80",
+        "PM": "85",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": "59.2",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-9.240000009536743",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:24:39.866Z",
+    "ok": true
+  }
+}

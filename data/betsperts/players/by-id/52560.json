@@ -1,0 +1,148 @@
+{
+  "playerId": "52560",
+  "playerName": "David Lawrence",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "David Lawrence",
+    "BirthPlace": "Moline, Illinois",
+    "BirthDate": "February 04, 1990",
+    "Age": "36",
+    "Height": "5ft 11in",
+    "Weight": "175 lbs",
+    "Nationality": "United States",
+    "Residence": "Moline, Illinois",
+    "ProWins": null,
+    "TurnedPro": "2012",
+    "PGAWins": null,
+    "College": "Eastern Illinois University 2012, Marketing"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "David Lawrence",
+        "player_num": "52560",
+        "Year": "2017",
+        "Rounds": "2",
+        "SG:TOT": "-0.25",
+        "SG:T2G": "-1.43",
+        "SG:OTT": "0.31",
+        "SG:APP": "-1.60",
+        "SG:BS": "-1.29",
+        "SG:ARG": "-0.14",
+        "SG:P": "1.18",
+        "Dr Distance": "281.6",
+        "Dr Accuracy %": "67.9",
+        "Ball Speed": "169.77"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2017-07-16",
+        "position": "CUT",
+        "roundPosition": "T83",
+        "TournamentName": "John Deere Classic",
+        "is_major": "0",
+        "playerName": "David Lawrence",
+        "player_num": "52560",
+        "Rounds": "2",
+        "CourseID": "669",
+        "Course": "TPC Deere Run",
+        "ShotLink": "2",
+        "SG:TOT": "-0.25",
+        "SG:T2G": "-1.43",
+        "SG:OTT": "0.31",
+        "SG:APP": "-1.60",
+        "SG:BS": "-1.29",
+        "SG:ARG": "-0.14",
+        "SG:P": "1.18",
+        "SG:SG": "1.03"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "50.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "1.1785000562667847",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-2.2799999713897705",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "1.7699999809265137",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-0.2549999952316284",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-0.2549999952316284",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-0.2549999952316284",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "68",
+        "PM": "73",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": "85.9",
+        "200-250": "71.6",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-0.2549999952316284",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:21:01.860Z",
+    "ok": true
+  }
+}

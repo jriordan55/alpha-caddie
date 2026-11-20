@@ -1,0 +1,231 @@
+{
+  "playerId": "22983",
+  "playerName": "Bradley Dredge",
+  "flag": null,
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Bradley Dredge",
+    "BirthPlace": "Tredegar, Wales",
+    "BirthDate": "July 06, 1973",
+    "Age": "53",
+    "Height": "6ft 1in",
+    "Weight": "168 lbs",
+    "Nationality": "Wales",
+    "Residence": "Cardiff, Wales",
+    "ProWins": null,
+    "TurnedPro": "1996",
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Bradley Dredge",
+        "player_num": "22983",
+        "Year": "2017",
+        "Rounds": "2",
+        "SG:TOT": "-0.19",
+        "SG:T2G": "-0.02",
+        "SG:OTT": "0.50",
+        "SG:APP": "-0.58",
+        "SG:BS": "-0.08",
+        "SG:ARG": "0.06",
+        "SG:P": "-0.18",
+        "Dr Distance": "298.7",
+        "Dr Accuracy %": "64.3",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Bradley Dredge",
+        "player_num": "22983",
+        "Year": "2016",
+        "Rounds": "8",
+        "SG:TOT": "-0.72",
+        "SG:T2G": "-0.27",
+        "SG:OTT": "-0.63",
+        "SG:APP": "0.42",
+        "SG:BS": "-0.20",
+        "SG:ARG": "-0.06",
+        "SG:P": "-0.58",
+        "Dr Distance": "286.0",
+        "Dr Accuracy %": "49.1",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2017-06-18",
+        "position": "CUT",
+        "roundPosition": "T79",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Bradley Dredge",
+        "player_num": "22983",
+        "Rounds": "2",
+        "CourseID": "236",
+        "Course": "Erin Hills",
+        "ShotLink": "2",
+        "SG:TOT": "-0.19",
+        "SG:T2G": "-0.02",
+        "SG:OTT": "0.50",
+        "SG:APP": "-0.58",
+        "SG:BS": "-0.08",
+        "SG:ARG": "0.06",
+        "SG:P": "-0.18",
+        "SG:SG": "-0.12"
+      },
+      {
+        "Date": "2016-10-30",
+        "position": "T47",
+        "roundPosition": "T47",
+        "TournamentName": "WGC - HSBC Champions",
+        "is_major": "0",
+        "playerName": "Bradley Dredge",
+        "player_num": "22983",
+        "Rounds": "4",
+        "CourseID": "766",
+        "Course": "Sheshan International GC",
+        "ShotLink": "0",
+        "SG:TOT": "-0.60",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2016-07-31",
+        "position": "T79",
+        "roundPosition": "T79",
+        "TournamentName": "PGA Championship",
+        "is_major": "1",
+        "playerName": "Bradley Dredge",
+        "player_num": "22983",
+        "Rounds": "4",
+        "CourseID": "715",
+        "Course": "Baltusrol GC",
+        "ShotLink": "4",
+        "SG:TOT": "-0.84",
+        "SG:T2G": "-0.27",
+        "SG:OTT": "-0.63",
+        "SG:APP": "0.42",
+        "SG:BS": "-0.20",
+        "SG:ARG": "-0.06",
+        "SG:P": "-0.58",
+        "SG:SG": "-0.64"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "30.0",
+        "SG TOT 1+": "10.0",
+        "SG TOT 2+": "10.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "18"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.1770000159740448",
+        "Rounds": "6"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "0.6833333478619655",
+        "Rounds": "5"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.17666666209697723",
+        "Rounds": "5"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-3.9250000715255737",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "0.0949999988079071",
+        "Rounds": "4"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-0.5974999885074794",
+        "Rounds": "4"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-0.6250000223517418",
+        "Rounds": "6"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-0.5974999885074794",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-0.6250000223517418",
+        "Rounds": "6"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-0.6140000088140368",
+        "Rounds": "10"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "72.14285714285714",
+        "PM": "72.33333333333333",
+        "Rounds": "18"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "18",
+        "50-100": "17",
+        "100-150": null,
+        "150-200": "33.5",
+        "200+": "47.2",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-0.5974999885074794",
+        "Rounds": "4"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-0.6250000223517418",
+        "Rounds": "6"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:38.282Z",
+    "ok": true
+  }
+}

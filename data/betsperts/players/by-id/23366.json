@@ -1,0 +1,200 @@
+{
+  "playerId": "23366",
+  "playerName": "Brian Gaffney",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Brian Gaffney",
+    "BirthPlace": "Summit, New Jersey",
+    "BirthDate": "October 03, 1970",
+    "Age": "56",
+    "Height": "5ft 11in",
+    "Weight": "140 lbs",
+    "Nationality": "United States",
+    "Residence": "Darien, Connecticut",
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": "Montclair State University "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Brian Gaffney",
+        "player_num": "23366",
+        "Year": "2016",
+        "Rounds": "2",
+        "SG:TOT": "-2.31",
+        "SG:T2G": "-3.58",
+        "SG:OTT": "-0.26",
+        "SG:APP": "-1.96",
+        "SG:BS": "-2.22",
+        "SG:ARG": "-1.36",
+        "SG:P": "1.27",
+        "Dr Distance": "269.0",
+        "Dr Accuracy %": "42.9",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Brian Gaffney",
+        "player_num": "23366",
+        "Year": "2015",
+        "Rounds": "4",
+        "SG:TOT": "-0.89",
+        "SG:T2G": "-1.45",
+        "SG:OTT": "-0.61",
+        "SG:APP": "0.55",
+        "SG:BS": "-0.07",
+        "SG:ARG": "-1.39",
+        "SG:P": "0.56",
+        "Dr Distance": "273.5",
+        "Dr Accuracy %": "67.9",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2016-07-31",
+        "position": "CUT",
+        "roundPosition": "T125",
+        "TournamentName": "PGA Championship",
+        "is_major": "1",
+        "playerName": "Brian Gaffney",
+        "player_num": "23366",
+        "Rounds": "2",
+        "CourseID": "715",
+        "Course": "Baltusrol GC",
+        "ShotLink": "2",
+        "SG:TOT": "-2.31",
+        "SG:T2G": "-3.58",
+        "SG:OTT": "-0.26",
+        "SG:APP": "-1.96",
+        "SG:BS": "-2.22",
+        "SG:ARG": "-1.36",
+        "SG:P": "1.27",
+        "SG:SG": "-0.09"
+      },
+      {
+        "Date": "2015-08-16",
+        "position": "71",
+        "roundPosition": "71",
+        "TournamentName": "PGA Championship",
+        "is_major": "1",
+        "playerName": "Brian Gaffney",
+        "player_num": "23366",
+        "Rounds": "4",
+        "CourseID": "706",
+        "Course": "Whistling Straits",
+        "ShotLink": "4",
+        "SG:TOT": "-0.89",
+        "SG:T2G": "-1.45",
+        "SG:OTT": "-0.61",
+        "SG:APP": "0.55",
+        "SG:BS": "-0.07",
+        "SG:ARG": "-1.39",
+        "SG:P": "0.56",
+        "SG:SG": "-0.83"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "33.3",
+        "SG TOT 1+": "16.7",
+        "SG TOT 2+": "16.7",
+        "SG TOT 3+": "16.7",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "6"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "0.5625000149011612",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "0.4200000762939453",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.1849999707192183",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-7.380000114440918",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "0.7300000190734863",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-0.8899999996647239",
+        "Rounds": "4"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-2.309999942779541",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-1.3633333140363295",
+        "Rounds": "6"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-1.3633333140363295",
+        "Rounds": "6"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "73.5",
+        "PM": "73",
+        "Rounds": "6"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "6",
+        "50-100": "21.6",
+        "100-150": "25.8",
+        "150-200": "38.2",
+        "200+": "49.4",
+        "200-250": "47.2",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-1.3633333140363295",
+        "Rounds": "6"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:48.879Z",
+    "ok": true
+  }
+}

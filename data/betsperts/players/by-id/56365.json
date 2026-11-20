@@ -1,0 +1,148 @@
+{
+  "playerId": "56365",
+  "playerName": "Mario Carmona",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_mx-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Mario Carmona",
+    "BirthPlace": "Ciudad Juarez, Chihuahua, Mexico",
+    "BirthDate": "March 29, 1996",
+    "Age": "30",
+    "Height": "6ft 1in",
+    "Weight": "185 lbs",
+    "Nationality": "Mexico",
+    "Residence": "Houston, Texas",
+    "ProWins": "0",
+    "TurnedPro": "2019",
+    "PGAWins": "0",
+    "College": "Rice University 2018, Economics & Sports Management"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Mario Carmona",
+        "player_num": "56365",
+        "Year": "2021",
+        "Rounds": "2",
+        "SG:TOT": "-4.75",
+        "SG:T2G": "-1.91",
+        "SG:OTT": "-0.56",
+        "SG:APP": "1.24",
+        "SG:BS": "0.68",
+        "SG:ARG": "-2.60",
+        "SG:P": "-2.83",
+        "Dr Distance": "293.1",
+        "Dr Accuracy %": "25.0",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2021-06-20",
+        "position": "CUT",
+        "roundPosition": null,
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Mario Carmona",
+        "player_num": "56365",
+        "Rounds": "2",
+        "CourseID": "744",
+        "Course": "Torrey Pines GC (South)",
+        "ShotLink": "2",
+        "SG:TOT": "-4.75",
+        "SG:T2G": "-1.91",
+        "SG:OTT": "-0.56",
+        "SG:APP": "1.24",
+        "SG:BS": "0.68",
+        "SG:ARG": "-2.60",
+        "SG:P": "-2.83",
+        "SG:SG": "-5.43"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "-2.833500027656555",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-3.2799999713897705",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-6.210000038146973",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-4.745000004768372",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-4.745000004768372",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-4.745000004768372",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "77",
+        "PM": "80",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "36.7",
+        "200+": "84.4",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-4.745000004768372",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:47.982Z",
+    "ok": true
+  }
+}

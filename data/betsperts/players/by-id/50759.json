@@ -1,0 +1,200 @@
+{
+  "playerId": "50759",
+  "playerName": "Michael Blair",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ca-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Michael Blair",
+    "BirthPlace": "Hamilton, Ontario, Canada",
+    "BirthDate": "November 01, 1991",
+    "Age": "35",
+    "Height": "6ft 3in",
+    "Weight": "185 lbs",
+    "Nationality": "Canada",
+    "Residence": "Ancaster, Ontario, Canada",
+    "ProWins": "1",
+    "TurnedPro": "2016",
+    "PGAWins": "0",
+    "College": "Eastern Michigan University "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Michael Blair",
+        "player_num": "50759",
+        "Year": "2024",
+        "Rounds": "2",
+        "SG:TOT": "-0.70",
+        "SG:T2G": "-0.28",
+        "SG:OTT": "1.14",
+        "SG:APP": "-1.83",
+        "SG:BS": "-0.68",
+        "SG:ARG": "0.41",
+        "SG:P": "-0.42",
+        "Dr Distance": "299.6",
+        "Dr Accuracy %": "64.3",
+        "Ball Speed": "174.62"
+      },
+      {
+        "playerName": "Michael Blair",
+        "player_num": "50759",
+        "Year": "2019",
+        "Rounds": "2",
+        "SG:TOT": "-8.02",
+        "SG:T2G": "-7.21",
+        "SG:OTT": "-3.32",
+        "SG:APP": "-2.08",
+        "SG:BS": "-5.40",
+        "SG:ARG": "-1.81",
+        "SG:P": "-0.81",
+        "Dr Distance": "298.1",
+        "Dr Accuracy %": "25.0",
+        "Ball Speed": "175.91"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2024-06-02",
+        "position": "CUT",
+        "roundPosition": "T90",
+        "TournamentName": "RBC Canadian Open",
+        "is_major": "0",
+        "playerName": "Michael Blair",
+        "player_num": "50759",
+        "Rounds": "2",
+        "CourseID": "874",
+        "Course": "Hamilton Golf & Country Club",
+        "ShotLink": "2",
+        "SG:TOT": "-0.70",
+        "SG:T2G": "-0.28",
+        "SG:OTT": "1.14",
+        "SG:APP": "-1.83",
+        "SG:BS": "-0.68",
+        "SG:ARG": "0.41",
+        "SG:P": "-0.42",
+        "SG:SG": "-0.02"
+      },
+      {
+        "Date": "2019-06-09",
+        "position": "CUT",
+        "roundPosition": "156",
+        "TournamentName": "RBC Canadian Open",
+        "is_major": "0",
+        "playerName": "Michael Blair",
+        "player_num": "50759",
+        "Rounds": "2",
+        "CourseID": "874",
+        "Course": "Hamilton Golf & Country Club",
+        "ShotLink": "2",
+        "SG:TOT": "-8.02",
+        "SG:T2G": "-7.21",
+        "SG:OTT": "-3.32",
+        "SG:APP": "-2.08",
+        "SG:BS": "-5.40",
+        "SG:ARG": "-1.81",
+        "SG:P": "-0.81",
+        "SG:SG": "-2.62"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.4244999885559082",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-3.890000104904175",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-4.829999901354313",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-0.700000025331974",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-8.019999980926514",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-8.019999980926514",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-0.700000025331974",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-8.019999980926514",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-0.700000025331974",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "75.5",
+        "PM": "73.5",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": "35.5",
+        "150-200": "53",
+        "200+": "49.4",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-4.360000003129244",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:24:07.348Z",
+    "ok": true
+  }
+}

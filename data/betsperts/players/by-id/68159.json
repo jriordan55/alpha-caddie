@@ -1,0 +1,239 @@
+{
+  "playerId": "68159",
+  "playerName": "Connor Doyal",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Connor Doyal",
+    "BirthPlace": null,
+    "BirthDate": "",
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Connor Doyal",
+        "player_num": "68159",
+        "Year": "2026",
+        "Rounds": "4",
+        "SG:TOT": "-0.08",
+        "SG:T2G": "0.56",
+        "SG:OTT": "0.34",
+        "SG:APP": "0.21",
+        "SG:BS": "0.55",
+        "SG:ARG": "0.01",
+        "SG:P": "-0.64",
+        "Dr Distance": "291.3",
+        "Dr Accuracy %": "60.7",
+        "Ball Speed": "172.10"
+      },
+      {
+        "playerName": "Connor Doyal",
+        "player_num": "68159",
+        "Year": "2025",
+        "Rounds": "2",
+        "SG:TOT": "-3.03",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "71.4",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Connor Doyal",
+        "player_num": "68159",
+        "Rounds": "4",
+        "SG:TOT": "-0.08",
+        "SG:T2G": "0.56",
+        "SG:OTT": "0.34",
+        "SG:APP": "0.21",
+        "SG:BS": "0.55",
+        "SG:ARG": "0.01",
+        "SG:P": "-0.64",
+        "SG:SG": "-0.63"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-05-10",
+        "position": "T53",
+        "roundPosition": "T53",
+        "TournamentName": "Myrtle Beach Classic",
+        "is_major": "0",
+        "playerName": "Connor Doyal",
+        "player_num": "68159",
+        "Rounds": "4",
+        "CourseID": "925",
+        "Course": "Dunes Golf & Beach Club",
+        "ShotLink": "4",
+        "SG:TOT": "-0.08",
+        "SG:T2G": "0.56",
+        "SG:OTT": "0.34",
+        "SG:APP": "0.21",
+        "SG:BS": "0.55",
+        "SG:ARG": "0.01",
+        "SG:P": "-0.64",
+        "SG:SG": "-0.63"
+      },
+      {
+        "Date": "2025-04-20",
+        "position": "CUT",
+        "roundPosition": "T116",
+        "TournamentName": "Corales Puntacana Championship",
+        "is_major": "0",
+        "playerName": "Connor Doyal",
+        "player_num": "68159",
+        "Rounds": "2",
+        "CourseID": "244",
+        "Course": "Corales Golf Course",
+        "ShotLink": "0",
+        "SG:TOT": "-3.03",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "33.3",
+        "SG TOT 1+": "33.3",
+        "SG TOT 2+": "33.3",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "6"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-0.6359999999403954",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-2.9950000047683716",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.30000007152557373",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-2.5399999618530273",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "2.759999990463257",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "0.10000002384185791",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-0.2549999952316284",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-3.03000009059906",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-2.559999942779541",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "2.0299999713897705",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "0.06499993801116943",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-2.9850000143051147",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-3.03000009059906",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-0.07749998569488525",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "71",
+        "PM": "71.5",
+        "Rounds": "6"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "6",
+        "50-100": "14.4",
+        "100-150": "34.1",
+        "150-200": "29.8",
+        "200+": "57.1",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-1.0616666873296101",
+        "Rounds": "6"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:20:33.945Z",
+    "ok": true
+  }
+}

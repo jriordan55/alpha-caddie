@@ -1,0 +1,163 @@
+{
+  "playerId": "31627",
+  "playerName": "Todd Baek",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Todd Baek",
+    "BirthPlace": "Seoul, South Korea",
+    "BirthDate": "October 06, 1991",
+    "Age": "35",
+    "Height": "6ft 2in",
+    "Weight": "230 lbs",
+    "Nationality": "United States",
+    "Residence": "San Diego, California",
+    "ProWins": null,
+    "TurnedPro": "2012",
+    "PGAWins": null,
+    "College": "San Diego State University "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Todd Baek",
+        "player_num": "31627",
+        "Year": "2017",
+        "Rounds": "2",
+        "SG:TOT": "-3.79",
+        "SG:T2G": "-3.31",
+        "SG:OTT": "-0.49",
+        "SG:APP": "-2.04",
+        "SG:BS": "-2.53",
+        "SG:ARG": "-0.78",
+        "SG:P": "-4.08",
+        "Dr Distance": "264.6",
+        "Dr Accuracy %": "57.1",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2017-01-29",
+        "position": "CUT",
+        "roundPosition": "T149",
+        "TournamentName": "Farmers Insurance Open",
+        "is_major": "0",
+        "playerName": "Todd Baek",
+        "player_num": "31627",
+        "Rounds": "2",
+        "CourseID": "104",
+        "Course": "Torrey Pines GC (North)",
+        "ShotLink": "1",
+        "SG:TOT": "-3.79",
+        "SG:T2G": "-3.31",
+        "SG:OTT": "-0.49",
+        "SG:APP": "-2.04",
+        "SG:BS": "-2.53",
+        "SG:ARG": "-0.78",
+        "SG:P": "-4.08",
+        "SG:SG": "-4.85"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": null,
+        "Rounds": "1"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "-4.078000068664551",
+        "Rounds": "1"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-7.380000114440918",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.1899999976158142",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-0.1899999976158142",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-7.380000114440918",
+        "Rounds": "1"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-0.1899999976158142",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-7.380000114440918",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-3.785000056028366",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "72",
+        "PM": "81",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": "55.5",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "West Coast",
+        "StrokesGainedAverage": "-3.785000056028366",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:26:05.014Z",
+    "ok": true
+  }
+}

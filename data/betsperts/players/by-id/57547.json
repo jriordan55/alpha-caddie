@@ -1,0 +1,148 @@
+{
+  "playerId": "57547",
+  "playerName": "Callum Bruce",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/04/Flag_of_Scotland.svg_.png",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Callum Bruce",
+    "BirthPlace": "",
+    "BirthDate": "March 01, 1999",
+    "Age": "27",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "Scotland",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Callum Bruce",
+        "player_num": "57547",
+        "Year": "2019",
+        "Rounds": "2",
+        "SG:TOT": "-1.67",
+        "SG:T2G": "-0.20",
+        "SG:OTT": "0.19",
+        "SG:APP": "-0.29",
+        "SG:BS": "-0.10",
+        "SG:ARG": "-0.10",
+        "SG:P": "-1.46",
+        "Dr Distance": "289.0",
+        "Dr Accuracy %": "57.1",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2019-07-21",
+        "position": "CUT",
+        "roundPosition": "T94",
+        "TournamentName": "Barbasol Championship",
+        "is_major": "0",
+        "playerName": "Callum Bruce",
+        "player_num": "57547",
+        "Rounds": "2",
+        "CourseID": "884",
+        "Course": "Keene Trace GC",
+        "ShotLink": "2",
+        "SG:TOT": "-1.67",
+        "SG:T2G": "-0.20",
+        "SG:OTT": "0.19",
+        "SG:APP": "-0.29",
+        "SG:BS": "-0.10",
+        "SG:ARG": "-0.10",
+        "SG:P": "-1.46",
+        "SG:SG": "-1.56"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-1.4639999568462372",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-3.8499999046325684",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "0.5099999904632568",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-1.6699999570846558",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-1.6699999570846558",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-1.6699999570846558",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "69",
+        "PM": "74",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "35.8",
+        "150-200": "38.3",
+        "200+": "56.7",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-1.6699999570846558",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:59.389Z",
+    "ok": true
+  }
+}

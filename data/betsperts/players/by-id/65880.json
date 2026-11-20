@@ -1,0 +1,158 @@
+{
+  "playerId": "65880",
+  "playerName": "Gunnar Broin",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Gunnar Broin",
+    "BirthPlace": null,
+    "BirthDate": "",
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Gunnar Broin",
+        "player_num": "65880",
+        "Year": "2024",
+        "Rounds": "4",
+        "SG:TOT": "-1.22",
+        "SG:T2G": "-1.56",
+        "SG:OTT": "-0.67",
+        "SG:APP": "-0.93",
+        "SG:BS": "-1.60",
+        "SG:ARG": "0.03",
+        "SG:P": "0.35",
+        "Dr Distance": "299.5",
+        "Dr Accuracy %": "51.8",
+        "Ball Speed": "187.87"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2024-06-16",
+        "position": "T70",
+        "roundPosition": "T70",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Gunnar Broin",
+        "player_num": "65880",
+        "Rounds": "4",
+        "CourseID": "528",
+        "Course": "Pinehurst No. 2",
+        "ShotLink": "4",
+        "SG:TOT": "-1.22",
+        "SG:T2G": "-1.56",
+        "SG:OTT": "-0.67",
+        "SG:APP": "-0.93",
+        "SG:BS": "-1.60",
+        "SG:ARG": "0.03",
+        "SG:P": "0.35",
+        "SG:SG": "0.38"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "25.0",
+        "SG TOT 1+": "25.0",
+        "SG TOT 2+": "25.0",
+        "SG TOT 3+": "25.0",
+        "SG TOT 4+": "25.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "0.3490000516176224",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.7400000095367432",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "4.900000095367432",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-7.809999942779541",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-0.2199999988079071",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-1.21749996393919",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-1.21749996393919",
+        "Rounds": "4"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-1.21749996393919",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "73.66666666666667",
+        "PM": "75",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-1.21749996393919",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:21:54.282Z",
+    "ok": true
+  }
+}

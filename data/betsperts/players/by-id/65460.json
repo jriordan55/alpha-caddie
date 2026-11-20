@@ -1,0 +1,152 @@
+{
+  "playerId": "65460",
+  "playerName": "Robbie Higgins",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Robbie Higgins",
+    "BirthPlace": null,
+    "BirthDate": "",
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": "2024",
+    "PGAWins": null,
+    "College": "University of North Florida "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Robbie Higgins",
+        "player_num": "65460",
+        "Year": "2026",
+        "Rounds": "2",
+        "SG:TOT": "-6.74",
+        "SG:T2G": "-5.11",
+        "SG:OTT": "-0.82",
+        "SG:APP": "-3.67",
+        "SG:BS": "-4.49",
+        "SG:ARG": "-0.62",
+        "SG:P": "-1.63",
+        "Dr Distance": "312.2",
+        "Dr Accuracy %": "60.7",
+        "Ball Speed": "189.40"
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Robbie Higgins",
+        "player_num": "65460",
+        "Rounds": "2",
+        "SG:TOT": "-6.74",
+        "SG:T2G": "-5.11",
+        "SG:OTT": "-0.82",
+        "SG:APP": "-3.67",
+        "SG:BS": "-4.49",
+        "SG:ARG": "-0.62",
+        "SG:P": "-1.63",
+        "SG:SG": "-2.25"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-06-21",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Robbie Higgins",
+        "player_num": "65460",
+        "Rounds": "2",
+        "CourseID": "618",
+        "Course": "Shinnecock Hills GC",
+        "ShotLink": "2",
+        "SG:TOT": "-6.74",
+        "SG:T2G": "-5.11",
+        "SG:OTT": "-0.82",
+        "SG:APP": "-3.67",
+        "SG:BS": "-4.49",
+        "SG:ARG": "-0.62",
+        "SG:P": "-1.63",
+        "SG:SG": "-2.25"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-8.720000267028809",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-4.75",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-6.735000133514404",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-6.735000133514404",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-6.735000133514404",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "82",
+        "PM": "77",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-6.735000133514404",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:05.068Z",
+    "ok": true
+  }
+}

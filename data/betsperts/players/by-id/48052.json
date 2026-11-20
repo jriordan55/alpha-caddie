@@ -1,0 +1,261 @@
+{
+  "playerId": "48052",
+  "playerName": "Max Rottluff",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_gm-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Max Rottluff",
+    "BirthPlace": "Dusseldorf, Germany",
+    "BirthDate": "January 29, 1993",
+    "Age": "33",
+    "Height": "6ft 0in",
+    "Weight": "172 lbs",
+    "Nationality": "Germany",
+    "Residence": "Scottsdale, Arizona",
+    "ProWins": null,
+    "TurnedPro": "2016",
+    "PGAWins": null,
+    "College": "Arizona State University  (2016, Business Marketing) "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Max Rottluff",
+        "player_num": "48052",
+        "Year": "2024",
+        "Rounds": "8",
+        "SG:TOT": "1.44",
+        "SG:T2G": "1.86",
+        "SG:OTT": "-0.49",
+        "SG:APP": "2.30",
+        "SG:BS": "1.81",
+        "SG:ARG": "0.05",
+        "SG:P": "-0.08",
+        "Dr Distance": "314.8",
+        "Dr Accuracy %": "55.4",
+        "Ball Speed": "174.16"
+      },
+      {
+        "playerName": "Max Rottluff",
+        "player_num": "48052",
+        "Year": "2017",
+        "Rounds": "2",
+        "SG:TOT": "-2.79",
+        "SG:T2G": "-0.27",
+        "SG:OTT": "-0.11",
+        "SG:APP": "-0.15",
+        "SG:BS": "-0.26",
+        "SG:ARG": "-0.02",
+        "SG:P": "-4.11",
+        "Dr Distance": "282.8",
+        "Dr Accuracy %": "46.4",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2024-07-21",
+        "position": "T44",
+        "roundPosition": null,
+        "TournamentName": "Barracuda Championship",
+        "is_major": null,
+        "playerName": "Max Rottluff",
+        "player_num": "48052",
+        "Rounds": "4",
+        "CourseID": "931",
+        "Course": "Tahoe Mountain Club (Old Greenwood)",
+        "ShotLink": "0",
+        "SG:TOT": "1.11",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2024-07-14",
+        "position": "T16",
+        "roundPosition": "T16",
+        "TournamentName": "ISCO Championship",
+        "is_major": "0",
+        "playerName": "Max Rottluff",
+        "player_num": "48052",
+        "Rounds": "4",
+        "CourseID": "884",
+        "Course": "Keene Trace GC",
+        "ShotLink": "4",
+        "SG:TOT": "1.78",
+        "SG:T2G": "1.86",
+        "SG:OTT": "-0.49",
+        "SG:APP": "2.30",
+        "SG:BS": "1.81",
+        "SG:ARG": "0.05",
+        "SG:P": "-0.08",
+        "SG:SG": "-0.03"
+      },
+      {
+        "Date": "2017-01-29",
+        "position": "CUT",
+        "roundPosition": "T138",
+        "TournamentName": "Farmers Insurance Open",
+        "is_major": "0",
+        "playerName": "Max Rottluff",
+        "player_num": "48052",
+        "Rounds": "2",
+        "CourseID": "104",
+        "Course": "Torrey Pines GC (North)",
+        "ShotLink": "1",
+        "SG:TOT": "-2.79",
+        "SG:T2G": "-0.27",
+        "SG:OTT": "-0.11",
+        "SG:APP": "-0.15",
+        "SG:BS": "-0.26",
+        "SG:ARG": "-0.02",
+        "SG:P": "-4.11",
+        "SG:SG": "-4.13"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "60.0",
+        "SG TOT 1+": "50.0",
+        "SG TOT 2+": "50.0",
+        "SG TOT 3+": "30.0",
+        "SG TOT 4+": "10.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "10"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.0755000039935112",
+        "Rounds": "5"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "-4.11299991607666",
+        "Rounds": "1"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "0.37333329518636066",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "0.5233333110809326",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "1.655000016093254",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-0.009999990463256836",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "2.9700000286102295",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-0.31499993801116943",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "1.1879999816417695",
+        "Rounds": "5"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-1.1500000953674316",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-1.190000057220459",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-4.380000114440918",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "3.5433332920074463",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "0.18400003314018248",
+        "Rounds": "5"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-2.7850000858306885",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "1.4437500052154064",
+        "Rounds": "8"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "68.8",
+        "PM": "70",
+        "Rounds": "10"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "10",
+        "50-100": "14.9",
+        "100-150": "26.8",
+        "150-200": "31.3",
+        "200+": "45.7",
+        "200-250": "38",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "1.4437500052154064",
+        "Rounds": "8"
+      },
+      {
+        "SeasonHeld": "West Coast",
+        "StrokesGainedAverage": "-2.7850000858306885",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:24:05.051Z",
+    "ok": true
+  }
+}

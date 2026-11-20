@@ -1,0 +1,158 @@
+{
+  "playerId": "12461",
+  "playerName": "Paul McGinley",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ei-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Paul McGinley",
+    "BirthPlace": "Dublin, Ireland",
+    "BirthDate": "December 16, 1966",
+    "Age": "59",
+    "Height": null,
+    "Weight": "165 lbs",
+    "Nationality": "Ireland",
+    "Residence": "Sunningdale, England",
+    "ProWins": null,
+    "TurnedPro": "1991",
+    "PGAWins": null,
+    "College": "U.S. International "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Paul McGinley",
+        "player_num": "12461",
+        "Year": "2015",
+        "Rounds": "3",
+        "SG:TOT": "-5.24",
+        "SG:T2G": "-1.83",
+        "SG:OTT": "0.09",
+        "SG:APP": "-2.25",
+        "SG:BS": "-2.15",
+        "SG:ARG": "0.32",
+        "SG:P": "-4.27",
+        "Dr Distance": "266.2",
+        "Dr Accuracy %": "70.7",
+        "Ball Speed": "153.40"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2015-02-15",
+        "position": "CUT",
+        "roundPosition": "T152",
+        "TournamentName": "AT&T Pebble Beach Pro-Am",
+        "is_major": "0",
+        "playerName": "Paul McGinley",
+        "player_num": "12461",
+        "Rounds": "3",
+        "CourseID": "5",
+        "Course": "Pebble Beach Golf Links",
+        "ShotLink": "1",
+        "SG:TOT": "-5.24",
+        "SG:T2G": "-1.83",
+        "SG:OTT": "0.09",
+        "SG:APP": "-2.25",
+        "SG:BS": "-2.15",
+        "SG:ARG": "0.32",
+        "SG:P": "-4.27",
+        "SG:SG": "-3.94"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "3"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "-4.267000198364258",
+        "Rounds": "3"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-4.059999942779541",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-5.559999942779541",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-6.099999904632568",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-5.239999930063884",
+        "Rounds": "3"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-5.559999942779541",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-5.079999923706055",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-5.239999930063884",
+        "Rounds": "3"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "76",
+        "PM": "74.5",
+        "Rounds": "3"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "3",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "West Coast",
+        "StrokesGainedAverage": "-5.239999930063884",
+        "Rounds": "3"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:24:44.164Z",
+    "ok": true
+  }
+}

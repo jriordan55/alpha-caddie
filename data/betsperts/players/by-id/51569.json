@@ -1,0 +1,153 @@
+{
+  "playerId": "51569",
+  "playerName": "Peter Lansburgh",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Peter Lansburgh",
+    "BirthPlace": null,
+    "BirthDate": "October 24, 1987",
+    "Age": "39",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Peter Lansburgh",
+        "player_num": "51569",
+        "Year": "2023",
+        "Rounds": "2",
+        "SG:TOT": "-1.24",
+        "SG:T2G": "0.13",
+        "SG:OTT": "-0.51",
+        "SG:APP": "0.06",
+        "SG:BS": "-0.45",
+        "SG:ARG": "0.58",
+        "SG:P": "-1.37",
+        "Dr Distance": "290.2",
+        "Dr Accuracy %": "46.4",
+        "Ball Speed": "168.61"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2023-04-02",
+        "position": "CUT",
+        "roundPosition": "T100",
+        "TournamentName": "Valero Texas Open",
+        "is_major": "0",
+        "playerName": "Peter Lansburgh",
+        "player_num": "51569",
+        "Rounds": "2",
+        "CourseID": "770",
+        "Course": "TPC San Antonio (Oaks)",
+        "ShotLink": "2",
+        "SG:TOT": "-1.24",
+        "SG:T2G": "0.13",
+        "SG:OTT": "-0.51",
+        "SG:APP": "0.06",
+        "SG:BS": "-0.45",
+        "SG:ARG": "0.58",
+        "SG:P": "-1.37",
+        "SG:SG": "-0.79"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Poa Trivialis",
+        "StrokesGainedAverage": "-1.3680000007152557",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-2.6700000762939453",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "0.1899999976158142",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-1.2400000393390656",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "0.1899999976158142",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-2.6700000762939453",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-1.2400000393390656",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "72",
+        "PM": "75",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "21.1",
+        "150-200": null,
+        "200+": "74.3",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-1.2400000393390656",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:24:48.513Z",
+    "ok": true
+  }
+}

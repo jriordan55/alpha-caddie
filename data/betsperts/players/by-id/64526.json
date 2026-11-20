@@ -1,0 +1,157 @@
+{
+  "playerId": "64526",
+  "playerName": "Declan ODonovan",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/as-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Declan ODonovan",
+    "BirthPlace": null,
+    "BirthDate": "",
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "Australia",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Declan ODonovan",
+        "player_num": "64526",
+        "Year": "2026",
+        "Rounds": "2",
+        "SG:TOT": "-0.22",
+        "SG:T2G": "-2.21",
+        "SG:OTT": "-0.01",
+        "SG:APP": "-2.33",
+        "SG:BS": "-2.33",
+        "SG:ARG": "0.12",
+        "SG:P": "1.99",
+        "Dr Distance": "310.3",
+        "Dr Accuracy %": "64.3",
+        "Ball Speed": "175.80"
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Declan ODonovan",
+        "player_num": "64526",
+        "Rounds": "2",
+        "SG:TOT": "-0.22",
+        "SG:T2G": "-2.21",
+        "SG:OTT": "-0.01",
+        "SG:APP": "-2.33",
+        "SG:BS": "-2.33",
+        "SG:ARG": "0.12",
+        "SG:P": "1.99",
+        "SG:SG": "2.11"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-06-14",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "RBC Canadian Open",
+        "is_major": "0",
+        "playerName": "Declan ODonovan",
+        "player_num": "64526",
+        "Rounds": "2",
+        "CourseID": "935",
+        "Course": "TPC Toronto at Osprey Valley (North)",
+        "ShotLink": "2",
+        "SG:TOT": "-0.22",
+        "SG:T2G": "-2.21",
+        "SG:OTT": "-0.01",
+        "SG:APP": "-2.33",
+        "SG:BS": "-2.33",
+        "SG:ARG": "0.12",
+        "SG:P": "1.99",
+        "SG:SG": "2.11"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "50.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.4900000095367432",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "1.059999942779541",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-0.21500003337860107",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "1.059999942779541",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-1.4900000095367432",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-0.21500003337860107",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "69",
+        "PM": "70",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "29.1",
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-0.21500003337860107",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:21:10.230Z",
+    "ok": true
+  }
+}

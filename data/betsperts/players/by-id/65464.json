@@ -1,0 +1,148 @@
+{
+  "playerId": "65464",
+  "playerName": "Cameron Huss",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2026/05/c_fillg_face_centerq_autof_autodpr_2.0h_220w_200d_stub_default_avatar_light-17.png",
+    "Name": "Cameron Huss",
+    "BirthPlace": "Kenosha, Wisconsin",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "6ft 0in",
+    "Weight": "155 lbs",
+    "Nationality": "United States",
+    "Residence": "Palm Beach Gardens, Florida",
+    "ProWins": null,
+    "TurnedPro": "2024",
+    "PGAWins": null,
+    "College": "University of Wisconsin (2024, Consumer Behavior and Marketplace Studies)"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Cameron Huss",
+        "player_num": "65464",
+        "Year": "2025",
+        "Rounds": "2",
+        "SG:TOT": "-3.19",
+        "SG:T2G": "-2.58",
+        "SG:OTT": "-0.49",
+        "SG:APP": "-1.75",
+        "SG:BS": "-2.25",
+        "SG:ARG": "-0.34",
+        "SG:P": "-0.61",
+        "Dr Distance": "305.3",
+        "Dr Accuracy %": "46.4",
+        "Ball Speed": "179.62"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2025-10-05",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "Sanderson Farms Championship",
+        "is_major": "0",
+        "playerName": "Cameron Huss",
+        "player_num": "65464",
+        "Rounds": "2",
+        "CourseID": "746",
+        "Course": "The Country Club of Jackson",
+        "ShotLink": "2",
+        "SG:TOT": "-3.19",
+        "SG:T2G": "-2.58",
+        "SG:OTT": "-0.49",
+        "SG:APP": "-1.75",
+        "SG:BS": "-2.25",
+        "SG:ARG": "-0.34",
+        "SG:P": "-0.61",
+        "SG:SG": "-0.95"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-0.6100000143051147",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-4.559999942779541",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.8300000429153442",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-3.1949999928474426",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-3.1949999928474426",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-3.1949999928474426",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "75",
+        "PM": "72",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "26.2",
+        "150-200": "32",
+        "200+": "71.4",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-3.1949999928474426",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:20:02.232Z",
+    "ok": true
+  }
+}

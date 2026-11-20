@@ -1,0 +1,209 @@
+{
+  "playerId": "58547",
+  "playerName": "Austin Hitt",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Austin Hitt",
+    "BirthPlace": "Longwood, Florida",
+    "BirthDate": "December 17, 1997",
+    "Age": "28",
+    "Height": "6ft 2in",
+    "Weight": "185 lbs",
+    "Nationality": "United States",
+    "Residence": "Longwood, Florida",
+    "ProWins": null,
+    "TurnedPro": "2021",
+    "PGAWins": null,
+    "College": "University of North Carolina-Chapel Hill 2020, Management and Society"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Austin Hitt",
+        "player_num": "58547",
+        "Year": "2026",
+        "Rounds": "4",
+        "SG:TOT": "0.91",
+        "SG:T2G": "1.57",
+        "SG:OTT": "0.18",
+        "SG:APP": "0.66",
+        "SG:BS": "0.84",
+        "SG:ARG": "0.73",
+        "SG:P": "-0.66",
+        "Dr Distance": "291.8",
+        "Dr Accuracy %": "87.5",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Austin Hitt",
+        "player_num": "58547",
+        "Year": "2024",
+        "Rounds": "2",
+        "SG:TOT": "-2.48",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "78.6",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Austin Hitt",
+        "player_num": "58547",
+        "Rounds": "4",
+        "SG:TOT": "0.91",
+        "SG:T2G": "1.57",
+        "SG:OTT": "0.18",
+        "SG:APP": "0.66",
+        "SG:BS": "0.84",
+        "SG:ARG": "0.73",
+        "SG:P": "-0.66",
+        "SG:SG": "0.07"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-11-08",
+        "position": "T33",
+        "roundPosition": "T33",
+        "TournamentName": "World Wide Technology Championship",
+        "is_major": "0",
+        "playerName": "Austin Hitt",
+        "player_num": "58547",
+        "Rounds": "4",
+        "CourseID": "919",
+        "Course": "El Cardonal at Diamante",
+        "ShotLink": "4",
+        "SG:TOT": "0.91",
+        "SG:T2G": "1.57",
+        "SG:OTT": "0.18",
+        "SG:APP": "0.66",
+        "SG:BS": "0.84",
+        "SG:ARG": "0.73",
+        "SG:P": "-0.66",
+        "SG:SG": "0.07"
+      },
+      {
+        "Date": "2024-11-10",
+        "position": "CUT",
+        "roundPosition": "T102",
+        "TournamentName": "World Wide Technology Championship",
+        "is_major": "0",
+        "playerName": "Austin Hitt",
+        "player_num": "58547",
+        "Rounds": "2",
+        "CourseID": "919",
+        "Course": "El Cardonal at Diamante",
+        "ShotLink": "0",
+        "SG:TOT": "-2.48",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "66.7",
+        "SG TOT 1+": "33.3",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "10"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.0099999606609344",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.1449999436736107",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "1.309999942779541",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "1.690000057220459",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-0.2183333014448484",
+        "Rounds": "6"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-2.5999999046325684",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "0.2580000191926956",
+        "Rounds": "5"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-2.484999895095825",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "0.91499999538064",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "70.66666666666667",
+        "PM": "70",
+        "Rounds": "10"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "10",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-0.2183333014448484",
+        "Rounds": "6"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:16.280Z",
+    "ok": true
+  }
+}

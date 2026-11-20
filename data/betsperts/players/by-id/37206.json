@@ -1,0 +1,148 @@
+{
+  "playerId": "37206",
+  "playerName": "Dennis Downs",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Dennis Downs",
+    "BirthPlace": null,
+    "BirthDate": "August 14, 1982",
+    "Age": "44",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Dennis Downs",
+        "player_num": "37206",
+        "Year": "2016",
+        "Rounds": "2",
+        "SG:TOT": "-6.34",
+        "SG:T2G": "-4.80",
+        "SG:OTT": "-0.18",
+        "SG:APP": "-2.56",
+        "SG:BS": "-2.74",
+        "SG:ARG": "-2.06",
+        "SG:P": "-1.54",
+        "Dr Distance": "284.6",
+        "Dr Accuracy %": "60.7",
+        "Ball Speed": "165.06"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2016-02-07",
+        "position": "CUT",
+        "roundPosition": "129",
+        "TournamentName": "WM Phoenix Open",
+        "is_major": "0",
+        "playerName": "Dennis Downs",
+        "player_num": "37206",
+        "Rounds": "2",
+        "CourseID": "510",
+        "Course": "TPC Scottsdale",
+        "ShotLink": "2",
+        "SG:TOT": "-6.34",
+        "SG:T2G": "-4.80",
+        "SG:OTT": "-0.18",
+        "SG:APP": "-2.56",
+        "SG:BS": "-2.74",
+        "SG:ARG": "-2.06",
+        "SG:P": "-1.54",
+        "SG:SG": "-3.61"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Poa Trivialis",
+        "StrokesGainedAverage": "-1.5444999933242798",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-7.150000095367432",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-5.53000020980835",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-6.340000152587891",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-6.340000152587891",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-6.340000152587891",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "77",
+        "PM": "78",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "44.5",
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "West Coast",
+        "StrokesGainedAverage": "-6.340000152587891",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:21:10.618Z",
+    "ok": true
+  }
+}

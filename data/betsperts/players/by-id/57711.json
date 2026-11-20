@@ -1,0 +1,148 @@
+{
+  "playerId": "57711",
+  "playerName": "Mason Williams",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Mason Williams",
+    "BirthPlace": "",
+    "BirthDate": "March 14, 2000",
+    "Age": "26",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "United States",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Mason Williams",
+        "player_num": "57711",
+        "Year": "2019",
+        "Rounds": "2",
+        "SG:TOT": "-4.57",
+        "SG:T2G": "-2.50",
+        "SG:OTT": "0.29",
+        "SG:APP": "-2.35",
+        "SG:BS": "-2.06",
+        "SG:ARG": "-0.44",
+        "SG:P": "-2.07",
+        "Dr Distance": "294.3",
+        "Dr Accuracy %": "64.3",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2019-09-15",
+        "position": "CUT",
+        "roundPosition": "T151",
+        "TournamentName": "A Military Tribute at The Greenbrier",
+        "is_major": "0",
+        "playerName": "Mason Williams",
+        "player_num": "57711",
+        "Rounds": "2",
+        "CourseID": "771",
+        "Course": "The Old White TPC",
+        "ShotLink": "2",
+        "SG:TOT": "-4.57",
+        "SG:T2G": "-2.50",
+        "SG:OTT": "0.29",
+        "SG:APP": "-2.35",
+        "SG:BS": "-2.06",
+        "SG:ARG": "-0.44",
+        "SG:P": "-2.07",
+        "SG:SG": "-2.51"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-2.0695000290870667",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-4.059999942779541",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-5.079999923706055",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-4.569999933242798",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-4.569999933242798",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-4.569999933242798",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74",
+        "PM": "73",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "27.9",
+        "150-200": null,
+        "200+": "68.1",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-4.569999933242798",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:53.977Z",
+    "ok": true
+  }
+}

@@ -1,0 +1,138 @@
+{
+  "playerId": "39978",
+  "playerName": "John Hahn",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "John Hahn",
+    "BirthPlace": null,
+    "BirthDate": "February 06, 1989",
+    "Age": "37",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "John Hahn",
+        "player_num": "39978",
+        "Year": "2016",
+        "Rounds": "2",
+        "SG:TOT": "-3.20",
+        "SG:T2G": "-4.59",
+        "SG:OTT": "-1.32",
+        "SG:APP": "-1.86",
+        "SG:BS": "-3.18",
+        "SG:ARG": "-1.41",
+        "SG:P": "1.39",
+        "Dr Distance": "273.7",
+        "Dr Accuracy %": "71.4",
+        "Ball Speed": "161.20"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2016-06-05",
+        "position": "CUT",
+        "roundPosition": "T109",
+        "TournamentName": "the Memorial Tournament",
+        "is_major": "0",
+        "playerName": "John Hahn",
+        "player_num": "39978",
+        "Rounds": "2",
+        "CourseID": "23",
+        "Course": "Muirfield Village GC",
+        "ShotLink": "2",
+        "SG:TOT": "-3.20",
+        "SG:T2G": "-4.59",
+        "SG:OTT": "-1.32",
+        "SG:APP": "-1.86",
+        "SG:BS": "-3.18",
+        "SG:ARG": "-1.41",
+        "SG:P": "1.39",
+        "SG:SG": "-0.02"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-2.319999933242798",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-4.079999923706055",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-3.1999999284744263",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-3.1999999284744263",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Strong",
+        "StrokesGainedAverage": "-3.1999999284744263",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "75",
+        "PM": "73",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "30.9",
+        "200+": "51.4",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-3.1999999284744263",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:53.692Z",
+    "ok": true
+  }
+}

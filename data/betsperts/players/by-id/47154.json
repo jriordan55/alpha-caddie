@@ -1,0 +1,225 @@
+{
+  "playerId": "47154",
+  "playerName": "Martin Contini",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/ar-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Martin Contini",
+    "BirthPlace": "Tucuman, Argentina",
+    "BirthDate": "November 04, 1994",
+    "Age": "32",
+    "Height": "5ft 10in",
+    "Weight": "183 lbs",
+    "Nationality": "Argentina",
+    "Residence": "Winter Garden, Florida",
+    "ProWins": "0",
+    "TurnedPro": "2019",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Martin Contini",
+        "player_num": "47154",
+        "Year": "2023",
+        "Rounds": "4",
+        "SG:TOT": "-0.48",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "51.8",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Martin Contini",
+        "player_num": "47154",
+        "Year": "2022",
+        "Rounds": "4",
+        "SG:TOT": "1.30",
+        "SG:T2G": "0.25",
+        "SG:OTT": "-0.01",
+        "SG:APP": "-0.27",
+        "SG:BS": "-0.28",
+        "SG:ARG": "0.54",
+        "SG:P": "1.05",
+        "Dr Distance": "278.4",
+        "Dr Accuracy %": "53.6",
+        "Ball Speed": "174.84"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2023-11-12",
+        "position": "T65",
+        "roundPosition": "T65",
+        "TournamentName": "Butterfield Bermuda Championship",
+        "is_major": "0",
+        "playerName": "Martin Contini",
+        "player_num": "47154",
+        "Rounds": "4",
+        "CourseID": "765",
+        "Course": "Port Royal GC",
+        "ShotLink": "0",
+        "SG:TOT": "-0.48",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2022-02-27",
+        "position": "T16",
+        "roundPosition": "T16",
+        "TournamentName": "The Honda Classic",
+        "is_major": "0",
+        "playerName": "Martin Contini",
+        "player_num": "47154",
+        "Rounds": "4",
+        "CourseID": "734",
+        "Course": "PGA National (Champion)",
+        "ShotLink": "4",
+        "SG:TOT": "1.30",
+        "SG:T2G": "0.25",
+        "SG:OTT": "-0.01",
+        "SG:APP": "-0.27",
+        "SG:BS": "-0.28",
+        "SG:ARG": "0.54",
+        "SG:P": "1.05",
+        "SG:SG": "1.59"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "50.0",
+        "SG TOT 2+": "37.5",
+        "SG TOT 3+": "25.0",
+        "SG TOT 4+": "12.5",
+        "SG TOT 5+": "0.0",
+        "Rounds": "8"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "1.0464999992400408",
+        "Rounds": "8"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.5950000286102295",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "3.184999942779541",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "0.06500005722045898",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-0.9999999776482582",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "1.3025000095367432",
+        "Rounds": "4"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-0.475000012665987",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-1.7899999618530273",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "3.2899999618530273",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "1.8550000190734863",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-0.475000012665987",
+        "Rounds": "4"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "1.3025000095367432",
+        "Rounds": "4"
+      },
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-0.475000012665987",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "70.5",
+        "PM": "69.33333333333333",
+        "Rounds": "8"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "8",
+        "50-100": null,
+        "100-150": "24",
+        "150-200": "42.9",
+        "200+": "68.1",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-0.475000012665987",
+        "Rounds": "4"
+      },
+      {
+        "SeasonHeld": "Florida",
+        "StrokesGainedAverage": "1.3025000095367432",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:51.800Z",
+    "ok": true
+  }
+}

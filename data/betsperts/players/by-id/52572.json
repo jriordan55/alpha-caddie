@@ -1,0 +1,148 @@
+{
+  "playerId": "52572",
+  "playerName": "Brendan Leonard",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ca-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Brendan Leonard",
+    "BirthPlace": "Cambridge, Ontario, Canada",
+    "BirthDate": "May 25, 1991",
+    "Age": "35",
+    "Height": "5ft 10in",
+    "Weight": "165 lbs",
+    "Nationality": "Canada",
+    "Residence": "Cambridge, Ontario, Canada",
+    "ProWins": "1",
+    "TurnedPro": "2014",
+    "PGAWins": "0",
+    "College": "University of Detroit Mercy 2014, Finance"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Brendan Leonard",
+        "player_num": "52572",
+        "Year": "2022",
+        "Rounds": "2",
+        "SG:TOT": "-3.43",
+        "SG:T2G": "-2.28",
+        "SG:OTT": "-0.17",
+        "SG:APP": "-2.04",
+        "SG:BS": "-2.20",
+        "SG:ARG": "-0.08",
+        "SG:P": "-1.15",
+        "Dr Distance": "289.0",
+        "Dr Accuracy %": "53.8",
+        "Ball Speed": "166.62"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2022-06-12",
+        "position": "CUT",
+        "roundPosition": "T134",
+        "TournamentName": "RBC Canadian Open",
+        "is_major": "0",
+        "playerName": "Brendan Leonard",
+        "player_num": "52572",
+        "Rounds": "2",
+        "CourseID": "772",
+        "Course": "St. Georges G&CC",
+        "ShotLink": "2",
+        "SG:TOT": "-3.43",
+        "SG:T2G": "-2.28",
+        "SG:OTT": "-0.17",
+        "SG:APP": "-2.04",
+        "SG:BS": "-2.20",
+        "SG:ARG": "-0.08",
+        "SG:P": "-1.15",
+        "SG:SG": "-1.23"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-1.1504999995231628",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-6.449999809265137",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.41999998688697815",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-3.4349998980760574",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-3.4349998980760574",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-3.4349998980760574",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "78",
+        "PM": "72",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "31.5",
+        "150-200": "50.1",
+        "200+": "60.7",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-3.4349998980760574",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:42.745Z",
+    "ok": true
+  }
+}

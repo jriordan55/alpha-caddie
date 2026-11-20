@@ -1,0 +1,104 @@
+{
+  "courseNum": "32",
+  "courseName": "Glen Abbey GC",
+  "list": {
+    "CourseName": "Glen Abbey GC",
+    "CourseNum": "32",
+    "CourseNums": [
+      32
+    ]
+  },
+  "details": {
+    "CourseName": "Glen Abbey GC",
+    "CourseNum": "32",
+    "Locations": [
+      "Canada",
+      "International"
+    ],
+    "SeasonHeld": "Summer",
+    "CourseTypes": [
+      "Parkland"
+    ],
+    "ParScore": "72",
+    "Yards": "7273",
+    "AVG": "101",
+    "CourseLength": "Short",
+    "Architects": [
+      "Jack Nicklaus"
+    ],
+    "RedesignArchitects": [],
+    "Elevation": "568",
+    "CourseElevation": "Average",
+    "Bunkers": "85",
+    "BunkersRank": "Average",
+    "WaterHoles": "9",
+    "WaterDanger": "High",
+    "ScoreRTP": "-0.88",
+    "Difficulty": "Easy",
+    "FwyGrass": "Bent",
+    "FwyWidth": "0",
+    "GreenSqFt": "5600",
+    "GreenSize": "Small",
+    "GreenGrass": "Bent/Poa",
+    "GreenStimp": "12.5",
+    "GreenSpeed": "Average",
+    "RoughType": "Bluegrass Blend",
+    "RoughGrass": "Bluegrass",
+    "RoughLengthInc": "4",
+    "RoughLength": "Long",
+    "EventTypes": [
+      "36-Hole Cut"
+    ],
+    "Tournaments": [
+      {
+        "Year": "2015-2018",
+        "Tournament": "Canadian Open"
+      }
+    ],
+    "CorrelatedCourse": [],
+    "FieldSize": "Full Field",
+    "FieldStrength": "Average",
+    "OTTClub": "Driver Heavy",
+    "FwyPct": "51.3",
+    "FwyAccuracy": "Difficult",
+    "GainOTT": "Easy",
+    "MissedFairwayPenalty": "Average",
+    "RoughPenalty": "Average",
+    "GIRAccuracy": "Average",
+    "GIRPct": "62.9",
+    "GainAPP": "Very Difficult",
+    "ScramblingFromRough": "Average",
+    "ScramblingFromShortGrass": "Average",
+    "SandSaves": "Difficult",
+    "GainARG": "Average",
+    "GainingPuttingInside15": "Easy",
+    "GainingPuttingOutside15": "Average",
+    "3PuttAVD": "Easy",
+    "GainPutting": "Easy",
+    "Par3Scoring": "Average",
+    "Par4Scoring": "Average",
+    "Par5Scoring": "Easy",
+    "ShotLink": "1"
+  },
+  "tournaments": [
+    {
+      "CourseNum": "32",
+      "TNum": "32",
+      "TourneyName": "RBC Canadian Open"
+    }
+  ],
+  "_meta": {
+    "pulledAt": "2026-11-20T22:18:25.179Z",
+    "detailStatus": 200,
+    "tournamentsStatus": 200
+  },
+  "auth": {
+    "holeBreakdown": [],
+    "correlated": [],
+    "_meta": {
+      "pulledAt": "2026-11-20T22:52:51.915Z",
+      "holeStatus": 200,
+      "correlatedStatus": 200
+    }
+  }
+}

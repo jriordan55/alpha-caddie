@@ -1,0 +1,163 @@
+{
+  "playerId": "47281",
+  "playerName": "Tyler Torano",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Tyler Torano",
+    "BirthPlace": "San Diego, California",
+    "BirthDate": "January 18, 1992",
+    "Age": "34",
+    "Height": "5ft 10in",
+    "Weight": "175 lbs",
+    "Nationality": "United States",
+    "Residence": "San Diego, California",
+    "ProWins": "0",
+    "TurnedPro": "2014",
+    "PGAWins": "0",
+    "College": "Loyola Marymount University 2014, Business Finance"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Tyler Torano",
+        "player_num": "47281",
+        "Year": "2018",
+        "Rounds": "2",
+        "SG:TOT": "-1.51",
+        "SG:T2G": "-0.39",
+        "SG:OTT": "0.23",
+        "SG:APP": "0.13",
+        "SG:BS": "0.36",
+        "SG:ARG": "-0.75",
+        "SG:P": "-0.94",
+        "Dr Distance": "296.1",
+        "Dr Accuracy %": "32.1",
+        "Ball Speed": "176.26"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2018-01-28",
+        "position": "CUT",
+        "roundPosition": "T124",
+        "TournamentName": "Farmers Insurance Open",
+        "is_major": "0",
+        "playerName": "Tyler Torano",
+        "player_num": "47281",
+        "Rounds": "2",
+        "CourseID": "4",
+        "Course": "Torrey Pines GC (South)",
+        "ShotLink": "1",
+        "SG:TOT": "-1.51",
+        "SG:T2G": "-0.39",
+        "SG:OTT": "0.23",
+        "SG:APP": "0.13",
+        "SG:BS": "0.36",
+        "SG:ARG": "-0.75",
+        "SG:P": "-0.94",
+        "SG:SG": "-1.69"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": null,
+        "Rounds": "1"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "-0.9419999718666077",
+        "Rounds": "1"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.690000057220459",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.3300000429153442",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-1.690000057220459",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-1.3300000429153442",
+        "Rounds": "1"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-1.690000057220459",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-1.3300000429153442",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-1.5100000500679016",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "73",
+        "PM": "74",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": "90.3",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "West Coast",
+        "StrokesGainedAverage": "-1.5100000500679016",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:26:18.245Z",
+    "ok": true
+  }
+}

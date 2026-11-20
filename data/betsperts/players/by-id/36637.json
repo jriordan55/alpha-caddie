@@ -1,0 +1,148 @@
+{
+  "playerId": "36637",
+  "playerName": "Luis Fernando Barco",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_pe-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Luis Fernando Barco",
+    "BirthPlace": "Lima, Peru",
+    "BirthDate": "June 21, 1995",
+    "Age": "31",
+    "Height": "6ft 3in",
+    "Weight": "180 lbs",
+    "Nationality": "Peru",
+    "Residence": "Lima, Peru",
+    "ProWins": "0",
+    "TurnedPro": "2019",
+    "PGAWins": "0",
+    "College": "Purdue University 2017, Management and Finance"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Luis Fernando Barco",
+        "player_num": "36637",
+        "Year": "2021",
+        "Rounds": "2",
+        "SG:TOT": "-4.25",
+        "SG:T2G": "-5.58",
+        "SG:OTT": "-0.57",
+        "SG:APP": "-3.41",
+        "SG:BS": "-3.98",
+        "SG:ARG": "-1.60",
+        "SG:P": "1.33",
+        "Dr Distance": "297.2",
+        "Dr Accuracy %": "50.0",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2021-06-20",
+        "position": "CUT",
+        "roundPosition": null,
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Luis Fernando Barco",
+        "player_num": "36637",
+        "Rounds": "2",
+        "CourseID": "744",
+        "Course": "Torrey Pines GC (South)",
+        "ShotLink": "2",
+        "SG:TOT": "-4.25",
+        "SG:T2G": "-5.58",
+        "SG:OTT": "-0.57",
+        "SG:APP": "-3.41",
+        "SG:BS": "-3.98",
+        "SG:ARG": "-1.60",
+        "SG:P": "1.33",
+        "SG:SG": "-0.27"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "1.334500014781952",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-3.2799999713897705",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-5.210000038146973",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-4.245000004768372",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-4.245000004768372",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-4.245000004768372",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "77",
+        "PM": "79",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "51.6",
+        "200+": "79.3",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-4.245000004768372",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:40.238Z",
+    "ok": true
+  }
+}

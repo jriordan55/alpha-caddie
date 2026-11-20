@@ -1,0 +1,177 @@
+{
+  "playerId": "55468",
+  "playerName": "Felix Mory",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_fr-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Felix Mory",
+    "BirthPlace": null,
+    "BirthDate": "September 11, 1994",
+    "Age": "32",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "France",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Felix Mory",
+        "player_num": "55468",
+        "Year": "2026",
+        "Rounds": "4",
+        "SG:TOT": "1.24",
+        "SG:T2G": "1.59",
+        "SG:OTT": "0.66",
+        "SG:APP": "0.72",
+        "SG:BS": "1.38",
+        "SG:ARG": "0.21",
+        "SG:P": "-0.35",
+        "Dr Distance": "302.4",
+        "Dr Accuracy %": "64.3",
+        "Ball Speed": "184.74"
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Felix Mory",
+        "player_num": "55468",
+        "Rounds": "4",
+        "SG:TOT": "1.24",
+        "SG:T2G": "1.59",
+        "SG:OTT": "0.66",
+        "SG:APP": "0.72",
+        "SG:BS": "1.38",
+        "SG:ARG": "0.21",
+        "SG:P": "-0.35",
+        "SG:SG": "-0.14"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-07-12",
+        "position": "T21",
+        "roundPosition": "T21",
+        "TournamentName": "ISCO Championship",
+        "is_major": "0",
+        "playerName": "Felix Mory",
+        "player_num": "55468",
+        "Rounds": "4",
+        "CourseID": "934",
+        "Course": "Hurstbourne CC",
+        "ShotLink": "4",
+        "SG:TOT": "1.24",
+        "SG:T2G": "1.59",
+        "SG:OTT": "0.66",
+        "SG:APP": "0.72",
+        "SG:BS": "1.38",
+        "SG:ARG": "0.21",
+        "SG:P": "-0.35",
+        "SG:SG": "-0.14"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "100.0",
+        "SG TOT 1+": "25.0",
+        "SG TOT 2+": "25.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.3470000142697245",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "0.18000000715255737",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "0.9300000071525574",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "2.8499999046325684",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "1",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "1.2399999797344208",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "0.703333338101705",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "2.8499999046325684",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "1.2399999797344208",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "67",
+        "PM": "68",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": "11.1",
+        "100-150": "21",
+        "150-200": null,
+        "200+": "48.2",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "1.2399999797344208",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:21:34.858Z",
+    "ok": true
+  }
+}

@@ -1,0 +1,158 @@
+{
+  "playerId": "49709",
+  "playerName": "Matthew Short",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Matthew Short",
+    "BirthPlace": "Hickory, North Carolina",
+    "BirthDate": "March 16, 1984",
+    "Age": "42",
+    "Height": "6ft 3in",
+    "Weight": "190 lbs",
+    "Nationality": "United States",
+    "Residence": "Hudson, North Carolina",
+    "ProWins": "0",
+    "TurnedPro": "2007",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Matthew Short",
+        "player_num": "49709",
+        "Year": "2019",
+        "Rounds": "4",
+        "SG:TOT": "-1.66",
+        "SG:T2G": "-1.01",
+        "SG:OTT": "-0.59",
+        "SG:APP": "0.46",
+        "SG:BS": "-0.12",
+        "SG:ARG": "-0.88",
+        "SG:P": "-0.66",
+        "Dr Distance": "289.6",
+        "Dr Accuracy %": "53.6",
+        "Ball Speed": "170.09"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2019-05-05",
+        "position": "T70",
+        "roundPosition": "T70",
+        "TournamentName": "Wells Fargo Championship",
+        "is_major": "0",
+        "playerName": "Matthew Short",
+        "player_num": "49709",
+        "Rounds": "4",
+        "CourseID": "872",
+        "Course": "Quail Hollow Club",
+        "ShotLink": "4",
+        "SG:TOT": "-1.66",
+        "SG:T2G": "-1.01",
+        "SG:OTT": "-0.59",
+        "SG:APP": "0.46",
+        "SG:BS": "-0.12",
+        "SG:ARG": "-0.88",
+        "SG:P": "-0.66",
+        "SG:SG": "-1.54"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "25.0",
+        "SG TOT 1+": "25.0",
+        "SG TOT 2+": "25.0",
+        "SG TOT 3+": "25.0",
+        "SG TOT 4+": "25.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Poa Trivialis",
+        "StrokesGainedAverage": "-0.6589999496936798",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-3.5799999237060547",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "4.760000228881836",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-3.4800000190734863",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-4.360000133514404",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-1.6649999618530273",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-1.6649999618530273",
+        "Rounds": "4"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-1.6649999618530273",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "72.33333333333333",
+        "PM": "76",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": "30.7",
+        "150-200": "44",
+        "200+": "55.7",
+        "200-250": "49.8",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-1.6649999618530273",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:24:02.352Z",
+    "ok": true
+  }
+}

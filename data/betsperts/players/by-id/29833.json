@@ -1,0 +1,239 @@
+{
+  "playerId": "29833",
+  "playerName": "Yoshinori Fujimoto",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ja-flag.gif",
+  "profile": {
+    "ProfileImage": "0",
+    "Name": "Yoshinori Fujimoto",
+    "BirthPlace": "Nara, Japan",
+    "BirthDate": "October 25, 1989",
+    "Age": "37",
+    "Height": "5ft 5in",
+    "Weight": "150 lbs",
+    "Nationality": "Japan",
+    "Residence": null,
+    "ProWins": "2",
+    "TurnedPro": "2012",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Yoshinori Fujimoto",
+        "player_num": "29833",
+        "Year": "2026",
+        "Rounds": "4",
+        "SG:TOT": "0.05",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "68.3",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Yoshinori Fujimoto",
+        "player_num": "29833",
+        "Year": "2019",
+        "Rounds": "2",
+        "SG:TOT": "-0.81",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "46.4",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Yoshinori Fujimoto",
+        "player_num": "29833",
+        "Rounds": "4",
+        "SG:TOT": "0.05",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-10-11",
+        "position": "T33",
+        "roundPosition": "T33",
+        "TournamentName": "Baycurrent Classic",
+        "is_major": "0",
+        "playerName": "Yoshinori Fujimoto",
+        "player_num": "29833",
+        "Rounds": "4",
+        "CourseID": "936",
+        "Course": "Yokohama Country Club (West)",
+        "ShotLink": "0",
+        "SG:TOT": "0.05",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2019-07-21",
+        "position": "CUT",
+        "roundPosition": "T98",
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Yoshinori Fujimoto",
+        "player_num": "29833",
+        "Rounds": "2",
+        "CourseID": "885",
+        "Course": "Royal Portrush GC",
+        "ShotLink": "0",
+        "SG:TOT": "-0.81",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "16.7",
+        "SG TOT 2+": "16.7",
+        "SG TOT 3+": "16.7",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "6"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": null,
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-2.134999990463257",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "0.4749999940395355",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-1.190000057220459",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "3.0999999046325684",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-1.2675000131130219",
+        "Rounds": "4"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "3.0999999046325684",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Shot",
+        "StrokesGainedAverage": "0.5600000023841858",
+        "Rounds": "1"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-0.8100000023841858",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-0.9633333484331766",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "3.0999999046325684",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "0.05249996483325958",
+        "Rounds": "4"
+      },
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-0.8100000023841858",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "69.25",
+        "PM": "73.5",
+        "Rounds": "6"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "6",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "0.05249996483325958",
+        "Rounds": "4"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-0.8100000023841858",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:26:32.380Z",
+    "ok": true
+  }
+}

@@ -1,0 +1,148 @@
+{
+  "playerId": "36478",
+  "playerName": "Riley Arp",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Riley Arp",
+    "BirthPlace": null,
+    "BirthDate": "August 22, 1987",
+    "Age": "39",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Riley Arp",
+        "player_num": "36478",
+        "Year": "2017",
+        "Rounds": "2",
+        "SG:TOT": "-1.00",
+        "SG:T2G": "-0.77",
+        "SG:OTT": "0.76",
+        "SG:APP": "-1.03",
+        "SG:BS": "-0.26",
+        "SG:ARG": "-0.51",
+        "SG:P": "-0.24",
+        "Dr Distance": "294.2",
+        "Dr Accuracy %": "60.7",
+        "Ball Speed": "182.82"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2017-04-02",
+        "position": "CUT",
+        "roundPosition": "T99",
+        "TournamentName": "Houston Open",
+        "is_major": "0",
+        "playerName": "Riley Arp",
+        "player_num": "36478",
+        "Rounds": "2",
+        "CourseID": "729",
+        "Course": "GC of Houston",
+        "ShotLink": "2",
+        "SG:TOT": "-1.00",
+        "SG:T2G": "-0.77",
+        "SG:OTT": "0.76",
+        "SG:APP": "-1.03",
+        "SG:BS": "-0.26",
+        "SG:ARG": "-0.51",
+        "SG:P": "-0.24",
+        "SG:SG": "-0.75"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Poa Trivialis",
+        "StrokesGainedAverage": "-0.2355000078678131",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.7400000095367432",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.2699999809265137",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-1.0049999952316284",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-1.0049999952316284",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-1.0049999952316284",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74",
+        "PM": "72",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": "56.6",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-1.0049999952316284",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:03.344Z",
+    "ok": true
+  }
+}

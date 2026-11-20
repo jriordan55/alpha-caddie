@@ -1,0 +1,267 @@
+{
+  "playerId": "2256",
+  "playerName": "Tom Watson",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Tom Watson",
+    "BirthPlace": "Kansas City, Missouri",
+    "BirthDate": "September 04, 1949",
+    "Age": "77",
+    "Height": "5ft 9in",
+    "Weight": "175 lbs",
+    "Nationality": "United States",
+    "Residence": "Bucyrus, Kansas",
+    "ProWins": null,
+    "TurnedPro": "1971",
+    "PGAWins": null,
+    "College": "Stanford University (1971, Psychology) "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Tom Watson",
+        "player_num": "2256",
+        "Year": "2016",
+        "Rounds": "2",
+        "SG:TOT": "-1.45",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "78.6",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Tom Watson",
+        "player_num": "2256",
+        "Year": "2015",
+        "Rounds": "8",
+        "SG:TOT": "-2.85",
+        "SG:T2G": "-2.07",
+        "SG:OTT": "-0.18",
+        "SG:APP": "-1.35",
+        "SG:BS": "-1.53",
+        "SG:ARG": "-0.53",
+        "SG:P": "0.67",
+        "Dr Distance": "247.1",
+        "Dr Accuracy %": "78.4",
+        "Ball Speed": "149.35"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2016-04-10",
+        "position": "CUT",
+        "roundPosition": "T63",
+        "TournamentName": "Masters Tournament",
+        "is_major": "1",
+        "playerName": "Tom Watson",
+        "player_num": "2256",
+        "Rounds": "2",
+        "CourseID": "14",
+        "Course": "Augusta National GC",
+        "ShotLink": "0",
+        "SG:TOT": "-1.45",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2015-07-19",
+        "position": "CUT",
+        "roundPosition": "155",
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Tom Watson",
+        "player_num": "2256",
+        "Rounds": "2",
+        "CourseID": "668",
+        "Course": "St. Andrews GC (Old Course)",
+        "ShotLink": "0",
+        "SG:TOT": "-5.70",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2015-04-19",
+        "position": "T72",
+        "roundPosition": "T72",
+        "TournamentName": "RBC Heritage",
+        "is_major": "0",
+        "playerName": "Tom Watson",
+        "player_num": "2256",
+        "Rounds": "4",
+        "CourseID": "12",
+        "Course": "Harbour Town Golf Links",
+        "ShotLink": "4",
+        "SG:TOT": "-1.39",
+        "SG:T2G": "-2.07",
+        "SG:OTT": "-0.18",
+        "SG:APP": "-1.35",
+        "SG:BS": "-1.53",
+        "SG:ARG": "-0.53",
+        "SG:P": "0.67",
+        "SG:SG": "0.14"
+      },
+      {
+        "Date": "2015-04-12",
+        "position": "CUT",
+        "roundPosition": "T87",
+        "TournamentName": "Masters Tournament",
+        "is_major": "1",
+        "playerName": "Tom Watson",
+        "player_num": "2256",
+        "Rounds": "2",
+        "CourseID": "14",
+        "Course": "Augusta National GC",
+        "ShotLink": "0",
+        "SG:TOT": "-2.90",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "40.0",
+        "SG TOT 1+": "10.0",
+        "SG TOT 2+": "10.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "10"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": null,
+        "Rounds": "6"
+      },
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "0.6749999970197678",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.2949999775737524",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-4.800000041723251",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "0.7599999904632568",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-6.039999961853027",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-2.1725000515580177",
+        "Rounds": "4"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-2.828333307057619",
+        "Rounds": "6"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-2.828333307057619",
+        "Rounds": "6"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-2.9000000953674316",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-1.4450000077486038",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-1.3924999963492155",
+        "Rounds": "4"
+      },
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-3.3483333438634872",
+        "Rounds": "6"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "73",
+        "PM": "77.25",
+        "Rounds": "10"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "10",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": "54.8",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-1.7825000239536166",
+        "Rounds": "8"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-5.699999928474426",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:26:08.910Z",
+    "ok": true
+  }
+}

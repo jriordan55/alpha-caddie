@@ -1,0 +1,195 @@
+{
+  "playerId": "61065",
+  "playerName": "Brandon Bingaman",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Brandon Bingaman",
+    "BirthPlace": "",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "United States",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Brandon Bingaman",
+        "player_num": "61065",
+        "Year": "2025",
+        "Rounds": "2",
+        "SG:TOT": "-4.41",
+        "SG:T2G": "-4.61",
+        "SG:OTT": "0.32",
+        "SG:APP": "-1.94",
+        "SG:BS": "-1.63",
+        "SG:ARG": "-2.98",
+        "SG:P": "0.20",
+        "Dr Distance": "297.9",
+        "Dr Accuracy %": "57.1",
+        "Ball Speed": "173.31"
+      },
+      {
+        "playerName": "Brandon Bingaman",
+        "player_num": "61065",
+        "Year": "2022",
+        "Rounds": "2",
+        "SG:TOT": "-3.79",
+        "SG:T2G": "-2.41",
+        "SG:OTT": "-0.47",
+        "SG:APP": "-1.11",
+        "SG:BS": "-1.57",
+        "SG:ARG": "-0.84",
+        "SG:P": "-1.37",
+        "Dr Distance": "305.9",
+        "Dr Accuracy %": "50.0",
+        "Ball Speed": "173.80"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2025-05-18",
+        "position": "CUT",
+        "roundPosition": "T143",
+        "TournamentName": "PGA Championship",
+        "is_major": "1",
+        "playerName": "Brandon Bingaman",
+        "player_num": "61065",
+        "Rounds": "2",
+        "CourseID": "241",
+        "Course": "Quail Hollow Club",
+        "ShotLink": "2",
+        "SG:TOT": "-4.41",
+        "SG:T2G": "-4.61",
+        "SG:OTT": "0.32",
+        "SG:APP": "-1.94",
+        "SG:BS": "-1.63",
+        "SG:ARG": "-2.98",
+        "SG:P": "0.20",
+        "SG:SG": "-2.78"
+      },
+      {
+        "Date": "2022-05-22",
+        "position": "CUT",
+        "roundPosition": "T135",
+        "TournamentName": "PGA Championship",
+        "is_major": "1",
+        "playerName": "Brandon Bingaman",
+        "player_num": "61065",
+        "Rounds": "2",
+        "CourseID": "611",
+        "Course": "Southern Hills CC",
+        "ShotLink": "2",
+        "SG:TOT": "-3.79",
+        "SG:T2G": "-2.41",
+        "SG:OTT": "-0.47",
+        "SG:APP": "-1.11",
+        "SG:BS": "-1.57",
+        "SG:ARG": "-0.84",
+        "SG:P": "-1.37",
+        "SG:SG": "-2.21"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-1.3725000526756048",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa Trivialis",
+        "StrokesGainedAverage": "0.19950000196695328",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-5.204999923706055",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-2.990000009536743",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-4.097499966621399",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-3.5799999237060547",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-4.269999980926514",
+        "Rounds": "3"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-4.097499966621399",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "75.5",
+        "PM": "78",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": "32.4",
+        "150-200": "52",
+        "200+": "53",
+        "200-250": "47.2",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-4.097499966621399",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:39.746Z",
+    "ok": true
+  }
+}

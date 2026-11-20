@@ -1,0 +1,148 @@
+{
+  "playerId": "1035",
+  "playerName": "Tommy Armour III",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Tommy Armour III",
+    "BirthPlace": "Denver, Colorado",
+    "BirthDate": "October 08, 1959",
+    "Age": "67",
+    "Height": "6ft 2in",
+    "Weight": "190 lbs",
+    "Nationality": "United States",
+    "Residence": "Las Vegas, Nevada",
+    "ProWins": null,
+    "TurnedPro": "1981",
+    "PGAWins": null,
+    "College": "University of New Mexico "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Tommy Armour III",
+        "player_num": "1035",
+        "Year": "2015",
+        "Rounds": "2",
+        "SG:TOT": "-0.94",
+        "SG:T2G": "-0.99",
+        "SG:OTT": "-0.47",
+        "SG:APP": "-0.62",
+        "SG:BS": "-1.08",
+        "SG:ARG": "0.09",
+        "SG:P": "0.05",
+        "Dr Distance": "265.0",
+        "Dr Accuracy %": "67.9",
+        "Ball Speed": "154.69"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2015-07-19",
+        "position": "CUT",
+        "roundPosition": "T88",
+        "TournamentName": "Barbasol Championship",
+        "is_major": "0",
+        "playerName": "Tommy Armour III",
+        "player_num": "1035",
+        "Rounds": "2",
+        "CourseID": "819",
+        "Course": "RTJ Trail (Grand National)",
+        "ShotLink": "2",
+        "SG:TOT": "-0.94",
+        "SG:T2G": "-0.99",
+        "SG:OTT": "-0.47",
+        "SG:APP": "-0.62",
+        "SG:BS": "-1.08",
+        "SG:ARG": "0.09",
+        "SG:P": "0.05",
+        "SG:SG": "0.14"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "0.05100000090897083",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "0.7599999904632568",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-2.640000104904175",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-0.940000057220459",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-0.940000057220459",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-0.940000057220459",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "70",
+        "PM": "73",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "32.9",
+        "200+": "69.3",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-0.940000057220459",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:26:09.618Z",
+    "ok": true
+  }
+}

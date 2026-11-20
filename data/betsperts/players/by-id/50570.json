@@ -1,0 +1,148 @@
+{
+  "playerId": "50570",
+  "playerName": "Alan Cooke",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Alan Cooke",
+    "BirthPlace": null,
+    "BirthDate": "June 29, 1994",
+    "Age": "32",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Alan Cooke",
+        "player_num": "50570",
+        "Year": "2017",
+        "Rounds": "2",
+        "SG:TOT": "-6.53",
+        "SG:T2G": "-5.77",
+        "SG:OTT": "-1.43",
+        "SG:APP": "-2.85",
+        "SG:BS": "-4.29",
+        "SG:ARG": "-1.48",
+        "SG:P": "-0.76",
+        "Dr Distance": "279.8",
+        "Dr Accuracy %": "46.4",
+        "Ball Speed": "170.70"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2017-07-09",
+        "position": "CUT",
+        "roundPosition": "T150",
+        "TournamentName": "The Greenbrier Classic",
+        "is_major": "0",
+        "playerName": "Alan Cooke",
+        "player_num": "50570",
+        "Rounds": "2",
+        "CourseID": "771",
+        "Course": "The Old White TPC",
+        "ShotLink": "2",
+        "SG:TOT": "-6.53",
+        "SG:T2G": "-5.77",
+        "SG:OTT": "-1.43",
+        "SG:APP": "-2.85",
+        "SG:BS": "-4.29",
+        "SG:ARG": "-1.48",
+        "SG:P": "-0.76",
+        "SG:SG": "-2.24"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.7604999914765358",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-9.079999923706055",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-3.9800000190734863",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-6.5299999713897705",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-6.5299999713897705",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-6.5299999713897705",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "79",
+        "PM": "74",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": "17.4",
+        "100-150": "32.8",
+        "150-200": "48.7",
+        "200+": "99.2",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-6.5299999713897705",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:18:48.595Z",
+    "ok": true
+  }
+}

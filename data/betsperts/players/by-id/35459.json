@@ -1,0 +1,163 @@
+{
+  "playerId": "35459",
+  "playerName": "Chris Williams",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Chris Williams",
+    "BirthPlace": "Moscow, Idaho",
+    "BirthDate": "June 21, 1991",
+    "Age": "35",
+    "Height": "6ft 0in",
+    "Weight": "160 lbs",
+    "Nationality": "United States",
+    "Residence": "Moscow, Idaho",
+    "ProWins": null,
+    "TurnedPro": "2013",
+    "PGAWins": null,
+    "College": "University of Washington "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Chris Williams",
+        "player_num": "35459",
+        "Year": "2015",
+        "Rounds": "2",
+        "SG:TOT": "-0.52",
+        "SG:T2G": "0.01",
+        "SG:OTT": "1.31",
+        "SG:APP": "-0.18",
+        "SG:BS": "1.14",
+        "SG:ARG": "-1.12",
+        "SG:P": "-2.35",
+        "Dr Distance": "289.2",
+        "Dr Accuracy %": "64.3",
+        "Ball Speed": "165.54"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2015-02-08",
+        "position": "CUT",
+        "roundPosition": "T91",
+        "TournamentName": "Farmers Insurance Open",
+        "is_major": "0",
+        "playerName": "Chris Williams",
+        "player_num": "35459",
+        "Rounds": "2",
+        "CourseID": "4",
+        "Course": "Torrey Pines GC (South)",
+        "ShotLink": "1",
+        "SG:TOT": "-0.52",
+        "SG:T2G": "0.01",
+        "SG:OTT": "1.31",
+        "SG:APP": "-0.18",
+        "SG:BS": "1.14",
+        "SG:ARG": "-1.12",
+        "SG:P": "-2.35",
+        "SG:SG": "-3.47"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "50.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": null,
+        "Rounds": "1"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "-2.3499999046325684",
+        "Rounds": "1"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "1.2899999618530273",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-2.3399999141693115",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "1.2899999618530273",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-2.3399999141693115",
+        "Rounds": "1"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-2.3399999141693115",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "1.2899999618530273",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-0.5249999761581421",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "69",
+        "PM": "76",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "West Coast",
+        "StrokesGainedAverage": "-0.5249999761581421",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:20:26.853Z",
+    "ok": true
+  }
+}

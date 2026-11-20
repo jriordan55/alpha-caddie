@@ -1,0 +1,109 @@
+{
+  "courseNum": "800",
+  "courseName": "TPC Kuala Lumpur",
+  "list": {
+    "CourseName": "TPC Kuala Lumpur",
+    "CourseNum": "800",
+    "CourseNums": [
+      800
+    ]
+  },
+  "details": {
+    "CourseName": "TPC Kuala Lumpur",
+    "CourseNum": "800",
+    "Locations": [
+      "Asia",
+      "International"
+    ],
+    "SeasonHeld": "Fall Swing",
+    "CourseTypes": [
+      "Parkland",
+      "TPC"
+    ],
+    "ParScore": "72",
+    "Yards": "7005",
+    "AVG": "97.3",
+    "CourseLength": "Very Short",
+    "Architects": [
+      "Robin Nelson",
+      "Rodney Wright"
+    ],
+    "RedesignArchitects": [
+      "Ted Parslow",
+      "Jason Winter"
+    ],
+    "Elevation": "210",
+    "CourseElevation": "Average",
+    "Bunkers": "85",
+    "BunkersRank": "Average",
+    "WaterHoles": "10",
+    "WaterDanger": "High",
+    "ScoreRTP": "-1.81",
+    "Difficulty": "Easy",
+    "FwyGrass": "Paspalum",
+    "FwyWidth": "0",
+    "GreenSqFt": "6500",
+    "GreenSize": "Average",
+    "GreenGrass": "Paspalum",
+    "GreenStimp": "11",
+    "GreenSpeed": "Slow",
+    "RoughType": "Seashore Paspalum/Fescue",
+    "RoughGrass": "Paspalum",
+    "RoughLengthInc": "2",
+    "RoughLength": "Short",
+    "EventTypes": [
+      "No-Cut"
+    ],
+    "Tournaments": [
+      {
+        "Year": "2013-2018",
+        "Tournament": "CIMB Classic"
+      }
+    ],
+    "CorrelatedCourse": [],
+    "FieldSize": "Small Field",
+    "FieldStrength": "Weak",
+    "OTTClub": "Less Than Driver",
+    "FwyPct": "66.6",
+    "FwyAccuracy": "Easy",
+    "GainOTT": "Easy",
+    "MissedFairwayPenalty": "Low",
+    "RoughPenalty": "Low",
+    "GIRAccuracy": "Easy",
+    "GIRPct": "71.7",
+    "GainAPP": "Very Easy",
+    "ScramblingFromRough": "Easy",
+    "ScramblingFromShortGrass": "Easy",
+    "SandSaves": "Easy",
+    "GainARG": "Easy",
+    "GainingPuttingInside15": "Easy",
+    "GainingPuttingOutside15": "Average",
+    "3PuttAVD": "Average",
+    "GainPutting": "Easy",
+    "Par3Scoring": "Easy",
+    "Par4Scoring": "Easy",
+    "Par5Scoring": "Easy",
+    "ShotLink": "0"
+  },
+  "tournaments": [
+    {
+      "CourseNum": "800",
+      "TNum": "494",
+      "TourneyName": "CIMB Classic"
+    }
+  ],
+  "_meta": {
+    "pulledAt": "2026-11-20T22:18:26.301Z",
+    "detailStatus": 200,
+    "tournamentsStatus": 200
+  },
+  "auth": {
+    "holeBreakdown": [],
+    "correlated": [],
+    "_meta": {
+      "pulledAt": "2026-11-20T22:52:52.928Z",
+      "holeStatus": 200,
+      "correlatedStatus": 200
+    }
+  }
+}

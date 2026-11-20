@@ -1,0 +1,158 @@
+{
+  "playerId": "45798",
+  "playerName": "Zach Murray",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/as-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Zach Murray",
+    "BirthPlace": "",
+    "BirthDate": "March 29, 1997",
+    "Age": "29",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "Australia",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Zach Murray",
+        "player_num": "45798",
+        "Year": "2020",
+        "Rounds": "4",
+        "SG:TOT": "-0.50",
+        "SG:T2G": "-0.09",
+        "SG:OTT": "-0.32",
+        "SG:APP": "0.59",
+        "SG:BS": "0.27",
+        "SG:ARG": "-0.36",
+        "SG:P": "-0.40",
+        "Dr Distance": "295.5",
+        "Dr Accuracy %": "51.8",
+        "Ball Speed": "178.33"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2020-02-23",
+        "position": "T48",
+        "roundPosition": "T48",
+        "TournamentName": "WGC - Mexico",
+        "is_major": "0",
+        "playerName": "Zach Murray",
+        "player_num": "45798",
+        "Rounds": "4",
+        "CourseID": "240",
+        "Course": "Club de Golf Chapultepec",
+        "ShotLink": "4",
+        "SG:TOT": "-0.50",
+        "SG:T2G": "-0.09",
+        "SG:OTT": "-0.32",
+        "SG:APP": "0.59",
+        "SG:BS": "0.27",
+        "SG:ARG": "-0.36",
+        "SG:P": "-0.40",
+        "SG:SG": "-0.76"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "75.0",
+        "SG TOT 1+": "50.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "-0.4037499725818634",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "1.3899999856948853",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "1.2799999713897705",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "0.75",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-5.400000095367432",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-0.49500003457069397",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-0.49500003457069397",
+        "Rounds": "4"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Strong",
+        "StrokesGainedAverage": "-0.49500003457069397",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "71",
+        "PM": "71",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": "27.5",
+        "150-200": "30.7",
+        "200+": "61.1",
+        "200-250": "48.7",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-0.49500003457069397",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:26:35.379Z",
+    "ok": true
+  }
+}

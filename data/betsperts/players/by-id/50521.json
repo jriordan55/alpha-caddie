@@ -1,0 +1,153 @@
+{
+  "playerId": "50521",
+  "playerName": "Hunter Larson",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Hunter Larson",
+    "BirthPlace": null,
+    "BirthDate": "July 28, 1988",
+    "Age": "38",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Hunter Larson",
+        "player_num": "50521",
+        "Year": "2024",
+        "Rounds": "2",
+        "SG:TOT": "-14.34",
+        "SG:T2G": "-10.00",
+        "SG:OTT": "-2.47",
+        "SG:APP": "-5.33",
+        "SG:BS": "-7.80",
+        "SG:ARG": "-2.19",
+        "SG:P": "-4.34",
+        "Dr Distance": "275.1",
+        "Dr Accuracy %": "35.7",
+        "Ball Speed": "165.82"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2024-01-14",
+        "position": "CUT",
+        "roundPosition": "144",
+        "TournamentName": "Sony Open",
+        "is_major": "0",
+        "playerName": "Hunter Larson",
+        "player_num": "50521",
+        "Rounds": "2",
+        "CourseID": "6",
+        "Course": "Waialae CC",
+        "ShotLink": "2",
+        "SG:TOT": "-14.34",
+        "SG:T2G": "-10.00",
+        "SG:OTT": "-2.47",
+        "SG:APP": "-5.33",
+        "SG:BS": "-7.80",
+        "SG:ARG": "-2.19",
+        "SG:P": "-4.34",
+        "SG:SG": "-6.53"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-4.3404998779296875",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-18.030000686645508",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-10.649999618530273",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-14.34000015258789",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-18.030000686645508",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-10.649999618530273",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-14.34000015258789",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "79",
+        "PM": "88",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "44.7",
+        "150-200": "42.7",
+        "200+": "62.2",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Aloha",
+        "StrokesGainedAverage": "-14.34000015258789",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:05.388Z",
+    "ok": true
+  }
+}

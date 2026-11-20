@@ -1,0 +1,148 @@
+{
+  "playerId": "60328",
+  "playerName": "Cam Kellett",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ca-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Cam Kellett",
+    "BirthPlace": null,
+    "BirthDate": "",
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "Canada",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Cam Kellett",
+        "player_num": "60328",
+        "Year": "2024",
+        "Rounds": "2",
+        "SG:TOT": "-0.20",
+        "SG:T2G": "0.05",
+        "SG:OTT": "0.65",
+        "SG:APP": "-1.41",
+        "SG:BS": "-0.76",
+        "SG:ARG": "0.81",
+        "SG:P": "-0.25",
+        "Dr Distance": "297.1",
+        "Dr Accuracy %": "57.1",
+        "Ball Speed": "178.92"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2024-06-02",
+        "position": "CUT",
+        "roundPosition": "T78",
+        "TournamentName": "RBC Canadian Open",
+        "is_major": "0",
+        "playerName": "Cam Kellett",
+        "player_num": "60328",
+        "Rounds": "2",
+        "CourseID": "874",
+        "Course": "Hamilton Golf & Country Club",
+        "ShotLink": "2",
+        "SG:TOT": "-0.20",
+        "SG:T2G": "0.05",
+        "SG:OTT": "0.65",
+        "SG:APP": "-1.41",
+        "SG:BS": "-0.76",
+        "SG:ARG": "0.81",
+        "SG:P": "-0.25",
+        "SG:SG": "0.56"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "50.0",
+        "SG TOT 2+": "50.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.25400006771087646",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "2.809999942779541",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-3.2100000381469727",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-0.20000004768371582",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-0.20000004768371582",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-0.20000004768371582",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74",
+        "PM": "68",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "56.7",
+        "150-200": "35.6",
+        "200+": "42.4",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-0.20000004768371582",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:20:01.257Z",
+    "ok": true
+  }
+}

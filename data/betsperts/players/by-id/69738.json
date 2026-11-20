@@ -1,0 +1,153 @@
+{
+  "playerId": "69738",
+  "playerName": "David Liechty",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "David Liechty",
+    "BirthPlace": null,
+    "BirthDate": "",
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "David Liechty",
+        "player_num": "69738",
+        "Year": "2025",
+        "Rounds": "2",
+        "SG:TOT": "-5.11",
+        "SG:T2G": "-4.55",
+        "SG:OTT": "-1.29",
+        "SG:APP": "-1.97",
+        "SG:BS": "-3.26",
+        "SG:ARG": "-1.29",
+        "SG:P": "-0.56",
+        "Dr Distance": "304.9",
+        "Dr Accuracy %": "67.9",
+        "Ball Speed": "185.49"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2025-10-26",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "Bank of Utah Championship",
+        "is_major": "0",
+        "playerName": "David Liechty",
+        "player_num": "69738",
+        "Rounds": "2",
+        "CourseID": "930",
+        "Course": "Black Desert Resort",
+        "ShotLink": "2",
+        "SG:TOT": "-5.11",
+        "SG:T2G": "-4.55",
+        "SG:OTT": "-1.29",
+        "SG:APP": "-1.97",
+        "SG:BS": "-3.26",
+        "SG:ARG": "-1.29",
+        "SG:P": "-0.56",
+        "SG:SG": "-1.85"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.5555000200401992",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-6.730000019073486",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-3.4800000190734863",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-5.105000019073486",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-3.4800000190734863",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-6.730000019073486",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-5.105000019073486",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74",
+        "PM": "77",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": "67.3",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-5.105000019073486",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:21:02.023Z",
+    "ok": true
+  }
+}

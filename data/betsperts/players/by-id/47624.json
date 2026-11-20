@@ -1,0 +1,148 @@
+{
+  "playerId": "47624",
+  "playerName": "Johnny Ruiz",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Johnny Ruiz",
+    "BirthPlace": "Camarillo, California",
+    "BirthDate": "January 19, 1994",
+    "Age": "32",
+    "Height": "6ft 0in",
+    "Weight": "180 lbs",
+    "Nationality": "United States",
+    "Residence": "Camarillo, California",
+    "ProWins": null,
+    "TurnedPro": "2015",
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Johnny Ruiz",
+        "player_num": "47624",
+        "Year": "2017",
+        "Rounds": "2",
+        "SG:TOT": "0.00",
+        "SG:T2G": "-0.42",
+        "SG:OTT": "0.24",
+        "SG:APP": "-1.12",
+        "SG:BS": "-0.88",
+        "SG:ARG": "0.46",
+        "SG:P": "0.41",
+        "Dr Distance": "299.7",
+        "Dr Accuracy %": "42.9",
+        "Ball Speed": "174.11"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2017-07-30",
+        "position": "CUT",
+        "roundPosition": "T77",
+        "TournamentName": "RBC Canadian Open",
+        "is_major": "0",
+        "playerName": "Johnny Ruiz",
+        "player_num": "47624",
+        "Rounds": "2",
+        "CourseID": "32",
+        "Course": "Glen Abbey GC",
+        "ShotLink": "2",
+        "SG:TOT": "0.00",
+        "SG:T2G": "-0.42",
+        "SG:OTT": "0.24",
+        "SG:APP": "-1.12",
+        "SG:BS": "-0.88",
+        "SG:ARG": "0.46",
+        "SG:P": "0.41",
+        "SG:SG": "0.88"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "50.0",
+        "SG TOT 2+": "50.0",
+        "SG TOT 3+": "50.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "0.41150009632110596",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "3.119999885559082",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-3.119999885559082",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "0",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "0",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "0",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "67",
+        "PM": "74",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "21.8",
+        "150-200": "33.9",
+        "200+": "43",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "0",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:58.271Z",
+    "ok": true
+  }
+}

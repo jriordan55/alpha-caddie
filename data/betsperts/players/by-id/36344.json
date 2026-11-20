@@ -1,0 +1,157 @@
+{
+  "playerId": "36344",
+  "playerName": "Michael Hollick",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_sf-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Michael Hollick",
+    "BirthPlace": null,
+    "BirthDate": "May 15, 1987",
+    "Age": "39",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "South Africa",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Michael Hollick",
+        "player_num": "36344",
+        "Year": "2026",
+        "Rounds": "2",
+        "SG:TOT": "-1.10",
+        "SG:T2G": "-1.37",
+        "SG:OTT": "-1.49",
+        "SG:APP": "-0.74",
+        "SG:BS": "-2.23",
+        "SG:ARG": "0.85",
+        "SG:P": "0.26",
+        "Dr Distance": null,
+        "Dr Accuracy %": "50.0",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Michael Hollick",
+        "player_num": "36344",
+        "Rounds": "2",
+        "SG:TOT": "-1.10",
+        "SG:T2G": "-1.37",
+        "SG:OTT": "-1.49",
+        "SG:APP": "-0.74",
+        "SG:BS": "-2.23",
+        "SG:ARG": "0.85",
+        "SG:P": "0.26",
+        "SG:SG": "1.11"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-07-19",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Michael Hollick",
+        "player_num": "36344",
+        "Rounds": "2",
+        "CourseID": "541",
+        "Course": "Royal Birkdale GC",
+        "ShotLink": "2",
+        "SG:TOT": "-1.10",
+        "SG:T2G": "-1.37",
+        "SG:OTT": "-1.49",
+        "SG:APP": "-0.74",
+        "SG:BS": "-2.23",
+        "SG:ARG": "0.85",
+        "SG:P": "0.26",
+        "SG:SG": "1.11"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.5600000023841858",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.649999976158142",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-1.104999989271164",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-1.649999976158142",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-0.5600000023841858",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-1.104999989271164",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "72",
+        "PM": "72",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-1.104999989271164",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:24:09.571Z",
+    "ok": true
+  }
+}

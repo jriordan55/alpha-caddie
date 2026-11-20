@@ -1,0 +1,245 @@
+{
+  "playerId": "60495",
+  "playerName": "Davis Bryant",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Davis Bryant",
+    "BirthPlace": null,
+    "BirthDate": "",
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Davis Bryant",
+        "player_num": "60495",
+        "Year": "2026",
+        "Rounds": "8",
+        "SG:TOT": "0.87",
+        "SG:T2G": "0.03",
+        "SG:OTT": "-0.85",
+        "SG:APP": "0.69",
+        "SG:BS": "-0.16",
+        "SG:ARG": "0.19",
+        "SG:P": "0.84",
+        "Dr Distance": "277.2",
+        "Dr Accuracy %": "69.6",
+        "Ball Speed": "168.47"
+      },
+      {
+        "playerName": "Davis Bryant",
+        "player_num": "60495",
+        "Year": "2025",
+        "Rounds": "2",
+        "SG:TOT": "-1.29",
+        "SG:T2G": "-1.15",
+        "SG:OTT": "-1.04",
+        "SG:APP": "-0.04",
+        "SG:BS": "-1.08",
+        "SG:ARG": "-0.06",
+        "SG:P": "-0.14",
+        "Dr Distance": "284.1",
+        "Dr Accuracy %": "46.4",
+        "Ball Speed": "164.89"
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Davis Bryant",
+        "player_num": "60495",
+        "Rounds": "8",
+        "SG:TOT": "0.87",
+        "SG:T2G": "0.03",
+        "SG:OTT": "-0.85",
+        "SG:APP": "0.69",
+        "SG:BS": "-0.16",
+        "SG:ARG": "0.19",
+        "SG:P": "0.84",
+        "SG:SG": "1.03"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-07-19",
+        "position": "T11",
+        "roundPosition": "T11",
+        "TournamentName": "Corales Puntacana Championship",
+        "is_major": "0",
+        "playerName": "Davis Bryant",
+        "player_num": "60495",
+        "Rounds": "4",
+        "CourseID": "244",
+        "Course": "Corales Golf Course",
+        "ShotLink": "4",
+        "SG:TOT": "1.99",
+        "SG:T2G": "1.15",
+        "SG:OTT": "-0.36",
+        "SG:APP": "1.28",
+        "SG:BS": "0.92",
+        "SG:ARG": "0.23",
+        "SG:P": "0.85",
+        "SG:SG": "1.07"
+      },
+      {
+        "Date": "2026-07-12",
+        "position": "T55",
+        "roundPosition": "T55",
+        "TournamentName": "ISCO Championship",
+        "is_major": "0",
+        "playerName": "Davis Bryant",
+        "player_num": "60495",
+        "Rounds": "4",
+        "CourseID": "934",
+        "Course": "Hurstbourne CC",
+        "ShotLink": "4",
+        "SG:TOT": "-0.26",
+        "SG:T2G": "-1.09",
+        "SG:OTT": "-1.33",
+        "SG:APP": "0.10",
+        "SG:BS": "-1.24",
+        "SG:ARG": "0.15",
+        "SG:P": "0.83",
+        "SG:SG": "0.98"
+      },
+      {
+        "Date": "2025-07-13",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "ISCO Championship",
+        "is_major": "0",
+        "playerName": "Davis Bryant",
+        "player_num": "60495",
+        "Rounds": "2",
+        "CourseID": "934",
+        "Course": "Hurstbourne CC",
+        "ShotLink": "2",
+        "SG:TOT": "-1.29",
+        "SG:T2G": "-1.15",
+        "SG:OTT": "-1.04",
+        "SG:APP": "-0.04",
+        "SG:BS": "-1.08",
+        "SG:ARG": "-0.06",
+        "SG:P": "-0.14",
+        "SG:SG": "-0.20"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "60.0",
+        "SG TOT 1+": "40.0",
+        "SG TOT 2+": "20.0",
+        "SG TOT 3+": "10.0",
+        "SG TOT 4+": "10.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "10"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "0.5041666623825828",
+        "Rounds": "6"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.2533333400885264",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "0.6466666658719381",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "1.5699999928474426",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "0.019999980926513672",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "1.9949999824166298",
+        "Rounds": "4"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-0.6033333341280619",
+        "Rounds": "6"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-1.2900000214576721",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-0.04799999594688416",
+        "Rounds": "5"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "2.393333315849304",
+        "Rounds": "3"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "0.43599999248981475",
+        "Rounds": "10"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "68.71428571428571",
+        "PM": "71",
+        "Rounds": "10"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "10",
+        "50-100": null,
+        "100-150": "23.8",
+        "150-200": "32.5",
+        "200+": "56.7",
+        "200-250": "49.7",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "0.43599999248981475",
+        "Rounds": "10"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:21:07.570Z",
+    "ok": true
+  }
+}

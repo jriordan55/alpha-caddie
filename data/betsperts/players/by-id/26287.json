@@ -1,0 +1,179 @@
+{
+  "playerId": "26287",
+  "playerName": "Roland Thatcher",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Roland Thatcher",
+    "BirthPlace": "Hampton, Virginia",
+    "BirthDate": "April 11, 1977",
+    "Age": "49",
+    "Height": "5ft 9in",
+    "Weight": "185 lbs",
+    "Nationality": "United States",
+    "Residence": "The Woodlands, Texas",
+    "ProWins": "0",
+    "TurnedPro": "2000",
+    "PGAWins": "0",
+    "College": "Auburn University  (2000, Criminal Science, Criminal Justice) "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Roland Thatcher",
+        "player_num": "26287",
+        "Year": "2019",
+        "Rounds": "4",
+        "SG:TOT": "-3.58",
+        "SG:T2G": "-0.70",
+        "SG:OTT": "-0.49",
+        "SG:APP": "-0.70",
+        "SG:BS": "-1.18",
+        "SG:ARG": "0.49",
+        "SG:P": "-2.89",
+        "Dr Distance": "276.7",
+        "Dr Accuracy %": "64.3",
+        "Ball Speed": "161.66"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2019-05-12",
+        "position": "CUT",
+        "roundPosition": "T129",
+        "TournamentName": "AT&T Byron Nelson",
+        "is_major": "0",
+        "playerName": "Roland Thatcher",
+        "player_num": "26287",
+        "Rounds": "2",
+        "CourseID": "243",
+        "Course": "Trinity Forest Golf Club",
+        "ShotLink": "2",
+        "SG:TOT": "-2.64",
+        "SG:T2G": "-0.24",
+        "SG:OTT": "-1.17",
+        "SG:APP": "0.63",
+        "SG:BS": "-0.54",
+        "SG:ARG": "0.30",
+        "SG:P": "-2.40",
+        "SG:SG": "-2.10"
+      },
+      {
+        "Date": "2019-04-07",
+        "position": "CUT",
+        "roundPosition": "T139",
+        "TournamentName": "Valero Texas Open",
+        "is_major": "0",
+        "playerName": "Roland Thatcher",
+        "player_num": "26287",
+        "Rounds": "2",
+        "CourseID": "770",
+        "Course": "TPC San Antonio (Oaks)",
+        "ShotLink": "2",
+        "SG:TOT": "-4.52",
+        "SG:T2G": "-1.15",
+        "SG:OTT": "0.20",
+        "SG:APP": "-2.03",
+        "SG:BS": "-1.83",
+        "SG:ARG": "0.68",
+        "SG:P": "-3.37",
+        "SG:SG": "-2.69"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-2.400999993085861",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa Trivialis",
+        "StrokesGainedAverage": "-3.369000017642975",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.3899999856948853",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-5.769999980926514",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-3.5799999833106995",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-4.5200000405311584",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-2.6399999260902405",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-3.5799999833106995",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "72",
+        "PM": "77",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": "51.4",
+        "200-250": "38.5",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-3.5799999833106995",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:10.177Z",
+    "ok": true
+  }
+}

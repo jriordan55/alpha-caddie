@@ -1,0 +1,153 @@
+{
+  "playerId": "54323",
+  "playerName": "Thaya Lim",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_th-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Thaya Lim",
+    "BirthPlace": "",
+    "BirthDate": "March 25, 1997",
+    "Age": "29",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "Thailand",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Thaya Lim",
+        "player_num": "54323",
+        "Year": "2022",
+        "Rounds": "2",
+        "SG:TOT": "-3.47",
+        "SG:T2G": "-3.40",
+        "SG:OTT": "0.93",
+        "SG:APP": "-3.16",
+        "SG:BS": "-2.23",
+        "SG:ARG": "-1.17",
+        "SG:P": "-0.07",
+        "Dr Distance": "298.2",
+        "Dr Accuracy %": "67.9",
+        "Ball Speed": "181.39"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2022-07-24",
+        "position": "CUT",
+        "roundPosition": "T140",
+        "TournamentName": "3M Open",
+        "is_major": "0",
+        "playerName": "Thaya Lim",
+        "player_num": "54323",
+        "Rounds": "2",
+        "CourseID": "883",
+        "Course": "TPC Twin Cities",
+        "ShotLink": "2",
+        "SG:TOT": "-3.47",
+        "SG:T2G": "-3.40",
+        "SG:OTT": "0.93",
+        "SG:APP": "-3.16",
+        "SG:BS": "-2.23",
+        "SG:ARG": "-1.17",
+        "SG:P": "-0.07",
+        "SG:SG": "-1.24"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.06800001859664917",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.2199999988079071",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-6.71999979019165",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-3.4699998944997787",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-6.71999979019165",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-0.2199999988079071",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-3.4699998944997787",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "78",
+        "PM": "73",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "33.1",
+        "150-200": "47.4",
+        "200+": "66.3",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-3.4699998944997787",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:57.856Z",
+    "ok": true
+  }
+}

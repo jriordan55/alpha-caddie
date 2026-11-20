@@ -1,0 +1,246 @@
+{
+  "playerId": "49801",
+  "playerName": "Preston Stanley",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Preston Stanley",
+    "BirthPlace": "North Richland Hills, Texas",
+    "BirthDate": "August 14, 1992",
+    "Age": "34",
+    "Height": "5ft 10in",
+    "Weight": "175 lbs",
+    "Nationality": "United States",
+    "Residence": "Katy, Texas",
+    "ProWins": "0",
+    "TurnedPro": "2015",
+    "PGAWins": "0",
+    "College": "Houston Baptist University 2015, Finance"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Preston Stanley",
+        "player_num": "49801",
+        "Year": "2024",
+        "Rounds": "2",
+        "SG:TOT": "-4.57",
+        "SG:T2G": "-3.59",
+        "SG:OTT": "0.03",
+        "SG:APP": "-2.88",
+        "SG:BS": "-2.84",
+        "SG:ARG": "-0.75",
+        "SG:P": "-0.99",
+        "Dr Distance": "297.5",
+        "Dr Accuracy %": "50.0",
+        "Ball Speed": "179.16"
+      },
+      {
+        "playerName": "Preston Stanley",
+        "player_num": "49801",
+        "Year": "2022",
+        "Rounds": "8",
+        "SG:TOT": "-0.74",
+        "SG:T2G": "0.91",
+        "SG:OTT": "0.43",
+        "SG:APP": "0.88",
+        "SG:BS": "1.31",
+        "SG:ARG": "-0.40",
+        "SG:P": "-0.49",
+        "Dr Distance": "302.2",
+        "Dr Accuracy %": "62.5",
+        "Ball Speed": "181.30"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2024-02-25",
+        "position": "CUT",
+        "roundPosition": "T122",
+        "TournamentName": "Mexico Open at Vidanta",
+        "is_major": "0",
+        "playerName": "Preston Stanley",
+        "player_num": "49801",
+        "Rounds": "2",
+        "CourseID": "978",
+        "Course": "Vidanta Vallarta",
+        "ShotLink": "2",
+        "SG:TOT": "-4.57",
+        "SG:T2G": "-3.59",
+        "SG:OTT": "0.03",
+        "SG:APP": "-2.88",
+        "SG:BS": "-2.84",
+        "SG:ARG": "-0.75",
+        "SG:P": "-0.99",
+        "SG:SG": "-1.73"
+      },
+      {
+        "Date": "2022-07-17",
+        "position": "71",
+        "roundPosition": null,
+        "TournamentName": "Barracuda Championship",
+        "is_major": null,
+        "playerName": "Preston Stanley",
+        "player_num": "49801",
+        "Rounds": "4",
+        "CourseID": "890",
+        "Course": "Tahoe Mountain Club (Old Greenwood)",
+        "ShotLink": "0",
+        "SG:TOT": "-1.89",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2022-07-03",
+        "position": "T51",
+        "roundPosition": "T51",
+        "TournamentName": "John Deere Classic",
+        "is_major": "0",
+        "playerName": "Preston Stanley",
+        "player_num": "49801",
+        "Rounds": "4",
+        "CourseID": "669",
+        "Course": "TPC Deere Run",
+        "ShotLink": "4",
+        "SG:TOT": "0.42",
+        "SG:T2G": "0.91",
+        "SG:OTT": "0.43",
+        "SG:APP": "0.88",
+        "SG:BS": "1.31",
+        "SG:ARG": "-0.40",
+        "SG:P": "-0.49",
+        "SG:SG": "-0.89"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "30.0",
+        "SG TOT 1+": "30.0",
+        "SG TOT 2+": "20.0",
+        "SG TOT 3+": "10.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "10"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.49425001442432404",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.54666668176651",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.719999889532725",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "0.2399998903274536",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-4.364999890327454",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-4.574999928474426",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-1.8949999958276749",
+        "Rounds": "4"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "0.42000003159046173",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-1.7883333365122478",
+        "Rounds": "6"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-5.029999852180481",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "2.8700000047683716",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-2.788333306709925",
+        "Rounds": "6"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "0.42000003159046173",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "68.33333333333333",
+        "PM": "74",
+        "Rounds": "10"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "10",
+        "50-100": null,
+        "100-150": "27.9",
+        "150-200": "41.8",
+        "200+": "57",
+        "200-250": "55.7",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-4.574999928474426",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-0.7374999821186066",
+        "Rounds": "8"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:24:52.697Z",
+    "ok": true
+  }
+}

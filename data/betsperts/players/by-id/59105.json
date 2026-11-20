@@ -1,0 +1,205 @@
+{
+  "playerId": "59105",
+  "playerName": "Blake Hathcoat",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Blake Hathcoat",
+    "BirthPlace": "Fresno, California",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "6ft 1in",
+    "Weight": "160 lbs",
+    "Nationality": "United States",
+    "Residence": "Moraga, California",
+    "ProWins": null,
+    "TurnedPro": "2021",
+    "PGAWins": null,
+    "College": "St. Marys College 2020, Finance"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Blake Hathcoat",
+        "player_num": "59105",
+        "Year": "2024",
+        "Rounds": "2",
+        "SG:TOT": "-6.50",
+        "SG:T2G": "-3.25",
+        "SG:OTT": "0.37",
+        "SG:APP": "-3.17",
+        "SG:BS": "-2.80",
+        "SG:ARG": "-0.44",
+        "SG:P": "-3.25",
+        "Dr Distance": "286.7",
+        "Dr Accuracy %": "64.3",
+        "Ball Speed": "170.68"
+      },
+      {
+        "playerName": "Blake Hathcoat",
+        "player_num": "59105",
+        "Year": "2023",
+        "Rounds": "2",
+        "SG:TOT": "-0.68",
+        "SG:T2G": "-3.98",
+        "SG:OTT": "-2.41",
+        "SG:APP": "-0.56",
+        "SG:BS": "-2.97",
+        "SG:ARG": "-1.01",
+        "SG:P": "3.29",
+        "Dr Distance": "282.5",
+        "Dr Accuracy %": "25.0",
+        "Ball Speed": "170.29"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2024-07-07",
+        "position": "CUT",
+        "roundPosition": "153",
+        "TournamentName": "John Deere Classic",
+        "is_major": "0",
+        "playerName": "Blake Hathcoat",
+        "player_num": "59105",
+        "Rounds": "2",
+        "CourseID": "669",
+        "Course": "TPC Deere Run",
+        "ShotLink": "2",
+        "SG:TOT": "-6.50",
+        "SG:T2G": "-3.25",
+        "SG:OTT": "0.37",
+        "SG:APP": "-3.17",
+        "SG:BS": "-2.80",
+        "SG:ARG": "-0.44",
+        "SG:P": "-3.25",
+        "SG:SG": "-3.70"
+      },
+      {
+        "Date": "2023-09-17",
+        "position": "CUT",
+        "roundPosition": "T89",
+        "TournamentName": "Fortinet Championship",
+        "is_major": "0",
+        "playerName": "Blake Hathcoat",
+        "player_num": "59105",
+        "Rounds": "2",
+        "CourseID": "926",
+        "Course": "Silverado Resort (North)",
+        "ShotLink": "2",
+        "SG:TOT": "-0.68",
+        "SG:T2G": "-3.98",
+        "SG:OTT": "-2.41",
+        "SG:APP": "-0.56",
+        "SG:BS": "-2.97",
+        "SG:ARG": "-1.01",
+        "SG:P": "3.29",
+        "SG:SG": "2.29"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "25.0",
+        "SG TOT 1+": "25.0",
+        "SG TOT 2+": "25.0",
+        "SG TOT 3+": "25.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-3.2545000314712524",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-5.269999980926514",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.9149999618530273",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-6.5",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-0.684999942779541",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-4.619999885559082",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-1.9149999618530273",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-5.920000076293945",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-3.5924999713897705",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "71",
+        "PM": "76.5",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": "17.3",
+        "100-150": "27.6",
+        "150-200": "41.8",
+        "200+": "63.1",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-0.684999942779541",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-6.5",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:30.073Z",
+    "ok": true
+  }
+}

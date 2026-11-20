@@ -1,0 +1,743 @@
+{
+  "playerId": "34306",
+  "playerName": "John Chin",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "John Chin",
+    "BirthPlace": "Fairfax, Virginia",
+    "BirthDate": "April 24, 1987",
+    "Age": "39",
+    "Height": "5ft 10in",
+    "Weight": "185 lbs",
+    "Nationality": "United States",
+    "Residence": "Temecula, California",
+    "ProWins": "0",
+    "TurnedPro": "2010",
+    "PGAWins": "0",
+    "College": "University of California-Irvine 2010, Sociology"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "John Chin",
+        "player_num": "34306",
+        "Year": "2024",
+        "Rounds": "2",
+        "SG:TOT": "-3.42",
+        "SG:T2G": "-2.46",
+        "SG:OTT": "-0.48",
+        "SG:APP": "-1.46",
+        "SG:BS": "-1.94",
+        "SG:ARG": "-0.52",
+        "SG:P": "-0.96",
+        "Dr Distance": "286.2",
+        "Dr Accuracy %": "71.4",
+        "Ball Speed": "170.65"
+      },
+      {
+        "playerName": "John Chin",
+        "player_num": "34306",
+        "Year": "2019",
+        "Rounds": "42",
+        "SG:TOT": "-1.14",
+        "SG:T2G": "-1.16",
+        "SG:OTT": "0.04",
+        "SG:APP": "-0.81",
+        "SG:BS": "-0.77",
+        "SG:ARG": "-0.38",
+        "SG:P": "-0.52",
+        "Dr Distance": "289.7",
+        "Dr Accuracy %": "58.3",
+        "Ball Speed": "175.91"
+      },
+      {
+        "playerName": "John Chin",
+        "player_num": "34306",
+        "Year": "2018",
+        "Rounds": "12",
+        "SG:TOT": "-1.10",
+        "SG:T2G": "-1.50",
+        "SG:OTT": "-0.60",
+        "SG:APP": "-0.59",
+        "SG:BS": "-1.19",
+        "SG:ARG": "-0.31",
+        "SG:P": "0.34",
+        "Dr Distance": "283.9",
+        "Dr Accuracy %": "57.7",
+        "Ball Speed": "172.24"
+      },
+      {
+        "playerName": "John Chin",
+        "player_num": "34306",
+        "Year": "2017",
+        "Rounds": "2",
+        "SG:TOT": "-1.69",
+        "SG:T2G": "-0.53",
+        "SG:OTT": "1.22",
+        "SG:APP": "-0.97",
+        "SG:BS": "0.25",
+        "SG:ARG": "-0.77",
+        "SG:P": "-1.17",
+        "Dr Distance": "297.8",
+        "Dr Accuracy %": "75.0",
+        "Ball Speed": "175.98"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2024-06-16",
+        "position": "CUT",
+        "roundPosition": "T140",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "John Chin",
+        "player_num": "34306",
+        "Rounds": "2",
+        "CourseID": "528",
+        "Course": "Pinehurst No. 2",
+        "ShotLink": "2",
+        "SG:TOT": "-3.42",
+        "SG:T2G": "-2.46",
+        "SG:OTT": "-0.48",
+        "SG:APP": "-1.46",
+        "SG:BS": "-1.94",
+        "SG:ARG": "-0.52",
+        "SG:P": "-0.96",
+        "SG:SG": "-1.48"
+      },
+      {
+        "Date": "2019-08-04",
+        "position": "T69",
+        "roundPosition": "T69",
+        "TournamentName": "Wyndham Championship",
+        "is_major": "0",
+        "playerName": "John Chin",
+        "player_num": "34306",
+        "Rounds": "4",
+        "CourseID": "752",
+        "Course": "Sedgefield CC",
+        "ShotLink": "4",
+        "SG:TOT": "-0.35",
+        "SG:T2G": "-0.44",
+        "SG:OTT": "0.47",
+        "SG:APP": "-0.50",
+        "SG:BS": "-0.03",
+        "SG:ARG": "-0.41",
+        "SG:P": "0.09",
+        "SG:SG": "-0.32"
+      },
+      {
+        "Date": "2019-07-21",
+        "position": "T39",
+        "roundPosition": "T39",
+        "TournamentName": "Barbasol Championship",
+        "is_major": "0",
+        "playerName": "John Chin",
+        "player_num": "34306",
+        "Rounds": "4",
+        "CourseID": "884",
+        "Course": "Keene Trace GC",
+        "ShotLink": "4",
+        "SG:TOT": "0.50",
+        "SG:T2G": "-0.11",
+        "SG:OTT": "0.39",
+        "SG:APP": "-0.73",
+        "SG:BS": "-0.34",
+        "SG:ARG": "0.23",
+        "SG:P": "0.61",
+        "SG:SG": "0.84"
+      },
+      {
+        "Date": "2019-07-14",
+        "position": "CUT",
+        "roundPosition": "T81",
+        "TournamentName": "John Deere Classic",
+        "is_major": "0",
+        "playerName": "John Chin",
+        "player_num": "34306",
+        "Rounds": "2",
+        "CourseID": "669",
+        "Course": "TPC Deere Run",
+        "ShotLink": "2",
+        "SG:TOT": "-0.23",
+        "SG:T2G": "2.83",
+        "SG:OTT": "0.35",
+        "SG:APP": "1.56",
+        "SG:BS": "1.91",
+        "SG:ARG": "0.92",
+        "SG:P": "-3.05",
+        "SG:SG": "-2.13"
+      },
+      {
+        "Date": "2019-07-07",
+        "position": "CUT",
+        "roundPosition": "T151",
+        "TournamentName": "3M Open",
+        "is_major": "0",
+        "playerName": "John Chin",
+        "player_num": "34306",
+        "Rounds": "2",
+        "CourseID": "883",
+        "Course": "TPC Twin Cities",
+        "ShotLink": "2",
+        "SG:TOT": "-6.63",
+        "SG:T2G": "-5.84",
+        "SG:OTT": "-1.35",
+        "SG:APP": "-3.46",
+        "SG:BS": "-4.80",
+        "SG:ARG": "-1.04",
+        "SG:P": "-0.79",
+        "SG:SG": "-1.83"
+      },
+      {
+        "Date": "2019-06-30",
+        "position": "CUT",
+        "roundPosition": "T139",
+        "TournamentName": "Rocket Mortgage Classic",
+        "is_major": "0",
+        "playerName": "John Chin",
+        "player_num": "34306",
+        "Rounds": "2",
+        "CourseID": "876",
+        "Course": "Detroit GC",
+        "ShotLink": "2",
+        "SG:TOT": "-2.84",
+        "SG:T2G": "-2.56",
+        "SG:OTT": "0.08",
+        "SG:APP": "-1.58",
+        "SG:BS": "-1.51",
+        "SG:ARG": "-1.06",
+        "SG:P": "-0.28",
+        "SG:SG": "-1.33"
+      },
+      {
+        "Date": "2019-06-23",
+        "position": "CUT",
+        "roundPosition": "T101",
+        "TournamentName": "Travelers Championship",
+        "is_major": "0",
+        "playerName": "John Chin",
+        "player_num": "34306",
+        "Rounds": "2",
+        "CourseID": "503",
+        "Course": "TPC River Highlands",
+        "ShotLink": "2",
+        "SG:TOT": "-1.01",
+        "SG:T2G": "-2.21",
+        "SG:OTT": "0.86",
+        "SG:APP": "-1.11",
+        "SG:BS": "-0.25",
+        "SG:ARG": "-1.96",
+        "SG:P": "1.19",
+        "SG:SG": "-0.77"
+      },
+      {
+        "Date": "2019-06-09",
+        "position": "CUT",
+        "roundPosition": "T102",
+        "TournamentName": "RBC Canadian Open",
+        "is_major": "0",
+        "playerName": "John Chin",
+        "player_num": "34306",
+        "Rounds": "2",
+        "CourseID": "874",
+        "Course": "Hamilton Golf & Country Club",
+        "ShotLink": "2",
+        "SG:TOT": "-1.02",
+        "SG:T2G": "0.35",
+        "SG:OTT": "0.79",
+        "SG:APP": "0.10",
+        "SG:BS": "0.89",
+        "SG:ARG": "-0.54",
+        "SG:P": "-1.37",
+        "SG:SG": "-1.91"
+      },
+      {
+        "Date": "2019-05-12",
+        "position": "CUT",
+        "roundPosition": "T110",
+        "TournamentName": "AT&T Byron Nelson",
+        "is_major": "0",
+        "playerName": "John Chin",
+        "player_num": "34306",
+        "Rounds": "2",
+        "CourseID": "243",
+        "Course": "Trinity Forest Golf Club",
+        "ShotLink": "2",
+        "SG:TOT": "-1.14",
+        "SG:T2G": "0.57",
+        "SG:OTT": "0.42",
+        "SG:APP": "0.59",
+        "SG:BS": "1.02",
+        "SG:ARG": "-0.45",
+        "SG:P": "-1.71",
+        "SG:SG": "-2.16"
+      },
+      {
+        "Date": "2019-05-05",
+        "position": "CUT",
+        "roundPosition": "T76",
+        "TournamentName": "Wells Fargo Championship",
+        "is_major": "0",
+        "playerName": "John Chin",
+        "player_num": "34306",
+        "Rounds": "2",
+        "CourseID": "872",
+        "Course": "Quail Hollow Club",
+        "ShotLink": "2",
+        "SG:TOT": "0.09",
+        "SG:T2G": "0.14",
+        "SG:OTT": "0.59",
+        "SG:APP": "-0.97",
+        "SG:BS": "-0.37",
+        "SG:ARG": "0.52",
+        "SG:P": "-0.05",
+        "SG:SG": "0.46"
+      },
+      {
+        "Date": "2019-03-31",
+        "position": "T67",
+        "roundPosition": "T67",
+        "TournamentName": "Corales Puntacana Championship",
+        "is_major": "0",
+        "playerName": "John Chin",
+        "player_num": "34306",
+        "Rounds": "4",
+        "CourseID": "244",
+        "Course": "Corales Golf Course",
+        "ShotLink": "0",
+        "SG:TOT": "-0.81",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2019-02-24",
+        "position": "T21",
+        "roundPosition": "T21",
+        "TournamentName": "Puerto Rico Open",
+        "is_major": "0",
+        "playerName": "John Chin",
+        "player_num": "34306",
+        "Rounds": "4",
+        "CourseID": "742",
+        "Course": "Grand Reserve GC",
+        "ShotLink": "0",
+        "SG:TOT": "1.50",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2019-02-10",
+        "position": "CUT",
+        "roundPosition": "T147",
+        "TournamentName": "AT&T Pebble Beach Pro-Am",
+        "is_major": "0",
+        "playerName": "John Chin",
+        "player_num": "34306",
+        "Rounds": "3",
+        "CourseID": "205",
+        "Course": "Spyglass Hill",
+        "ShotLink": "1",
+        "SG:TOT": "-4.33",
+        "SG:T2G": "-5.46",
+        "SG:OTT": "-2.28",
+        "SG:APP": "-1.95",
+        "SG:BS": "-4.22",
+        "SG:ARG": "-1.24",
+        "SG:P": "-1.13",
+        "SG:SG": "-2.37"
+      },
+      {
+        "Date": "2019-01-27",
+        "position": "T72",
+        "roundPosition": "T72",
+        "TournamentName": "Farmers Insurance Open",
+        "is_major": "0",
+        "playerName": "John Chin",
+        "player_num": "34306",
+        "Rounds": "4",
+        "CourseID": "4",
+        "Course": "Torrey Pines GC (South)",
+        "ShotLink": "3",
+        "SG:TOT": "-1.08",
+        "SG:T2G": "-1.08",
+        "SG:OTT": "-0.21",
+        "SG:APP": "-0.67",
+        "SG:BS": "-0.88",
+        "SG:ARG": "-0.20",
+        "SG:P": "-1.49",
+        "SG:SG": "-1.69"
+      },
+      {
+        "Date": "2019-01-20",
+        "position": "CUT",
+        "roundPosition": "T133",
+        "TournamentName": "Desert Classic",
+        "is_major": "0",
+        "playerName": "John Chin",
+        "player_num": "34306",
+        "Rounds": "3",
+        "CourseID": "704",
+        "Course": "Pete Dye Stadium Course",
+        "ShotLink": "1",
+        "SG:TOT": "-1.99",
+        "SG:T2G": "-7.02",
+        "SG:OTT": "-3.24",
+        "SG:APP": "-3.36",
+        "SG:BS": "-6.61",
+        "SG:ARG": "-0.41",
+        "SG:P": "0.08",
+        "SG:SG": "-0.34"
+      },
+      {
+        "Date": "2019-01-13",
+        "position": "CUT",
+        "roundPosition": "T109",
+        "TournamentName": "Sony Open",
+        "is_major": "0",
+        "playerName": "John Chin",
+        "player_num": "34306",
+        "Rounds": "2",
+        "CourseID": "6",
+        "Course": "Waialae CC",
+        "ShotLink": "2",
+        "SG:TOT": "-1.23",
+        "SG:T2G": "-1.08",
+        "SG:OTT": "0.17",
+        "SG:APP": "-0.79",
+        "SG:BS": "-0.62",
+        "SG:ARG": "-0.46",
+        "SG:P": "-0.15",
+        "SG:SG": "-0.61"
+      },
+      {
+        "Date": "2018-11-18",
+        "position": "CUT",
+        "roundPosition": "T117",
+        "TournamentName": "The RSM Classic",
+        "is_major": "0",
+        "playerName": "John Chin",
+        "player_num": "34306",
+        "Rounds": "2",
+        "CourseID": "776",
+        "Course": "Sea Island GC (Seaside)",
+        "ShotLink": "1",
+        "SG:TOT": "-1.53",
+        "SG:T2G": "-1.92",
+        "SG:OTT": "0.95",
+        "SG:APP": "-0.86",
+        "SG:BS": "0.09",
+        "SG:ARG": "-2.00",
+        "SG:P": "-0.20",
+        "SG:SG": "-2.20"
+      },
+      {
+        "Date": "2018-11-11",
+        "position": "CUT",
+        "roundPosition": "T82",
+        "TournamentName": "Mayakoba Golf Classic",
+        "is_major": "0",
+        "playerName": "John Chin",
+        "player_num": "34306",
+        "Rounds": "2",
+        "CourseID": "733",
+        "Course": "El Camaleon GC",
+        "ShotLink": "0",
+        "SG:TOT": "-0.91",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2018-11-04",
+        "position": "CUT",
+        "roundPosition": "T115",
+        "TournamentName": "Shriners Childrens Open",
+        "is_major": "0",
+        "playerName": "John Chin",
+        "player_num": "34306",
+        "Rounds": "2",
+        "CourseID": "538",
+        "Course": "TPC Summerlin",
+        "ShotLink": "2",
+        "SG:TOT": "-2.26",
+        "SG:T2G": "-1.90",
+        "SG:OTT": "-2.86",
+        "SG:APP": "0.38",
+        "SG:BS": "-2.47",
+        "SG:ARG": "0.58",
+        "SG:P": "-0.36",
+        "SG:SG": "0.21"
+      },
+      {
+        "Date": "2018-10-28",
+        "position": "T45",
+        "roundPosition": "T45",
+        "TournamentName": "Sanderson Farms Championship",
+        "is_major": "0",
+        "playerName": "John Chin",
+        "player_num": "34306",
+        "Rounds": "4",
+        "CourseID": "746",
+        "Course": "The Country Club of Jackson",
+        "ShotLink": "4",
+        "SG:TOT": "0.31",
+        "SG:T2G": "-0.52",
+        "SG:OTT": "-0.28",
+        "SG:APP": "-0.01",
+        "SG:BS": "-0.29",
+        "SG:ARG": "-0.23",
+        "SG:P": "0.83",
+        "SG:SG": "0.59"
+      },
+      {
+        "Date": "2018-10-07",
+        "position": "CUT",
+        "roundPosition": "T128",
+        "TournamentName": "Safeway Open",
+        "is_major": "0",
+        "playerName": "John Chin",
+        "player_num": "34306",
+        "Rounds": "2",
+        "CourseID": "552",
+        "Course": "Silverado Resort (North)",
+        "ShotLink": "2",
+        "SG:TOT": "-2.48",
+        "SG:T2G": "-2.84",
+        "SG:OTT": "0.24",
+        "SG:APP": "-2.58",
+        "SG:BS": "-2.33",
+        "SG:ARG": "-0.50",
+        "SG:P": "0.36",
+        "SG:SG": "-0.15"
+      },
+      {
+        "Date": "2017-01-15",
+        "position": "CUT",
+        "roundPosition": "T113",
+        "TournamentName": "Sony Open",
+        "is_major": "0",
+        "playerName": "John Chin",
+        "player_num": "34306",
+        "Rounds": "2",
+        "CourseID": "6",
+        "Course": "Waialae CC",
+        "ShotLink": "2",
+        "SG:TOT": "-1.69",
+        "SG:T2G": "-0.53",
+        "SG:OTT": "1.22",
+        "SG:APP": "-0.97",
+        "SG:BS": "0.25",
+        "SG:ARG": "-0.77",
+        "SG:P": "-1.17",
+        "SG:SG": "-1.94"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "34.5",
+        "SG TOT 1+": "20.7",
+        "SG TOT 2+": "15.5",
+        "SG TOT 3+": "6.9",
+        "SG TOT 4+": "1.7",
+        "SG TOT 5+": "0.0",
+        "Rounds": "66"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.597699998319149",
+        "Rounds": "11"
+      },
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-0.2657058861325769",
+        "Rounds": "18"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "-1.4042499605566263",
+        "Rounds": "6"
+      },
+      {
+        "GreenSurface": "Poa Trivialis",
+        "StrokesGainedAverage": "-0.010333331922690073",
+        "Rounds": "5"
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.4436363476243885",
+        "Rounds": "24"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.8713636230677366",
+        "Rounds": "24"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-1.3525000214576721",
+        "Rounds": "10"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-1.5999999245007832",
+        "Rounds": "8"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "",
+        "StrokesGainedAverage": null,
+        "Rounds": "4"
+      },
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-2.547500044107437",
+        "Rounds": "8"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-0.693333312869072",
+        "Rounds": "12"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-0.2768749569077045",
+        "Rounds": "16"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-1.6027272560379722",
+        "Rounds": "11"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-2.0520000010728836",
+        "Rounds": "15"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-1.4837500005960464",
+        "Rounds": "16"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "0.09000003337860107",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-0.6018181280656294",
+        "Rounds": "19"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-3.4199999570846558",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-1.2714814743785947",
+        "Rounds": "27"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-1.9713636230338702",
+        "Rounds": "22"
+      },
+      {
+        "FieldStrength": "Strong",
+        "StrokesGainedAverage": "-1.0775000154972076",
+        "Rounds": "4"
+      },
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-3.4199999570846558",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-0.10399996638298034",
+        "Rounds": "28"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-1.4750000063329936",
+        "Rounds": "10"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "71.3030303030303",
+        "PM": "71.76",
+        "Rounds": "66"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "66",
+        "50-100": "21.2",
+        "100-150": "26.9",
+        "150-200": "36.8",
+        "200+": "57.9",
+        "200-250": "52.1",
+        "250+": "80.1"
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Aloha",
+        "StrokesGainedAverage": "-1.4599999487400055",
+        "Rounds": "4"
+      },
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-1.0974999802807968",
+        "Rounds": "12"
+      },
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-0.09928568771907262",
+        "Rounds": "14"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-1.53777775934173",
+        "Rounds": "26"
+      },
+      {
+        "SeasonHeld": "West Coast",
+        "StrokesGainedAverage": "-2.3270000219345093",
+        "Rounds": "10"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:52.772Z",
+    "ok": true
+  }
+}

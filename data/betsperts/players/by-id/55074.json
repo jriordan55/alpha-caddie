@@ -1,0 +1,163 @@
+{
+  "playerId": "55074",
+  "playerName": "Sebastian Friedrichsen",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/da-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Sebastian Friedrichsen",
+    "BirthPlace": null,
+    "BirthDate": "September 27, 2002",
+    "Age": "24",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "Denmark",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Sebastian Friedrichsen",
+        "player_num": "55074",
+        "Year": "2024",
+        "Rounds": "4",
+        "SG:TOT": "-0.22",
+        "SG:T2G": "0.50",
+        "SG:OTT": "-0.28",
+        "SG:APP": "0.68",
+        "SG:BS": "0.41",
+        "SG:ARG": "0.10",
+        "SG:P": "-0.72",
+        "Dr Distance": "298.4",
+        "Dr Accuracy %": "55.4",
+        "Ball Speed": "171.33"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2024-07-14",
+        "position": "T55",
+        "roundPosition": "T55",
+        "TournamentName": "ISCO Championship",
+        "is_major": "0",
+        "playerName": "Sebastian Friedrichsen",
+        "player_num": "55074",
+        "Rounds": "4",
+        "CourseID": "884",
+        "Course": "Keene Trace GC",
+        "ShotLink": "4",
+        "SG:TOT": "-0.22",
+        "SG:T2G": "0.50",
+        "SG:OTT": "-0.28",
+        "SG:APP": "0.68",
+        "SG:BS": "0.41",
+        "SG:ARG": "0.10",
+        "SG:P": "-0.72",
+        "SG:SG": "-0.62"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "25.0",
+        "SG TOT 1+": "25.0",
+        "SG TOT 2+": "25.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.7207499593496323",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.5799999833106995",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "2.7899999618530273",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-2.6600000858306885",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-0.41999998688697815",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-0.2175000235438347",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-0.41999998688697815",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-0.15000003576278687",
+        "Rounds": "3"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-0.2175000235438347",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "71",
+        "PM": "66",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": "17.6",
+        "100-150": "21.9",
+        "150-200": "36.1",
+        "200+": "43.6",
+        "200-250": "43",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-0.2175000235438347",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:25:32.952Z",
+    "ok": true
+  }
+}

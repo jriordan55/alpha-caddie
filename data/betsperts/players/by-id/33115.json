@@ -1,0 +1,204 @@
+{
+  "playerId": "33115",
+  "playerName": "Jinho Choi",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ks-flag-1.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Jinho Choi",
+    "BirthPlace": "",
+    "BirthDate": "May 27, 1984",
+    "Age": "42",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "South Korea",
+    "Residence": "",
+    "ProWins": "1",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Jinho Choi",
+        "player_num": "33115",
+        "Year": "2017",
+        "Rounds": "5",
+        "SG:TOT": "-0.85",
+        "SG:T2G": "-4.03",
+        "SG:OTT": "-1.54",
+        "SG:APP": "-2.13",
+        "SG:BS": "-3.67",
+        "SG:ARG": "-0.36",
+        "SG:P": "-0.98",
+        "Dr Distance": "255.1",
+        "Dr Accuracy %": "67.1",
+        "Ball Speed": "153.05"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2017-10-22",
+        "position": "T36",
+        "roundPosition": "T36",
+        "TournamentName": "The CJ CUP at Nine Bridges",
+        "is_major": "0",
+        "playerName": "Jinho Choi",
+        "player_num": "33115",
+        "Rounds": "4",
+        "CourseID": "242",
+        "Course": "Nine Bridges",
+        "ShotLink": "0",
+        "SG:TOT": "0.19",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2017-02-19",
+        "position": "W/D",
+        "roundPosition": "T133",
+        "TournamentName": "The Genesis Invitational",
+        "is_major": "0",
+        "playerName": "Jinho Choi",
+        "player_num": "33115",
+        "Rounds": "1",
+        "CourseID": "500",
+        "Course": "Riviera CC",
+        "ShotLink": "1",
+        "SG:TOT": "-5.01",
+        "SG:T2G": "-4.03",
+        "SG:OTT": "-1.54",
+        "SG:APP": "-2.13",
+        "SG:BS": "-3.67",
+        "SG:ARG": "-0.36",
+        "SG:P": "-0.98",
+        "SG:SG": "-1.34"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "20.0",
+        "SG TOT 1+": "20.0",
+        "SG TOT 2+": "20.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "5"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": null,
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "-0.9769999980926514",
+        "Rounds": "1"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-2.530000114813447",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "2.3499999046325684",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-1.2100000381469727",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-0.3100000023841858",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-5.010000228881836",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "0.19499996583908796",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-5.010000228881836",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "0.19499996583908796",
+        "Rounds": "4"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "0.19499996583908796",
+        "Rounds": "4"
+      },
+      {
+        "FieldStrength": "Strong",
+        "StrokesGainedAverage": "-5.010000228881836",
+        "Rounds": "1"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "73.66666666666667",
+        "PM": "73.5",
+        "Rounds": "5"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "5",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": "89.2",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "0.19499996583908796",
+        "Rounds": "4"
+      },
+      {
+        "SeasonHeld": "West Coast",
+        "StrokesGainedAverage": "-5.010000228881836",
+        "Rounds": "1"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:47.128Z",
+    "ok": true
+  }
+}

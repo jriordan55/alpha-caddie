@@ -1,0 +1,158 @@
+{
+  "playerId": "40027",
+  "playerName": "Lexi Thompson",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Lexi Thompson",
+    "BirthPlace": null,
+    "BirthDate": "February 10, 1995",
+    "Age": "31",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Lexi Thompson",
+        "player_num": "40027",
+        "Year": "2023",
+        "Rounds": "2",
+        "SG:TOT": "-1.21",
+        "SG:T2G": "-1.78",
+        "SG:OTT": "-0.38",
+        "SG:APP": "-0.70",
+        "SG:BS": "-1.08",
+        "SG:ARG": "-0.71",
+        "SG:P": "0.58",
+        "Dr Distance": "284.0",
+        "Dr Accuracy %": "71.4",
+        "Ball Speed": "156.37"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2023-10-15",
+        "position": "CUT",
+        "roundPosition": "T85",
+        "TournamentName": "Shriners Childrens Open",
+        "is_major": "0",
+        "playerName": "Lexi Thompson",
+        "player_num": "40027",
+        "Rounds": "2",
+        "CourseID": "538",
+        "Course": "TPC Summerlin",
+        "ShotLink": "2",
+        "SG:TOT": "-1.21",
+        "SG:T2G": "-1.78",
+        "SG:OTT": "-0.38",
+        "SG:APP": "-0.70",
+        "SG:BS": "-1.08",
+        "SG:ARG": "-0.71",
+        "SG:P": "0.58",
+        "SG:SG": "-0.13"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "19"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "0.5759999975562096",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-2.1700000762939453",
+        "Rounds": "7"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.23999999463558197",
+        "Rounds": "7"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": null,
+        "Rounds": "5"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-1.2050000354647636",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-2.1700000762939453",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-0.23999999463558197",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-1.2050000354647636",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "69",
+        "PM": "73",
+        "Rounds": "19"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "19",
+        "50-100": null,
+        "100-150": "37.3",
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-1.2050000354647636",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:36.799Z",
+    "ok": true
+  }
+}

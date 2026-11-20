@@ -1,0 +1,148 @@
+{
+  "playerId": "34525",
+  "playerName": "Corey Nagy",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Corey Nagy",
+    "BirthPlace": "Charlotte, North Carolina",
+    "BirthDate": "September 20, 1988",
+    "Age": "38",
+    "Height": "6ft 4in",
+    "Weight": "197 lbs",
+    "Nationality": "United States",
+    "Residence": "Charlotte, North Carolina",
+    "ProWins": null,
+    "TurnedPro": "2010",
+    "PGAWins": null,
+    "College": "University of North Carolina-Charlotte  (2010, Psychology) "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Corey Nagy",
+        "player_num": "34525",
+        "Year": "2016",
+        "Rounds": "2",
+        "SG:TOT": "-1.10",
+        "SG:T2G": "-0.53",
+        "SG:OTT": "0.49",
+        "SG:APP": "-0.28",
+        "SG:BS": "0.21",
+        "SG:ARG": "-0.73",
+        "SG:P": "-0.57",
+        "Dr Distance": "292.7",
+        "Dr Accuracy %": "60.7",
+        "Ball Speed": "168.50"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2016-05-08",
+        "position": "CUT",
+        "roundPosition": "T106",
+        "TournamentName": "Wells Fargo Championship",
+        "is_major": "0",
+        "playerName": "Corey Nagy",
+        "player_num": "34525",
+        "Rounds": "2",
+        "CourseID": "698",
+        "Course": "Quail Hollow Club",
+        "ShotLink": "2",
+        "SG:TOT": "-1.10",
+        "SG:T2G": "-0.53",
+        "SG:OTT": "0.49",
+        "SG:APP": "-0.28",
+        "SG:BS": "0.21",
+        "SG:ARG": "-0.73",
+        "SG:P": "-0.57",
+        "SG:SG": "-1.30"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Poa Trivialis",
+        "StrokesGainedAverage": "-0.5695000290870667",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-2.4000000953674316",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "0.20999999344348907",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-1.0950000509619713",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-1.0950000509619713",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Strong",
+        "StrokesGainedAverage": "-1.0950000509619713",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "75",
+        "PM": "73",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "41.6",
+        "200+": "58.4",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-1.0950000509619713",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:20:35.994Z",
+    "ok": true
+  }
+}

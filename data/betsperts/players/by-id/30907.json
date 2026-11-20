@@ -1,0 +1,200 @@
+{
+  "playerId": "30907",
+  "playerName": "Rhys Enoch",
+  "flag": null,
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Rhys Enoch",
+    "BirthPlace": "",
+    "BirthDate": "June 16, 1988",
+    "Age": "38",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "Wales",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Rhys Enoch",
+        "player_num": "30907",
+        "Year": "2019",
+        "Rounds": "4",
+        "SG:TOT": "-0.53",
+        "SG:T2G": "-1.40",
+        "SG:OTT": "-0.21",
+        "SG:APP": "-0.97",
+        "SG:BS": "-1.18",
+        "SG:ARG": "-0.22",
+        "SG:P": "0.87",
+        "Dr Distance": "271.0",
+        "Dr Accuracy %": "53.6",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Rhys Enoch",
+        "player_num": "30907",
+        "Year": "2018",
+        "Rounds": "4",
+        "SG:TOT": "-0.39",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "53.3",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2019-06-16",
+        "position": "71",
+        "roundPosition": "71",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Rhys Enoch",
+        "player_num": "30907",
+        "Rounds": "4",
+        "CourseID": "666",
+        "Course": "Pebble Beach Golf Links",
+        "ShotLink": "4",
+        "SG:TOT": "-0.53",
+        "SG:T2G": "-1.40",
+        "SG:OTT": "-0.21",
+        "SG:APP": "-0.97",
+        "SG:BS": "-1.18",
+        "SG:ARG": "-0.22",
+        "SG:P": "0.87",
+        "SG:SG": "0.65"
+      },
+      {
+        "Date": "2018-07-22",
+        "position": "T67",
+        "roundPosition": "T67",
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Rhys Enoch",
+        "player_num": "30907",
+        "Rounds": "4",
+        "CourseID": "658",
+        "Course": "Carnoustie GC",
+        "ShotLink": "0",
+        "SG:TOT": "-0.39",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "37.5",
+        "SG TOT 2+": "12.5",
+        "SG TOT 3+": "12.5",
+        "SG TOT 4+": "12.5",
+        "SG TOT 5+": "12.5",
+        "Rounds": "8"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "0.8677500039339066",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-3.0749999582767487",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "4.190000057220459",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "0.8299999758601189",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-3.7949999570846558",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-0.39499999955296516",
+        "Rounds": "4"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-0.5299999415874481",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-0.46249997057020664",
+        "Rounds": "8"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-0.46249997057020664",
+        "Rounds": "8"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "74.16666666666667",
+        "PM": "68.5",
+        "Rounds": "8"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "8",
+        "50-100": null,
+        "100-150": "26.2",
+        "150-200": null,
+        "200+": "39.9",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-0.46249997057020664",
+        "Rounds": "8"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:24:57.675Z",
+    "ok": true
+  }
+}

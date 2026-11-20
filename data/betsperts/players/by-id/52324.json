@@ -1,0 +1,231 @@
+{
+  "playerId": "52324",
+  "playerName": "James Sugrue",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ei-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "James Sugrue",
+    "BirthPlace": "",
+    "BirthDate": "December 09, 1996",
+    "Age": "29",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "Ireland",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "James Sugrue",
+        "player_num": "52324",
+        "Year": "2020",
+        "Rounds": "4",
+        "SG:TOT": "-3.49",
+        "SG:T2G": "-3.52",
+        "SG:OTT": "0.13",
+        "SG:APP": "-2.45",
+        "SG:BS": "-2.32",
+        "SG:ARG": "-1.20",
+        "SG:P": "-1.07",
+        "Dr Distance": "290.4",
+        "Dr Accuracy %": "57.1",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "James Sugrue",
+        "player_num": "52324",
+        "Year": "2019",
+        "Rounds": "2",
+        "SG:TOT": "0.19",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "64.3",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2020-11-15",
+        "position": "CUT",
+        "roundPosition": "T76",
+        "TournamentName": "Masters Tournament",
+        "is_major": "1",
+        "playerName": "James Sugrue",
+        "player_num": "52324",
+        "Rounds": "2",
+        "CourseID": "14",
+        "Course": "Augusta National GC",
+        "ShotLink": "2",
+        "SG:TOT": "-2.39",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2020-09-20",
+        "position": "CUT",
+        "roundPosition": "T136",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "James Sugrue",
+        "player_num": "52324",
+        "Rounds": "2",
+        "CourseID": "891",
+        "Course": "Winged Foot GC",
+        "ShotLink": "2",
+        "SG:TOT": "-4.60",
+        "SG:T2G": "-3.52",
+        "SG:OTT": "0.13",
+        "SG:APP": "-2.45",
+        "SG:BS": "-2.32",
+        "SG:ARG": "-1.20",
+        "SG:P": "-1.07",
+        "SG:SG": "-2.27"
+      },
+      {
+        "Date": "2019-07-21",
+        "position": "CUT",
+        "roundPosition": "T74",
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "James Sugrue",
+        "player_num": "52324",
+        "Rounds": "2",
+        "CourseID": "885",
+        "Course": "Royal Portrush GC",
+        "ShotLink": "0",
+        "SG:TOT": "0.19",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "33.3",
+        "SG TOT 1+": "16.7",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "6"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": null,
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-3.0133334000905356",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.5166666706403096",
+        "Rounds": "3"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "0.1899999976158142",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-2.3900000751018524",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-4.5950000286102295",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-2.3900000751018524",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "0.1899999976158142",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-4.5950000286102295",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-2.2650000353654227",
+        "Rounds": "6"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "73.66666666666667",
+        "PM": "76",
+        "Rounds": "6"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "6",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "78.2",
+        "200+": "59.5",
+        "200-250": "56.5",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-3.492500051856041",
+        "Rounds": "4"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "0.1899999976158142",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:21.717Z",
+    "ok": true
+  }
+}

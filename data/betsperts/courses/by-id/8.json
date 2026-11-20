@@ -1,0 +1,162 @@
+{
+  "courseNum": "8",
+  "courseName": "Trump National Doral",
+  "list": {
+    "CourseName": "Trump National Doral",
+    "CourseNum": "8",
+    "CourseNums": [
+      8
+    ]
+  },
+  "details": {
+    "CourseName": "Trump National Doral",
+    "CourseNum": "8",
+    "Locations": [
+      "Southeast",
+      "Florida"
+    ],
+    "SeasonHeld": "Florida",
+    "CourseTypes": [
+      "Parkland"
+    ],
+    "ParScore": "72",
+    "Yards": "7739",
+    "AVG": "107.5",
+    "CourseLength": "Very Long",
+    "Architects": [
+      "Dick Wilson",
+      "Robert von Hagge"
+    ],
+    "RedesignArchitects": [
+      "Gil Hanse",
+      "Jim Wagner"
+    ],
+    "Elevation": "7",
+    "CourseElevation": "Sea Level",
+    "Bunkers": "100",
+    "BunkersRank": "High",
+    "WaterHoles": "10",
+    "WaterDanger": "High",
+    "ScoreRTP": "1.31",
+    "Difficulty": "Difficult",
+    "FwyGrass": "Bermuda",
+    "FwyWidth": "0",
+    "GreenSqFt": "6505",
+    "GreenSize": "Average",
+    "GreenGrass": "Bermuda",
+    "GreenStimp": "12",
+    "GreenSpeed": "Average",
+    "RoughType": "Tifway 419 Bermuda",
+    "RoughGrass": "Bermuda",
+    "RoughLengthInc": "3",
+    "RoughLength": "Average",
+    "EventTypes": [
+      "No-Cut"
+    ],
+    "Tournaments": [
+      {
+        "Year": "2007-2016",
+        "Tournament": "WGC-Cadillac Championship"
+      },
+      {
+        "Year": "2026",
+        "Tournament": "Cadillac Championship"
+      }
+    ],
+    "CorrelatedCourse": [
+      "Bay Hill Club & Lodge",
+      "Quail Hollow Club",
+      "Ocean Course at Kiawah Island",
+      "Augusta National GC",
+      "PGA National (Champion)",
+      "TPC Southwind",
+      "The Concession Golf Club",
+      "Torrey Pines GC (South)"
+    ],
+    "FieldSize": "Small Field",
+    "FieldStrength": "Strong",
+    "OTTClub": "Mixed",
+    "FwyPct": "55.1",
+    "FwyAccuracy": "Difficult",
+    "GainOTT": "Very Difficult",
+    "MissedFairwayPenalty": "Average",
+    "RoughPenalty": "Average",
+    "GIRAccuracy": "Average",
+    "GIRPct": "61.8",
+    "GainAPP": "Very Difficult",
+    "ScramblingFromRough": "Difficult",
+    "ScramblingFromShortGrass": "Average",
+    "SandSaves": "Average",
+    "GainARG": "Average",
+    "GainingPuttingInside15": "Easy",
+    "GainingPuttingOutside15": "Average",
+    "3PuttAVD": "Average",
+    "GainPutting": "Very Easy",
+    "Par3Scoring": "Difficult",
+    "Par4Scoring": "Difficult",
+    "Par5Scoring": "Difficult",
+    "ShotLink": "1"
+  },
+  "tournaments": [
+    {
+      "CourseNum": "8",
+      "TNum": "556",
+      "TourneyName": "Cadillac Championship"
+    }
+  ],
+  "_meta": {
+    "pulledAt": "2026-11-20T22:18:26.479Z",
+    "detailStatus": 200,
+    "tournamentsStatus": 200
+  },
+  "auth": {
+    "holeBreakdown": [],
+    "correlated": [
+      {
+        "CourseNum": "4",
+        "CourseName": "Torrey Pines GC (South)",
+        "CourseNums": "[4, 939, 744]"
+      },
+      {
+        "CourseNum": "9",
+        "CourseName": "Bay Hill Club & Lodge",
+        "CourseNums": "[9]"
+      },
+      {
+        "CourseNum": "14",
+        "CourseName": "Augusta National GC",
+        "CourseNums": "[14]"
+      },
+      {
+        "CourseNum": "513",
+        "CourseName": "TPC Southwind",
+        "CourseNums": "[513]"
+      },
+      {
+        "CourseNum": "697",
+        "CourseName": "Ocean Course at Kiawah Island",
+        "CourseNums": "[697]"
+      },
+      {
+        "CourseNum": "872",
+        "CourseName": "Quail Hollow Club",
+        "CourseNums": "[872, 698, 241]"
+      },
+      {
+        "CourseNum": "898",
+        "CourseName": "The Concession Golf Club",
+        "CourseNums": "[898]"
+      },
+      {
+        "CourseNum": "928",
+        "CourseName": "PGA National (Champion)",
+        "CourseNums": "[928, 734]"
+      }
+    ],
+    "_meta": {
+      "pulledAt": "2026-11-20T22:52:53.091Z",
+      "holeStatus": 200,
+      "correlatedStatus": 200
+    }
+  }
+}

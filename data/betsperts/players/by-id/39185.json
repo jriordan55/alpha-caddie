@@ -1,0 +1,230 @@
+{
+  "playerId": "39185",
+  "playerName": "Jake McLeod",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/as-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Jake McLeod",
+    "BirthPlace": "",
+    "BirthDate": "August 13, 1994",
+    "Age": "32",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "Australia",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Jake McLeod",
+        "player_num": "39185",
+        "Year": "2019",
+        "Rounds": "10",
+        "SG:TOT": "-0.95",
+        "SG:T2G": "-2.37",
+        "SG:OTT": "-0.42",
+        "SG:APP": "-1.04",
+        "SG:BS": "-1.46",
+        "SG:ARG": "-0.90",
+        "SG:P": "1.97",
+        "Dr Distance": "302.3",
+        "Dr Accuracy %": "52.9",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2019-11-03",
+        "position": "T57",
+        "roundPosition": "T57",
+        "TournamentName": "WGC - HSBC Champions",
+        "is_major": "0",
+        "playerName": "Jake McLeod",
+        "player_num": "39185",
+        "Rounds": "4",
+        "CourseID": "766",
+        "Course": "Sheshan International GC",
+        "ShotLink": "4",
+        "SG:TOT": "-1.32",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2019-07-21",
+        "position": "CUT",
+        "roundPosition": "T107",
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Jake McLeod",
+        "player_num": "39185",
+        "Rounds": "2",
+        "CourseID": "885",
+        "Course": "Royal Portrush GC",
+        "ShotLink": "0",
+        "SG:TOT": "-1.31",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2019-02-24",
+        "position": "T45",
+        "roundPosition": "T45",
+        "TournamentName": "WGC - Mexico",
+        "is_major": "0",
+        "playerName": "Jake McLeod",
+        "player_num": "39185",
+        "Rounds": "4",
+        "CourseID": "240",
+        "Course": "Club de Golf Chapultepec",
+        "ShotLink": "4",
+        "SG:TOT": "-0.39",
+        "SG:T2G": "-2.37",
+        "SG:OTT": "-0.42",
+        "SG:APP": "-1.04",
+        "SG:BS": "-1.46",
+        "SG:ARG": "-0.90",
+        "SG:P": "1.97",
+        "SG:SG": "1.07"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "60.0",
+        "SG TOT 1+": "30.0",
+        "SG TOT 2+": "20.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "10"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": null,
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "1.9735000375658274",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.12333333492279053",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "0.48000001907348633",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-6.370000123977661",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "1.0949999615550041",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-0.6983333453536034",
+        "Rounds": "6"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-1.3225000500679016",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-1.3225000500679016",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-0.6983333453536034",
+        "Rounds": "6"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Strong",
+        "StrokesGainedAverage": "-1.3225000500679016",
+        "Rounds": "4"
+      },
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-0.6983333453536034",
+        "Rounds": "6"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "71.8",
+        "PM": "72.8",
+        "Rounds": "10"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "10",
+        "50-100": null,
+        "100-150": "35.9",
+        "150-200": "31.2",
+        "200+": "52.4",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-1.3225000500679016",
+        "Rounds": "4"
+      },
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-0.39250001683831215",
+        "Rounds": "4"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-1.3100000023841858",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:17.621Z",
+    "ok": true
+  }
+}

@@ -1,0 +1,214 @@
+{
+  "playerId": "65071",
+  "playerName": "Tiger Christensen",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_gm-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Tiger Christensen",
+    "BirthPlace": null,
+    "BirthDate": "",
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "Germany",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Tiger Christensen",
+        "player_num": "65071",
+        "Year": "2026",
+        "Rounds": "2",
+        "SG:TOT": "-4.11",
+        "SG:T2G": "-3.20",
+        "SG:OTT": "-2.53",
+        "SG:APP": "-0.24",
+        "SG:BS": "-2.77",
+        "SG:ARG": "-0.44",
+        "SG:P": "-0.90",
+        "Dr Distance": null,
+        "Dr Accuracy %": "50.0",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Tiger Christensen",
+        "player_num": "65071",
+        "Year": "2023",
+        "Rounds": "2",
+        "SG:TOT": "-2.15",
+        "SG:T2G": "-1.68",
+        "SG:OTT": "-0.12",
+        "SG:APP": "-0.19",
+        "SG:BS": "-0.31",
+        "SG:ARG": "-1.37",
+        "SG:P": "-1.91",
+        "Dr Distance": null,
+        "Dr Accuracy %": "42.9",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Tiger Christensen",
+        "player_num": "65071",
+        "Rounds": "2",
+        "SG:TOT": "-4.11",
+        "SG:T2G": "-3.20",
+        "SG:OTT": "-2.53",
+        "SG:APP": "-0.24",
+        "SG:BS": "-2.77",
+        "SG:ARG": "-0.44",
+        "SG:P": "-0.90",
+        "SG:SG": "-1.34"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-07-19",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Tiger Christensen",
+        "player_num": "65071",
+        "Rounds": "2",
+        "CourseID": "541",
+        "Course": "Royal Birkdale GC",
+        "ShotLink": "2",
+        "SG:TOT": "-4.11",
+        "SG:T2G": "-3.20",
+        "SG:OTT": "-2.53",
+        "SG:APP": "-0.24",
+        "SG:BS": "-2.77",
+        "SG:ARG": "-0.44",
+        "SG:P": "-0.90",
+        "SG:SG": "-1.34"
+      },
+      {
+        "Date": "2023-07-23",
+        "position": "CUT",
+        "roundPosition": null,
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Tiger Christensen",
+        "player_num": "65071",
+        "Rounds": "2",
+        "CourseID": "923",
+        "Course": "Royal Liverpool",
+        "ShotLink": "2",
+        "SG:TOT": "-2.15",
+        "SG:T2G": "-1.68",
+        "SG:OTT": "-0.12",
+        "SG:APP": "-0.19",
+        "SG:BS": "-0.31",
+        "SG:ARG": "-1.37",
+        "SG:P": "-1.91",
+        "SG:SG": "-3.28"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-1.9140000343322754",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-3.6549999713897705",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-2.6000000536441803",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-4.105000019073486",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-2.1500000059604645",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-4.650000095367432",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-3.559999942779541",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-2.1500000059604645",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-3.1275000125169754",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "76",
+        "PM": "74.5",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-3.1275000125169754",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:26:01.456Z",
+    "ok": true
+  }
+}

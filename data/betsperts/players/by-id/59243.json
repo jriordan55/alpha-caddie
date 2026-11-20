@@ -1,0 +1,168 @@
+{
+  "playerId": "59243",
+  "playerName": "Connor Howe",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2026/05/4684383.png",
+    "Name": "Connor Howe",
+    "BirthPlace": "Ogden, Utah",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "6ft 2in",
+    "Weight": "175 lbs",
+    "Nationality": "United States",
+    "Residence": "Atlanta, Georgia",
+    "ProWins": null,
+    "TurnedPro": "2023",
+    "PGAWins": null,
+    "College": "Georgia Tech (2023, Business Finance)"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Connor Howe",
+        "player_num": "59243",
+        "Year": "2025",
+        "Rounds": "4",
+        "SG:TOT": "-0.20",
+        "SG:T2G": "-0.90",
+        "SG:OTT": "-1.25",
+        "SG:APP": "0.10",
+        "SG:BS": "-1.14",
+        "SG:ARG": "0.25",
+        "SG:P": "0.69",
+        "Dr Distance": "296.0",
+        "Dr Accuracy %": "80.4",
+        "Ball Speed": "182.74"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2025-10-26",
+        "position": "T56",
+        "roundPosition": "T56",
+        "TournamentName": "Bank of Utah Championship",
+        "is_major": "0",
+        "playerName": "Connor Howe",
+        "player_num": "59243",
+        "Rounds": "4",
+        "CourseID": "930",
+        "Course": "Black Desert Resort",
+        "ShotLink": "4",
+        "SG:TOT": "-0.20",
+        "SG:T2G": "-0.90",
+        "SG:OTT": "-1.25",
+        "SG:APP": "0.10",
+        "SG:BS": "-1.14",
+        "SG:ARG": "0.25",
+        "SG:P": "0.69",
+        "SG:SG": "0.94"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "50.0",
+        "SG TOT 2+": "50.0",
+        "SG TOT 3+": "25.0",
+        "SG TOT 4+": "25.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "8"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "0.6902500241994858",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "2.2699999809265137",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "4.519999980926514",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-5.909999847412109",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-1.7000000476837158",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-0.20499998331069946",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "4.519999980926514",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "2.2699999809265137",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-3.8049999475479126",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-0.20499998331069946",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "68",
+        "PM": "70.33333333333333",
+        "Rounds": "8"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "8",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "37",
+        "200+": "50.5",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-0.20499998331069946",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:20:34.164Z",
+    "ok": true
+  }
+}

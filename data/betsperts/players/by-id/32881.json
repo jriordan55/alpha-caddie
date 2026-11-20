@@ -1,0 +1,277 @@
+{
+  "playerId": "32881",
+  "playerName": "Hugo León",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ci-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Hugo León",
+    "BirthPlace": "Santiago, Chile",
+    "BirthDate": "November 12, 1984",
+    "Age": "42",
+    "Height": "5ft 11in",
+    "Weight": "175 lbs",
+    "Nationality": "Chile",
+    "Residence": "Tequesta, Florida",
+    "ProWins": "3",
+    "TurnedPro": "2007",
+    "PGAWins": "0",
+    "College": "Southeastern Louisiana University (2007, Business and Management) "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Hugo León",
+        "player_num": "32881",
+        "Year": "2022",
+        "Rounds": "6",
+        "SG:TOT": "-0.22",
+        "SG:T2G": "0.94",
+        "SG:OTT": "-0.48",
+        "SG:APP": "-0.08",
+        "SG:BS": "-0.56",
+        "SG:ARG": "1.50",
+        "SG:P": "0.25",
+        "Dr Distance": "291.4",
+        "Dr Accuracy %": "51.8",
+        "Ball Speed": "176.64"
+      },
+      {
+        "playerName": "Hugo León",
+        "player_num": "32881",
+        "Year": "2017",
+        "Rounds": "4",
+        "SG:TOT": "-1.95",
+        "SG:T2G": "-0.24",
+        "SG:OTT": "1.10",
+        "SG:APP": "-1.53",
+        "SG:BS": "-0.43",
+        "SG:ARG": "0.19",
+        "SG:P": "-0.56",
+        "Dr Distance": "290.3",
+        "Dr Accuracy %": "51.8",
+        "Ball Speed": "179.32"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2022-07-17",
+        "position": "CUT",
+        "roundPosition": null,
+        "TournamentName": "Barracuda Championship",
+        "is_major": null,
+        "playerName": "Hugo Leon",
+        "player_num": "32881",
+        "Rounds": "2",
+        "CourseID": "890",
+        "Course": "Tahoe Mountain Club (Old Greenwood)",
+        "ShotLink": "0",
+        "SG:TOT": "-3.04",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2022-07-10",
+        "position": "T27",
+        "roundPosition": "T27",
+        "TournamentName": "Barbasol Championship",
+        "is_major": "0",
+        "playerName": "Hugo León",
+        "player_num": "32881",
+        "Rounds": "4",
+        "CourseID": "884",
+        "Course": "Keene Trace GC",
+        "ShotLink": "4",
+        "SG:TOT": "1.19",
+        "SG:T2G": "0.94",
+        "SG:OTT": "-0.48",
+        "SG:APP": "-0.08",
+        "SG:BS": "-0.56",
+        "SG:ARG": "1.50",
+        "SG:P": "0.25",
+        "SG:SG": "1.76"
+      },
+      {
+        "Date": "2017-07-23",
+        "position": "CUT",
+        "roundPosition": "T84",
+        "TournamentName": "Barbasol Championship",
+        "is_major": "0",
+        "playerName": "Hugo León",
+        "player_num": "32881",
+        "Rounds": "2",
+        "CourseID": "819",
+        "Course": "RTJ Trail (Grand National)",
+        "ShotLink": "2",
+        "SG:TOT": "-0.80",
+        "SG:T2G": "-0.24",
+        "SG:OTT": "1.10",
+        "SG:APP": "-1.53",
+        "SG:BS": "-0.43",
+        "SG:ARG": "0.19",
+        "SG:P": "-0.56",
+        "SG:SG": "-0.38"
+      },
+      {
+        "Date": "2017-03-26",
+        "position": "CUT",
+        "roundPosition": "T120",
+        "TournamentName": "Puerto Rico Open",
+        "is_major": "0",
+        "playerName": "Hugo León",
+        "player_num": "32881",
+        "Rounds": "2",
+        "CourseID": "742",
+        "Course": "Grand Reserve GC",
+        "ShotLink": "0",
+        "SG:TOT": "-3.10",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "40.0",
+        "SG TOT 2+": "10.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "12"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "0.252499982714653",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-0.5635000169277191",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-2.9375",
+        "Rounds": "5"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "0.4650000035762787",
+        "Rounds": "5"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "1.190000057220459",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-0.4000000059604645",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "",
+        "StrokesGainedAverage": null,
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-0.8049999475479126",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-3.0674999952316284",
+        "Rounds": "4"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-0.4000000059604645",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "1.7266666491826375",
+        "Rounds": "3"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-3.0399999022483826",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-2.196666727463404",
+        "Rounds": "5"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "0.7140000104904175",
+        "Rounds": "5"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-0.909999993443489",
+        "Rounds": "12"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "69.8",
+        "PM": "71.33333333333333",
+        "Rounds": "12"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "12",
+        "50-100": null,
+        "100-150": "28.2",
+        "150-200": "31",
+        "200+": "57.2",
+        "200-250": "44.1",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-3.0950000882148743",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-0.3637499697506428",
+        "Rounds": "10"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:04.336Z",
+    "ok": true
+  }
+}

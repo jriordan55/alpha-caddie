@@ -1,0 +1,272 @@
+{
+  "playerId": "58601",
+  "playerName": "Davis Shore",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Davis Shore",
+    "BirthPlace": "Knoxville, Tennessee",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "6ft 2in",
+    "Weight": "150 lbs",
+    "Nationality": "United States",
+    "Residence": "Sarasota, Florida",
+    "ProWins": "0",
+    "TurnedPro": "2021",
+    "PGAWins": "0",
+    "College": "University of Alabama 2020, Finance"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Davis Shore",
+        "player_num": "58601",
+        "Year": "2025",
+        "Rounds": "4",
+        "SG:TOT": "2.01",
+        "SG:T2G": "0.81",
+        "SG:OTT": "-0.09",
+        "SG:APP": "0.85",
+        "SG:BS": "0.76",
+        "SG:ARG": "0.05",
+        "SG:P": "1.19",
+        "Dr Distance": "279.9",
+        "Dr Accuracy %": "71.4",
+        "Ball Speed": "167.82"
+      },
+      {
+        "playerName": "Davis Shore",
+        "player_num": "58601",
+        "Year": "2022",
+        "Rounds": "2",
+        "SG:TOT": "-0.62",
+        "SG:T2G": "-1.13",
+        "SG:OTT": "-0.08",
+        "SG:APP": "-0.38",
+        "SG:BS": "-0.45",
+        "SG:ARG": "-0.67",
+        "SG:P": "0.51",
+        "Dr Distance": "282.8",
+        "Dr Accuracy %": "67.9",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Davis Shore",
+        "player_num": "58601",
+        "Year": "2021",
+        "Rounds": "2",
+        "SG:TOT": "-2.25",
+        "SG:T2G": "-2.49",
+        "SG:OTT": "-1.05",
+        "SG:APP": "-1.84",
+        "SG:BS": "-2.89",
+        "SG:ARG": "0.40",
+        "SG:P": "0.24",
+        "Dr Distance": "292.0",
+        "Dr Accuracy %": "39.3",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2025-05-11",
+        "position": "T13",
+        "roundPosition": "T13",
+        "TournamentName": "Myrtle Beach Classic",
+        "is_major": "0",
+        "playerName": "Davis Shore",
+        "player_num": "58601",
+        "Rounds": "4",
+        "CourseID": "925",
+        "Course": "Dunes Golf & Beach Club",
+        "ShotLink": "4",
+        "SG:TOT": "2.01",
+        "SG:T2G": "0.81",
+        "SG:OTT": "-0.09",
+        "SG:APP": "0.85",
+        "SG:BS": "0.76",
+        "SG:ARG": "0.05",
+        "SG:P": "1.19",
+        "SG:SG": "1.24"
+      },
+      {
+        "Date": "2022-06-19",
+        "position": "CUT",
+        "roundPosition": "T98",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Davis Shore",
+        "player_num": "58601",
+        "Rounds": "2",
+        "CourseID": "654",
+        "Course": "The Country Club",
+        "ShotLink": "2",
+        "SG:TOT": "-0.62",
+        "SG:T2G": "-1.13",
+        "SG:OTT": "-0.08",
+        "SG:APP": "-0.38",
+        "SG:BS": "-0.45",
+        "SG:ARG": "-0.67",
+        "SG:P": "0.51",
+        "SG:SG": "-0.17"
+      },
+      {
+        "Date": "2021-06-20",
+        "position": "CUT",
+        "roundPosition": null,
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Davis Shore",
+        "player_num": "58601",
+        "Rounds": "2",
+        "CourseID": "744",
+        "Course": "Torrey Pines GC (South)",
+        "ShotLink": "2",
+        "SG:TOT": "-2.25",
+        "SG:T2G": "-2.49",
+        "SG:OTT": "-1.05",
+        "SG:APP": "-1.84",
+        "SG:BS": "-2.89",
+        "SG:ARG": "0.40",
+        "SG:P": "0.24",
+        "SG:SG": "0.64"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "37.5",
+        "SG TOT 1+": "25.0",
+        "SG TOT 2+": "25.0",
+        "SG TOT 3+": "25.0",
+        "SG TOT 4+": "12.5",
+        "SG TOT 5+": "0.0",
+        "Rounds": "12"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "1.194000005722046",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "0.3749999925494194",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.1633333365122477",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "0.7966666985303164",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "0.9599999785423279",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-0.5600000023841858",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "1.4700000148266554",
+        "Rounds": "5"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-0.5600000023841858",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-2.2450000047683716",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "2.785000056028366",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "3.0199999809265137",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-1.432500007096678",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-0.5600000023841858",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-1.432500007096678",
+        "Rounds": "4"
+      },
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "2.007500022649765",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "71.66666666666667",
+        "PM": "71.2",
+        "Rounds": "12"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "12",
+        "50-100": null,
+        "100-150": "23.4",
+        "150-200": "36.5",
+        "200+": "47.1",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "2.007500022649765",
+        "Rounds": "4"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-1.432500007096678",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:21:08.783Z",
+    "ok": true
+  }
+}

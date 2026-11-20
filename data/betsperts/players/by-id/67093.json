@@ -1,0 +1,152 @@
+{
+  "playerId": "67093",
+  "playerName": "Tony Garcia",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Tony Garcia",
+    "BirthPlace": null,
+    "BirthDate": "",
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Tony Garcia",
+        "player_num": "67093",
+        "Year": "2026",
+        "Rounds": "2",
+        "SG:TOT": "-1.67",
+        "SG:T2G": "-0.44",
+        "SG:OTT": "-0.31",
+        "SG:APP": "-0.62",
+        "SG:BS": "-0.93",
+        "SG:ARG": "0.49",
+        "SG:P": "-1.23",
+        "Dr Distance": "289.6",
+        "Dr Accuracy %": "82.1",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Tony Garcia",
+        "player_num": "67093",
+        "Rounds": "2",
+        "SG:TOT": "-1.67",
+        "SG:T2G": "-0.44",
+        "SG:OTT": "-0.31",
+        "SG:APP": "-0.62",
+        "SG:BS": "-0.93",
+        "SG:ARG": "0.49",
+        "SG:P": "-1.23",
+        "SG:SG": "-0.74"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-07-19",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "Corales Puntacana Championship",
+        "is_major": "0",
+        "playerName": "Tony Garcia",
+        "player_num": "67093",
+        "Rounds": "2",
+        "CourseID": "244",
+        "Course": "Corales Golf Course",
+        "ShotLink": "2",
+        "SG:TOT": "-1.67",
+        "SG:T2G": "-0.44",
+        "SG:OTT": "-0.31",
+        "SG:APP": "-0.62",
+        "SG:BS": "-0.93",
+        "SG:ARG": "0.49",
+        "SG:P": "-1.23",
+        "SG:SG": "-0.74"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-2.0899999141693115",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.2599999904632568",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-1.6749999523162842",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-1.6749999523162842",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-1.6749999523162842",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "72",
+        "PM": "73",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-1.6749999523162842",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:26:11.228Z",
+    "ok": true
+  }
+}

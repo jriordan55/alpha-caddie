@@ -1,0 +1,205 @@
+{
+  "playerId": "35840",
+  "playerName": "Kevin Foley",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Kevin Foley",
+    "BirthPlace": "New Brunswick, New Jersey",
+    "BirthDate": "May 24, 1987",
+    "Age": "39",
+    "Height": "6ft 2in",
+    "Weight": "190 lbs",
+    "Nationality": "United States",
+    "Residence": "Somerville, New Jersey",
+    "ProWins": "0",
+    "TurnedPro": "2010",
+    "PGAWins": "0",
+    "College": "Penn State University  (2010, Economics) "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Kevin Foley",
+        "player_num": "35840",
+        "Year": "2018",
+        "Rounds": "2",
+        "SG:TOT": "-0.37",
+        "SG:T2G": "-0.29",
+        "SG:OTT": "0.10",
+        "SG:APP": "-0.14",
+        "SG:BS": "-0.04",
+        "SG:ARG": "-0.25",
+        "SG:P": "-0.08",
+        "Dr Distance": "282.4",
+        "Dr Accuracy %": "60.7",
+        "Ball Speed": "169.41"
+      },
+      {
+        "playerName": "Kevin Foley",
+        "player_num": "35840",
+        "Year": "2016",
+        "Rounds": "2",
+        "SG:TOT": "-6.08",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "60.7",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2018-07-22",
+        "position": "CUT",
+        "roundPosition": "T74",
+        "TournamentName": "Barbasol Championship",
+        "is_major": "0",
+        "playerName": "Kevin Foley",
+        "player_num": "35840",
+        "Rounds": "2",
+        "CourseID": "823",
+        "Course": "Keene Trace GC",
+        "ShotLink": "2",
+        "SG:TOT": "-0.37",
+        "SG:T2G": "-0.29",
+        "SG:OTT": "0.10",
+        "SG:APP": "-0.14",
+        "SG:BS": "-0.04",
+        "SG:ARG": "-0.25",
+        "SG:P": "-0.08",
+        "SG:SG": "-0.33"
+      },
+      {
+        "Date": "2016-06-19",
+        "position": "CUT",
+        "roundPosition": "150",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Kevin Foley",
+        "player_num": "35840",
+        "Rounds": "2",
+        "CourseID": "608",
+        "Course": "Oakmont CC",
+        "ShotLink": "0",
+        "SG:TOT": "-6.08",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "25.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.0845000147819519",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": null,
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.2249999642372131",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-5.22999981045723",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-6.0849997997283936",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-0.3699999749660492",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-6.0849997997283936",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-0.3699999749660492",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-6.0849997997283936",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-0.3699999749660492",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "75.33333333333333",
+        "PM": "75",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": "21.3",
+        "150-200": "30.9",
+        "200+": "64.3",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-3.2274998873472214",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:20.690Z",
+    "ok": true
+  }
+}

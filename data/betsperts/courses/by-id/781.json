@@ -1,0 +1,107 @@
+{
+  "courseNum": "781",
+  "courseName": "Plainfield CC",
+  "list": {
+    "CourseName": "Plainfield CC",
+    "CourseNum": "781",
+    "CourseNums": [
+      781
+    ]
+  },
+  "details": {
+    "CourseName": "Plainfield CC",
+    "CourseNum": "781",
+    "Locations": [
+      "Northeast",
+      "New Jersey"
+    ],
+    "SeasonHeld": "",
+    "CourseTypes": [
+      "Parkland"
+    ],
+    "ParScore": "70",
+    "Yards": "7012",
+    "AVG": "100.2",
+    "CourseLength": "Short",
+    "Architects": [
+      "Donald Ross"
+    ],
+    "RedesignArchitects": [
+      "Gil Hanse"
+    ],
+    "Elevation": "203",
+    "CourseElevation": "Average",
+    "Bunkers": "100",
+    "BunkersRank": "High",
+    "WaterHoles": "4",
+    "WaterDanger": "Low",
+    "ScoreRTP": "0.5",
+    "Difficulty": "",
+    "FwyGrass": "Bent",
+    "FwyWidth": "0",
+    "GreenSqFt": "7500",
+    "GreenSize": "Large",
+    "GreenGrass": "Poa",
+    "GreenStimp": "13",
+    "GreenSpeed": "Fast",
+    "RoughType": "Mixed",
+    "RoughGrass": "Bluegrass",
+    "RoughLengthInc": "3.5",
+    "RoughLength": "Long",
+    "EventTypes": [
+      "36-Hole Cut",
+      "Fed-Ex Cup Playoff"
+    ],
+    "Tournaments": [
+      {
+        "Year": "2015",
+        "Tournament": "The Barclays"
+      }
+    ],
+    "CorrelatedCourse": [],
+    "FieldSize": "Average Size Field",
+    "FieldStrength": "",
+    "OTTClub": "",
+    "FwyPct": "0",
+    "FwyAccuracy": "",
+    "GainOTT": "",
+    "MissedFairwayPenalty": "",
+    "RoughPenalty": "",
+    "GIRAccuracy": "",
+    "GIRPct": "0",
+    "GainAPP": "",
+    "ScramblingFromRough": "",
+    "ScramblingFromShortGrass": "",
+    "SandSaves": "",
+    "GainARG": "",
+    "GainingPuttingInside15": "",
+    "GainingPuttingOutside15": "",
+    "3PuttAVD": "",
+    "GainPutting": "",
+    "Par3Scoring": "",
+    "Par4Scoring": "",
+    "Par5Scoring": "",
+    "ShotLink": "1"
+  },
+  "tournaments": [
+    {
+      "CourseNum": "781",
+      "TNum": "27",
+      "TourneyName": "The Barclays"
+    }
+  ],
+  "_meta": {
+    "pulledAt": "2026-11-20T22:18:25.689Z",
+    "detailStatus": 200,
+    "tournamentsStatus": 200
+  },
+  "auth": {
+    "holeBreakdown": [],
+    "correlated": [],
+    "_meta": {
+      "pulledAt": "2026-11-20T22:52:52.345Z",
+      "holeStatus": 200,
+      "correlatedStatus": 200
+    }
+  }
+}

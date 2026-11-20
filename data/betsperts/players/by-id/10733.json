@@ -1,0 +1,252 @@
+{
+  "playerId": "10733",
+  "playerName": "Kent Jones",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Kent Jones",
+    "BirthPlace": "Portales, New Mexico",
+    "BirthDate": "January 08, 1967",
+    "Age": "59",
+    "Height": null,
+    "Weight": "150 lbs",
+    "Nationality": "United States",
+    "Residence": "Albuquerque, New Mexico",
+    "ProWins": null,
+    "TurnedPro": "1992",
+    "PGAWins": null,
+    "College": "University of New Mexico  (1990, Business Administration, 1991 Masters, Business Administration) "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Kent Jones",
+        "player_num": "10733",
+        "Year": "2017",
+        "Rounds": "2",
+        "SG:TOT": "-2.30",
+        "SG:T2G": "-1.07",
+        "SG:OTT": "-0.00",
+        "SG:APP": "0.58",
+        "SG:BS": "0.57",
+        "SG:ARG": "-1.64",
+        "SG:P": "-1.23",
+        "Dr Distance": "268.0",
+        "Dr Accuracy %": "71.4",
+        "Ball Speed": "157.44"
+      },
+      {
+        "playerName": "Kent Jones",
+        "player_num": "10733",
+        "Year": "2016",
+        "Rounds": "4",
+        "SG:TOT": "-0.76",
+        "SG:T2G": "0.03",
+        "SG:OTT": "-0.53",
+        "SG:APP": "0.21",
+        "SG:BS": "-0.32",
+        "SG:ARG": "0.35",
+        "SG:P": "-0.79",
+        "Dr Distance": "265.1",
+        "Dr Accuracy %": "82.1",
+        "Ball Speed": "156.83"
+      },
+      {
+        "playerName": "Kent Jones",
+        "player_num": "10733",
+        "Year": "2015",
+        "Rounds": "2",
+        "SG:TOT": "-1.94",
+        "SG:T2G": "1.41",
+        "SG:OTT": "-0.03",
+        "SG:APP": "0.57",
+        "SG:BS": "0.54",
+        "SG:ARG": "0.87",
+        "SG:P": "-3.35",
+        "Dr Distance": "266.9",
+        "Dr Accuracy %": "67.9",
+        "Ball Speed": "154.32"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2017-07-23",
+        "position": "CUT",
+        "roundPosition": "T109",
+        "TournamentName": "Barbasol Championship",
+        "is_major": "0",
+        "playerName": "Kent Jones",
+        "player_num": "10733",
+        "Rounds": "2",
+        "CourseID": "819",
+        "Course": "RTJ Trail (Grand National)",
+        "ShotLink": "2",
+        "SG:TOT": "-2.30",
+        "SG:T2G": "-1.07",
+        "SG:OTT": "-0.00",
+        "SG:APP": "0.58",
+        "SG:BS": "0.57",
+        "SG:ARG": "-1.64",
+        "SG:P": "-1.23",
+        "SG:SG": "-2.88"
+      },
+      {
+        "Date": "2016-08-14",
+        "position": "T67",
+        "roundPosition": "T67",
+        "TournamentName": "John Deere Classic",
+        "is_major": "0",
+        "playerName": "Kent Jones",
+        "player_num": "10733",
+        "Rounds": "4",
+        "CourseID": "669",
+        "Course": "TPC Deere Run",
+        "ShotLink": "4",
+        "SG:TOT": "-0.76",
+        "SG:T2G": "0.03",
+        "SG:OTT": "-0.53",
+        "SG:APP": "0.21",
+        "SG:BS": "-0.32",
+        "SG:ARG": "0.35",
+        "SG:P": "-0.79",
+        "SG:SG": "-0.43"
+      },
+      {
+        "Date": "2015-07-19",
+        "position": "CUT",
+        "roundPosition": "T107",
+        "TournamentName": "Barbasol Championship",
+        "is_major": "0",
+        "playerName": "Kent Jones",
+        "player_num": "10733",
+        "Rounds": "2",
+        "CourseID": "819",
+        "Course": "RTJ Trail (Grand National)",
+        "ShotLink": "2",
+        "SG:TOT": "-1.94",
+        "SG:T2G": "1.41",
+        "SG:OTT": "-0.03",
+        "SG:APP": "0.57",
+        "SG:BS": "0.54",
+        "SG:ARG": "0.87",
+        "SG:P": "-3.35",
+        "SG:SG": "-2.48"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "37.5",
+        "SG TOT 1+": "25.0",
+        "SG TOT 2+": "25.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "12"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.7852500230073929",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-2.2907500118017197",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "0.5333333810170492",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-2.2533332904179892",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-0.4099999964237213",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-5.940000057220459",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "",
+        "StrokesGainedAverage": null,
+        "Rounds": "4"
+      },
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-2.122499942779541",
+        "Rounds": "4"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-0.755000002682209",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": null,
+        "Rounds": "4"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-1.438749972730875",
+        "Rounds": "8"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-1.438749972730875",
+        "Rounds": "12"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "73",
+        "PM": "69.75",
+        "Rounds": "12"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "12",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "29.2",
+        "200+": "49.1",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-1.438749972730875",
+        "Rounds": "12"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:19.726Z",
+    "ok": true
+  }
+}

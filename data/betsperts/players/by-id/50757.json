@@ -1,0 +1,227 @@
+{
+  "playerId": "50757",
+  "playerName": "Hugo Bernard",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ca-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Hugo Bernard",
+    "BirthPlace": "Gaspe, Quebec, Canada",
+    "BirthDate": "December 13, 1994",
+    "Age": "31",
+    "Height": "6ft 3in",
+    "Weight": "205 lbs",
+    "Nationality": "Canada",
+    "Residence": "Mont-Saint-Hilaire, Quebec, Canada",
+    "ProWins": "0",
+    "TurnedPro": "2018",
+    "PGAWins": "0",
+    "College": "Saint Leo University 2016"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Hugo Bernard",
+        "player_num": "50757",
+        "Year": "2018",
+        "Rounds": "2",
+        "SG:TOT": "-4.40",
+        "SG:T2G": "-4.63",
+        "SG:OTT": "-0.63",
+        "SG:APP": "-2.98",
+        "SG:BS": "-3.61",
+        "SG:ARG": "-1.02",
+        "SG:P": "0.23",
+        "Dr Distance": "312.7",
+        "Dr Accuracy %": "42.9",
+        "Ball Speed": "183.02"
+      },
+      {
+        "playerName": "Hugo Bernard",
+        "player_num": "50757",
+        "Year": "2017",
+        "Rounds": "2",
+        "SG:TOT": "0.00",
+        "SG:T2G": "-1.19",
+        "SG:OTT": "0.21",
+        "SG:APP": "0.27",
+        "SG:BS": "0.47",
+        "SG:ARG": "-1.66",
+        "SG:P": "1.19",
+        "Dr Distance": "300.4",
+        "Dr Accuracy %": "28.6",
+        "Ball Speed": "177.70"
+      },
+      {
+        "playerName": "Hugo Bernard",
+        "player_num": "50757",
+        "Year": "2016",
+        "Rounds": "2",
+        "SG:TOT": "-5.17",
+        "SG:T2G": "-3.72",
+        "SG:OTT": "1.00",
+        "SG:APP": "-1.91",
+        "SG:BS": "-0.91",
+        "SG:ARG": "-2.80",
+        "SG:P": "-1.45",
+        "Dr Distance": "322.8",
+        "Dr Accuracy %": "35.7",
+        "Ball Speed": "178.40"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2018-07-29",
+        "position": "CUT",
+        "roundPosition": "T145",
+        "TournamentName": "RBC Canadian Open",
+        "is_major": "0",
+        "playerName": "Hugo Bernard",
+        "player_num": "50757",
+        "Rounds": "2",
+        "CourseID": "32",
+        "Course": "Glen Abbey GC",
+        "ShotLink": "2",
+        "SG:TOT": "-4.40",
+        "SG:T2G": "-4.63",
+        "SG:OTT": "-0.63",
+        "SG:APP": "-2.98",
+        "SG:BS": "-3.61",
+        "SG:ARG": "-1.02",
+        "SG:P": "0.23",
+        "SG:SG": "-0.79"
+      },
+      {
+        "Date": "2017-07-30",
+        "position": "CUT",
+        "roundPosition": "T77",
+        "TournamentName": "RBC Canadian Open",
+        "is_major": "0",
+        "playerName": "Hugo Bernard",
+        "player_num": "50757",
+        "Rounds": "2",
+        "CourseID": "32",
+        "Course": "Glen Abbey GC",
+        "ShotLink": "2",
+        "SG:TOT": "0.00",
+        "SG:T2G": "-1.19",
+        "SG:OTT": "0.21",
+        "SG:APP": "0.27",
+        "SG:BS": "0.47",
+        "SG:ARG": "-1.66",
+        "SG:P": "1.19",
+        "SG:SG": "-0.47"
+      },
+      {
+        "Date": "2016-07-24",
+        "position": "CUT",
+        "roundPosition": "151",
+        "TournamentName": "RBC Canadian Open",
+        "is_major": "0",
+        "playerName": "Hugo Bernard",
+        "player_num": "50757",
+        "Rounds": "2",
+        "CourseID": "32",
+        "Course": "Glen Abbey GC",
+        "ShotLink": "2",
+        "SG:TOT": "-5.17",
+        "SG:T2G": "-3.72",
+        "SG:OTT": "1.00",
+        "SG:APP": "-1.91",
+        "SG:BS": "-0.91",
+        "SG:ARG": "-2.80",
+        "SG:P": "-1.45",
+        "SG:SG": "-4.25"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "16.7",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "6"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.13000000617466867",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-4.683333357175191",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.693333347638448",
+        "Rounds": "3"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-3.18833335240682",
+        "Rounds": "6"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-5.165000081062317",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-2.199999988079071",
+        "Rounds": "4"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-3.18833335240682",
+        "Rounds": "6"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "75.33333333333333",
+        "PM": "74",
+        "Rounds": "6"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "6",
+        "50-100": "29.8",
+        "100-150": "37.9",
+        "150-200": "36",
+        "200+": "63.6",
+        "200-250": "60.2",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-3.18833335240682",
+        "Rounds": "6"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:04.280Z",
+    "ok": true
+  }
+}

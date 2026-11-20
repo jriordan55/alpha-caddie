@@ -1,0 +1,158 @@
+{
+  "playerId": "56741",
+  "playerName": "Braden Bailey",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Braden Bailey",
+    "BirthPlace": "Groves, Texas",
+    "BirthDate": "February 11, 1997",
+    "Age": "29",
+    "Height": "5ft 8in",
+    "Weight": "155 lbs",
+    "Nationality": "United States",
+    "Residence": "Waco, Texas",
+    "ProWins": "0",
+    "TurnedPro": "2019",
+    "PGAWins": "0",
+    "College": "Baylor University 2019, Finance"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Braden Bailey",
+        "player_num": "56741",
+        "Year": "2019",
+        "Rounds": "4",
+        "SG:TOT": "0.37",
+        "SG:T2G": "1.36",
+        "SG:OTT": "-0.98",
+        "SG:APP": "1.93",
+        "SG:BS": "0.95",
+        "SG:ARG": "0.40",
+        "SG:P": "-0.99",
+        "Dr Distance": "279.9",
+        "Dr Accuracy %": "51.8",
+        "Ball Speed": "176.55"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2019-10-13",
+        "position": "T51",
+        "roundPosition": "T51",
+        "TournamentName": "Houston Open",
+        "is_major": "0",
+        "playerName": "Braden Bailey",
+        "player_num": "56741",
+        "Rounds": "4",
+        "CourseID": "729",
+        "Course": "GC of Houston",
+        "ShotLink": "4",
+        "SG:TOT": "0.37",
+        "SG:T2G": "1.36",
+        "SG:OTT": "-0.98",
+        "SG:APP": "1.93",
+        "SG:BS": "0.95",
+        "SG:ARG": "0.40",
+        "SG:P": "-0.99",
+        "SG:SG": "-0.58"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "25.0",
+        "SG TOT 1+": "25.0",
+        "SG TOT 2+": "25.0",
+        "SG TOT 3+": "25.0",
+        "SG TOT 4+": "25.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-0.9867499954998493",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "4.510000228881836",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.7099999785423279",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-0.009999999776482582",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-2.309999942779541",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "0.3700000769458711",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "0.3700000769458711",
+        "Rounds": "4"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "0.3700000769458711",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "69.5",
+        "PM": "73.5",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": "19",
+        "150-200": "30.7",
+        "200+": "54.1",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "0.3700000769458711",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:19:38.147Z",
+    "ok": true
+  }
+}

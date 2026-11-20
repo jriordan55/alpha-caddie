@@ -1,0 +1,143 @@
+{
+  "playerId": "47894",
+  "playerName": "Wei-Hsuan Wang",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/image.png",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Wei-Hsuan Wang",
+    "BirthPlace": "Taipei, Chinese Taipei",
+    "BirthDate": "September 27, 1999",
+    "Age": "27",
+    "Height": "5ft 11in",
+    "Weight": "165 lbs",
+    "Nationality": "Taiwan",
+    "Residence": "Taipei, Chinese Taipei",
+    "ProWins": null,
+    "TurnedPro": "2018",
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Wei-Hsuan Wang",
+        "player_num": "47894",
+        "Year": "2025",
+        "Rounds": "2",
+        "SG:TOT": "-1.86",
+        "SG:T2G": "-0.15",
+        "SG:OTT": "-0.03",
+        "SG:APP": "0.19",
+        "SG:BS": "0.16",
+        "SG:ARG": "-0.31",
+        "SG:P": "-1.71",
+        "Dr Distance": "315.2",
+        "Dr Accuracy %": "57.1",
+        "Ball Speed": "187.38"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2025-06-08",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "RBC Canadian Open",
+        "is_major": "0",
+        "playerName": "Wei-Hsuan Wang",
+        "player_num": "47894",
+        "Rounds": "2",
+        "CourseID": "935",
+        "Course": "TPC Toronto at Osprey Valley (North)",
+        "ShotLink": "2",
+        "SG:TOT": "-1.86",
+        "SG:T2G": "-0.15",
+        "SG:OTT": "-0.03",
+        "SG:APP": "0.19",
+        "SG:BS": "0.16",
+        "SG:ARG": "-0.31",
+        "SG:P": "-1.71",
+        "SG:SG": "-2.02"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-3.240000009536743",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-0.4699999988079071",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-1.8550000041723251",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-0.4699999988079071",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-3.240000009536743",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-1.8550000041723251",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "72",
+        "PM": "70",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "25",
+        "150-200": null,
+        "200+": "57.8",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-1.8550000041723251",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:26:23.479Z",
+    "ok": true
+  }
+}

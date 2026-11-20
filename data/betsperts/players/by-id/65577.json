@@ -1,0 +1,168 @@
+{
+  "playerId": "65577",
+  "playerName": "Owen Stamper",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Owen Stamper",
+    "BirthPlace": "Scottsville, Kentucky",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "6ft 3in",
+    "Weight": "180 lbs",
+    "Nationality": "United States",
+    "Residence": "Scottsville, Kentucky",
+    "ProWins": null,
+    "TurnedPro": "2024",
+    "PGAWins": null,
+    "College": "Middle Tennessee State University "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Owen Stamper",
+        "player_num": "65577",
+        "Year": "2025",
+        "Rounds": "4",
+        "SG:TOT": "0.79",
+        "SG:T2G": "0.75",
+        "SG:OTT": "1.22",
+        "SG:APP": "-0.29",
+        "SG:BS": "0.93",
+        "SG:ARG": "-0.18",
+        "SG:P": "0.05",
+        "Dr Distance": "311.0",
+        "Dr Accuracy %": "78.6",
+        "Ball Speed": "180.98"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2025-10-26",
+        "position": "T37",
+        "roundPosition": "T37",
+        "TournamentName": "Bank of Utah Championship",
+        "is_major": "0",
+        "playerName": "Owen Stamper",
+        "player_num": "65577",
+        "Rounds": "4",
+        "CourseID": "930",
+        "Course": "Black Desert Resort",
+        "ShotLink": "4",
+        "SG:TOT": "0.79",
+        "SG:T2G": "0.75",
+        "SG:OTT": "1.22",
+        "SG:APP": "-0.29",
+        "SG:BS": "0.93",
+        "SG:ARG": "-0.18",
+        "SG:P": "0.05",
+        "SG:SG": "-0.13"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "50.0",
+        "SG TOT 2+": "50.0",
+        "SG TOT 3+": "25.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "0.04974999651312828",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.7300000190734863",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "2.5199999809265137",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "3.0899999141693115",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-0.699999988079071",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "0.794999971985817",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "2.5199999809265137",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-1.7300000190734863",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "1.1949999630451202",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "0.794999971985817",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "69",
+        "PM": "68.5",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "36.9",
+        "200+": "52.8",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "0.794999971985817",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:24:35.144Z",
+    "ok": true
+  }
+}

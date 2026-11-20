@@ -3,6 +3,7 @@
 # Refreshes both trackers:
 #   - O/U projection-tracker (DK / PrizePicks / Sleeper / Underdog / FanDuel / Caesars / Kalshi)
 #   - matchup-tracker (round matchups + 3-balls)
+# and force-refreshes the Betsperts player/course DB into data/betsperts/,
 # then pushes; "Projection Tracker Pages" rebuilds GitHub Pages from the new CSVs.
 #
 # Schedule: every day at 9:00 PM US Eastern (America/New_York), year-round.
@@ -127,4 +128,7 @@ jobs:
           GOLF_SKIP_FD_ROUND_AUDIT_CSV: "0"
           GOLF_SKIP_CZR_ROUND_AUDIT_CSV: "0"
           GOLF_SKIP_KL_ROUND_AUDIT_CSV: "0"
+          # Betsperts player + course DB → data/betsperts (soft inside refresh:live)
+          GOLF_SKIP_BETSPERTS: "0"
+          GOLF_BETSPERTS_FORCE: "1"
         run: npm run push:live

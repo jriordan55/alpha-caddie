@@ -1,0 +1,138 @@
+{
+  "playerId": "39043",
+  "playerName": "Juan Carlos Benitez",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_mx-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Juan Carlos Benitez",
+    "BirthPlace": "Puebla, Mexico",
+    "BirthDate": "June 12, 1992",
+    "Age": "34",
+    "Height": "5ft 9in",
+    "Weight": "158 lbs",
+    "Nationality": "Mexico",
+    "Residence": "Pueble, Mexico",
+    "ProWins": "1",
+    "TurnedPro": "2017",
+    "PGAWins": "0",
+    "College": "Texas State University 2017, Bachelor of Arts and Applied Sciences with an Emphasis in Business"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Juan Carlos Benitez",
+        "player_num": "39043",
+        "Year": "2021",
+        "Rounds": "2",
+        "SG:TOT": "-1.80",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "57.1",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2021-11-07",
+        "position": "CUT",
+        "roundPosition": "T108",
+        "TournamentName": "World Wide Technology Championship",
+        "is_major": "0",
+        "playerName": "Juan Carlos Benitez",
+        "player_num": "39043",
+        "Rounds": "2",
+        "CourseID": "733",
+        "Course": "El Camaleón Golf Course at Mayakoba",
+        "ShotLink": "0",
+        "SG:TOT": "-1.80",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "50.0",
+        "SG TOT 1+": "50.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-4.71999979019165",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "1.1200000047683716",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-1.7999998927116394",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-1.7999998927116394",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-1.7999998927116394",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "68",
+        "PM": "74",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-1.7999998927116394",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:08.589Z",
+    "ok": true
+  }
+}

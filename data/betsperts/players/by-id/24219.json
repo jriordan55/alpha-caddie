@@ -1,0 +1,200 @@
+{
+  "playerId": "24219",
+  "playerName": "Wesley Heffernan",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ca-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Wesley Heffernan",
+    "BirthPlace": "Calgary, Alberta, Canada",
+    "BirthDate": "March 07, 1977",
+    "Age": "49",
+    "Height": "6ft 1in",
+    "Weight": "160 lbs",
+    "Nationality": "Canada",
+    "Residence": "Calgary, Alberta, Canada",
+    "ProWins": "5",
+    "TurnedPro": "2000",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Wesley Heffernan",
+        "player_num": "24219",
+        "Year": "2025",
+        "Rounds": "2",
+        "SG:TOT": "-6.35",
+        "SG:T2G": "-6.57",
+        "SG:OTT": "-3.70",
+        "SG:APP": "-3.18",
+        "SG:BS": "-6.88",
+        "SG:ARG": "0.31",
+        "SG:P": "0.21",
+        "Dr Distance": "291.4",
+        "Dr Accuracy %": "35.7",
+        "Ball Speed": "176.05"
+      },
+      {
+        "playerName": "Wesley Heffernan",
+        "player_num": "24219",
+        "Year": "2022",
+        "Rounds": "2",
+        "SG:TOT": "-1.44",
+        "SG:T2G": "1.01",
+        "SG:OTT": "0.63",
+        "SG:APP": "-0.27",
+        "SG:BS": "0.36",
+        "SG:ARG": "0.65",
+        "SG:P": "-2.44",
+        "Dr Distance": "297.3",
+        "Dr Accuracy %": "53.8",
+        "Ball Speed": "174.35"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2025-06-08",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "RBC Canadian Open",
+        "is_major": "0",
+        "playerName": "Wesley Heffernan",
+        "player_num": "24219",
+        "Rounds": "2",
+        "CourseID": "935",
+        "Course": "TPC Toronto at Osprey Valley (North)",
+        "ShotLink": "2",
+        "SG:TOT": "-6.35",
+        "SG:T2G": "-6.57",
+        "SG:OTT": "-3.70",
+        "SG:APP": "-3.18",
+        "SG:BS": "-6.88",
+        "SG:ARG": "0.31",
+        "SG:P": "0.21",
+        "SG:SG": "0.52"
+      },
+      {
+        "Date": "2022-06-12",
+        "position": "CUT",
+        "roundPosition": "T108",
+        "TournamentName": "RBC Canadian Open",
+        "is_major": "0",
+        "playerName": "Wesley Heffernan",
+        "player_num": "24219",
+        "Rounds": "2",
+        "CourseID": "772",
+        "Course": "St. Georges G&CC",
+        "ShotLink": "2",
+        "SG:TOT": "-1.44",
+        "SG:T2G": "1.01",
+        "SG:OTT": "0.63",
+        "SG:APP": "-0.27",
+        "SG:BS": "0.36",
+        "SG:ARG": "0.65",
+        "SG:P": "-2.44",
+        "SG:SG": "-1.79"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-2.444499969482422",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-4.34499990940094",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-3.4449998885393143",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-6.354999780654907",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-1.435000017285347",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-6.46999979019165",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-6.239999771118164",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-1.435000017285347",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-3.894999898970127",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "73.5",
+        "PM": "75",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": "27.5",
+        "100-150": "27",
+        "150-200": "43.7",
+        "200+": "66",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-3.894999898970127",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:26:25.384Z",
+    "ok": true
+  }
+}

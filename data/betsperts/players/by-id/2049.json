@@ -1,0 +1,148 @@
+{
+  "playerId": "2049",
+  "playerName": "Gene Sauers",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Gene Sauers",
+    "BirthPlace": "Savannah, Georgia",
+    "BirthDate": "August 22, 1962",
+    "Age": "64",
+    "Height": "5ft 8in",
+    "Weight": "150 lbs",
+    "Nationality": "United States",
+    "Residence": "Savannah, Georgia",
+    "ProWins": null,
+    "TurnedPro": "1984",
+    "PGAWins": null,
+    "College": "Georgia Southern University "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Gene Sauers",
+        "player_num": "2049",
+        "Year": "2017",
+        "Rounds": "2",
+        "SG:TOT": "-3.19",
+        "SG:T2G": "-1.29",
+        "SG:OTT": "-1.60",
+        "SG:APP": "-0.18",
+        "SG:BS": "-1.78",
+        "SG:ARG": "0.49",
+        "SG:P": "-1.91",
+        "Dr Distance": "270.1",
+        "Dr Accuracy %": "92.9",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2017-06-18",
+        "position": "CUT",
+        "roundPosition": "T140",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Gene Sauers",
+        "player_num": "2049",
+        "Rounds": "2",
+        "CourseID": "236",
+        "Course": "Erin Hills",
+        "ShotLink": "2",
+        "SG:TOT": "-3.19",
+        "SG:T2G": "-1.29",
+        "SG:OTT": "-1.60",
+        "SG:APP": "-0.18",
+        "SG:BS": "-1.78",
+        "SG:ARG": "0.49",
+        "SG:P": "-1.91",
+        "SG:SG": "-1.41"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-1.9059999585151672",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-3.609999895095825",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-2.7699999809265137",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-3.1899999380111694",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-3.1899999380111694",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-3.1899999380111694",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "77",
+        "PM": "76",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "38.8",
+        "150-200": null,
+        "200+": "63.3",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-3.1899999380111694",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:21:44.861Z",
+    "ok": true
+  }
+}

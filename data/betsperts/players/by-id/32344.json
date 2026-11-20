@@ -1,0 +1,283 @@
+{
+  "playerId": "32344",
+  "playerName": "Lukas Nemecz",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/au-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Lukas Nemecz",
+    "BirthPlace": "",
+    "BirthDate": "August 17, 1989",
+    "Age": "37",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "Austria",
+    "Residence": "",
+    "ProWins": "1",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Lukas Nemecz",
+        "player_num": "32344",
+        "Year": "2024",
+        "Rounds": "8",
+        "SG:TOT": "1.19",
+        "SG:T2G": "0.85",
+        "SG:OTT": "0.18",
+        "SG:APP": "0.51",
+        "SG:BS": "0.69",
+        "SG:ARG": "0.16",
+        "SG:P": "-0.32",
+        "Dr Distance": "305.6",
+        "Dr Accuracy %": "62.5",
+        "Ball Speed": "168.42"
+      },
+      {
+        "playerName": "Lukas Nemecz",
+        "player_num": "32344",
+        "Year": "2023",
+        "Rounds": "2",
+        "SG:TOT": "-0.40",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": null,
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Lukas Nemecz",
+        "player_num": "32344",
+        "Year": "2022",
+        "Rounds": "4",
+        "SG:TOT": "0.95",
+        "SG:T2G": "1.55",
+        "SG:OTT": "0.87",
+        "SG:APP": "0.10",
+        "SG:BS": "0.97",
+        "SG:ARG": "0.58",
+        "SG:P": "-0.61",
+        "Dr Distance": "282.4",
+        "Dr Accuracy %": "80.4",
+        "Ball Speed": "168.53"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2024-07-21",
+        "position": "T13",
+        "roundPosition": null,
+        "TournamentName": "Barracuda Championship",
+        "is_major": null,
+        "playerName": "Lukas Nemecz",
+        "player_num": "32344",
+        "Rounds": "4",
+        "CourseID": "931",
+        "Course": "Tahoe Mountain Club (Old Greenwood)",
+        "ShotLink": "0",
+        "SG:TOT": "1.86",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2024-07-14",
+        "position": "T45",
+        "roundPosition": "T45",
+        "TournamentName": "ISCO Championship",
+        "is_major": "0",
+        "playerName": "Lukas Nemecz",
+        "player_num": "32344",
+        "Rounds": "4",
+        "CourseID": "884",
+        "Course": "Keene Trace GC",
+        "ShotLink": "4",
+        "SG:TOT": "0.53",
+        "SG:T2G": "0.85",
+        "SG:OTT": "0.18",
+        "SG:APP": "0.51",
+        "SG:BS": "0.69",
+        "SG:ARG": "0.16",
+        "SG:P": "-0.32",
+        "SG:SG": "-0.16"
+      },
+      {
+        "Date": "2023-07-23",
+        "position": "CUT",
+        "roundPosition": null,
+        "TournamentName": "Barracuda Championship",
+        "is_major": null,
+        "playerName": "Lukas Nemecz",
+        "player_num": "32344",
+        "Rounds": "2",
+        "CourseID": "890",
+        "Course": "Tahoe Mountain Club (Old Greenwood)",
+        "ShotLink": "0",
+        "SG:TOT": "-0.40",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2022-07-10",
+        "position": "T41",
+        "roundPosition": "T41",
+        "TournamentName": "Barbasol Championship",
+        "is_major": "0",
+        "playerName": "Lukas Nemecz",
+        "player_num": "32344",
+        "Rounds": "4",
+        "CourseID": "884",
+        "Course": "Keene Trace GC",
+        "ShotLink": "4",
+        "SG:TOT": "0.95",
+        "SG:T2G": "1.55",
+        "SG:OTT": "0.87",
+        "SG:APP": "0.10",
+        "SG:BS": "0.97",
+        "SG:ARG": "0.58",
+        "SG:P": "-0.61",
+        "SG:SG": "-0.03"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "57.1",
+        "SG TOT 1+": "57.1",
+        "SG TOT 2+": "21.4",
+        "SG TOT 3+": "14.3",
+        "SG TOT 4+": "7.1",
+        "SG TOT 5+": "0.0",
+        "Rounds": "14"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.4630000088363886",
+        "Rounds": "8"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "0.14499999582767487",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "1.7174999988637865",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "1.50000003973643",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "0.19333337744077048",
+        "Rounds": "3"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "0.3900000024586916",
+        "Rounds": "3"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "2.1850000619888306",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "0.3459999978542328",
+        "Rounds": "5"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "1.0800000429153442",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "1.3933333555857341",
+        "Rounds": "3"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-0.009999999776482582",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "0.08800001740455628",
+        "Rounds": "5"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "1.5125000178813934",
+        "Rounds": "8"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "0.8950000164498176",
+        "Rounds": "14"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "68.4",
+        "PM": "68.42857142857143",
+        "Rounds": "14"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "14",
+        "50-100": "19",
+        "100-150": "25.6",
+        "150-200": "28.7",
+        "200+": "51.3",
+        "200-250": null,
+        "250+": "76.3"
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "0.8950000164498176",
+        "Rounds": "14"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:41.117Z",
+    "ok": true
+  }
+}

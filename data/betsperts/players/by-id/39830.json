@@ -1,0 +1,158 @@
+{
+  "playerId": "39830",
+  "playerName": "Xuewen Luo",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_ch-flag.gif",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Xuewen Luo",
+    "BirthPlace": "Yantai, China",
+    "BirthDate": "April 09, 1996",
+    "Age": "30",
+    "Height": "5ft 8in",
+    "Weight": "171 lbs",
+    "Nationality": "China",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Xuewen Luo",
+        "player_num": "39830",
+        "Year": "2022",
+        "Rounds": "2",
+        "SG:TOT": "-1.90",
+        "SG:T2G": "-1.21",
+        "SG:OTT": "0.42",
+        "SG:APP": "-2.52",
+        "SG:BS": "-2.09",
+        "SG:ARG": "0.89",
+        "SG:P": "-0.69",
+        "Dr Distance": "295.8",
+        "Dr Accuracy %": "71.4",
+        "Ball Speed": "163.81"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2022-10-09",
+        "position": "CUT",
+        "roundPosition": "T108",
+        "TournamentName": "Shriners Childrens Open",
+        "is_major": "0",
+        "playerName": "Xuewen Luo",
+        "player_num": "39830",
+        "Rounds": "2",
+        "CourseID": "538",
+        "Course": "TPC Summerlin",
+        "ShotLink": "2",
+        "SG:TOT": "-1.90",
+        "SG:T2G": "-1.21",
+        "SG:OTT": "0.42",
+        "SG:APP": "-2.52",
+        "SG:BS": "-2.09",
+        "SG:ARG": "0.89",
+        "SG:P": "-0.69",
+        "SG:SG": "0.20"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.6880000084638596",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.6200000047683716",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-3.1700000762939453",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-3.1700000762939453",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-0.6200000047683716",
+        "Rounds": "1"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-3.1700000762939453",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-0.6200000047683716",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-1.8950000405311584",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "73",
+        "PM": "70",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "39.3",
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-1.8950000405311584",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:26:30.515Z",
+    "ok": true
+  }
+}

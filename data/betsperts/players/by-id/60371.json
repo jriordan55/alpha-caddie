@@ -1,0 +1,221 @@
+{
+  "playerId": "60371",
+  "playerName": "Laird Shepherd",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/St_Georges_Cross.svg_.png",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Laird Shepherd",
+    "BirthPlace": "",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "England",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Laird Shepherd",
+        "player_num": "60371",
+        "Year": "2022",
+        "Rounds": "4",
+        "SG:TOT": "-5.95",
+        "SG:T2G": "-4.67",
+        "SG:OTT": "-1.53",
+        "SG:APP": "-2.31",
+        "SG:BS": "-3.84",
+        "SG:ARG": "-0.83",
+        "SG:P": "-1.28",
+        "Dr Distance": "290.5",
+        "Dr Accuracy %": "48.2",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Laird Shepherd",
+        "player_num": "60371",
+        "Year": "2021",
+        "Rounds": "2",
+        "SG:TOT": "-0.82",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "64.3",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2022-06-19",
+        "position": "CUT",
+        "roundPosition": "T134",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Laird Shepherd",
+        "player_num": "60371",
+        "Rounds": "2",
+        "CourseID": "654",
+        "Course": "The Country Club",
+        "ShotLink": "2",
+        "SG:TOT": "-3.12",
+        "SG:T2G": "-1.08",
+        "SG:OTT": "0.33",
+        "SG:APP": "-2.11",
+        "SG:BS": "-1.77",
+        "SG:ARG": "0.69",
+        "SG:P": "-2.04",
+        "SG:SG": "-1.35"
+      },
+      {
+        "Date": "2022-04-10",
+        "position": "CUT",
+        "roundPosition": "89",
+        "TournamentName": "Masters Tournament",
+        "is_major": "1",
+        "playerName": "Laird Shepherd",
+        "player_num": "60371",
+        "Rounds": "2",
+        "CourseID": "14",
+        "Course": "Augusta National GC",
+        "ShotLink": "2",
+        "SG:TOT": "-8.78",
+        "SG:T2G": "-8.26",
+        "SG:OTT": "-3.39",
+        "SG:APP": "-2.51",
+        "SG:BS": "-5.90",
+        "SG:ARG": "-2.35",
+        "SG:P": "-0.52",
+        "SG:SG": "-2.88"
+      },
+      {
+        "Date": "2021-07-18",
+        "position": "CUT",
+        "roundPosition": null,
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Laird Shepherd",
+        "player_num": "60371",
+        "Rounds": "2",
+        "CourseID": "778",
+        "Course": "Royal St. Georges GC",
+        "ShotLink": "0",
+        "SG:TOT": "-0.82",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "16.7",
+        "SG TOT 1+": "16.7",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "6"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.523499995470047",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "-2.0369999408721924",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-4.146666685740153",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-4.336666862169902",
+        "Rounds": "3"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-4.241666773955028",
+        "Rounds": "6"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-0.824999988079071",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-5.950000166893005",
+        "Rounds": "4"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-4.241666773955028",
+        "Rounds": "6"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "78",
+        "PM": "75.33333333333333",
+        "Rounds": "6"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "6",
+        "50-100": "23.3",
+        "100-150": null,
+        "150-200": "49.3",
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-8.78000020980835",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-1.972500056028366",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:30.789Z",
+    "ok": true
+  }
+}

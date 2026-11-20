@@ -1,0 +1,262 @@
+{
+  "playerId": "54636",
+  "playerName": "Tony Romo",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Tony Romo",
+    "BirthPlace": "",
+    "BirthDate": "April 21, 1980",
+    "Age": "46",
+    "Height": "Noneft Nonein",
+    "Weight": "None lbs",
+    "Nationality": "United States",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "0",
+    "PGAWins": "0",
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Tony Romo",
+        "player_num": "54636",
+        "Year": "2019",
+        "Rounds": "6",
+        "SG:TOT": "-5.09",
+        "SG:T2G": "-3.13",
+        "SG:OTT": "-2.68",
+        "SG:APP": "-0.21",
+        "SG:BS": "-2.89",
+        "SG:ARG": "-0.24",
+        "SG:P": "-0.47",
+        "Dr Distance": "277.1",
+        "Dr Accuracy %": "39.3",
+        "Ball Speed": "172.41"
+      },
+      {
+        "playerName": "Tony Romo",
+        "player_num": "54636",
+        "Year": "2018",
+        "Rounds": "2",
+        "SG:TOT": "-8.18",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "Dr Distance": null,
+        "Dr Accuracy %": "64.3",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2019-09-29",
+        "position": "CUT",
+        "roundPosition": "T129",
+        "TournamentName": "Safeway Open",
+        "is_major": "0",
+        "playerName": "Tony Romo",
+        "player_num": "54636",
+        "Rounds": "2",
+        "CourseID": "552",
+        "Course": "Silverado Resort (North)",
+        "ShotLink": "2",
+        "SG:TOT": "-2.56",
+        "SG:T2G": "-2.24",
+        "SG:OTT": "-1.06",
+        "SG:APP": "-0.16",
+        "SG:BS": "-1.22",
+        "SG:ARG": "-1.01",
+        "SG:P": "-0.33",
+        "SG:SG": "-1.34"
+      },
+      {
+        "Date": "2019-05-12",
+        "position": "CUT",
+        "roundPosition": "T148",
+        "TournamentName": "AT&T Byron Nelson",
+        "is_major": "0",
+        "playerName": "Tony Romo",
+        "player_num": "54636",
+        "Rounds": "2",
+        "CourseID": "243",
+        "Course": "Trinity Forest Golf Club",
+        "ShotLink": "2",
+        "SG:TOT": "-4.64",
+        "SG:T2G": "-4.02",
+        "SG:OTT": "-4.31",
+        "SG:APP": "-0.26",
+        "SG:BS": "-4.56",
+        "SG:ARG": "0.54",
+        "SG:P": "-0.62",
+        "SG:SG": "-0.08"
+      },
+      {
+        "Date": "2019-03-31",
+        "position": "CUT",
+        "roundPosition": "127",
+        "TournamentName": "Corales Puntacana Championship",
+        "is_major": "0",
+        "playerName": "Tony Romo",
+        "player_num": "54636",
+        "Rounds": "2",
+        "CourseID": "244",
+        "Course": "Corales Golf Course",
+        "ShotLink": "0",
+        "SG:TOT": "-8.08",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2018-03-25",
+        "position": "CUT",
+        "roundPosition": "132",
+        "TournamentName": "Corales Puntacana Championship",
+        "is_major": "0",
+        "playerName": "Tony Romo",
+        "player_num": "54636",
+        "Rounds": "2",
+        "CourseID": "244",
+        "Course": "Corales Golf Course",
+        "ShotLink": "0",
+        "SG:TOT": "-8.18",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "12.5",
+        "SG TOT 1+": "12.5",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "8"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-0.6154999434947968",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-4.2924999594688416",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-7.442499995231628",
+        "Rounds": "4"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-4.639999866485596",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-8.132500052452087",
+        "Rounds": "4"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-2.5649999380111694",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-8.184999942779541",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-5.322500050067902",
+        "Rounds": "4"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-4.639999866485596",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-2.5649999380111694",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-8.132500052452087",
+        "Rounds": "4"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-4.639999866485596",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "75",
+        "PM": "79",
+        "Rounds": "8"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "8",
+        "50-100": null,
+        "100-150": "34.3",
+        "150-200": null,
+        "200+": "57.6",
+        "200-250": "51.5",
+        "250+": "69.6"
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-2.5649999380111694",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-6.96833332379659",
+        "Rounds": "6"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:26:11.708Z",
+    "ok": true
+  }
+}

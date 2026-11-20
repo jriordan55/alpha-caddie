@@ -1,0 +1,224 @@
+{
+  "playerId": "48237",
+  "playerName": "Oliver Lindell",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_fi-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Oliver Lindell",
+    "BirthPlace": null,
+    "BirthDate": "September 29, 1998",
+    "Age": "28",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "Finland",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Oliver Lindell",
+        "player_num": "48237",
+        "Year": "2026",
+        "Rounds": "4",
+        "SG:TOT": "0.72",
+        "SG:T2G": "1.30",
+        "SG:OTT": "-0.13",
+        "SG:APP": "1.30",
+        "SG:BS": "1.17",
+        "SG:ARG": "0.13",
+        "SG:P": "-0.58",
+        "Dr Distance": "293.5",
+        "Dr Accuracy %": "48.1",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Oliver Lindell",
+        "player_num": "48237",
+        "Year": "2025",
+        "Rounds": "4",
+        "SG:TOT": "1.33",
+        "SG:T2G": "-0.26",
+        "SG:OTT": "-0.73",
+        "SG:APP": "0.72",
+        "SG:BS": "-0.01",
+        "SG:ARG": "-0.25",
+        "SG:P": "1.58",
+        "Dr Distance": null,
+        "Dr Accuracy %": "53.6",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Oliver Lindell",
+        "player_num": "48237",
+        "Rounds": "4",
+        "SG:TOT": "0.72",
+        "SG:T2G": "1.30",
+        "SG:OTT": "-0.13",
+        "SG:APP": "1.30",
+        "SG:BS": "1.17",
+        "SG:ARG": "0.13",
+        "SG:P": "-0.58",
+        "SG:SG": "-0.45"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-07-12",
+        "position": "T36",
+        "roundPosition": "T36",
+        "TournamentName": "Genesis Scottish Open",
+        "is_major": "0",
+        "playerName": "Oliver Lindell",
+        "player_num": "48237",
+        "Rounds": "4",
+        "CourseID": "945",
+        "Course": "The Renaissance Club",
+        "ShotLink": "4",
+        "SG:TOT": "0.72",
+        "SG:T2G": "1.30",
+        "SG:OTT": "-0.13",
+        "SG:APP": "1.30",
+        "SG:BS": "1.17",
+        "SG:ARG": "0.13",
+        "SG:P": "-0.58",
+        "SG:SG": "-0.45"
+      },
+      {
+        "Date": "2025-07-20",
+        "position": "T28",
+        "roundPosition": null,
+        "TournamentName": "The Open Championship",
+        "is_major": "1",
+        "playerName": "Oliver Lindell",
+        "player_num": "48237",
+        "Rounds": "4",
+        "CourseID": "885",
+        "Course": "Royal Portrush GC",
+        "ShotLink": "4",
+        "SG:TOT": "1.33",
+        "SG:T2G": "-0.26",
+        "SG:OTT": "-0.73",
+        "SG:APP": "0.72",
+        "SG:BS": "-0.01",
+        "SG:ARG": "-0.25",
+        "SG:P": "1.58",
+        "SG:SG": "1.34"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "75.0",
+        "SG TOT 1+": "50.0",
+        "SG TOT 2+": "25.0",
+        "SG TOT 3+": "25.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "8"
+      }
+    ],
+    "greenGrass": [],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "2.444999933242798",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "2.075000047683716",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "1.0850000157952309",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-1.5049999952316284",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "1.649999996026357",
+        "Rounds": "6"
+      },
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-0.8499999865889549",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "0.8966666460037231",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "3.4100000858306885",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "0.35333333909511566",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "1.0399999618530273",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Strong",
+        "StrokesGainedAverage": "0.7224999852478504",
+        "Rounds": "4"
+      },
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "1.3275000154972076",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "69",
+        "PM": "69.5",
+        "Rounds": "8"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "8",
+        "50-100": null,
+        "100-150": "28.4",
+        "150-200": "34.2",
+        "200+": "69.5",
+        "200-250": null,
+        "250+": "115.7"
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "1.025000000372529",
+        "Rounds": "8"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:24:33.673Z",
+    "ok": true
+  }
+}

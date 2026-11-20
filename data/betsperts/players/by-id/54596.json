@@ -1,0 +1,215 @@
+{
+  "playerId": "54596",
+  "playerName": "Cole Miller",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Cole Miller",
+    "BirthPlace": "New Tripoli, Pennsylvania",
+    "BirthDate": "July 28, 1995",
+    "Age": "31",
+    "Height": "5ft 7in",
+    "Weight": "155 lbs",
+    "Nationality": "United States",
+    "Residence": "Jacksonville, Florida",
+    "ProWins": "0",
+    "TurnedPro": "2018",
+    "PGAWins": "0",
+    "College": "Penn State University  (2018, Marketing) "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Cole Miller",
+        "player_num": "54596",
+        "Year": "2019",
+        "Rounds": "2",
+        "SG:TOT": "-1.21",
+        "SG:T2G": "-0.12",
+        "SG:OTT": "1.69",
+        "SG:APP": "-0.58",
+        "SG:BS": "1.11",
+        "SG:ARG": "-1.23",
+        "SG:P": "-0.47",
+        "Dr Distance": "295.6",
+        "Dr Accuracy %": "60.7",
+        "Ball Speed": "174.79"
+      },
+      {
+        "playerName": "Cole Miller",
+        "player_num": "54596",
+        "Year": "2018",
+        "Rounds": "2",
+        "SG:TOT": "-0.96",
+        "SG:T2G": "-0.94",
+        "SG:OTT": "0.88",
+        "SG:APP": "-2.69",
+        "SG:BS": "-1.82",
+        "SG:ARG": "0.88",
+        "SG:P": "-0.03",
+        "Dr Distance": "294.7",
+        "Dr Accuracy %": "57.1",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2019-11-24",
+        "position": "CUT",
+        "roundPosition": "T114",
+        "TournamentName": "The RSM Classic",
+        "is_major": "0",
+        "playerName": "Cole Miller",
+        "player_num": "54596",
+        "Rounds": "2",
+        "CourseID": "889",
+        "Course": "Sea Island GC (Plantation)",
+        "ShotLink": "1",
+        "SG:TOT": "-1.21",
+        "SG:T2G": "-0.12",
+        "SG:OTT": "1.69",
+        "SG:APP": "-0.58",
+        "SG:BS": "1.11",
+        "SG:ARG": "-1.23",
+        "SG:P": "-0.47",
+        "SG:SG": "-1.70"
+      },
+      {
+        "Date": "2018-06-17",
+        "position": "CUT",
+        "roundPosition": "T98",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Cole Miller",
+        "player_num": "54596",
+        "Rounds": "2",
+        "CourseID": "618",
+        "Course": "Shinnecock Hills GC",
+        "ShotLink": "2",
+        "SG:TOT": "-0.96",
+        "SG:T2G": "-0.94",
+        "SG:OTT": "0.88",
+        "SG:APP": "-2.69",
+        "SG:BS": "-1.82",
+        "SG:ARG": "0.88",
+        "SG:P": "-0.03",
+        "SG:SG": "0.85"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-0.47200000286102295",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.0599999725818634",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-1.110000029206276",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-0.5899999737739563",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-0.9649999886751175",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-1.8200000524520874",
+        "Rounds": "1"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-0.5899999737739563",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-0.9649999886751175",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-1.8200000524520874",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-0.9649999886751175",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-1.2050000131130219",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "75",
+        "PM": "72",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": null,
+        "150-200": "34.5",
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-1.2050000131130219",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-0.9649999886751175",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:20:31.603Z",
+    "ok": true
+  }
+}

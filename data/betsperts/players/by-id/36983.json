@@ -1,0 +1,498 @@
+{
+  "playerId": "36983",
+  "playerName": "Matt Dobyns",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "0",
+    "Name": "Matt Dobyns",
+    "BirthPlace": "Austin, Texas",
+    "BirthDate": "March 13, 1978",
+    "Age": "48",
+    "Height": "5ft 11in",
+    "Weight": "210 lbs",
+    "Nationality": "United States",
+    "Residence": "Glen Head, New York",
+    "ProWins": "4",
+    "TurnedPro": "2001",
+    "PGAWins": "0",
+    "College": "University of Texas "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Matt Dobyns",
+        "player_num": "36983",
+        "Year": "2024",
+        "Rounds": "2",
+        "SG:TOT": "-6.83",
+        "SG:T2G": "-4.25",
+        "SG:OTT": "-1.82",
+        "SG:APP": "-2.11",
+        "SG:BS": "-3.93",
+        "SG:ARG": "-0.33",
+        "SG:P": "-2.58",
+        "Dr Distance": "279.1",
+        "Dr Accuracy %": "60.7",
+        "Ball Speed": "172.68"
+      },
+      {
+        "playerName": "Matt Dobyns",
+        "player_num": "36983",
+        "Year": "2018",
+        "Rounds": "2",
+        "SG:TOT": "-3.01",
+        "SG:T2G": "-3.51",
+        "SG:OTT": "-0.79",
+        "SG:APP": "-0.74",
+        "SG:BS": "-1.53",
+        "SG:ARG": "-1.98",
+        "SG:P": "0.49",
+        "Dr Distance": "302.9",
+        "Dr Accuracy %": "53.6",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Matt Dobyns",
+        "player_num": "36983",
+        "Year": "2017",
+        "Rounds": "2",
+        "SG:TOT": "-2.83",
+        "SG:T2G": "0.05",
+        "SG:OTT": "0.04",
+        "SG:APP": "-0.57",
+        "SG:BS": "-0.54",
+        "SG:ARG": "0.59",
+        "SG:P": "-2.88",
+        "Dr Distance": "296.6",
+        "Dr Accuracy %": "42.9",
+        "Ball Speed": null
+      },
+      {
+        "playerName": "Matt Dobyns",
+        "player_num": "36983",
+        "Year": "2016",
+        "Rounds": "16",
+        "SG:TOT": "-0.96",
+        "SG:T2G": "-0.79",
+        "SG:OTT": "0.52",
+        "SG:APP": "-0.84",
+        "SG:BS": "-0.33",
+        "SG:ARG": "-0.46",
+        "SG:P": "-0.15",
+        "Dr Distance": "296.9",
+        "Dr Accuracy %": "51.8",
+        "Ball Speed": "176.23"
+      },
+      {
+        "playerName": "Matt Dobyns",
+        "player_num": "36983",
+        "Year": "2015",
+        "Rounds": "4",
+        "SG:TOT": "-0.77",
+        "SG:T2G": "-1.57",
+        "SG:OTT": "0.57",
+        "SG:APP": "-1.91",
+        "SG:BS": "-1.34",
+        "SG:ARG": "-0.23",
+        "SG:P": "0.80",
+        "Dr Distance": "290.9",
+        "Dr Accuracy %": "62.5",
+        "Ball Speed": "177.90"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2024-05-19",
+        "position": "CUT",
+        "roundPosition": "T69",
+        "TournamentName": "PGA Championship",
+        "is_major": "1",
+        "playerName": "Matt Dobyns",
+        "player_num": "36983",
+        "Rounds": "2",
+        "CourseID": "671",
+        "Course": "Valhalla Golf Club",
+        "ShotLink": "2",
+        "SG:TOT": "-6.83",
+        "SG:T2G": "-4.25",
+        "SG:OTT": "-1.82",
+        "SG:APP": "-2.11",
+        "SG:BS": "-3.93",
+        "SG:ARG": "-0.33",
+        "SG:P": "-2.58",
+        "SG:SG": "-2.91"
+      },
+      {
+        "Date": "2018-08-12",
+        "position": "CUT",
+        "roundPosition": "T133",
+        "TournamentName": "PGA Championship",
+        "is_major": "1",
+        "playerName": "Matt Dobyns",
+        "player_num": "36983",
+        "Rounds": "2",
+        "CourseID": "534",
+        "Course": "Bellerive CC",
+        "ShotLink": "2",
+        "SG:TOT": "-3.01",
+        "SG:T2G": "-3.51",
+        "SG:OTT": "-0.79",
+        "SG:APP": "-0.74",
+        "SG:BS": "-1.53",
+        "SG:ARG": "-1.98",
+        "SG:P": "0.49",
+        "SG:SG": "-1.49"
+      },
+      {
+        "Date": "2017-08-13",
+        "position": "CUT",
+        "roundPosition": "T125",
+        "TournamentName": "PGA Championship",
+        "is_major": "1",
+        "playerName": "Matt Dobyns",
+        "player_num": "36983",
+        "Rounds": "2",
+        "CourseID": "241",
+        "Course": "Quail Hollow Club",
+        "ShotLink": "2",
+        "SG:TOT": "-2.83",
+        "SG:T2G": "0.05",
+        "SG:OTT": "0.04",
+        "SG:APP": "-0.57",
+        "SG:BS": "-0.54",
+        "SG:ARG": "0.59",
+        "SG:P": "-2.88",
+        "SG:SG": "-2.29"
+      },
+      {
+        "Date": "2016-07-31",
+        "position": "CUT",
+        "roundPosition": "T106",
+        "TournamentName": "PGA Championship",
+        "is_major": "1",
+        "playerName": "Matt Dobyns",
+        "player_num": "36983",
+        "Rounds": "2",
+        "CourseID": "715",
+        "Course": "Baltusrol GC",
+        "ShotLink": "2",
+        "SG:TOT": "-1.31",
+        "SG:T2G": "-1.13",
+        "SG:OTT": "0.52",
+        "SG:APP": "-0.18",
+        "SG:BS": "0.34",
+        "SG:ARG": "-1.46",
+        "SG:P": "-0.19",
+        "SG:SG": "-1.65"
+      },
+      {
+        "Date": "2016-07-17",
+        "position": "79",
+        "roundPosition": "79",
+        "TournamentName": "Barbasol Championship",
+        "is_major": "0",
+        "playerName": "Matt Dobyns",
+        "player_num": "36983",
+        "Rounds": "3",
+        "CourseID": "819",
+        "Course": "RTJ Trail (Grand National)",
+        "ShotLink": "3",
+        "SG:TOT": "-1.23",
+        "SG:T2G": "-0.01",
+        "SG:OTT": "0.87",
+        "SG:APP": "-0.61",
+        "SG:BS": "0.26",
+        "SG:ARG": "-0.27",
+        "SG:P": "-1.22",
+        "SG:SG": "-1.49"
+      },
+      {
+        "Date": "2016-05-08",
+        "position": "T53",
+        "roundPosition": "T53",
+        "TournamentName": "Wells Fargo Championship",
+        "is_major": "0",
+        "playerName": "Matt Dobyns",
+        "player_num": "36983",
+        "Rounds": "4",
+        "CourseID": "698",
+        "Course": "Quail Hollow Club",
+        "ShotLink": "4",
+        "SG:TOT": "0.23",
+        "SG:T2G": "-0.96",
+        "SG:OTT": "0.14",
+        "SG:APP": "-0.69",
+        "SG:BS": "-0.55",
+        "SG:ARG": "-0.41",
+        "SG:P": "1.19",
+        "SG:SG": "0.78"
+      },
+      {
+        "Date": "2016-04-03",
+        "position": "78",
+        "roundPosition": "78",
+        "TournamentName": "Houston Open",
+        "is_major": "0",
+        "playerName": "Matt Dobyns",
+        "player_num": "36983",
+        "Rounds": "3",
+        "CourseID": "729",
+        "Course": "GC of Houston",
+        "ShotLink": "3",
+        "SG:TOT": "-1.68",
+        "SG:T2G": "-0.83",
+        "SG:OTT": "0.48",
+        "SG:APP": "-1.58",
+        "SG:BS": "-1.10",
+        "SG:ARG": "0.27",
+        "SG:P": "-0.85",
+        "SG:SG": "-0.58"
+      },
+      {
+        "Date": "2016-03-27",
+        "position": "CUT",
+        "roundPosition": "T87",
+        "TournamentName": "Puerto Rico Open",
+        "is_major": "0",
+        "playerName": "Matt Dobyns",
+        "player_num": "36983",
+        "Rounds": "2",
+        "CourseID": "742",
+        "Course": "Grand Reserve GC",
+        "ShotLink": "0",
+        "SG:TOT": "-1.15",
+        "SG:T2G": null,
+        "SG:OTT": null,
+        "SG:APP": null,
+        "SG:BS": null,
+        "SG:ARG": null,
+        "SG:P": null,
+        "SG:SG": null
+      },
+      {
+        "Date": "2016-02-21",
+        "position": "CUT",
+        "roundPosition": "T100",
+        "TournamentName": "Northern Trust Open",
+        "is_major": "0",
+        "playerName": "Matt Dobyns",
+        "player_num": "36983",
+        "Rounds": "2",
+        "CourseID": "500",
+        "Course": "Riviera CC",
+        "ShotLink": "2",
+        "SG:TOT": "-1.34",
+        "SG:T2G": "-1.21",
+        "SG:OTT": "0.78",
+        "SG:APP": "-1.06",
+        "SG:BS": "-0.28",
+        "SG:ARG": "-0.93",
+        "SG:P": "-0.13",
+        "SG:SG": "-1.06"
+      },
+      {
+        "Date": "2015-11-08",
+        "position": "CUT",
+        "roundPosition": "T75",
+        "TournamentName": "Sanderson Farms Championship",
+        "is_major": "0",
+        "playerName": "Matt Dobyns",
+        "player_num": "36983",
+        "Rounds": "2",
+        "CourseID": "746",
+        "Course": "The Country Club of Jackson",
+        "ShotLink": "2",
+        "SG:TOT": "-0.58",
+        "SG:T2G": "-1.02",
+        "SG:OTT": "0.47",
+        "SG:APP": "-1.54",
+        "SG:BS": "-1.07",
+        "SG:ARG": "0.05",
+        "SG:P": "0.44",
+        "SG:SG": "0.48"
+      },
+      {
+        "Date": "2015-08-16",
+        "position": "CUT",
+        "roundPosition": "T100",
+        "TournamentName": "PGA Championship",
+        "is_major": "1",
+        "playerName": "Matt Dobyns",
+        "player_num": "36983",
+        "Rounds": "2",
+        "CourseID": "706",
+        "Course": "Whistling Straits",
+        "ShotLink": "2",
+        "SG:TOT": "-0.96",
+        "SG:T2G": "-2.11",
+        "SG:OTT": "0.68",
+        "SG:APP": "-2.28",
+        "SG:BS": "-1.60",
+        "SG:ARG": "-0.51",
+        "SG:P": "1.15",
+        "SG:SG": "0.64"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "26.9",
+        "SG TOT 1+": "19.2",
+        "SG TOT 2+": "7.7",
+        "SG TOT 3+": "3.8",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "26"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-0.7145000160671771",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-1.2234285700001888",
+        "Rounds": "7"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "-0.13200002908706665",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa Trivialis",
+        "StrokesGainedAverage": "0.3164285974843161",
+        "Rounds": "7"
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-0.7018181410702792",
+        "Rounds": "11"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-2.291818144985221",
+        "Rounds": "11"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "-2.7833333214124045",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-2.5899999141693115",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-1.258999977260828",
+        "Rounds": "10"
+      },
+      {
+        "CourseLength": "Long",
+        "StrokesGainedAverage": "-0.9329999681562186",
+        "Rounds": "10"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-3.6583332618077598",
+        "Rounds": "6"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Average",
+        "StrokesGainedAverage": "-3.001428484916687",
+        "Rounds": "7"
+      },
+      {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "-1.0274999616667628",
+        "Rounds": "12"
+      },
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-2.8300000429153442",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-0.9740000009536743",
+        "Rounds": "5"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Average",
+        "StrokesGainedAverage": "-1.6799999475479126",
+        "Rounds": "3"
+      },
+      {
+        "FieldStrength": "Strong",
+        "StrokesGainedAverage": "-0.29499996329347294",
+        "Rounds": "6"
+      },
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-2.9889999445527793",
+        "Rounds": "10"
+      },
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-1.0242857081549508",
+        "Rounds": "7"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "73.18181818181819",
+        "PM": "73.92857142857143",
+        "Rounds": "26"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "26",
+        "50-100": "28.8",
+        "100-150": "28.3",
+        "150-200": "39.6",
+        "200+": "67.8",
+        "200-250": "58.9",
+        "250+": "91.7"
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-0.5849999785423279",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Spring",
+        "StrokesGainedAverage": "-1.827272658998316",
+        "Rounds": "11"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-1.8109090812504292",
+        "Rounds": "11"
+      },
+      {
+        "SeasonHeld": "West Coast",
+        "StrokesGainedAverage": "-1.3399999625980854",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:23:55.268Z",
+    "ok": true
+  }
+}

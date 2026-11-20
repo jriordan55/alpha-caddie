@@ -1,0 +1,153 @@
+{
+  "playerId": "23531",
+  "playerName": "Tracy Vest",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Tracy Vest",
+    "BirthPlace": null,
+    "BirthDate": "February 09, 1973",
+    "Age": "53",
+    "Height": null,
+    "Weight": null,
+    "Nationality": "United States",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Tracy Vest",
+        "player_num": "23531",
+        "Year": "2024",
+        "Rounds": "2",
+        "SG:TOT": "-9.00",
+        "SG:T2G": "-6.28",
+        "SG:OTT": "-3.34",
+        "SG:APP": "-1.89",
+        "SG:BS": "-5.24",
+        "SG:ARG": "-1.04",
+        "SG:P": "-2.73",
+        "Dr Distance": "276.2",
+        "Dr Accuracy %": "50.0",
+        "Ball Speed": "168.96"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2024-07-07",
+        "position": "CUT",
+        "roundPosition": "154",
+        "TournamentName": "John Deere Classic",
+        "is_major": "0",
+        "playerName": "Tracy Vest",
+        "player_num": "23531",
+        "Rounds": "2",
+        "CourseID": "669",
+        "Course": "TPC Deere Run",
+        "ShotLink": "2",
+        "SG:TOT": "-9.00",
+        "SG:T2G": "-6.28",
+        "SG:OTT": "-3.34",
+        "SG:APP": "-1.89",
+        "SG:BS": "-5.24",
+        "SG:ARG": "-1.04",
+        "SG:P": "-2.73",
+        "SG:SG": "-3.77"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "2"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-2.727500021457672",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-6.920000076293945",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-11.079999923706055",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-9",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-11.079999923706055",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-6.920000076293945",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-9",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "81",
+        "PM": "75",
+        "Rounds": "2"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "2",
+        "50-100": null,
+        "100-150": "25",
+        "150-200": "44.3",
+        "200+": null,
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-9",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:26:12.652Z",
+    "ok": true
+  }
+}

@@ -1,0 +1,219 @@
+{
+  "playerId": "55416",
+  "playerName": "Rhett Rasmussen",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Rhett Rasmussen",
+    "BirthPlace": "Draper, Utah",
+    "BirthDate": "June 20, 1998",
+    "Age": "28",
+    "Height": "6ft 0in",
+    "Weight": "165 lbs",
+    "Nationality": "United States",
+    "Residence": "Draper, Utah",
+    "ProWins": "0",
+    "TurnedPro": "2020",
+    "PGAWins": "0",
+    "College": "Brigham Young University 2020, Communications"
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Rhett Rasmussen",
+        "player_num": "55416",
+        "Year": "2026",
+        "Rounds": "2",
+        "SG:TOT": "-4.01",
+        "SG:T2G": "-2.94",
+        "SG:OTT": "-0.73",
+        "SG:APP": "-2.68",
+        "SG:BS": "-3.40",
+        "SG:ARG": "0.46",
+        "SG:P": "-1.06",
+        "Dr Distance": "295.9",
+        "Dr Accuracy %": "82.1",
+        "Ball Speed": "174.89"
+      },
+      {
+        "playerName": "Rhett Rasmussen",
+        "player_num": "55416",
+        "Year": "2018",
+        "Rounds": "2",
+        "SG:TOT": "-1.96",
+        "SG:T2G": "-0.70",
+        "SG:OTT": "-0.26",
+        "SG:APP": "-0.89",
+        "SG:BS": "-1.15",
+        "SG:ARG": "0.45",
+        "SG:P": "-1.26",
+        "Dr Distance": "294.6",
+        "Dr Accuracy %": "71.4",
+        "Ball Speed": null
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Rhett Rasmussen",
+        "player_num": "55416",
+        "Rounds": "2",
+        "SG:TOT": "-4.01",
+        "SG:T2G": "-2.94",
+        "SG:OTT": "-0.73",
+        "SG:APP": "-2.68",
+        "SG:BS": "-3.40",
+        "SG:ARG": "0.46",
+        "SG:P": "-1.06",
+        "SG:SG": "-0.60"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-10-04",
+        "position": "CUT",
+        "roundPosition": "CUT",
+        "TournamentName": "Bank of Utah Championship",
+        "is_major": "0",
+        "playerName": "Rhett Rasmussen",
+        "player_num": "55416",
+        "Rounds": "2",
+        "CourseID": "930",
+        "Course": "Black Desert Resort",
+        "ShotLink": "2",
+        "SG:TOT": "-4.01",
+        "SG:T2G": "-2.94",
+        "SG:OTT": "-0.73",
+        "SG:APP": "-2.68",
+        "SG:BS": "-3.40",
+        "SG:ARG": "0.46",
+        "SG:P": "-1.06",
+        "SG:SG": "-0.60"
+      },
+      {
+        "Date": "2018-06-17",
+        "position": "CUT",
+        "roundPosition": "T112",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Rhett Rasmussen",
+        "player_num": "55416",
+        "Rounds": "2",
+        "CourseID": "618",
+        "Course": "Shinnecock Hills GC",
+        "ShotLink": "2",
+        "SG:TOT": "-1.96",
+        "SG:T2G": "-0.70",
+        "SG:OTT": "-0.26",
+        "SG:APP": "-0.89",
+        "SG:BS": "-1.15",
+        "SG:ARG": "0.45",
+        "SG:P": "-1.26",
+        "SG:SG": "-0.81"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "0.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "-1.0625000186264515",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-3.7450000047683716",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-2.225000098347664",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Average",
+        "StrokesGainedAverage": "-4.005000114440918",
+        "Rounds": "2"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-1.9649999886751175",
+        "Rounds": "2"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-1.9649999886751175",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "-4.005000114440918",
+        "Rounds": "2"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-1.9649999886751175",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Weak",
+        "StrokesGainedAverage": "-4.005000114440918",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "73",
+        "PM": "76",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": "69.8",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Fall",
+        "StrokesGainedAverage": "-4.005000114440918",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-1.9649999886751175",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:24:57.544Z",
+    "ok": true
+  }
+}

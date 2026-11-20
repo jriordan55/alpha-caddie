@@ -1,0 +1,211 @@
+{
+  "playerId": "59203",
+  "playerName": "Joey Vrzich",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_us-flag-1-1.webp",
+  "profile": {
+    "ProfileImage": "",
+    "Name": "Joey Vrzich",
+    "BirthPlace": "La Mesa, California",
+    "BirthDate": "",
+    "Age": null,
+    "Height": "5ft 11in",
+    "Weight": "190 lbs",
+    "Nationality": "United States",
+    "Residence": "",
+    "ProWins": "0",
+    "TurnedPro": "2022",
+    "PGAWins": "0",
+    "College": "Pepperdine University "
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Joey Vrzich",
+        "player_num": "59203",
+        "Year": "2024",
+        "Rounds": "2",
+        "SG:TOT": "-1.42",
+        "SG:T2G": "-0.91",
+        "SG:OTT": "0.27",
+        "SG:APP": "-1.04",
+        "SG:BS": "-0.77",
+        "SG:ARG": "-0.14",
+        "SG:P": "-0.51",
+        "Dr Distance": "313.1",
+        "Dr Accuracy %": "60.7",
+        "Ball Speed": "182.27"
+      },
+      {
+        "playerName": "Joey Vrzich",
+        "player_num": "59203",
+        "Year": "2023",
+        "Rounds": "2",
+        "SG:TOT": "-1.70",
+        "SG:T2G": "-4.84",
+        "SG:OTT": "0.18",
+        "SG:APP": "-3.87",
+        "SG:BS": "-3.69",
+        "SG:ARG": "-1.15",
+        "SG:P": "0.70",
+        "Dr Distance": "300.6",
+        "Dr Accuracy %": "39.3",
+        "Ball Speed": "182.09"
+      }
+    ],
+    "sgGuest": [],
+    "sgByEvent": [
+      {
+        "Date": "2024-06-16",
+        "position": "CUT",
+        "roundPosition": "T109",
+        "TournamentName": "U.S. Open",
+        "is_major": "1",
+        "playerName": "Joey Vrzich",
+        "player_num": "59203",
+        "Rounds": "2",
+        "CourseID": "528",
+        "Course": "Pinehurst No. 2",
+        "ShotLink": "2",
+        "SG:TOT": "-1.42",
+        "SG:T2G": "-0.91",
+        "SG:OTT": "0.27",
+        "SG:APP": "-1.04",
+        "SG:BS": "-0.77",
+        "SG:ARG": "-0.14",
+        "SG:P": "-0.51",
+        "SG:SG": "-0.65"
+      },
+      {
+        "Date": "2023-01-28",
+        "position": "CUT",
+        "roundPosition": "T122",
+        "TournamentName": "Farmers Insurance Open",
+        "is_major": "0",
+        "playerName": "Joey Vrzich",
+        "player_num": "59203",
+        "Rounds": "2",
+        "CourseID": "4",
+        "Course": "Torrey Pines GC (South)",
+        "ShotLink": "1",
+        "SG:TOT": "-1.70",
+        "SG:T2G": "-4.84",
+        "SG:OTT": "0.18",
+        "SG:APP": "-3.87",
+        "SG:BS": "-3.69",
+        "SG:ARG": "-1.15",
+        "SG:P": "0.70",
+        "SG:SG": "-0.45"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "25.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": null,
+        "Rounds": "1"
+      },
+      {
+        "GreenSurface": "Bermuda",
+        "StrokesGainedAverage": "-0.5099999904632568",
+        "Rounds": "2"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedAverage": "0.6970000267028809",
+        "Rounds": "1"
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "-1.0049999952316284",
+        "Rounds": "2"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "-2.119999933987856",
+        "Rounds": "2"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "0.7300000190734863",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Very Long",
+        "StrokesGainedAverage": "-2.326666625837485",
+        "Rounds": "3"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Very Difficult",
+        "StrokesGainedAverage": "-2.326666625837485",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "0.7300000190734863",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Strong",
+        "StrokesGainedAverage": "-1.7049999237060547",
+        "Rounds": "2"
+      },
+      {
+        "FieldStrength": "Very Strong",
+        "StrokesGainedAverage": "-1.4200000055134296",
+        "Rounds": "2"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "76.5",
+        "PM": "72.5",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": null,
+        "150-200": null,
+        "200+": "65.9",
+        "200-250": null,
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-1.4200000055134296",
+        "Rounds": "2"
+      },
+      {
+        "SeasonHeld": "West Coast",
+        "StrokesGainedAverage": "-1.7049999237060547",
+        "Rounds": "2"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:51.145Z",
+    "ok": true
+  }
+}

@@ -1,0 +1,177 @@
+{
+  "playerId": "59198",
+  "playerName": "Hugo Townsend",
+  "flag": "https://api.betspertsgolf.com/raw-forum/wp-content/uploads/2022/03/tn_sw-flag.gif",
+  "profile": {
+    "ProfileImage": null,
+    "Name": "Hugo Townsend",
+    "BirthPlace": null,
+    "BirthDate": "",
+    "Age": null,
+    "Height": null,
+    "Weight": null,
+    "Nationality": "Sweden",
+    "Residence": null,
+    "ProWins": null,
+    "TurnedPro": null,
+    "PGAWins": null,
+    "College": ""
+  },
+  "stats": {
+    "sgSummary": [
+      {
+        "playerName": "Hugo Townsend",
+        "player_num": "59198",
+        "Year": "2026",
+        "Rounds": "4",
+        "SG:TOT": "-0.26",
+        "SG:T2G": "-1.00",
+        "SG:OTT": "-0.21",
+        "SG:APP": "-1.06",
+        "SG:BS": "-1.27",
+        "SG:ARG": "0.26",
+        "SG:P": "0.74",
+        "Dr Distance": "296.0",
+        "Dr Accuracy %": "39.3",
+        "Ball Speed": "182.69"
+      }
+    ],
+    "sgGuest": [
+      {
+        "playerName": "Hugo Townsend",
+        "player_num": "59198",
+        "Rounds": "4",
+        "SG:TOT": "-0.26",
+        "SG:T2G": "-1.00",
+        "SG:OTT": "-0.21",
+        "SG:APP": "-1.06",
+        "SG:BS": "-1.27",
+        "SG:ARG": "0.26",
+        "SG:P": "0.74",
+        "SG:SG": "1.01"
+      }
+    ],
+    "sgByEvent": [
+      {
+        "Date": "2026-07-12",
+        "position": "T55",
+        "roundPosition": "T55",
+        "TournamentName": "ISCO Championship",
+        "is_major": "0",
+        "playerName": "Hugo Townsend",
+        "player_num": "59198",
+        "Rounds": "4",
+        "CourseID": "934",
+        "Course": "Hurstbourne CC",
+        "ShotLink": "4",
+        "SG:TOT": "-0.26",
+        "SG:T2G": "-1.00",
+        "SG:OTT": "-0.21",
+        "SG:APP": "-1.06",
+        "SG:BS": "-1.27",
+        "SG:ARG": "0.26",
+        "SG:P": "0.74",
+        "SG:SG": "1.01"
+      }
+    ],
+    "floorCeiling": [
+      {
+        "SG TOT 0+": "75.0",
+        "SG TOT 1+": "0.0",
+        "SG TOT 2+": "0.0",
+        "SG TOT 3+": "0.0",
+        "SG TOT 4+": "0.0",
+        "SG TOT 5+": "0.0",
+        "Rounds": "4"
+      }
+    ],
+    "greenGrass": [
+      {
+        "GreenSurface": "Bent",
+        "StrokesGainedAverage": "0.7427499704062939",
+        "Rounds": "4"
+      },
+      {
+        "GreenSurface": "Poa",
+        "StrokesGainedPutting": 0
+      }
+    ],
+    "byRound": [
+      {
+        "Condition": "1",
+        "StrokesGainedAverage": "0.18000000715255737",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "2",
+        "StrokesGainedAverage": "0.9300000071525574",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "3",
+        "StrokesGainedAverage": "0.8500000238418579",
+        "Rounds": "1"
+      },
+      {
+        "Condition": "4",
+        "StrokesGainedAverage": "-3",
+        "Rounds": "1"
+      }
+    ],
+    "byCourseLength": [
+      {
+        "CourseLength": "Short",
+        "StrokesGainedAverage": "-0.25999999046325684",
+        "Rounds": "4"
+      }
+    ],
+    "byScoringCondition": [
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "-0.6299999952316284",
+        "Rounds": "3"
+      },
+      {
+        "Condition": "Very Easy",
+        "StrokesGainedAverage": "0.8500000238418579",
+        "Rounds": "1"
+      }
+    ],
+    "byFieldStrength": [
+      {
+        "FieldStrength": "Very Weak",
+        "StrokesGainedAverage": "-0.25999999046325684",
+        "Rounds": "4"
+      }
+    ],
+    "amPmSplit": [
+      {
+        "AM": "69",
+        "PM": "69",
+        "Rounds": "4"
+      }
+    ],
+    "approachProximity": [
+      {
+        "Rounds": "4",
+        "50-100": null,
+        "100-150": "31.9",
+        "150-200": "31.4",
+        "200+": "54",
+        "200-250": "48.6",
+        "250+": null
+      }
+    ],
+    "sgBySeasonHeld": [
+      {
+        "SeasonHeld": "Summer",
+        "StrokesGainedAverage": "-0.25999999046325684",
+        "Rounds": "4"
+      }
+    ]
+  },
+  "_meta": {
+    "pulledAt": "2026-11-20T22:22:04.470Z",
+    "ok": true
+  }
+}
