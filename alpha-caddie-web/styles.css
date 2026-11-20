@@ -1,115 +1,116 @@
 /*
- * Theme tokens from Alpha Caddie reference comps:
- *   Dark  — Strokes Gained Leaders + Lift/Clean/Place (charcoal + #00D27F)
- *   Light — Iron Men + Wind Watch (paper #F2F0E9 + forest #006241)
+ * Exact palette sampled from reference screenshots:
+ *   Dark  — SG Leaders + Lift/Clean/Place (#080c0f bg, #00d088 accent)
+ *   Light — Wind Watch + Iron Men (#f2efe8 / #f7f7f7 paper, #00704c forest)
  */
 :root,
 html[data-theme="dark"] {
   color-scheme: dark;
-  --golf-bg: #0a0c0e;
-  --golf-bg-rgb: 10, 12, 14;
-  --golf-elevated: #12161a;
-  --golf-elevated-soft: #1a1f24;
-  --golf-border: rgba(255, 255, 255, 0.08);
-  --golf-card-border: #1f2937;
-  --golf-green: #00d27f;
-  --golf-green-rgb: 0, 210, 127;
-  --golf-green-soft: #10b981;
-  --golf-green-bright: #00d27f;
-  --golf-green-muted: #064e3b;
-  --golf-green-bar-secondary: #88c9a1;
+  --golf-bg: #080c0f;
+  --golf-bg-rgb: 8, 12, 15;
+  --golf-elevated: #0e1316;
+  --golf-elevated-soft: #141a1e;
+  --golf-border: #222628;
+  --golf-card-border: #222628;
+  --golf-green: #00d088;
+  --golf-green-rgb: 0, 208, 136;
+  --golf-green-soft: #14c48c;
+  --golf-green-bright: #00d088;
+  --golf-green-muted: #08684c;
+  --golf-green-chip-strong: #048860;
+  --golf-green-bar-secondary: #394048;
   --golf-text: #ffffff;
-  --golf-text-muted: #8b9298;
-  --golf-text-subtle: #5f656a;
-  --golf-danger: #fca5a5;
-  --golf-danger-bg: #451a1a;
-  --golf-ou-over: #fca5a5;
+  --golf-text-muted: #8a8f94;
+  --golf-text-subtle: #6a7076;
+  --golf-danger: #f0b4b8;
+  --golf-danger-bg: #3c1c24;
+  --golf-ou-over: #f0b4b8;
   --golf-warning: #fbbf24;
-  --golf-chip-neutral: #1a1d1e;
-  --golf-bar-track: #333333;
-  --golf-bar-inactive: #3e454d;
+  --golf-chip-neutral: #14181c;
+  --golf-bar-track: #1a1f24;
+  --golf-bar-inactive: #394048;
   --golf-focus-ring: rgba(var(--golf-green-rgb), 0.45);
   --golf-focus-surface: rgba(var(--golf-green-rgb), 0.12);
   --golf-focus-border: rgba(var(--golf-green-rgb), 0.35);
-  --golf-surface-deep: #090c0d;
-  --golf-surface-mid: #0f1418;
-  --golf-surface-alt: #151a1f;
-  --golf-surface-head: #1a1f24;
-  --golf-surface-hover: #22282e;
+  --golf-surface-deep: #06090b;
+  --golf-surface-mid: #0e1316;
+  --golf-surface-alt: #141a1e;
+  --golf-surface-head: #161c20;
+  --golf-surface-hover: #1c2328;
   --golf-overlay-soft: rgba(255, 255, 255, 0.03);
   --golf-overlay-mid: rgba(255, 255, 255, 0.06);
-  --golf-overlay-strong: rgba(255, 255, 255, 0.14);
-  --golf-nav-bg: rgba(var(--golf-bg-rgb), 0.88);
-  --golf-hero-glow: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(var(--golf-green-rgb), 0.1), transparent);
-  --golf-hero-glow-2: radial-gradient(ellipse 60% 40% at 100% 0%, rgba(0, 210, 127, 0.04), transparent);
+  --golf-overlay-strong: rgba(255, 255, 255, 0.12);
+  --golf-nav-bg: rgba(var(--golf-bg-rgb), 0.92);
+  --golf-hero-glow: none;
+  --golf-hero-glow-2: none;
   --golf-pinstripe: repeating-linear-gradient(
-    -45deg,
-    transparent,
-    transparent 11px,
-    rgba(255, 255, 255, 0.015) 11px,
-    rgba(255, 255, 255, 0.015) 12px
+    -32deg,
+    transparent 0 10px,
+    rgba(255, 255, 255, 0.018) 10px 11px
   );
-  --golf-radius-sm: 8px;
-  --golf-radius-md: 12px;
-  --golf-radius-lg: 16px;
-  --golf-radius-xl: 20px;
+  --golf-radius-sm: 6px;
+  --golf-radius-md: 10px;
+  --golf-radius-lg: 14px;
+  --golf-radius-xl: 18px;
   --golf-radius-pill: 999px;
-  --golf-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.32);
-  --golf-shadow-md: 0 4px 20px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(255, 255, 255, 0.04);
-  --golf-shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.45);
+  --golf-shadow-sm: none;
+  --golf-shadow-md: none;
+  --golf-shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.45);
   --golf-content-max: 1280px;
-  --golf-logo-grad: linear-gradient(145deg, rgba(var(--golf-green-rgb), 0.28), rgba(var(--golf-bg-rgb), 0.92));
+  --golf-logo-grad: linear-gradient(145deg, rgba(var(--golf-green-rgb), 0.22), #0e1316);
+  --golf-rain: #3b719f;
 }
 
 html[data-theme="light"] {
   color-scheme: light;
-  --golf-bg: #f2f0e9;
-  --golf-bg-rgb: 242, 240, 233;
+  --golf-bg: #f2efe8;
+  --golf-bg-rgb: 242, 239, 232;
   --golf-elevated: #ffffff;
-  --golf-elevated-soft: #f8f8f8;
-  --golf-border: #e0e0e0;
+  --golf-elevated-soft: #f7f7f7;
+  --golf-border: #e4e0d8;
   --golf-card-border: #e0e0e0;
-  --golf-green: #006241;
-  --golf-green-rgb: 0, 98, 65;
-  --golf-green-soft: #006644;
-  --golf-green-bright: #008552;
-  --golf-green-muted: #88c9a1;
-  --golf-green-bar-secondary: #88c9a1;
-  --golf-text: #1a1a1a;
-  --golf-text-muted: #707070;
-  --golf-text-subtle: #757575;
-  --golf-danger: #b91c1c;
-  --golf-danger-bg: #fee2e2;
-  --golf-ou-over: #dc2626;
-  --golf-warning: #b45309;
-  --golf-chip-neutral: #f0f0f0;
-  --golf-bar-track: #f0f0f0;
-  --golf-bar-inactive: #d1d5db;
-  --golf-focus-ring: rgba(var(--golf-green-rgb), 0.4);
+  --golf-green: #00704c;
+  --golf-green-rgb: 0, 112, 76;
+  --golf-green-soft: #007048;
+  --golf-green-bright: #00704c;
+  --golf-green-muted: #80c8a0;
+  --golf-green-chip-strong: #00704c;
+  --golf-green-bar-secondary: #80c8a0;
+  --golf-text: #111111;
+  --golf-text-muted: #757575;
+  --golf-text-subtle: #8a8a8a;
+  --golf-danger: #b42318;
+  --golf-danger-bg: #fce8e6;
+  --golf-ou-over: #b42318;
+  --golf-warning: #b54708;
+  --golf-chip-neutral: #efefef;
+  --golf-bar-track: #efefef;
+  --golf-bar-inactive: #e0e0e0;
+  --golf-focus-ring: rgba(var(--golf-green-rgb), 0.35);
   --golf-focus-surface: rgba(var(--golf-green-rgb), 0.1);
-  --golf-focus-border: rgba(var(--golf-green-rgb), 0.32);
-  --golf-surface-deep: #ebe8df;
+  --golf-focus-border: rgba(var(--golf-green-rgb), 0.28);
+  --golf-surface-deep: #ebe7de;
   --golf-surface-mid: #ffffff;
-  --golf-surface-alt: #f8f8f8;
-  --golf-surface-head: #f4f2ec;
-  --golf-surface-hover: #ebe8df;
-  --golf-overlay-soft: rgba(0, 0, 0, 0.03);
-  --golf-overlay-mid: rgba(0, 0, 0, 0.05);
-  --golf-overlay-strong: rgba(0, 0, 0, 0.12);
-  --golf-nav-bg: rgba(var(--golf-bg-rgb), 0.92);
-  --golf-hero-glow: radial-gradient(ellipse 80% 50% at 50% -20%, rgba(var(--golf-green-rgb), 0.08), transparent);
-  --golf-hero-glow-2: radial-gradient(ellipse 60% 40% at 100% 0%, rgba(0, 98, 65, 0.04), transparent);
-  --golf-pinstripe: repeating-linear-gradient(
-    -45deg,
-    transparent,
-    transparent 11px,
-    rgba(0, 0, 0, 0.02) 11px,
-    rgba(0, 0, 0, 0.02) 12px
-  );
-  --golf-shadow-sm: 0 1px 2px rgba(26, 26, 26, 0.06);
-  --golf-shadow-md: 0 4px 16px rgba(26, 26, 26, 0.08), 0 0 0 1px rgba(26, 26, 26, 0.04);
-  --golf-shadow-lg: 0 16px 40px rgba(26, 26, 26, 0.12);
-  --golf-logo-grad: linear-gradient(145deg, rgba(var(--golf-green-rgb), 0.18), #ffffff);
+  --golf-surface-alt: #f7f7f7;
+  --golf-surface-head: #f7f5f0;
+  --golf-surface-hover: #ebe7de;
+  --golf-overlay-soft: rgba(0, 0, 0, 0.025);
+  --golf-overlay-mid: rgba(0, 0, 0, 0.045);
+  --golf-overlay-strong: rgba(0, 0, 0, 0.1);
+  --golf-nav-bg: rgba(var(--golf-bg-rgb), 0.94);
+  --golf-hero-glow: none;
+  --golf-hero-glow-2: none;
+  --golf-pinstripe: none;
+  --golf-radius-sm: 8px;
+  --golf-radius-md: 12px;
+  --golf-radius-lg: 14px;
+  --golf-radius-xl: 18px;
+  --golf-radius-pill: 999px;
+  --golf-shadow-sm: none;
+  --golf-shadow-md: none;
+  --golf-shadow-lg: 0 10px 28px rgba(17, 17, 17, 0.08);
+  --golf-logo-grad: linear-gradient(145deg, rgba(var(--golf-green-rgb), 0.14), #ffffff);
+  --golf-rain: #3b719f;
 }
 
 * { box-sizing: border-box; }
@@ -6546,14 +6547,21 @@ dialog,
   gap: 14px;
 }
 
-/* ?? Live Stats (Live Course Insights) ?? */
+/* Live Stats (Live Course Insights) — heat chips match SG Leaders comps */
 .live-stats-panel {
-  --ls-heat-pos-bg: #1b8a3e;
-  --ls-heat-neg-bg: #c62828;
-  --ls-heat-zero-bg: #ffffff;
-  --ls-heat-zero-fg: #111111;
+  --ls-heat-pos-bg: var(--golf-green-chip-strong);
+  --ls-heat-neg-bg: var(--golf-danger-bg);
+  --ls-heat-zero-bg: var(--golf-chip-neutral);
+  --ls-heat-zero-fg: var(--golf-text);
   --ls-heat-on-color-fg: #ffffff;
-  --ls-pill-active: #c9a227;
+  --ls-pill-active: var(--golf-green);
+}
+html[data-theme="light"] .live-stats-panel {
+  --ls-heat-on-color-fg: #ffffff;
+}
+html[data-theme="dark"] .live-stats-panel {
+  --ls-heat-neg-bg: #3c1c24;
+  --ls-heat-on-color-fg: #ffffff;
 }
 
 .live-stats-round-bar {
@@ -6563,9 +6571,9 @@ dialog,
   gap: 10px 16px;
   margin: 0 0 14px;
   padding: 10px 12px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 8px;
-  background: rgba(0, 0, 0, 0.18);
+  border: 1px solid var(--golf-card-border);
+  border-radius: var(--golf-radius-md);
+  background: var(--golf-surface-mid);
 }
 .live-stats-round-bar-label {
   font-size: 0.68rem;
@@ -6764,14 +6772,14 @@ dialog,
   margin-top: 8px;
 }
 
-/* Theme utility chips (Strokes Gained Leaders / Iron Men comps) */
+/* Theme utility chips — match SG Leaders / Iron Men / Wind Watch comps exactly */
 .sg-chip {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   min-width: 3.25rem;
-  padding: 4px 8px;
-  border-radius: 8px;
+  padding: 5px 9px;
+  border-radius: 6px;
   font-variant-numeric: tabular-nums;
   font-weight: 600;
   font-size: 0.8125rem;
@@ -6783,7 +6791,7 @@ dialog,
   font-weight: 700;
 }
 .sg-chip--strong {
-  background: var(--golf-green);
+  background: var(--golf-green-chip-strong);
   color: #ffffff;
 }
 .sg-chip--good {
@@ -6816,5 +6824,43 @@ html[data-theme="light"] .sg-chip--good {
   background: var(--golf-green-bar-secondary);
 }
 html[data-theme="light"] .ou-toggle-btn.active {
-  box-shadow: 0 1px 3px rgba(26, 26, 26, 0.12);
+  box-shadow: none;
+}
+
+/* Screenshot-faithful surfaces: bordered cards, no drop shadows */
+html[data-theme="light"] .home-card,
+html[data-theme="light"] .ou-filter-card,
+html[data-theme="light"] .tabs,
+html[data-theme="light"] .data-status-primary,
+html[data-theme="light"] .panel .card,
+html[data-theme="light"] .ev-panel,
+html[data-theme="dark"] .home-card,
+html[data-theme="dark"] .ou-filter-card,
+html[data-theme="dark"] .tabs,
+html[data-theme="dark"] .data-status-primary {
+  box-shadow: none;
+  border-color: var(--golf-card-border);
+}
+
+html[data-theme="light"] .home-eyebrow,
+html[data-theme="dark"] .home-eyebrow {
+  color: var(--golf-green);
+  letter-spacing: 0.14em;
+}
+
+html[data-theme="light"] .home-card:hover,
+html[data-theme="dark"] .home-card:hover {
+  transform: none;
+  box-shadow: none;
+  border-color: var(--golf-green);
+}
+
+html[data-theme="light"] .app-nav,
+html[data-theme="dark"] .app-nav {
+  box-shadow: none;
+}
+
+html[data-theme="light"] .nav-theme-toggle-icon,
+html[data-theme="dark"] .nav-theme-toggle-icon {
+  background: var(--golf-green);
 }
