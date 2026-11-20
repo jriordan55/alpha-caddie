@@ -1005,6 +1005,130 @@ function displayGolferName(name) {
   return s;
 }
 
+/** @type {{ dgToPga?: Record<string, number>, nameToPga?: Record<string, number>, betspertsByName?: Record<string, string> } | null} */
+let PLAYER_HEADSHOTS = null;
+let playerHeadshotsLoadPromise = null;
+
+function normHeadshotNameKey(name) {
+  return String(name || "")
+    .toLowerCase()
+    .replace(/,/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+async function ensurePlayerHeadshotsLoaded() {
+  if (PLAYER_HEADSHOTS) return PLAYER_HEADSHOTS;
+  if (playerHeadshotsLoadPromise) return playerHeadshotsLoadPromise;
+  playerHeadshotsLoadPromise = (async () => {
+    try {
+      const res = await fetch(`data/player_headshots.json?v=${Date.now()}`, { cache: "no-store" });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      PLAYER_HEADSHOTS = await res.json();
+    } catch {
+      PLAYER_HEADSHOTS = { dgToPga: {}, nameToPga: {}, betspertsByName: {} };
+    }
+    return PLAYER_HEADSHOTS;
+  })();
+  return playerHeadshotsLoadPromise;
+}
+
+function resolvePgaPlayerIdForHeadshot({ dg_id, player_name } = {}) {
+  const map = PLAYER_HEADSHOTS;
+  const dg = Math.round(num(dg_id, NaN));
+  if (map?.dgToPga && Number.isFinite(dg) && dg > 0) {
+    const mapped = Number(map.dgToPga[String(dg)]);
+    if (Number.isFinite(mapped) && mapped > 0) return mapped;
+  }
+  const keys = [
+    normHeadshotNameKey(player_name),
+    normHeadshotNameKey(displayGolferName(player_name)),
+  ].filter(Boolean);
+  for (const k of keys) {
+    const mapped = Number(map?.nameToPga?.[k]);
+    if (Number.isFinite(mapped) && mapped > 0) return mapped;
+  }
+  // Some feeds already use PGA ids as dg_id.
+  if (Number.isFinite(dg) && dg > 0) return dg;
+  return NaN;
+}
+
+function pgaTourHeadshotUrl(pgaId, size = 72) {
+  const id = Math.round(num(pgaId, NaN));
+  if (!Number.isFinite(id) || id <= 0) return "";
+  const s = Math.max(32, Math.min(160, Math.round(size) || 72));
+  const theme = document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
+  const bg = theme === "light" ? "F2EFE8" : "080C0F";
+  const stub = theme === "light" ? "default_avatar_light.webp" : "default_avatar_dark.webp";
+  return `https://pga-tour-res.cloudinary.com/image/upload/c_thumb,g_face,z_0.7,q_auto,f_auto,w_${s},h_${s},b_rgb:${bg},d_stub:${stub}/headshots_${id}`;
+}
+
+function betspertsHeadshotUrl(player_name) {
+  const map = PLAYER_HEADSHOTS?.betspertsByName;
+  if (!map) return "";
+  const keys = [
+    normHeadshotNameKey(player_name),
+    normHeadshotNameKey(displayGolferName(player_name)),
+  ].filter(Boolean);
+  for (const k of keys) {
+    const url = map[k];
+    if (typeof url === "string" && url.startsWith("http")) return url;
+  }
+  return "";
+}
+
+function playerHeadshotUrl({ dg_id, player_name, size = 72 } = {}) {
+  const pga = resolvePgaPlayerIdForHeadshot({ dg_id, player_name });
+  if (Number.isFinite(pga) && pga > 0) return pgaTourHeadshotUrl(pga, size);
+  return betspertsHeadshotUrl(player_name);
+}
+
+function playerInitialsFromName(name) {
+  const disp = displayGolferName(name || "");
+  const parts = disp.split(/\s+/).filter(Boolean);
+  if (!parts.length) return "?";
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return `${parts[0][0] || ""}${parts[parts.length - 1][0] || ""}`.toUpperCase();
+}
+
+/** Circular headshot node matching screenshot leaderboards. */
+function createPlayerAvatarEl({ dg_id, player_name, size = 36 } = {}) {
+  const wrap = document.createElement("span");
+  wrap.className = "player-avatar";
+  wrap.style.width = `${size}px`;
+  wrap.style.height = `${size}px`;
+  wrap.setAttribute("aria-hidden", "true");
+  const initials = document.createElement("span");
+  initials.className = "player-avatar-initials";
+  initials.textContent = playerInitialsFromName(player_name);
+  wrap.appendChild(initials);
+  const url = playerHeadshotUrl({ dg_id, player_name, size: Math.round(size * 2) });
+  if (url) {
+    const img = document.createElement("img");
+    img.className = "player-avatar-img";
+    img.alt = "";
+    img.loading = "lazy";
+    img.decoding = "async";
+    img.referrerPolicy = "no-referrer";
+    img.src = url;
+    img.onerror = function onHeadshotErr() {
+      this.onerror = null;
+      this.remove();
+    };
+    wrap.appendChild(img);
+  }
+  return wrap;
+}
+
+function playerAvatarHtml({ dg_id, player_name, size = 36 } = {}) {
+  const url = playerHeadshotUrl({ dg_id, player_name, size: Math.round(size * 2) });
+  const initials = escapeHtml(playerInitialsFromName(player_name));
+  const img = url
+    ? `<img class="player-avatar-img" alt="" loading="lazy" decoding="async" referrerpolicy="no-referrer" src="${escapeHtml(url)}" onerror="this.onerror=null;this.remove();" />`
+    : "";
+  return `<span class="player-avatar" style="width:${size}px;height:${size}px" aria-hidden="true"><span class="player-avatar-initials">${initials}</span>${img}</span>`;
+}
+
 /** Never show synthetic `DG 12345` labels in the UI. */
 function isDgPlaceholderDisplayName(name) {
   return /^DG\s*\d+\s*$/i.test(String(name || "").trim());
@@ -9015,6 +9139,11 @@ function buildOuProjDetailPanel(player, col, side, mu, pick, rawName, dkPick, pp
 }
 
 function buildOuTable() {
+  if (!PLAYER_HEADSHOTS) {
+    void ensurePlayerHeadshotsLoaded().then(() => {
+      if (activeAppTabId() === "ou") buildOuTable();
+    });
+  }
   ensureOuMarketFilterValid();
   const table = document.getElementById("table-ou");
   if (!table) return;
@@ -9178,6 +9307,21 @@ function buildOuTable() {
 
     const nameTd = document.createElement("td");
     nameTd.className = "ou-cell ou-proj-long-td ou-proj-td-golfer";
+    const golferWrap = document.createElement("span");
+    golferWrap.className = "player-golfer-cell";
+    golferWrap.appendChild(
+      createPlayerAvatarEl({
+        dg_id: player.dg_id,
+        player_name: rawName,
+        size: 36,
+      }),
+    );
+    const nameStack = document.createElement("span");
+    nameStack.className = "player-golfer-meta";
+    const nameText = document.createElement("span");
+    nameText.className = "player-golfer-name";
+    nameText.textContent = displayGolferName(rawName);
+    nameStack.appendChild(nameText);
     const countryRaw = String(player.country || "").trim();
     const countrySlug = golfCountryToFlagSlug(countryRaw);
     if (countrySlug) {
@@ -9192,11 +9336,10 @@ function buildOuTable() {
         this.onerror = null;
         this.style.display = "none";
       };
-      nameTd.appendChild(flagEl);
+      nameStack.appendChild(flagEl);
     }
-    const nameText = document.createElement("span");
-    nameText.textContent = displayGolferName(rawName);
-    nameTd.appendChild(nameText);
+    golferWrap.appendChild(nameStack);
+    nameTd.appendChild(golferWrap);
     nameTd.dataset.playerValue = rawName;
     tr.appendChild(nameTd);
 
@@ -27513,6 +27656,7 @@ function wireLiveStatsUiOnce() {
 
 async function buildLiveStatsTab() {
   wireLiveStatsUiOnce();
+  await ensurePlayerHeadshotsLoaded();
   const tbody = document.querySelector("#table-live-stats tbody");
   const countEl = document.getElementById("live-stats-count");
   if (!tbody) return;
@@ -27627,9 +27771,14 @@ async function buildLiveStatsTab() {
             return `<td class="${c.cls}">${c.html}</td>`;
           })
           .join("");
+        const nm = r.player_display || r.player;
         return `<tr>
         <td class="ls-pos">${escapeHtml(r.pos)}</td>
-        <td class="ls-player">${escapeHtml(r.player_display || r.player)}</td>
+        <td class="ls-player"><span class="player-golfer-cell">${playerAvatarHtml({
+          dg_id: r.dg_id,
+          player_name: nm,
+          size: 36,
+        })}<span class="player-golfer-meta"><span class="player-golfer-name">${escapeHtml(nm)}</span></span></span></td>
         ${cells}
       </tr>`;
       })
@@ -27767,9 +27916,14 @@ async function buildLiveStatsTab() {
           return `<td class="${c.cls}">${c.html}</td>`;
         })
         .join("");
+      const nm = r.player_display || r.player;
       return `<tr>
         <td class="ls-pos">${escapeHtml(r.pos)}</td>
-        <td class="ls-player">${escapeHtml(r.player_display || r.player)}</td>
+        <td class="ls-player"><span class="player-golfer-cell">${playerAvatarHtml({
+          dg_id: r.dg_id,
+          player_name: nm,
+          size: 36,
+        })}<span class="player-golfer-meta"><span class="player-golfer-name">${escapeHtml(nm)}</span></span></span></td>
         ${cells}
       </tr>`;
     })
@@ -28980,6 +29134,9 @@ function applyAlphaCaddieTheme(theme, { persist = true } = {}) {
     }
   }
   syncAlphaCaddieThemeToggleUi(t);
+  // Cloudinary headshot bg/stub follows theme — refresh visible tables.
+  if (activeAppTabId() === "ou") buildOuTable();
+  if (activeAppTabId() === "live-stats") void buildLiveStatsTab();
 }
 
 function initAlphaCaddieThemeToggle() {
@@ -28992,6 +29149,7 @@ function initAlphaCaddieThemeToggle() {
 
 document.addEventListener("DOMContentLoaded", () => {
   initAlphaCaddieThemeToggle();
+  void ensurePlayerHeadshotsLoaded();
   syncWeatherUiFromState();
   initPropsTopTableSortOnce();
   configureRoundPickerUi();

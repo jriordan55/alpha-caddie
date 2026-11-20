@@ -229,6 +229,8 @@ if (!envTruthy("GOLF_SKIP_BETSPERTS", false)) {
   console.log("[refresh:live] Skipping Betsperts pull (GOLF_SKIP_BETSPERTS=1).\n");
 }
 
+run("build-player-headshots.mjs", "PGA/Betsperts player headshot map → data/player_headshots.json", {}, softOpt);
+
 await mirrorPublishArtifacts();
 
 console.log("\n[refresh:live] Done — projections, sportsbook odds, and prior-round tab data updated.");

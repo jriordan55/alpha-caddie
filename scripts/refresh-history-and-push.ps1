@@ -709,7 +709,9 @@ $artifacts = @(
   "alpha-caddie-web/data/historical_rounds_all.csv",
   # Betsperts Rabbit Hole player/course dump (refresh:live / push:live nightly)
   "data/betsperts",
-  "alpha-caddie-web/scripts/fetch-betsperts-db.mjs"
+  "alpha-caddie-web/scripts/fetch-betsperts-db.mjs",
+  "alpha-caddie-web/scripts/build-player-headshots.mjs",
+  "alpha-caddie-web/data/player_headshots.json"
 )
 if (-not $LiveWeekOnly) {
   $artifacts += @(
