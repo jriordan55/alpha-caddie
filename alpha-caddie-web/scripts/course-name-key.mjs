@@ -13,21 +13,23 @@ const COURSE_NAME_CANONICAL_KEYS = {
 };
 
 /**
- * Pull North/South/East/West course side before stripping parentheses so
- * "Club (North Course)" and "Club (South Course)" stay distinct keys.
+ * Pull course side before stripping parentheses so dual venues stay distinct
+ * ("Sea Island (Seaside Course)" vs "(Plantation Course)", North/South, etc.).
  * @param {string} s lowercased raw
- * @returns {string} e.g. "north course" or ""
+ * @returns {string} e.g. "north course", "seaside", or ""
  */
 export function extractCourseSideToken(s) {
   const t = String(s || "").toLowerCase();
-  const inParen = t.match(/\(\s*(north|south|east|west)\s*(course)?\s*\)/i);
-  if (inParen) return `${inParen[1].toLowerCase()} course`;
-  const outside = t.match(/\b(north|south|east|west)\s+course\b/i);
-  if (outside) return `${outside[1].toLowerCase()} course`;
-  // Short forms: "Torrey Pines (South)", "Firestone CC (South)"
-  const shortParen = t.match(/\(\s*(north|south|east|west)\s*\)/i);
-  if (shortParen) return `${shortParen[1].toLowerCase()} course`;
-  return "";
+  const named =
+    t.match(/\(\s*(seaside|plantation|ocean|resort|links|north|south|east|west)\s*(course)?\s*\)/i) ||
+    t.match(/\b(seaside|plantation|ocean|resort|links|north|south|east|west)\s+course\b/i) ||
+    t.match(/\(\s*(seaside|plantation|ocean|resort|links|north|south|east|west)\s*\)/i);
+  if (!named) return "";
+  const side = named[1].toLowerCase();
+  if (side === "seaside" || side === "plantation" || side === "ocean" || side === "resort" || side === "links") {
+    return side;
+  }
+  return `${side} course`;
 }
 
 export function normCourseNameKey(raw) {

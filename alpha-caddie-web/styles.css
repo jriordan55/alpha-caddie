@@ -2426,16 +2426,18 @@ html[data-theme="light"] .player-golfer-course {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 28px;
+  min-width: 30px;
   height: 28px;
-  padding: 0 6px;
+  padding: 0 7px;
   border-radius: 8px;
-  font-size: 0.68rem;
+  font-size: 0.72rem;
   font-weight: 800;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.03em;
   line-height: 1;
   box-sizing: border-box;
   user-select: none;
+  font-family: "DM Sans", "Segoe UI", sans-serif;
+  text-transform: uppercase;
 }
 #table-ou.table-ou-projections .ou-proj-td-book .book-logo-mark-chip {
   margin: 0 auto;

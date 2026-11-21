@@ -3865,7 +3865,11 @@ function metaEventVenueLabel() {
   const m = DATA.meta || {};
   const ev = m.event_name ? formatEventNameForDisplay(m.event_name) : "";
   const dual = ouFieldDualCourseSummaryLabel();
-  const course = dual || (m.course_used ? formatCourseNameForDisplay(m.course_used) : "");
+  const course =
+    dual ||
+    (m.course_used
+      ? formatDualOrSingleCourseForDisplay(m.course_used)
+      : "");
   if (ev && course) return enforceCourseDisplayAcronyms(`${ev} · ${course}`);
   return enforceCourseDisplayAcronyms(ev || course || "");
 }
@@ -3881,7 +3885,7 @@ function updateStatusBar() {
   if (!el) return;
   const m = DATA.meta || {};
   const ev = m.event_name ? String(m.event_name).trim() : "";
-  const course = m.course_used ? formatCourseNameForDisplay(m.course_used) : "";
+  const course = m.course_used ? formatDualOrSingleCourseForDisplay(m.course_used) : "";
   const line = metaEventVenueLabel() || "—";
   el.textContent = line;
   el.title = ev && course ? `${ev}\n${course}` : line;
@@ -5681,13 +5685,20 @@ async function ensureForecastWeatherLoaded() {
   hydrateBakedWeatherFromPlayerFields();
   const status = String(DATA.meta?.forecast_weather_status || "");
   const slots = DATA.meta?.forecast_wave_slots;
+  const hasWaveSlots =
+    Boolean(slots && typeof slots === "object") &&
+    Boolean(
+      (slots.morning && Number.isFinite(num(slots.morning.tempF, NaN))) ||
+        (slots.afternoon && Number.isFinite(num(slots.afternoon.tempF, NaN))),
+    );
   const hasWave =
-    Boolean(slots && typeof slots === "object" && (slots.morning || slots.afternoon)) ||
-    Boolean(String(DATA.meta?.forecast_wave_summary || "").trim());
+    hasWaveSlots || Boolean(String(DATA.meta?.forecast_wave_summary || "").trim());
+  // Prefer baked wave banner; only hit Open-Meteo when there is nothing usable to show.
+  const failedHard = ["open_meteo_fetch_failed", "empty_hourly"].includes(status);
   const needsFetch =
-    !projectionsWeatherUsableFromBaked() ||
-    !hasWave ||
-    ["no_course_coords", "open_meteo_fetch_failed", "empty_hourly", "no_players"].includes(status);
+    (!hasWave && !projectionsWeatherUsableFromBaked()) ||
+    (!hasWave && ["no_course_coords", "no_players"].includes(status)) ||
+    failedHard;
   if (needsFetch) {
     await refreshForecastWeatherFromOpenMeteo();
   } else {
@@ -5755,10 +5766,16 @@ async function refreshForecastWeatherFromOpenMeteo() {
   const tz = forecastTimezoneFromMeta();
   if (!DATA.meta) DATA.meta = {};
   if (!coords || !DATA.players?.length) {
-    for (const p of DATA.players || []) delete p.dg_auto_weather;
-    DATA.meta.forecast_weather_status = coords ? "no_players" : "no_course_coords";
+    const hadSlots =
+      DATA.meta.forecast_wave_slots &&
+      typeof DATA.meta.forecast_wave_slots === "object" &&
+      (DATA.meta.forecast_wave_slots.morning || DATA.meta.forecast_wave_slots.afternoon);
+    if (!hadSlots) {
+      for (const p of DATA.players || []) delete p.dg_auto_weather;
+      DATA.meta.forecast_weather_status = coords ? "no_players" : "no_course_coords";
+    }
     finalizeForecastWaveSummary(null);
-    return false;
+    return Boolean(hadSlots);
   }
   const cacheKey = `${coords.lat}|${coords.lon}|${tz}|${DATA.meta.datagolf_field_date_start || ""}`;
   const now = Date.now();
@@ -23074,16 +23091,19 @@ const COURSE_NAME_CANONICAL_KEYS = Object.freeze({
   "yokohama country club west course": "yokohama country club",
 });
 
-/** Pull North/South course side before stripping parentheses (must match course-name-key.mjs). */
+/** Pull course side before stripping parentheses (must match course-name-key.mjs). */
 function extractCourseSideToken(s) {
   const t = String(s || "").toLowerCase();
-  const inParen = t.match(/\(\s*(north|south|east|west)\s*(course)?\s*\)/i);
-  if (inParen) return `${inParen[1].toLowerCase()} course`;
-  const outside = t.match(/\b(north|south|east|west)\s+course\b/i);
-  if (outside) return `${outside[1].toLowerCase()} course`;
-  const shortParen = t.match(/\(\s*(north|south|east|west)\s*\)/i);
-  if (shortParen) return `${shortParen[1].toLowerCase()} course`;
-  return "";
+  const named =
+    t.match(/\(\s*(seaside|plantation|ocean|resort|links|north|south|east|west)\s*(course)?\s*\)/i) ||
+    t.match(/\b(seaside|plantation|ocean|resort|links|north|south|east|west)\s+course\b/i) ||
+    t.match(/\(\s*(seaside|plantation|ocean|resort|links|north|south|east|west)\s*\)/i);
+  if (!named) return "";
+  const side = named[1].toLowerCase();
+  if (side === "seaside" || side === "plantation" || side === "ocean" || side === "resort" || side === "links") {
+    return side;
+  }
+  return `${side} course`;
 }
 
 /** Course-name canonical key for filters/matching (e.g. "Trump National Doral" vs "(Blue Monster)"). */
@@ -23116,6 +23136,27 @@ function formatCourseNameForDisplay(raw) {
   return courseFitPrettyCourseKey(k);
 }
 
+/** Dual-course `course_used` (`A · B`) — keep Seaside/Plantation; avoid "Club Club" collapse. */
+function formatDualOrSingleCourseForDisplay(raw) {
+  const s = String(raw || "").trim();
+  if (!s) return "";
+  if (s.includes(" · ") || s.includes(";")) {
+    const parts = s
+      .split(/\s*[·;]\s*/)
+      .map((part) => formatCourseNameForDisplay(part.trim()) || part.trim())
+      .filter(Boolean);
+    const uniq = [...new Set(parts.map((p) => p.toLowerCase()))];
+    if (uniq.length === 1 && parts.length > 1) {
+      // Collapsed to same club name — prefer short side labels from the field when available.
+      const sides = ouFieldDualCourseSummaryLabel();
+      if (sides) return sides;
+      return parts[0];
+    }
+    return parts.join(" · ");
+  }
+  return formatCourseNameForDisplay(s);
+}
+
 function formatHistoryRoundCourseNameInPlace(r) {
   if (!r || typeof r !== "object") return r;
   const cn = String(r.course_name ?? "").trim();
@@ -23135,19 +23176,7 @@ function normalizeHistoryCourseNamesInPayload(payload) {
 
 function normalizeStoredCourseUsedLabels() {
   const m = DATA.meta;
-  // Dual-course labels use " · " — don't run through single-course pretty formatter.
-  const prettyDual = (raw) => {
-    const s = String(raw || "").trim();
-    if (!s) return s;
-    if (s.includes(" · ") || s.includes(";")) {
-      return s
-        .split(/\s*[·;]\s*/)
-        .map((part) => formatCourseNameForDisplay(part.trim()) || part.trim())
-        .filter(Boolean)
-        .join(" · ");
-    }
-    return formatCourseNameForDisplay(s);
-  };
+  const prettyDual = (raw) => formatDualOrSingleCourseForDisplay(raw) || String(raw || "").trim();
   if (m && m.course_used) m.course_used = prettyDual(m.course_used);
   if (DATA.course_used) DATA.course_used = prettyDual(DATA.course_used);
   for (const p of DATA.players || []) {
@@ -26861,7 +26890,7 @@ async function loadProjections(opts = {}) {
     await yieldToMain();
     hydrateBakedWeatherFromPlayerFields();
     void fetchAndMergeFieldTeeTimes({ force: true });
-    void ensureForecastWeatherLoaded();
+    await ensureForecastWeatherLoaded();
     void ensurePgatourEventRoundsLoaded().then(() => {
       if (HISTORY._ok && lastLiveInPlayBundleForHistory) {
         reapplyLiveInPlayHistoryMerge();
