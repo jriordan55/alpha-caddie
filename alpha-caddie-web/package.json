@@ -8,6 +8,7 @@
     "fetch:dg": "node scripts/fetch-datagolf.mjs",
     "fetch:dg:all-tours": "node scripts/fetch-all-tours.mjs",
     "build:headshots": "node scripts/build-player-headshots.mjs",
+    "build:betsperts-sg": "node scripts/build-betsperts-sg.mjs",
     "fetch:betsperts": "node scripts/fetch-betsperts-db.mjs",
     "fetch:betsperts:daily": "node scripts/fetch-betsperts-db.mjs --force",
     "fetch:betsperts:auth": "node scripts/fetch-betsperts-db.mjs --auth-only",

@@ -14958,7 +14958,7 @@ function courseBreakdownSuccessSkillsSection(ctx) {
   return {
     title: "Skills that correlate with success here",
     paragraphs: [
-      "These are the traits the course model, approach mix, and venue scoring profile point to. Leaders are from this week's field (DataGolf skill ratings / approach-skill YTD).",
+      "These are the traits the course model, approach mix, and venue scoring profile point to. Leaders are from this week's field (Betsperts strokes gained / approach-skill YTD).",
     ],
     bullets: skills.map((s) => `<strong>${s.label}</strong>: ${s.why}. Best in field — ${s.leaders}.`),
   };

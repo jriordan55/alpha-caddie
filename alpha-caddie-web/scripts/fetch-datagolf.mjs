@@ -145,6 +145,7 @@ import {
 } from "./counting-from-rates-sg.mjs";
 import { blendWeightsFromHistCalib } from "./optimized-counting-blend.mjs";
 import { resolveCourseTableForVenue } from "./course-adaptive-pricing.mjs";
+import { applyBetspertsSgToSkillByDg } from "./betsperts-sg.mjs";
 import {
   applyCourseTailoringShiftsToRow,
   computeCourseTailoringShifts,
@@ -1917,6 +1918,17 @@ async function main() {
     else skillByDg.set(fid, mergeSkillDrivingProfile({ dg_id: fid }));
   }
 
+  let betspertsSgApplied = 0;
+  try {
+    const bp = applyBetspertsSgToSkillByDg(skillByDg);
+    betspertsSgApplied = bp.applied;
+    console.log(
+      `[fetch-dg] Betsperts SG overlay: ${bp.applied}/${bp.available} players (sg_total/ott/app/arg/putt/t2g)`,
+    );
+  } catch (e) {
+    console.warn("[fetch-dg] Betsperts SG overlay skipped:", e.message || e);
+  }
+
   console.log("Fetching preds/approach-skill (YTD → approach_skill_ytd.json for Course Fit shot bins)…");
   try {
     const asJson = await fetchDg("/preds/approach-skill", { period: "ytd", file_format: "json" }, key);
@@ -2976,6 +2988,9 @@ async function main() {
     updated_at: new Date().toISOString().replace(/\.\d{3}Z$/, "Z"),
     source:
       "DataGolf API (field-updates, preds/live-hole-stats hole pars, skill-ratings, player-decompositions, preds/live-tournament-stats when available, preds/pre-tournament, betting-tools/outrights, betting-tools/matchups)",
+    /** Strokes-gained pillars (sg_total/ott/app/arg/putt/t2g) prefer Betsperts Rabbit Hole when mapped. */
+    sg_source: betspertsSgApplied > 0 ? "betsperts" : "datagolf",
+    betsperts_sg_n: betspertsSgApplied,
     /** Web app: book columns are implied % (0–100); convert to American in UI like Shiny pct_to_american */
     outrights_odds_format: "percent",
     /** Stored raw from betting-tools/matchups with odds_format=decimal */
