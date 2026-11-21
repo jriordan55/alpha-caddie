@@ -148,7 +148,9 @@ export async function applyBayesianRoundMu(opts = {}) {
   let n = 0;
   let nWx = 0;
   for (const p of players) {
+    // Only rewrite the active display round — locked prior rounds (R1/R2…) keep their μ + lines.
     if (Math.round(num(p.round, NaN)) !== targetRound) continue;
+    if (p.projection_round_locked === true) continue;
     const dg = Math.round(num(p.dg_id, NaN));
     if (!Number.isFinite(dg)) continue;
     const snap = weatherSnapFromPlayer(p);
