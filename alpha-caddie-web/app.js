@@ -1096,6 +1096,9 @@ function createPlayerAvatarEl({ dg_id, player_name, size = 36 } = {}) {
   wrap.style.width = `${size}px`;
   wrap.style.height = `${size}px`;
   wrap.setAttribute("aria-hidden", "true");
+  wrap.dataset.dgId = String(dg_id ?? "");
+  wrap.dataset.playerName = String(player_name || "");
+  wrap.dataset.avatarSize = String(size);
   const initials = document.createElement("span");
   initials.className = "player-avatar-initials";
   initials.textContent = playerInitialsFromName(player_name);
@@ -1116,6 +1119,31 @@ function createPlayerAvatarEl({ dg_id, player_name, size = 36 } = {}) {
     wrap.appendChild(img);
   }
   return wrap;
+}
+
+/** Fill headshots in-place after map loads — never rebuild the whole O/U table. */
+function hydrateVisiblePlayerAvatars() {
+  document.querySelectorAll(".player-avatar").forEach((wrap) => {
+    if (!(wrap instanceof HTMLElement)) return;
+    if (wrap.querySelector("img.player-avatar-img")) return;
+    const dg = wrap.dataset.dgId;
+    const name = wrap.dataset.playerName || "";
+    const size = Math.round(num(wrap.dataset.avatarSize, 36));
+    const url = playerHeadshotUrl({ dg_id: dg, player_name: name, size: Math.round(size * 2) });
+    if (!url) return;
+    const img = document.createElement("img");
+    img.className = "player-avatar-img";
+    img.alt = "";
+    img.loading = "lazy";
+    img.decoding = "async";
+    img.referrerPolicy = "no-referrer";
+    img.src = url;
+    img.onerror = function onHeadshotErr() {
+      this.onerror = null;
+      this.remove();
+    };
+    wrap.appendChild(img);
+  });
 }
 
 function playerAvatarHtml({ dg_id, player_name, size = 36 } = {}) {
@@ -9020,10 +9048,18 @@ function buildOuProjDetailPanel(player, col, side, mu, pick, rawName, dkPick, pp
   return wrap;
 }
 
+let ouTableBuildGen = 0;
+
+function selectedOuProjBookFilter() {
+  return String(document.getElementById("ou-proj-book-filter")?.value ?? "best").trim().toLowerCase();
+}
+
 function buildOuTable() {
+  const buildGen = ++ouTableBuildGen;
   if (!PLAYER_HEADSHOTS) {
     void ensurePlayerHeadshotsLoaded().then(() => {
-      if (activeAppTabId() === "ou") buildOuTable();
+      if (buildGen !== ouTableBuildGen) return;
+      hydrateVisiblePlayerAvatars();
     });
   }
   ensureOuMarketFilterValid();
@@ -9079,18 +9115,32 @@ function buildOuTable() {
   const teeWave = selectedOuTeeWaveFilter();
 
   // Defer field-history shard fetch until after first paint (averages fill in on next rebuild).
-  requestAnimationFrame(() => ensureOuFieldHistoryOnce());
+  requestAnimationFrame(() => {
+    if (buildGen === ouTableBuildGen) ensureOuFieldHistoryOnce();
+  });
 
-  let flatRows = getOuProjectionFlatRows(allRows, cols);
+  const projMarketSel = String(document.getElementById("ou-proj-market-filter")?.value || "").trim();
+  const bookFilter = selectedOuProjBookFilter();
+  // Only compute needed markets. "All markets" + "All books" is a main-thread bomb — clamp.
+  let colsForRows = projMarketSel
+    ? cols.filter((c) => String(c.label) === projMarketSel)
+    : bookFilter === ""
+      ? cols.slice(0, 1)
+      : cols;
+  if (!colsForRows.length) colsForRows = cols.slice(0, 1);
+  let flatRows = getOuProjectionFlatRows(allRows, colsForRows);
   if (q) {
     flatRows = flatRows.filter((r) => golferNameMatchesQuery(String(r.player.player_name || ""), q));
   }
   if (teeWave) {
     flatRows = flatRows.filter((r) => playerMatchesTeeWaveFilter(r.player, teeWave));
   }
-  const projMarketSel = String(document.getElementById("ou-proj-market-filter")?.value || "").trim();
-  if (projMarketSel) flatRows = flatRows.filter((r) => String(r.col.label) === projMarketSel);
   let bookRows = expandOuProjectionBookPriceRows(flatRows);
+  if (bookFilter === "best") {
+    bookRows = bookRows.filter((r) => r.isBestBook);
+  } else if (bookFilter) {
+    bookRows = bookRows.filter((r) => String(r.bookKey || "") === bookFilter);
+  }
   const k = ouTableSort.key;
   const d = ouTableSort.dir;
   if (k !== "stat-order") {
@@ -9098,6 +9148,10 @@ function buildOuTable() {
   } else {
     bookRows.sort(ouProjectionRowStatOrder);
   }
+  // Hard cap so a bad filter never locks the tab.
+  const OU_BOOK_ROW_RENDER_CAP = 400;
+  const bookRowsTotal = bookRows.length;
+  if (bookRows.length > OU_BOOK_ROW_RENDER_CAP) bookRows = bookRows.slice(0, OU_BOOK_ROW_RENDER_CAP);
 
   const projColCount = 14;
   const flatRowKeys = new Set(
@@ -9132,200 +9186,234 @@ function buildOuTable() {
     tr.appendChild(td);
     tbody.appendChild(tr);
   } else {
-  const ouTbodyFrag = document.createDocumentFragment();
-  for (const r of bookRows) {
-    const tr = document.createElement("tr");
-    tr.className = "ou-proj-long-tr ou-proj-data-row ou-proj-book-row";
-    if (r.isBestBook) tr.classList.add("ou-proj-best-book-row");
-    const {
-      player,
-      col,
-      side,
-      mu,
-      bookKey,
-      bookPick,
-      bookAm,
-      bookLine,
-      bookEdge,
-      bookRoi,
-      bookModelP,
-      bookKelly,
-      bookFairP,
-      deltaAvg,
-      dkPick,
-      ppPick,
-      slPick,
-      udPick,
-      fdPick,
-      klPick,
-      czrPick,
-      oxPick,
-      csPick,
-    } = r;
-    const rawName = String(player.player_name || "");
-    const expandKey = ouProjMakeExpandKey(rawName, col.label, side, bookKey);
-    tr.dataset.expandKey = expandKey;
-    if (ouProjExpandedKey === expandKey) tr.classList.add("ou-proj-row-expanded");
-    const teeTd = document.createElement("td");
-    teeTd.className = "ou-cell ou-proj-long-td num ou-proj-td-tee";
-    const teeRaw = playerDgTeetimeForRound(player);
-    teeTd.textContent = formatDgTeetimeEasternDisplay(teeRaw);
-    teeTd.title = teeRaw ? `Tee time (ET): ${teeRaw.replace("T", " ")}` : "Tee time not posted yet";
-    tr.appendChild(teeTd);
-
-    const nameTd = document.createElement("td");
-    nameTd.className = "ou-cell ou-proj-long-td ou-proj-td-golfer";
-    const golferWrap = document.createElement("span");
-    golferWrap.className = "player-golfer-cell";
-    golferWrap.appendChild(
-      createPlayerAvatarEl({
-        dg_id: player.dg_id,
-        player_name: rawName,
-        size: 32,
-      }),
-    );
-    const nameStack = document.createElement("span");
-    nameStack.className = "player-golfer-meta";
-    const nameText = document.createElement("span");
-    nameText.className = "player-golfer-name";
-    nameText.textContent = displayGolferName(rawName);
-    nameStack.appendChild(nameText);
-    golferWrap.appendChild(nameStack);
-    nameTd.appendChild(golferWrap);
-    nameTd.dataset.playerValue = rawName;
-    tr.appendChild(nameTd);
-
-    const mktTd = document.createElement("td");
-    mktTd.className = "ou-cell ou-proj-long-td ou-proj-td-market";
-    mktTd.textContent = col.label;
-    tr.appendChild(mktTd);
-
-    const sideTd = document.createElement("td");
-    sideTd.className = "ou-cell ou-proj-long-td num ou-proj-td-side";
-    sideTd.textContent = side === "over" ? "Over" : "Under";
-    tr.appendChild(sideTd);
-
-    const muTd = document.createElement("td");
-    muTd.className = "ou-cell ou-proj-long-td num ou-proj-td-mu";
-    muTd.textContent = formatOuProjectedMean(mu);
-    tr.appendChild(muTd);
-
-    const avgTd = document.createElement("td");
-    avgTd.className = "ou-cell ou-proj-long-td num ou-proj-td-avg";
-    const avgHit = ouProjectionRowMarketAvgHit(r);
-    if (
-      !Number.isFinite(avgHit.avg) &&
-      (ouPlayerAvgHistoryPending(player) || avgHit.source === "pending")
-    ) {
-      avgTd.textContent = "…";
-    } else {
-      avgTd.textContent = formatOuMarketAverage(avgHit.avg, col.market);
-    }
-    avgTd.title = ouPlayerMarketAverageTitle(col.market, avgHit);
-    tr.appendChild(avgTd);
-
-    const bookTd = document.createElement("td");
-    bookTd.className = "ou-cell ou-proj-long-td ou-proj-td-book";
-    bookTd.innerHTML = bookBadgeHtml(bookKey);
-    if (r.isBestBook) bookTd.title = "Best available price for this side";
-    tr.appendChild(bookTd);
-
-    const lineTd = document.createElement("td");
-    lineTd.className = "ou-cell ou-proj-long-td num ou-proj-td-line";
-    lineTd.textContent = Number.isFinite(bookLine) ? String(bookLine) : "";
-    tr.appendChild(lineTd);
-
-    const oddsTd = document.createElement("td");
-    oddsTd.className = "ou-cell ou-proj-long-td num ou-proj-td-odds";
-    paintOuProjOddsTd(oddsTd, bookPick, side, bookFairP);
-    tr.appendChild(oddsTd);
-
-    const edgeTd = document.createElement("td");
-    edgeTd.className = "ou-cell ou-proj-long-td num ou-proj-td-edge";
-    if (Number.isFinite(bookEdge)) {
-      edgeTd.textContent = formatEdgePct(bookEdge);
-      if (Number.isFinite(bookRoi)) {
-        edgeTd.title = `Edge ${formatEdgePct(bookEdge)} · Exp ROI ${(bookRoi * 100).toFixed(1)}%`;
+    let paintIdx = 0;
+    const CHUNK = 32;
+    const paintChunk = () => {
+      if (buildGen !== ouTableBuildGen) return;
+      const frag = document.createDocumentFragment();
+      const end = Math.min(paintIdx + CHUNK, bookRows.length);
+      for (; paintIdx < end; paintIdx++) {
+        const nodes = buildOuProjectionBookRowNodes(bookRows[paintIdx], projColCount);
+        for (const n of nodes) frag.appendChild(n);
       }
-      if (bookEdge > 0) edgeTd.classList.add("pos");
-      else if (bookEdge < 0) edgeTd.classList.add("neg");
-    } else edgeTd.textContent = "";
-    tr.appendChild(edgeTd);
+      tbody.appendChild(frag);
+      if (paintIdx < bookRows.length) {
+        requestAnimationFrame(paintChunk);
+        return;
+      }
+      if (bookRowsTotal > OU_BOOK_ROW_RENDER_CAP) {
+        const tr = document.createElement("tr");
+        const td = document.createElement("td");
+        td.colSpan = projColCount;
+        td.className = "ou-cell ou-proj-long-td ou-proj-empty-td";
+        td.textContent = `Showing top ${OU_BOOK_ROW_RENDER_CAP} of ${bookRowsTotal} prices — narrow Market/Book filters to see more.`;
+        tr.appendChild(td);
+        tbody.appendChild(tr);
+      }
+      finishOuProjectionTablePaint(buildGen);
+    };
+    requestAnimationFrame(paintChunk);
+    return;
+  }
 
-    const roiTd = document.createElement("td");
-    roiTd.className = "ou-cell ou-proj-long-td num ou-proj-td-roi";
+  finishOuProjectionTablePaint(buildGen);
+}
+
+function buildOuProjectionBookRowNodes(r, projColCount) {
+  const out = [];
+  const tr = document.createElement("tr");
+  tr.className = "ou-proj-long-tr ou-proj-data-row ou-proj-book-row";
+  if (r.isBestBook) tr.classList.add("ou-proj-best-book-row");
+  const {
+    player,
+    col,
+    side,
+    mu,
+    bookKey,
+    bookPick,
+    bookAm,
+    bookLine,
+    bookEdge,
+    bookRoi,
+    bookModelP,
+    bookKelly,
+    bookFairP,
+    deltaAvg,
+    dkPick,
+    ppPick,
+    slPick,
+    udPick,
+    fdPick,
+    klPick,
+    czrPick,
+    oxPick,
+    csPick,
+  } = r;
+  const rawName = String(player.player_name || "");
+  const expandKey = ouProjMakeExpandKey(rawName, col.label, side, bookKey);
+  tr.dataset.expandKey = expandKey;
+  if (ouProjExpandedKey === expandKey) tr.classList.add("ou-proj-row-expanded");
+
+  const teeTd = document.createElement("td");
+  teeTd.className = "ou-cell ou-proj-long-td num ou-proj-td-tee";
+  const teeRaw = playerDgTeetimeForRound(player);
+  teeTd.textContent = formatDgTeetimeEasternDisplay(teeRaw);
+  teeTd.title = teeRaw ? `Tee time (ET): ${teeRaw.replace("T", " ")}` : "Tee time not posted yet";
+  tr.appendChild(teeTd);
+
+  const nameTd = document.createElement("td");
+  nameTd.className = "ou-cell ou-proj-long-td ou-proj-td-golfer";
+  const golferWrap = document.createElement("span");
+  golferWrap.className = "player-golfer-cell";
+  golferWrap.appendChild(
+    createPlayerAvatarEl({
+      dg_id: player.dg_id,
+      player_name: rawName,
+      size: 32,
+    }),
+  );
+  const nameStack = document.createElement("span");
+  nameStack.className = "player-golfer-meta";
+  const nameText = document.createElement("span");
+  nameText.className = "player-golfer-name";
+  nameText.textContent = displayGolferName(rawName);
+  nameStack.appendChild(nameText);
+  golferWrap.appendChild(nameStack);
+  nameTd.appendChild(golferWrap);
+  nameTd.dataset.playerValue = rawName;
+  tr.appendChild(nameTd);
+
+  const mktTd = document.createElement("td");
+  mktTd.className = "ou-cell ou-proj-long-td ou-proj-td-market";
+  mktTd.textContent = col.label;
+  tr.appendChild(mktTd);
+
+  const sideTd = document.createElement("td");
+  sideTd.className = "ou-cell ou-proj-long-td num ou-proj-td-side";
+  sideTd.textContent = side === "over" ? "Over" : "Under";
+  tr.appendChild(sideTd);
+
+  const muTd = document.createElement("td");
+  muTd.className = "ou-cell ou-proj-long-td num ou-proj-td-mu";
+  muTd.textContent = formatOuProjectedMean(mu);
+  tr.appendChild(muTd);
+
+  const avgTd = document.createElement("td");
+  avgTd.className = "ou-cell ou-proj-long-td num ou-proj-td-avg";
+  const avgHit = ouProjectionRowMarketAvgHit(r);
+  if (!Number.isFinite(avgHit.avg) && (ouPlayerAvgHistoryPending(player) || avgHit.source === "pending")) {
+    avgTd.textContent = "…";
+  } else {
+    avgTd.textContent = formatOuMarketAverage(avgHit.avg, col.market);
+  }
+  avgTd.title = ouPlayerMarketAverageTitle(col.market, avgHit);
+  tr.appendChild(avgTd);
+
+  const bookTd = document.createElement("td");
+  bookTd.className = "ou-cell ou-proj-long-td ou-proj-td-book";
+  bookTd.innerHTML = bookBadgeHtml(bookKey, { textFirst: true });
+  if (r.isBestBook) bookTd.title = "Best available price for this side";
+  tr.appendChild(bookTd);
+
+  const lineTd = document.createElement("td");
+  lineTd.className = "ou-cell ou-proj-long-td num ou-proj-td-line";
+  lineTd.textContent = Number.isFinite(bookLine) ? String(bookLine) : "";
+  tr.appendChild(lineTd);
+
+  const oddsTd = document.createElement("td");
+  oddsTd.className = "ou-cell ou-proj-long-td num ou-proj-td-odds";
+  paintOuProjOddsTd(oddsTd, bookPick, side, bookFairP);
+  tr.appendChild(oddsTd);
+
+  const edgeTd = document.createElement("td");
+  edgeTd.className = "ou-cell ou-proj-long-td num ou-proj-td-edge";
+  if (Number.isFinite(bookEdge)) {
+    edgeTd.textContent = formatEdgePct(bookEdge);
     if (Number.isFinite(bookRoi)) {
-      roiTd.textContent = `${(bookRoi * 100).toFixed(1)}%`;
-      if (bookRoi > 0) roiTd.classList.add("pos");
-      else if (bookRoi < 0) roiTd.classList.add("neg");
-    } else roiTd.textContent = "";
-    tr.appendChild(roiTd);
-
-    const fairTd = document.createElement("td");
-    fairTd.className = "ou-cell ou-proj-long-td num ou-proj-td-fair";
-    const fairP = Number.isFinite(bookModelP) ? bookModelP : NaN;
-    fairTd.textContent = Number.isFinite(fairP) ? modelAmericanFromProb(fairP) : "";
-    fairTd.title = Number.isFinite(fairP) ? `Model fair · ${(fairP * 100).toFixed(1)}%` : "";
-    tr.appendChild(fairTd);
-
-    const kellyTd = document.createElement("td");
-    kellyTd.className = "ou-cell ou-proj-long-td num ou-proj-td-kelly";
-    if (Number.isFinite(bookKelly) && bookKelly > 0) {
-      kellyTd.textContent = formatOuKellyDollars(bookKelly);
-      kellyTd.title = `${bookMeta(bookKey).short} · ${ouProjKellyFractionLabel(ouProjKellyFractionFromUi())} · $${Math.round(ouProjBankrollFromUi()).toLocaleString()} bankroll`;
-    } else {
-      kellyTd.textContent = "";
+      edgeTd.title = `Edge ${formatEdgePct(bookEdge)} · Exp ROI ${(bookRoi * 100).toFixed(1)}%`;
     }
-    tr.appendChild(kellyTd);
+    if (bookEdge > 0) edgeTd.classList.add("pos");
+    else if (bookEdge < 0) edgeTd.classList.add("neg");
+  } else edgeTd.textContent = "";
+  tr.appendChild(edgeTd);
 
-    const dAvgTd = document.createElement("td");
-    dAvgTd.className = "ou-cell ou-proj-long-td num ou-proj-td-delta-avg";
-    paintOuProjDeltaTd(dAvgTd, deltaAvg);
-    dAvgTd.title = "Model − average book fair value";
-    tr.appendChild(dAvgTd);
+  const roiTd = document.createElement("td");
+  roiTd.className = "ou-cell ou-proj-long-td num ou-proj-td-roi";
+  if (Number.isFinite(bookRoi)) {
+    roiTd.textContent = `${(bookRoi * 100).toFixed(1)}%`;
+    if (bookRoi > 0) roiTd.classList.add("pos");
+    else if (bookRoi < 0) roiTd.classList.add("neg");
+  } else roiTd.textContent = "";
+  tr.appendChild(roiTd);
 
-    if (Number.isFinite(mu)) {
-      tr.title = `${displayGolferName(rawName)} · ${col.label} · ${side === "over" ? "Over" : "Under"} · ${bookMeta(bookKey).label}${Number.isFinite(bookAm) ? ` ${formatAmerican(bookAm)}` : ""}`;
-    }
-    ouTbodyFrag.appendChild(tr);
-    if (ouProjExpandedKey === expandKey) {
-      const dtr = document.createElement("tr");
-      dtr.className = "ou-proj-detail-tr";
-      const dtd = document.createElement("td");
-      dtd.colSpan = projColCount;
-      dtd.className = "ou-proj-detail-td";
-      dtd.appendChild(
-        buildOuProjDetailPanel(
-          player,
-          col,
-          side,
-          mu,
-          bookPick,
-          rawName,
-          dkPick,
-          ppPick,
-          slPick,
-          udPick,
-          fdPick,
-          klPick,
-          czrPick,
-          oxPick,
-          csPick,
-        ),
-      );
-      dtr.appendChild(dtd);
-      ouTbodyFrag.appendChild(dtr);
-    }
+  const fairTd = document.createElement("td");
+  fairTd.className = "ou-cell ou-proj-long-td num ou-proj-td-fair";
+  const fairP = Number.isFinite(bookModelP) ? bookModelP : NaN;
+  fairTd.textContent = Number.isFinite(fairP) ? modelAmericanFromProb(fairP) : "";
+  fairTd.title = Number.isFinite(fairP) ? `Model fair · ${(fairP * 100).toFixed(1)}%` : "";
+  tr.appendChild(fairTd);
+
+  const kellyTd = document.createElement("td");
+  kellyTd.className = "ou-cell ou-proj-long-td num ou-proj-td-kelly";
+  if (Number.isFinite(bookKelly) && bookKelly > 0) {
+    kellyTd.textContent = formatOuKellyDollars(bookKelly);
+    kellyTd.title = `${bookMeta(bookKey).short} · ${ouProjKellyFractionLabel(ouProjKellyFractionFromUi())} · $${Math.round(ouProjBankrollFromUi()).toLocaleString()} bankroll`;
+  } else {
+    kellyTd.textContent = "";
   }
-  tbody.appendChild(ouTbodyFrag);
-  }
+  tr.appendChild(kellyTd);
 
+  const dAvgTd = document.createElement("td");
+  dAvgTd.className = "ou-cell ou-proj-long-td num ou-proj-td-delta-avg";
+  paintOuProjDeltaTd(dAvgTd, deltaAvg);
+  dAvgTd.title = "Model − average book fair value";
+  tr.appendChild(dAvgTd);
+
+  if (Number.isFinite(mu)) {
+    tr.title = `${displayGolferName(rawName)} · ${col.label} · ${side === "over" ? "Over" : "Under"} · ${bookMeta(bookKey).label}${Number.isFinite(bookAm) ? ` ${formatAmerican(bookAm)}` : ""}`;
+  }
+  out.push(tr);
+  if (ouProjExpandedKey === expandKey) {
+    const dtr = document.createElement("tr");
+    dtr.className = "ou-proj-detail-tr";
+    const dtd = document.createElement("td");
+    dtd.colSpan = projColCount;
+    dtd.className = "ou-proj-detail-td";
+    dtd.appendChild(
+      buildOuProjDetailPanel(
+        player,
+        col,
+        side,
+        mu,
+        bookPick,
+        rawName,
+        dkPick,
+        ppPick,
+        slPick,
+        udPick,
+        fdPick,
+        klPick,
+        czrPick,
+        oxPick,
+        csPick,
+      ),
+    );
+    dtr.appendChild(dtd);
+    out.push(dtr);
+  }
+  return out;
+}
+
+function finishOuProjectionTablePaint(buildGen) {
+  if (buildGen !== ouTableBuildGen) return;
+  hydrateVisiblePlayerAvatars();
   updateOuSortIndicators();
   syncOuTableHorizontalScroll();
   syncOuChartCard();
   syncForecastWaveBannerTexts();
   if (ouProjExpandedDetail) {
     requestAnimationFrame(() => {
+      if (buildGen !== ouTableBuildGen) return;
       const c = document.querySelector("#table-ou tbody .ou-proj-detail-canvas");
       if (!c || !ouProjExpandedDetail) return;
       drawOuProjDetailDistribution(
@@ -9790,17 +9878,21 @@ function attachBookLogoWithFallback(imgEl, fallbackEl, domain) {
   imgEl.src = urls[0];
 }
 
-function bookBadgeHtml(book) {
+function bookBadgeHtml(book, opts = {}) {
   const m = bookMeta(book);
+  const textFirst = opts.textFirst !== false;
+  // Round projections: text badge only — remote favicons stall the tab and often fail blank.
+  if (textFirst || opts.skipRemoteLogo) {
+    return `<span class="book-logo-pill book-logo-pill-text" title="${m.label}"><span class="book-logo-mark">${m.short}</span><span class="book-logo-name">${m.label}</span></span>`;
+  }
   const slug = bookLogoSlugFromDomain(m.domain);
   const localLogo = slug ? `logos/${slug}.png` : "";
   const favicon = bookFaviconUrlFromDomain(m.domain);
-  const imgSrc = favicon || localLogo;
-  const onErr = favicon && localLogo
-    ? `if(this.getAttribute('data-tried')!=='1'){this.setAttribute('data-tried','1');this.src='${localLogo}';}else{this.style.display='none';this.nextElementSibling.style.display='inline-flex';}`
-    : "this.style.display='none';this.nextElementSibling.style.display='inline-flex';";
+  const imgSrc = localLogo || favicon;
+  const onErr =
+    "this.style.display='none';var n=this.nextElementSibling;if(n)n.style.display='inline-flex';";
   const mark = imgSrc
-    ? `<img class="book-logo-img-inline" src="${imgSrc}" alt="${m.label}" loading="lazy" data-tried="0" onerror="${onErr}" /><span class="book-logo-mark" style="display:none">${m.short}</span>`
+    ? `<img class="book-logo-img-inline" src="${imgSrc}" alt="" loading="lazy" decoding="async" onerror="${onErr}" /><span class="book-logo-mark" style="display:none">${m.short}</span>`
     : `<span class="book-logo-mark">${m.short}</span>`;
   return `<span class="book-logo-pill" title="${m.label}">${mark}<span class="book-logo-name">${m.label}</span></span>`;
 }
@@ -28959,6 +29051,11 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("ou-proj-market-filter")?.addEventListener("change", (ev) => {
     const el = ev?.currentTarget;
     if (el && el instanceof HTMLSelectElement) el.dataset.userPicked = "1";
+    ouProjExpandedKey = "";
+    ouTableSort = { key: "pr-best-roi", dir: -1 };
+    scheduleBuildOuTable(true);
+  });
+  document.getElementById("ou-proj-book-filter")?.addEventListener("change", () => {
     ouProjExpandedKey = "";
     ouTableSort = { key: "pr-best-roi", dir: -1 };
     scheduleBuildOuTable(true);

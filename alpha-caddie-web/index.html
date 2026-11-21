@@ -26,7 +26,7 @@
     onload="this.media='all'"
   />
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" /></noscript>
-  <link rel="stylesheet" href="styles.css?v=25" />
+  <link rel="stylesheet" href="styles.css?v=26" />
 </head>
 <body>
   <header class="app-nav">
@@ -172,6 +172,21 @@
             <label class="toolbar-label ou-filter-field">Market
               <select id="ou-proj-market-filter" title="Filter table to one stat market">
                 <option value="">All markets</option>
+              </select>
+            </label>
+            <label class="toolbar-label ou-filter-field">Book
+              <select id="ou-proj-book-filter" title="One sportsbook price per row — Best keeps the table fast">
+                <option value="best" selected>Best price</option>
+                <option value="">All books</option>
+                <option value="draftkings">DraftKings</option>
+                <option value="fanduel">FanDuel</option>
+                <option value="caesars">Caesars</option>
+                <option value="kalshi">Kalshi</option>
+                <option value="prizepicks">PrizePicks</option>
+                <option value="sleeper">Sleeper</option>
+                <option value="underdog">Underdog</option>
+                <option value="onyx">Onyx</option>
+                <option value="courtside">Courtside</option>
               </select>
             </label>
             <label class="toolbar-label ou-filter-field">Average
@@ -1430,6 +1445,6 @@
     </div>
   </dialog>
 
-  <script src="app.js?v=379"></script>
+  <script src="app.js?v=380"></script>
 </body>
 </html>
