@@ -276,6 +276,34 @@ if (ppLineErrors.length) {
   );
 }
 
+// Weather banner + tee-time snapshots — required on 9pm / push:live (not soft-skippable).
+{
+  const wxMeta = projectionExportMeta(proj);
+  const wxStatus = String(wxMeta.forecast_weather_status || proj.forecast_weather_status || "").trim();
+  const slots = wxMeta.forecast_wave_slots || proj.forecast_wave_slots;
+  const hasWave =
+    slots &&
+    typeof slots === "object" &&
+    ((slots.morning && Number.isFinite(num(slots.morning.tempF, NaN))) ||
+      (slots.afternoon && Number.isFinite(num(slots.afternoon.tempF, NaN))));
+  const wxOk =
+    hasWave &&
+    !["no_course_coords", "open_meteo_fetch_failed", "empty_hourly", "no_players"].includes(wxStatus);
+  const requireWeather =
+    envTruthy("GOLF_REQUIRE_WEATHER", true) && !envTruthy("GOLF_ALLOW_MISSING_WEATHER_COORDS", false);
+  if (!wxOk) {
+    const msg =
+      `venue weather missing or failed (status=${wxStatus || "unset"}, wave=${hasWave ? "yes" : "no"}) — ` +
+      `run npm run bake:weather (add COURSE_COORDINATES_BY_NAME if no_course_coords)`;
+    if (requireWeather) {
+      // Hard fail even when GOLF_LIVE_VALIDATE_SOFT=1 — weather must ship every nightly.
+      console.error(`[validate:projections] FAIL: ${msg}`);
+      process.exit(1);
+    }
+    console.warn(`[validate:projections] WARN: ${msg}`);
+  }
+}
+
 const targetLabel = liveInPlay
   ? eventWeekTrusted
     ? "event-week (live in-play)"

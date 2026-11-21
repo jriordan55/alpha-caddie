@@ -172,10 +172,19 @@ for (const tour of tours) {
     "refresh-live-tour.mjs",
     `Live projections (${tour})`,
     { GOLF_DATAGOLF_TOUR: tour, GOLF_TOUR: tour },
-    // LiveWeekOnly / soft mode: OneDrive locks on live-in-play.json must not abort the nightly publish.
-    tour === "euro" || liveWeekSoft ? softOpt : {},
+    // Euro stays soft; PGA is hard so weather/coords failures abort the 9pm publish.
+    // Local OneDrive locks: set GOLF_LIVE_WEEK_SOFT=1 to soften PGA too.
+    tour === "euro" || (tour !== "pga" && liveWeekSoft) || (tour === "pga" && envTruthy("GOLF_LIVE_WEEK_SOFT_PGA", false))
+      ? softOpt
+      : {},
   );
 }
+
+// Absolute weather gate for the primary projections.json (never soft).
+run("bake-weather-into-projections.mjs", "Open-Meteo weather publish gate (required)", {
+  ...tourArtifactEnv(),
+  GOLF_ALLOW_MISSING_WEATHER_COORDS: process.env.GOLF_ALLOW_MISSING_WEATHER_COORDS || "0",
+});
 
 // —— Tab data: projection tracker O/U CSV ——
 if (!envTruthy("GOLF_SKIP_ROUND_PROJECTION_VS_ACTUAL", false)) {

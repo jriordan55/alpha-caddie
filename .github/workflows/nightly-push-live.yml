@@ -112,6 +112,10 @@ jobs:
           GOLF_REQUIRE_TRACKER_REFRESH: "1"
           GOLF_SKIP_MATCHUP_ODDS_UPDATE: "0"
           GOLF_REQUIRE_LIVE_PUBLISH_INVARIANTS: "1"
+          # Weather must bake every night — fail publish if Open-Meteo / coords missing.
+          GOLF_REQUIRE_WEATHER: "1"
+          GOLF_ALLOW_MISSING_WEATHER_COORDS: "0"
+          GOLF_LIVE_WEEK_SOFT_PGA: "0"
           GOLF_REBUILD_PRIOR_BACKTEST_PROJECTIONS: "0"
           # Multi-book O/U props + audit CSVs for projection-tracker (never skip on nightly).
           GOLF_SKIP_DK_OU: "0"

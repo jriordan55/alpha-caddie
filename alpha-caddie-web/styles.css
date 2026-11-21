@@ -2422,7 +2422,25 @@ html[data-theme="light"] .player-golfer-course {
   background: transparent;
   gap: 0;
 }
-.book-logo-mark-chip {
+.book-logo-mark-wrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  vertical-align: middle;
+}
+.book-logo-mark-img {
+  display: block;
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  border-radius: 6px;
+  background: #fff;
+  box-sizing: border-box;
+}
+.book-logo-mark-chip,
+.book-logo-mark-chip-fallback .book-logo-mark-chip {
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -2439,6 +2457,10 @@ html[data-theme="light"] .player-golfer-course {
   font-family: "DM Sans", "Segoe UI", sans-serif;
   text-transform: uppercase;
 }
+.book-logo-mark-chip-fallback[hidden] {
+  display: none !important;
+}
+#table-ou.table-ou-projections .ou-proj-td-book .book-logo-mark-wrap,
 #table-ou.table-ou-projections .ou-proj-td-book .book-logo-mark-chip {
   margin: 0 auto;
 }

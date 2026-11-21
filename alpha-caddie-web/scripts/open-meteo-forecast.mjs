@@ -85,6 +85,10 @@ export const COURSE_COORDINATES_BY_NAME = {
   "el cardonal at diamante": { lat: 22.9017, lon: -109.985, timezone: "America/Mazatlan" },
   "omni barton creek resort and spa": { lat: 30.2965, lon: -97.964, timezone: "America/Chicago" },
   "sea island golf club": { lat: 31.133, lon: -81.3727, timezone: "America/New_York" },
+  "sea island golf club seaside": { lat: 31.133, lon: -81.3727, timezone: "America/New_York" },
+  "sea island golf club seaside course": { lat: 31.133, lon: -81.3727, timezone: "America/New_York" },
+  "sea island golf club plantation": { lat: 31.168, lon: -81.37, timezone: "America/New_York" },
+  "sea island golf club plantation course": { lat: 31.168, lon: -81.37, timezone: "America/New_York" },
   "albany golf club": { lat: 25.0044, lon: -77.506, timezone: "America/Nassau" },
 };
 
@@ -141,19 +145,29 @@ async function geocodeProjectionCourseCoords(proj) {
   const meta = projectionExportMeta(proj);
   const course = String(meta?.course_used ?? proj?.course_used ?? "").trim();
   if (!course) return null;
+  // Dual-course labels ("Seaside · Plantation") often fail as one string — try each side.
+  const candidates = [
+    course,
+    ...course
+      .split(/\s*[·;|]\s*/)
+      .map((p) => p.trim())
+      .filter((p) => p && p !== course),
+  ];
   try {
     const { geocodeCourseName } = await import("./historical-round-weather.mjs");
     const eventName = String(meta?.event_name ?? proj?.event_name ?? "").trim();
-    const hit = await geocodeCourseName(course, {
-      coordsCachePath: COORDS_CACHE_PATH,
-      eventName,
-    });
-    if (hit && Number.isFinite(num(hit.lat, NaN)) && Number.isFinite(num(hit.lon, NaN))) {
-      _coordsCache = null; // force reload of the file we just wrote
-      console.warn(
-        `[open-meteo] geocoded "${course}" → ${hit.lat},${hit.lon} (${hit.timezone || "tz?"}) — add to COURSE_COORDINATES_BY_NAME for an exact fix`,
-      );
-      return { lat: hit.lat, lon: hit.lon, timezone: hit.timezone || null };
+    for (const name of candidates) {
+      const hit = await geocodeCourseName(name, {
+        coordsCachePath: COORDS_CACHE_PATH,
+        eventName,
+      });
+      if (hit && Number.isFinite(num(hit.lat, NaN)) && Number.isFinite(num(hit.lon, NaN))) {
+        _coordsCache = null; // force reload of the file we just wrote
+        console.warn(
+          `[open-meteo] geocoded "${name}" → ${hit.lat},${hit.lon} (${hit.timezone || "tz?"}) — add to COURSE_COORDINATES_BY_NAME for an exact fix`,
+        );
+        return { lat: hit.lat, lon: hit.lon, timezone: hit.timezone || null };
+      }
     }
   } catch (e) {
     console.warn("[open-meteo] geocode fallback failed:", e?.message || e);

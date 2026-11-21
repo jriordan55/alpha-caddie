@@ -36,6 +36,13 @@ function num(v, fallback = NaN) {
   return Number.isFinite(n) ? n : fallback;
 }
 
+function envTruthy(name, defaultVal = false) {
+  const raw = process.env[name];
+  if (raw === undefined || String(raw).trim() === "") return defaultVal;
+  const s = String(raw).trim().toLowerCase();
+  return s === "1" || s === "true" || s === "yes";
+}
+
 function r3(x) {
   return Number.isFinite(x) ? Math.round(x * 1000) / 1000 : null;
 }
@@ -126,6 +133,14 @@ export async function applyBayesianRoundMu(opts = {}) {
   console.log(
     `[bayes-mu] tee weather ${baked.status} · ${baked.playersWithWeather} players · ${baked.teeMatches} tee matches`,
   );
+  if (baked.status === "no_course_coords") {
+    const course = String(proj?.course_used || proj?.meta?.course_used || "?").trim();
+    console.error(
+      `[bayes-mu] FAIL: no coordinates for "${course}" — add lat/lon to COURSE_COORDINATES_BY_NAME ` +
+        `(scripts/open-meteo-forecast.mjs) or set GOLF_ALLOW_MISSING_WEATHER_COORDS=1`,
+    );
+    if (!envTruthy("GOLF_ALLOW_MISSING_WEATHER_COORDS", false)) process.exit(1);
+  }
 
   const birdR = fit.dispersion.birdies?.r;
   const bogR = fit.dispersion.bogeys?.r;

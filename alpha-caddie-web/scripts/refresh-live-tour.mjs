@@ -123,6 +123,9 @@ if (tour === "pga") {
 run("fetch-book-odds-into-projections.mjs", "Sportsbook odds merge", {}, softOpt);
 run("merge-live-round-meta-into-projections.mjs", "Display round + prior-round difficulty", {}, softOpt);
 run("merge-field-teetimes-into-projections.mjs", "Tee times", {}, softOpt);
+// Hard gate: 9pm / push:live must never publish without venue weather (banner + μ).
+// Soft mode does NOT apply — missing coords / Open-Meteo failure aborts the tour publish.
+run("bake-weather-into-projections.mjs", "Open-Meteo weather → projections (required)", {});
 run("repair-projection-course-basis.mjs", "Venue history blend", {}, softOpt);
 run(
   "within-event-projection-apply.mjs",
@@ -139,6 +142,8 @@ if (envTruthy("GOLF_HIERARCHICAL_MU", true)) {
     "Bayesian hierarchical round μ (baseline + course + skill×traits + tee-window wind + form)",
   );
 }
+// Final weather pass after hierarchical μ so forecast_wave_* banner fields cannot be left empty.
+run("bake-weather-into-projections.mjs", "Open-Meteo weather final bake (required)", {});
 
 await mirrorLegacyAliases();
 console.log(`\n[refresh-live-tour] Done: ${tourDisplayLabel(tour)} → ${paths.projectionsFile}\n`);

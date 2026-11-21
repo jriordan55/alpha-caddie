@@ -543,6 +543,8 @@ function Stage-LiveWeekFieldHistoryShards([string] $RepoRoot, [string] $WebRoot)
 
 if ($LiveWeekOnly) {
   Run-Npm "Live-week refresh (projections + odds + weather + Trends patch + tracker) ..." run refresh:live
+  # Hard publish gate (also runs inside refresh:live) — never ship without venue forecast.
+  Run-Npm "Open-Meteo weather publish gate (bake:weather required) ..." run bake:weather
   Promote-RoundProjectionVsActualCsv $webRoot
 } else {
   Run-Npm "Running fetch:dg ..." run fetch:dg

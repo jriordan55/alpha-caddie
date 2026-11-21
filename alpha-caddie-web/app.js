@@ -5116,7 +5116,9 @@ const COURSE_COORDINATES_BY_NAME = {
   "sea island golf club": { lat: 31.133, lon: -81.3727 },
   "sea island golf club (seaside course)": { lat: 31.133, lon: -81.3727 },
   "sea island golf club (plantation course)": { lat: 31.168, lon: -81.37 },
+  "sea island golf club seaside": { lat: 31.133, lon: -81.3727 },
   "sea island golf club seaside course": { lat: 31.133, lon: -81.3727 },
+  "sea island golf club plantation": { lat: 31.168, lon: -81.37 },
   "sea island golf club plantation course": { lat: 31.168, lon: -81.37 },
 };
 
@@ -10236,14 +10238,14 @@ function bookFaviconUrlFromDomain(domain) {
   return `https://www.google.com/s2/favicons?domain=${encodeURIComponent(d)}&sz=64`;
 }
 
-/** Remote icon URLs first — `logos/*.png` is optional and usually absent in this repo. */
+/** Bundled `logos/*.png` first (offline / CSP-safe), then remote favicons. */
 function bookLogoCandidateUrls(domain) {
   const d = String(domain || "").trim().toLowerCase();
   const slug = bookLogoSlugFromDomain(d);
   const urls = [];
-  if (d) urls.push(`https://icons.duckduckgo.com/ip3/${encodeURIComponent(d)}.ico`);
-  if (d) urls.push(`https://www.google.com/s2/favicons?domain=${encodeURIComponent(d)}&sz=64`);
   if (slug) urls.push(`logos/${slug}.png`);
+  if (d) urls.push(`https://www.google.com/s2/favicons?domain=${encodeURIComponent(d)}&sz=128`);
+  if (d) urls.push(`https://icons.duckduckgo.com/ip3/${encodeURIComponent(d)}.ico`);
   return urls;
 }
 
@@ -10292,9 +10294,52 @@ function bookMarkChipHtml(bookKey, shortLabel) {
   return `<span class="book-logo-mark-chip" style="background:${colors.bg};color:${colors.fg}">${label}</span>`;
 }
 
+/** Real logo img + letter-chip fallback (onerror hides img, shows chip). */
+function bookMarkHtml(bookKey, shortLabel, domain) {
+  const chip = bookMarkChipHtml(bookKey, shortLabel);
+  const urls = bookLogoCandidateUrls(domain);
+  if (!urls.length) return chip;
+  const safeAlt = String(shortLabel || bookKey || "book")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+  const src = urls[0]
+    .replace(/&/g, "&amp;")
+    .replace(/"/g, "&quot;");
+  const rest = urls
+    .slice(1)
+    .map((u) => u.replace(/&/g, "&amp;").replace(/"/g, "&quot;"))
+    .join("|");
+  return (
+    `<span class="book-logo-mark-wrap">` +
+    `<img class="book-logo-mark-img" src="${src}" data-fallbacks="${rest}" alt="${safeAlt}" width="28" height="28" loading="lazy" decoding="async" ` +
+    `onerror="window.__bookLogoImgErr&&window.__bookLogoImgErr(this)"/>` +
+    `<span class="book-logo-mark-chip-fallback" hidden>${chip}</span>` +
+    `</span>`
+  );
+}
+
+if (typeof window !== "undefined" && !window.__bookLogoImgErr) {
+  window.__bookLogoImgErr = function bookLogoImgErr(img) {
+    if (!img || img.dataset.logoFailed === "1") return;
+    const raw = String(img.getAttribute("data-fallbacks") || "");
+    const next = raw.split("|").map((s) => s.trim()).filter(Boolean);
+    if (next.length) {
+      img.setAttribute("data-fallbacks", next.slice(1).join("|"));
+      img.src = next[0];
+      return;
+    }
+    img.dataset.logoFailed = "1";
+    img.style.display = "none";
+    const fb = img.nextElementSibling;
+    if (fb) fb.hidden = false;
+  };
+}
+
 function bookBadgeHtml(book, opts = {}) {
   const m = bookMeta(book);
-  const markHtml = bookMarkChipHtml(m.key || book, m.short);
+  const markHtml = bookMarkHtml(m.key || book, m.short, m.domain);
   const markOnly = !!opts.markOnly;
   const nameHtml = markOnly ? "" : `<span class="book-logo-name">${m.label}</span>`;
   const pillClass = markOnly
