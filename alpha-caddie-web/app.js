@@ -1090,7 +1090,7 @@ function playerInitialsFromName(name) {
 }
 
 /** Circular headshot node matching screenshot leaderboards. */
-function createPlayerAvatarEl({ dg_id, player_name, size = 36 } = {}) {
+function createPlayerAvatarEl({ dg_id, player_name, size = 36, deferImage = false } = {}) {
   const wrap = document.createElement("span");
   wrap.className = "player-avatar";
   wrap.style.width = `${size}px`;
@@ -1103,6 +1103,7 @@ function createPlayerAvatarEl({ dg_id, player_name, size = 36 } = {}) {
   initials.className = "player-avatar-initials";
   initials.textContent = playerInitialsFromName(player_name);
   wrap.appendChild(initials);
+  if (deferImage) return wrap;
   const url = playerHeadshotUrl({ dg_id, player_name, size: Math.round(size * 2) });
   if (url) {
     const img = document.createElement("img");
@@ -3678,10 +3679,12 @@ function ouProjectionFieldPlayerDgIds() {
   return ids;
 }
 
-function invalidateOuProjectionAvgCaches() {
+function invalidateOuProjectionAvgCaches({ wipeRows = true } = {}) {
   OU_PROJ_AVG_CACHE.clear();
-  ouProjectionFlatRowsCache = null;
-  ouProjectionFlatRowsCacheSig = "";
+  if (wipeRows) {
+    ouProjectionFlatRowsCache = null;
+    ouProjectionFlatRowsCacheSig = "";
+  }
 }
 
 function syncOuProjAvgColumnHeader() {
@@ -3898,8 +3901,12 @@ function scheduleOuTableRebuildAfterHistory() {
   if (ouHistoryMergeRebuildRaf) cancelAnimationFrame(ouHistoryMergeRebuildRaf);
   ouHistoryMergeRebuildRaf = requestAnimationFrame(() => {
     ouHistoryMergeRebuildRaf = 0;
-    invalidateOuProjectionAvgCaches();
-    scheduleBuildOuTable(true);
+    invalidateOuProjectionAvgCaches({ wipeRows: false });
+    if (ouAvgOnlyRebuildTimer) clearTimeout(ouAvgOnlyRebuildTimer);
+    ouAvgOnlyRebuildTimer = setTimeout(() => {
+      ouAvgOnlyRebuildTimer = 0;
+      scheduleBuildOuTable(true);
+    }, 1200);
   });
 }
 
@@ -3927,18 +3934,24 @@ async function ensureOuProjectionFieldHistoryLoaded() {
     }
   }
   ouFieldHistoryLoadedSig = sig;
-  invalidateOuProjectionAvgCaches();
-  HISTORY_ROUNDS_CHRONO_CACHE.clear();
+  // Keep priced-row cache — only refresh Average column (full wipe freezes the tab).
+  invalidateOuProjectionAvgCaches({ wipeRows: false });
 }
 
+let ouAvgOnlyRebuildTimer = 0;
 function scheduleOuProjectionFieldHistoryLoad() {
   if (ouFieldHistoryLoadPromise) return ouFieldHistoryLoadPromise;
   ouFieldHistoryLoadPromise = ensureOuProjectionFieldHistoryLoaded()
     .then(() => {
-      if (activeAppTabId() === "ou") scheduleBuildOuTable(true);
+      if (activeAppTabId() !== "ou") return;
+      if (ouAvgOnlyRebuildTimer) clearTimeout(ouAvgOnlyRebuildTimer);
+      ouAvgOnlyRebuildTimer = setTimeout(() => {
+        ouAvgOnlyRebuildTimer = 0;
+        scheduleBuildOuTable(true);
+      }, 1200);
     })
     .catch(() => {
-      if (activeAppTabId() === "ou") scheduleBuildOuTable(true);
+      /* leave table as-is */
     })
     .finally(() => {
       ouFieldHistoryLoadPromise = null;
@@ -8454,117 +8467,51 @@ function ouLookupBookPick(map, id, nameKey, canon) {
   );
 }
 
-function ouAttachProjectionRowMetrics(row) {
-  const { player, col, side, dkPick, ppPick, slPick, udPick, fdPick, klPick, czrPick, oxPick, csPick } = row;
-  row.pick = dkPick || ppPick || slPick || udPick || fdPick || klPick || czrPick || oxPick || csPick;
+function ouAttachProjectionRowMetrics(row, opts = {}) {
+  const { player, col, side } = row;
+  const bookFilter = String(opts.bookFilter ?? "best").trim().toLowerCase();
+  row.pick =
+    row.dkPick ||
+    row.ppPick ||
+    row.slPick ||
+    row.udPick ||
+    row.fdPick ||
+    row.klPick ||
+    row.czrPick ||
+    row.oxPick ||
+    row.csPick;
   const bankroll = ouProjBankrollFromUi();
   const kellyFraction = ouProjKellyFractionFromUi();
-
-  const edgeForPick = (pick) => {
-    if (!pick) return { edge: NaN, roi: NaN, sortOdds: NaN, modelP: NaN, fairP: NaN };
-    const pImpOver = impliedProbFromAmerican(pick.over);
-    const pImpUnder = impliedProbFromAmerican(pick.under);
-    const { pOver, pUnder, edgeO, edgeU } = ouEdgeForCell(
-      col.market,
-      player,
-      pick.line,
-      pImpOver,
-      pImpUnder,
-      OU_PROJ_TABLE_MEAN_OPTS,
-    );
-    const sideAm = side === "over" ? pick.over : pick.under;
-    const modelP = side === "over" ? pOver : pUnder;
-    return {
-      edge: side === "over" ? edgeO : edgeU,
-      roi: propPricingExpectedRoi(modelP, sideAm),
-      sortOdds: sideAm,
-      modelP,
-      fairP: ouProjNoVigSideProb(pick, side),
-    };
+  // One model eval per distinct line (books often share 68.5 / 69.5).
+  const lineModelCache = new Map();
+  const modelForLine = (line) => {
+    const key = Number.isFinite(line) ? String(line) : "";
+    if (lineModelCache.has(key)) return lineModelCache.get(key);
+    const pOver = clampProb01(modelProbOverMarket(col.market, player, line, OU_PROJ_TABLE_MEAN_OPTS));
+    const hit = { pOver, pUnder: clampProb01(1 - pOver) };
+    lineModelCache.set(key, hit);
+    return hit;
   };
-
-  const dkHit = edgeForPick(dkPick);
-  const ppHit = edgeForPick(ppPick);
-  const slHit = edgeForPick(slPick);
-  const udHit = edgeForPick(udPick);
-  const fdHit = edgeForPick(fdPick);
-  const klHit = edgeForPick(klPick);
-  const czrHit = edgeForPick(czrPick);
-  const oxHit = edgeForPick(oxPick);
-  const csHit = edgeForPick(csPick);
-  row.dkEdge = dkHit.edge;
-  row.ppEdge = ppHit.edge;
-  row.slEdge = slHit.edge;
-  row.udEdge = udHit.edge;
-  row.fdEdge = fdHit.edge;
-  row.klEdge = klHit.edge;
-  row.czrEdge = czrHit.edge;
-  row.oxEdge = oxHit.edge;
-  row.csEdge = csHit.edge;
-  row.dkRoi = dkHit.roi;
-  row.ppRoi = ppHit.roi;
-  row.slRoi = slHit.roi;
-  row.udRoi = udHit.roi;
-  row.fdRoi = fdHit.roi;
-  row.klRoi = klHit.roi;
-  row.czrRoi = czrHit.roi;
-  row.oxRoi = oxHit.roi;
-  row.csRoi = csHit.roi;
-  row.dkSortOdds = dkHit.sortOdds;
-  row.ppSortOdds = ppHit.sortOdds;
-  row.slSortOdds = slHit.sortOdds;
-  row.udSortOdds = udHit.sortOdds;
-  row.fdSortOdds = fdHit.sortOdds;
-  row.klSortOdds = klHit.sortOdds;
-  row.czrSortOdds = czrHit.sortOdds;
-  row.oxSortOdds = oxHit.sortOdds;
-  row.csSortOdds = csHit.sortOdds;
-  row.dkFairP = dkHit.fairP;
-  row.ppFairP = ppHit.fairP;
-  row.slFairP = slHit.fairP;
-  row.udFairP = udHit.fairP;
-  row.fdFairP = fdHit.fairP;
-  row.klFairP = klHit.fairP;
-  row.czrFairP = czrHit.fairP;
-  row.oxFairP = oxHit.fairP;
-  row.csFairP = csHit.fairP;
-  row.dkModelP = dkHit.modelP;
-  row.ppModelP = ppHit.modelP;
-  row.slModelP = slHit.modelP;
-  row.udModelP = udHit.modelP;
-  row.fdModelP = fdHit.modelP;
-  row.klModelP = klHit.modelP;
-  row.czrModelP = czrHit.modelP;
-  row.oxModelP = oxHit.modelP;
-  row.csModelP = csHit.modelP;
-  row.dkKelly = ouKellyStakeForProjectionSide(col.market, player, dkPick, side, bankroll, kellyFraction);
-  row.ppKelly = ouKellyStakeForProjectionSide(col.market, player, ppPick, side, bankroll, kellyFraction);
-  row.slKelly = ouKellyStakeForProjectionSide(col.market, player, slPick, side, bankroll, kellyFraction);
-  row.udKelly = ouKellyStakeForProjectionSide(col.market, player, udPick, side, bankroll, kellyFraction);
-  row.fdKelly = ouKellyStakeForProjectionSide(col.market, player, fdPick, side, bankroll, kellyFraction);
-  row.klKelly = ouKellyStakeForProjectionSide(col.market, player, klPick, side, bankroll, kellyFraction);
-  row.czrKelly = ouKellyStakeForProjectionSide(col.market, player, czrPick, side, bankroll, kellyFraction);
-  row.oxKelly = ouKellyStakeForProjectionSide(col.market, player, oxPick, side, bankroll, kellyFraction);
-  row.csKelly = ouKellyStakeForProjectionSide(col.market, player, csPick, side, bankroll, kellyFraction);
 
   const entries = [];
   for (const spec of OU_PROJ_BOOK_SPECS) {
+    if (bookFilter && bookFilter !== "best" && bookFilter !== spec.key) continue;
     const pick = row[spec.pick];
     if (!pick) continue;
     const am = ouProjSideAmerican(pick, side);
     const dec = decimalFromAmerican(am);
     if (!Number.isFinite(dec) || dec <= 1) continue;
-    entries.push({
-      key: spec.key,
-      pick,
-      am,
-      dec,
-      fairP: num(row[spec.fair], NaN),
-      modelP: num(row[spec.model], NaN),
-      edge: num(row[spec.edge], NaN),
-      roi: num(row[spec.roi], NaN),
-      kelly: num(row[spec.kelly], NaN),
-    });
+    const { pOver, pUnder } = modelForLine(pick.line);
+    const modelP = side === "over" ? pOver : pUnder;
+    const pImp = impliedProbFromAmerican(am);
+    const edge = Number.isFinite(modelP) && Number.isFinite(pImp) ? modelP - pImp : NaN;
+    const roi = propPricingExpectedRoi(modelP, am);
+    const fairP = ouProjNoVigSideProb(pick, side);
+    row[spec.edge] = edge;
+    row[spec.roi] = roi;
+    row[spec.fair] = fairP;
+    row[spec.model] = modelP;
+    entries.push({ key: spec.key, pick, am, dec, fairP, modelP, edge, roi, kelly: NaN, spec });
   }
 
   const fairPs = entries.map((e) => e.fairP).filter((p) => Number.isFinite(p));
@@ -8575,6 +8522,15 @@ function ouAttachProjectionRowMetrics(row) {
     Number.isFinite(row.avgModelP) && Number.isFinite(row.avgFairP) ? row.avgModelP - row.avgFairP : NaN;
 
   const best = ouProjPickBestBook(entries);
+  // Kelly only for books we will show (best-only → one stake calc).
+  const kellyTargets =
+    bookFilter === "best" ? (best ? [best] : []) : bookFilter ? entries.filter((e) => e.key === bookFilter) : entries;
+  for (const e of kellyTargets) {
+    const kelly = ouKellyStakeDollars(e.modelP, e.am, bankroll, kellyFraction);
+    e.kelly = Number.isFinite(kelly) && kelly > 0 ? kelly : 0;
+    if (e.spec) row[e.spec.kelly] = e.kelly;
+  }
+
   row.bestBookKey = best?.key || "";
   row.bestBookAm = best ? best.am : NaN;
   row.bestKelly = best && Number.isFinite(best.kelly) && best.kelly > 0 ? best.kelly : best ? 0 : NaN;
@@ -8589,22 +8545,13 @@ function ouAttachProjectionRowMetrics(row) {
       : NaN;
   row.kellySort = Number.isFinite(row.bestKelly) ? row.bestKelly : 0;
   row.bestRoi = best && Number.isFinite(best.roi) ? best.roi : NaN;
-  row.edge = [
-    dkHit.edge,
-    ppHit.edge,
-    slHit.edge,
-    udHit.edge,
-    fdHit.edge,
-    klHit.edge,
-    czrHit.edge,
-    oxHit.edge,
-    csHit.edge,
-  ].find((e) => Number.isFinite(e));
+  row.edge = best && Number.isFinite(best.edge) ? best.edge : entries.find((e) => Number.isFinite(e.edge))?.edge;
+  row._pricedEntries = entries;
   return row;
 }
 
 /** One display row per golfer × market × Over|Under — when any book posted a line. */
-function ouProjectionFlatRowsForPlayers(players, cols) {
+function ouProjectionFlatRowsForPlayers(players, cols, bookFilter = "best") {
   const out = [];
   const fieldIndex = buildOuProjectionFieldIndex(players);
   const resolvePlayer = ouBuildFastFieldPlayerResolver(fieldIndex);
@@ -8618,6 +8565,7 @@ function ouProjectionFlatRowsForPlayers(players, cols) {
   const czrPickMap = ouBuildBookPickMap(caesarsRoundPropsOnly(), resolvePlayer);
   const oxPickMap = ouBuildBookPickMap(onyxRoundPropsOnly(), resolvePlayer);
   const csPickMap = ouBuildBookPickMap(courtsideRoundPropsOnly(), resolvePlayer);
+  const metricOpts = { bookFilter };
 
   for (const player of players) {
     const id = Math.round(num(player.dg_id, NaN));
@@ -8659,28 +8607,28 @@ function ouProjectionFlatRowsForPlayers(players, cols) {
           marketAvgSource: marketAvgHit.source,
           marketAvgWindow: marketAvgHit.windowMode,
         };
-        out.push(ouAttachProjectionRowMetrics(row));
+        out.push(ouAttachProjectionRowMetrics(row, metricOpts));
       }
     }
   }
   return out;
 }
 
-function ouProjectionFlatRowsCacheKey(players, cols) {
+function ouProjectionFlatRowsCacheKey(players, cols, bookFilter = "best") {
   const avgWindow = ouProjAvgWindowMode();
   const round = getOuRound();
   const colSig = cols.map((c) => c.label).join("\x1e");
   return [
     `r${round}`,
     `aw${avgWindow}`,
+    `bf${bookFilter || "all"}`,
     `br${Math.round(ouProjBankrollFromUi())}`,
     `kf${ouProjKellyFractionFromUi()}`,
     `c${colSig}`,
     `n${players.length}`,
     `fp${playerDgFingerprint(players)}`,
-    `ep${historyMutationEpoch}`,
     `rev${projectionsDataRev}`,
-    `ppv2`,
+    `ppv3`,
     `dk${ouDkRoundPropsCacheSig}`,
     `pp${ouPpRoundPropsCacheSig}`,
     `sl${ouSlRoundPropsCacheSig}`,
@@ -8693,20 +8641,27 @@ function ouProjectionFlatRowsCacheKey(players, cols) {
   ].join("|");
 }
 
-function getOuProjectionFlatRows(players, cols) {
-  const sig = ouProjectionFlatRowsCacheKey(players, cols);
+function getOuProjectionFlatRows(players, cols, bookFilter = "best") {
+  const sig = ouProjectionFlatRowsCacheKey(players, cols, bookFilter);
   if (ouProjectionFlatRowsCacheSig === sig && ouProjectionFlatRowsCache) return ouProjectionFlatRowsCache;
-  const rows = ouProjectionFlatRowsForPlayers(players, cols);
+  const rows = ouProjectionFlatRowsForPlayers(players, cols, bookFilter);
   ouProjectionFlatRowsCacheSig = sig;
   ouProjectionFlatRowsCache = rows;
   return rows;
 }
 
 /** Pivot side-rows into one sportsbook price per table row (skip books with no posted price). */
-function expandOuProjectionBookPriceRows(flatRows) {
+function expandOuProjectionBookPriceRows(flatRows, bookFilter = "best") {
   const out = [];
+  const wantBest = bookFilter === "best";
+  const wantKey = bookFilter && bookFilter !== "best" ? bookFilter : "";
   for (const r of flatRows) {
-    for (const spec of OU_PROJ_BOOK_SPECS) {
+    const specs = wantBest
+      ? OU_PROJ_BOOK_SPECS.filter((s) => s.key === r.bestBookKey)
+      : wantKey
+        ? OU_PROJ_BOOK_SPECS.filter((s) => s.key === wantKey)
+        : OU_PROJ_BOOK_SPECS;
+    for (const spec of specs) {
       const pick = r[spec.pick];
       if (!pick) continue;
       const am = ouProjSideAmerican(pick, r.side);
@@ -9056,12 +9011,6 @@ function selectedOuProjBookFilter() {
 
 function buildOuTable() {
   const buildGen = ++ouTableBuildGen;
-  if (!PLAYER_HEADSHOTS) {
-    void ensurePlayerHeadshotsLoaded().then(() => {
-      if (buildGen !== ouTableBuildGen) return;
-      hydrateVisiblePlayerAvatars();
-    });
-  }
   ensureOuMarketFilterValid();
   const table = document.getElementById("table-ou");
   if (!table) return;
@@ -9114,33 +9063,28 @@ function buildOuTable() {
   const q = pf && pf instanceof HTMLInputElement ? String(pf.value || "").trim().toLowerCase() : "";
   const teeWave = selectedOuTeeWaveFilter();
 
-  // Defer field-history shard fetch until after first paint (averages fill in on next rebuild).
-  requestAnimationFrame(() => {
-    if (buildGen === ouTableBuildGen) ensureOuFieldHistoryOnce();
-  });
+  // History shards after the table is interactive — never on the critical path.
+  if (!window.__ouFieldHistoryKickoff) {
+    window.__ouFieldHistoryKickoff = setTimeout(() => {
+      if (activeAppTabId() === "ou") ensureOuFieldHistoryOnce();
+    }, 2500);
+  }
 
   const projMarketSel = String(document.getElementById("ou-proj-market-filter")?.value || "").trim();
   const bookFilter = selectedOuProjBookFilter();
   // Only compute needed markets. "All markets" + "All books" is a main-thread bomb — clamp.
   let colsForRows = projMarketSel
     ? cols.filter((c) => String(c.label) === projMarketSel)
-    : bookFilter === ""
-      ? cols.slice(0, 1)
-      : cols;
+    : cols.slice(0, 1);
   if (!colsForRows.length) colsForRows = cols.slice(0, 1);
-  let flatRows = getOuProjectionFlatRows(allRows, colsForRows);
+  let flatRows = getOuProjectionFlatRows(allRows, colsForRows, bookFilter);
   if (q) {
     flatRows = flatRows.filter((r) => golferNameMatchesQuery(String(r.player.player_name || ""), q));
   }
   if (teeWave) {
     flatRows = flatRows.filter((r) => playerMatchesTeeWaveFilter(r.player, teeWave));
   }
-  let bookRows = expandOuProjectionBookPriceRows(flatRows);
-  if (bookFilter === "best") {
-    bookRows = bookRows.filter((r) => r.isBestBook);
-  } else if (bookFilter) {
-    bookRows = bookRows.filter((r) => String(r.bookKey || "") === bookFilter);
-  }
+  let bookRows = expandOuProjectionBookPriceRows(flatRows, bookFilter);
   const k = ouTableSort.key;
   const d = ouTableSort.dir;
   if (k !== "stat-order") {
@@ -9149,7 +9093,7 @@ function buildOuTable() {
     bookRows.sort(ouProjectionRowStatOrder);
   }
   // Hard cap so a bad filter never locks the tab.
-  const OU_BOOK_ROW_RENDER_CAP = 400;
+  const OU_BOOK_ROW_RENDER_CAP = 220;
   const bookRowsTotal = bookRows.length;
   if (bookRows.length > OU_BOOK_ROW_RENDER_CAP) bookRows = bookRows.slice(0, OU_BOOK_ROW_RENDER_CAP);
 
@@ -9187,7 +9131,7 @@ function buildOuTable() {
     tbody.appendChild(tr);
   } else {
     let paintIdx = 0;
-    const CHUNK = 32;
+    const CHUNK = 24;
     const paintChunk = () => {
       if (buildGen !== ouTableBuildGen) return;
       const frag = document.createDocumentFragment();
@@ -9270,6 +9214,7 @@ function buildOuProjectionBookRowNodes(r, projColCount) {
       dg_id: player.dg_id,
       player_name: rawName,
       size: 32,
+      deferImage: true,
     }),
   );
   const nameStack = document.createElement("span");
@@ -9406,11 +9351,20 @@ function buildOuProjectionBookRowNodes(r, projColCount) {
 
 function finishOuProjectionTablePaint(buildGen) {
   if (buildGen !== ouTableBuildGen) return;
-  hydrateVisiblePlayerAvatars();
   updateOuSortIndicators();
   syncOuTableHorizontalScroll();
   syncOuChartCard();
   syncForecastWaveBannerTexts();
+  // Headshots after paint — never block first interaction.
+  const hydrate = () => {
+    if (buildGen !== ouTableBuildGen) return;
+    void ensurePlayerHeadshotsLoaded().then(() => {
+      if (buildGen !== ouTableBuildGen) return;
+      hydrateVisiblePlayerAvatars();
+    });
+  };
+  if (typeof requestIdleCallback === "function") requestIdleCallback(hydrate, { timeout: 1200 });
+  else setTimeout(hydrate, 200);
   if (ouProjExpandedDetail) {
     requestAnimationFrame(() => {
       if (buildGen !== ouTableBuildGen) return;
