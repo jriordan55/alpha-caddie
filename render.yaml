@@ -72,6 +72,13 @@ services:
       # Only if DataGolf files land in the wrong place: set to absolute repo root containing `data/` (leave unset for normal golfModel/alpha-caddie-web monorepo).
       # - key: GOLF_MODEL_DIR
       #   value: "/opt/render/project/src"
-      # Historical Trends — full PGA+LIV merge (same scale as local `npm run update:rounds` without RECENT cap). Slow first deploy / dyno boot.
+      # Cap history refresh to recent seasons on Render (full 2004→present merge stalls boot for minutes).
       - key: GOLF_HISTORICAL_ROUNDS_FULL_HISTORY
+        value: "0"
+      - key: GOLF_HISTORICAL_ROUNDS_RECENT_FETCH_YEARS
+        value: "2"
+      # Skip Playwright DK probe on boot — Chromium scrape blocks first paint; book-odds poll still refreshes DK.
+      - key: GOLF_RENDER_SKIP_DK_OU_PROBE
+        value: "1"
+      - key: GOLF_SKIP_BUILD_HISTORY_ON_START
         value: "1"

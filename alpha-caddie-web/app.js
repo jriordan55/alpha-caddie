@@ -3887,9 +3887,7 @@ function ensureOuFieldHistoryOnce() {
 async function ensureOuProjectionFieldHistoryLoaded() {
   const sig = ouFieldHistoryLoadSig();
   if (ouFieldHistoryLoadedSig === sig && ouFieldHistoryReadyForAverages() && ouCourseShardReadyForProjAvg()) return;
-  if (!HISTORY._ok && !playerHistoryLoadPromise) {
-    await loadPlayerHistory();
-  }
+  // Field by-dg shards only — never pull the 76MB player_round_history.json monolith here.
   await ensurePgatourEventRoundsLoaded();
   if (HISTORY._ok && lastLiveInPlayBundleForHistory) {
     reapplyLiveInPlayHistoryMerge();
@@ -24081,14 +24079,10 @@ async function ensurePropsFieldVenueShardRoundsLoaded() {
   return propsFieldVenueShardPromise;
 }
 
-/** Load venue shard + optional full player history for field leaderboard. */
+/** Load venue shard for field leaderboard (no 76MB monolith). */
 function ensurePropsFieldVenueHistoryLoaded() {
   if (isFileProtocol()) return;
   void ensurePropsFieldVenueShardRoundsLoaded().then(() => {
-    if (activeAppTabId() === "props") scheduleRenderPropsTrends(0);
-  });
-  if (propsFieldLeaderboardEnabled() || playerHistoryLoadPromise || HISTORY._loading) return;
-  void loadPlayerHistory().then(() => {
     if (activeAppTabId() === "props") scheduleRenderPropsTrends(0);
   });
 }
@@ -26513,17 +26507,16 @@ async function loadProjections(opts = {}) {
 
   const finishOk = async () => {
     lastProjectionsLoadedAtMs = Date.now();
-    const blocking = [];
-    if (reloadSidecar) blocking.push(loadPlayerShots());
-    await Promise.all(blocking);
+    // Do not await shots/history here — first paint needs projections only.
+    // Never auto-fetch player_round_history.json (~76MB) on boot; tabs load field shards on demand.
+    if (reloadSidecar && !isFileProtocol()) {
+      void loadPlayerShots();
+    }
     if (HISTORY._ok) scrubNonActualRoundsFromHistoryBuckets();
     await yieldToMain();
     hydrateBakedWeatherFromPlayerFields();
-    if (!isFileProtocol() && !HISTORY._ok && !playerHistoryLoadPromise) {
-      void loadPlayerHistory();
-    }
-    await fetchAndMergeFieldTeeTimes({ force: true });
-    await ensureForecastWeatherLoaded();
+    void fetchAndMergeFieldTeeTimes({ force: true });
+    void ensureForecastWeatherLoaded();
     void ensurePgatourEventRoundsLoaded().then(() => {
       if (HISTORY._ok && lastLiveInPlayBundleForHistory) {
         reapplyLiveInPlayHistoryMerge();
@@ -26684,10 +26677,14 @@ async function ensureLiveStatsSourcesLoaded() {
       /* missing live file */
     }
   }
-  // Soft-load field history so SG ARG can fill from completed-round CSV merges when LTS omits it.
-  if (!isFileProtocol() && (!HISTORY._ok || HISTORY._partial)) {
+  // Soft-load current-field by-dg shards only (not the 76MB monolith).
+  if (!isFileProtocol()) {
     try {
-      await loadPlayerHistory();
+      const seasonYear = ouProjectionFieldHistorySeasonYear();
+      await ensurePropsFieldPlayerHistoryLoaded({
+        seasonYear,
+        ids: liveStatsFieldDgIds().size ? [...liveStatsFieldDgIds()] : ouProjectionFieldPlayerDgIds(),
+      });
     } catch {
       /* optional */
     }
@@ -26846,15 +26843,7 @@ function liveStatsFieldDgIds() {
 async function ensureLiveStatsLookbackHistoryLoaded() {
   const ids = [...liveStatsFieldDgIds()];
   if (!ids.length) return 0;
-  if (!isFileProtocol()) {
-    try {
-      if (!HISTORY._ok || HISTORY._partial) await loadPlayerHistory();
-    } catch {
-      /* optional monolith */
-    }
-  } else if (!HISTORY._ok || HISTORY._partial) {
-    await loadPlayerHistory();
-  }
+  // Prefer by-dg career shards only — never pull player_round_history.json (~76MB).
   const needCareer = ids.filter((id) => !historyBucketLoaded(id) || historyBucketIsSeasonSliceOnly(id));
   if (!needCareer.length) return ids.length;
   const batch = 28;
@@ -28039,21 +28028,23 @@ function ensurePlayerHistoryLoadedForTab(tab) {
           if (!historyBucketLoaded(dg) && !historyBucketResolved(dg)) {
             await extractHistoryBucketFromEmbedded(dg);
           }
+          // Never fall back to player_round_history.json (~76MB); mark absent if shard missing.
           if (!historyBucketLoaded(dg) && !historyBucketResolved(dg)) {
-            if (!HISTORY._ok || HISTORY._partial) {
-              await loadPlayerHistory();
-            }
-            if (!historyBucketLoaded(dg) && !historyBucketResolved(dg)) {
-              markPlayerHistoryAbsent(dg);
-            }
+            markPlayerHistoryAbsent(dg);
           }
           return historyBucketLoaded(dg) || historyBucketResolved(dg);
         })()
       : tab === "ou"
         ? scheduleOuProjectionFieldHistoryLoad()
-        : HISTORY._ok && !HISTORY._partial
-        ? Promise.resolve(true)
-        : loadPlayerHistory();
+        : (async () => {
+            // course-fit: field by-dg shards only
+            const seasonYear = ouProjectionFieldHistorySeasonYear();
+            await ensurePropsFieldPlayerHistoryLoaded({
+              seasonYear,
+              ids: ouProjectionFieldPlayerDgIds(),
+            });
+            return true;
+          })();
   return p.then(() => {
     if (activeAppTabId() !== tab) return;
     if (tab === "props") renderPropsTrendsNow();
