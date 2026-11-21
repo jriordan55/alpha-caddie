@@ -7,7 +7,8 @@
 # then pushes; "Projection Tracker Pages" rebuilds GitHub Pages from the new CSVs.
 #
 # Schedule: every day at 9:00 PM US Eastern (America/New_York), year-round.
-# GitHub cron is UTC-only, so we fire at 01:00 and 02:00 UTC and gate on ET hour 21.
+# Use timezone-aware cron (GitHub.com) — the old UTC dual-cron + hour gate always skipped
+# because Actions delays pushed the job past 21:00 ET.
 #
 # One-time setup (repo → Settings → Secrets and variables → Actions):
 #   DATAGOLF_API_KEY          (required)
@@ -22,9 +23,8 @@ name: Nightly push:live
 on:
   workflow_dispatch:
   schedule:
-    # 9pm Eastern: 01:00 UTC during EDT, 02:00 UTC during EST (time gate picks the right one).
-    - cron: "0 1 * * *"
-    - cron: "0 2 * * *"
+    - cron: "0 21 * * *"
+      timezone: "America/New_York"
 
 permissions:
   contents: write
@@ -43,23 +43,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Skip unless 9pm Eastern (scheduled runs only)
-        if: github.event_name == 'schedule'
-        id: et_gate
-        shell: pwsh
-        run: |
-          $tz = [TimeZoneInfo]::FindSystemTimeZoneById('Eastern Standard Time')
-          $et = [TimeZoneInfo]::ConvertTimeFromUtc([DateTime]::UtcNow, $tz)
-          if ($et.Hour -ne 21) {
-            Write-Host "::notice::Skipping scheduled run — Eastern time is $($et.ToString('yyyy-MM-dd HH:mm')), not 21:xx."
-            "skip=true" >> $env:GITHUB_OUTPUT
-          } else {
-            Write-Host "Eastern time is $($et.ToString('yyyy-MM-dd HH:mm')) — running nightly push:live."
-            "skip=false" >> $env:GITHUB_OUTPUT
-          }
-
       - name: Require DATAGOLF_API_KEY
-        if: github.event_name != 'schedule' || steps.et_gate.outputs.skip != 'true'
         shell: pwsh
         run: |
           if ([string]::IsNullOrWhiteSpace('${{ secrets.DATAGOLF_API_KEY }}')) {
@@ -67,7 +51,6 @@ jobs:
           }
 
       - name: Setup Node
-        if: github.event_name != 'schedule' || steps.et_gate.outputs.skip != 'true'
         uses: actions/setup-node@v4
         with:
           node-version: "20"
@@ -75,23 +58,19 @@ jobs:
           cache-dependency-path: alpha-caddie-web/package-lock.json
 
       - name: Install dependencies
-        if: github.event_name != 'schedule' || steps.et_gate.outputs.skip != 'true'
         working-directory: alpha-caddie-web
         run: npm ci
 
       - name: Install Playwright Chromium
-        if: github.event_name != 'schedule' || steps.et_gate.outputs.skip != 'true'
         working-directory: alpha-caddie-web
         run: npx playwright install --with-deps chromium
 
       - name: Git identity
-        if: github.event_name != 'schedule' || steps.et_gate.outputs.skip != 'true'
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
       - name: npm run push:live (multi-book O/U + matchup trackers)
-        if: github.event_name != 'schedule' || steps.et_gate.outputs.skip != 'true'
         working-directory: alpha-caddie-web
         env:
           GOLF_MODEL_DIR: ${{ github.workspace }}

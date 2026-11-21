@@ -64,8 +64,21 @@ export function enforceCourseDisplayAcronyms(label) {
 }
 
 export function formatCourseLabelForDisplay(raw) {
-  const k = normCourseNameKey(raw);
-  if (!k) return enforceCourseDisplayAcronyms(String(raw || "").trim());
+  const s = String(raw || "").trim();
+  if (!s) return "";
+  // Dual-course weeks use " · " / ";" — format each side so we never collapse to
+  // "Sea Island Golf Club Sea Island Golf Club" (which broke Open-Meteo coords).
+  if (s.includes(" · ") || s.includes(";")) {
+    const parts = s
+      .split(/\s*[·;]\s*/)
+      .map((part) => formatCourseLabelForDisplay(part.trim()) || part.trim())
+      .filter(Boolean);
+    const uniq = [...new Set(parts.map((p) => p.toLowerCase()))];
+    if (uniq.length === 1 && parts.length > 1) return parts[0];
+    return parts.join(" · ");
+  }
+  const k = normCourseNameKey(s);
+  if (!k) return enforceCourseDisplayAcronyms(s);
   return enforceCourseDisplayAcronyms(k.replace(/\b\w/g, (c) => c.toUpperCase()));
 }
 

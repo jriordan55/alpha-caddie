@@ -29,6 +29,17 @@ async function main() {
     process.exit(0);
   }
   const proj = readJson(projPath);
+  // Undo collapsed dual labels from formatCourseLabelForDisplay (broke coords lookup).
+  {
+    const raw = String(proj?.course_used || proj?.meta?.course_used || "").trim();
+    if (/sea\s*island/i.test(raw) && !/\(| · |;/.test(raw)) {
+      const fixed =
+        "Sea Island Golf Club (Seaside Course) · Sea Island Golf Club (Plantation Course)";
+      proj.course_used = fixed;
+      if (proj.meta && typeof proj.meta === "object") proj.meta.course_used = fixed;
+      console.warn(`[bake-weather] repaired collapsed course_used → ${fixed}`);
+    }
+  }
   let fieldUpdates = null;
   if (existsSync(livePath)) {
     try {

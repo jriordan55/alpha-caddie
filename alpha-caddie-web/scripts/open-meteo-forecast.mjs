@@ -129,9 +129,20 @@ export function courseCoordinatesForProjections(proj) {
       return { lat: hit.lat, lon: hit.lon, timezone: hit.timezone || null };
     }
   }
+  // Collapsed dual labels ("Club Club") and loose venue aliases.
+  const collapsed = normCourseNameKey(raw);
+  if (collapsed && COURSE_COORDINATES_BY_NAME[collapsed]) {
+    const c = COURSE_COORDINATES_BY_NAME[collapsed];
+    return { lat: c.lat, lon: c.lon, timezone: c.timezone || null };
+  }
   if (/sea\s*island/i.test(raw) && COURSE_COORDINATES_BY_NAME["sea island golf club"]) {
     const c = COURSE_COORDINATES_BY_NAME["sea island golf club"];
     return { lat: c.lat, lon: c.lon, timezone: c.timezone || null };
+  }
+  // "sea island golf club sea island golf club" (· stripped by formatCourseLabelForDisplay)
+  if (/sea\s*island\s+golf\s+club(\s+sea\s*island\s+golf\s+club)+/i.test(collapsed || raw)) {
+    const c = COURSE_COORDINATES_BY_NAME["sea island golf club"];
+    if (c) return { lat: c.lat, lon: c.lon, timezone: c.timezone || null };
   }
   return null;
 }
