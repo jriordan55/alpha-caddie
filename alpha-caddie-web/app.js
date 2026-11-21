@@ -3992,21 +3992,7 @@ function ouRhFilterSummaryLabel(state = ouRhFilterState()) {
 }
 
 function syncOuProjAvgColumnHeader() {
-  const th = document.querySelector("#table-ou thead th[data-sort-key='pr-avg']");
-  if (!th) return;
-  const label = "Rabbit Hole";
-  const sortInd = th.querySelector(".sort-ind");
-  for (const child of [...th.childNodes]) {
-    if (child !== sortInd) th.removeChild(child);
-  }
-  th.insertBefore(document.createTextNode(label), sortInd);
-  if (!sortInd) {
-    th.insertAdjacentHTML(
-      "beforeend",
-      `<span class="sort-ind"><span class="sort-up">▲</span><span class="sort-down">▼</span></span>`,
-    );
-  }
-  th.title = `Betsperts Rabbit Hole — ${ouRhFilterSummaryLabel()} (Round→SG:TOT, Birdies→BoB%, Fairways→Dr Acc, GIR→GIR%, Bogeys→Bogey%/Dbl%)`;
+  /* Average / Rabbit Hole column removed from Round projections. */
 }
 
 /** Live Rabbit Hole (or legacy average) hit for one projection row. */
@@ -7340,7 +7326,7 @@ let ouGolferSuggestLabelsSig = "";
 /** @type {string[]} */
 let ouGolferSuggestLabels = [];
 let ouProjTableChromeReady = false;
-const OU_PROJ_TABLE_CHROME_VER = 11;
+const OU_PROJ_TABLE_CHROME_VER = 12;
 let ouProjTableChromeBuiltVer = 0;
 let ouTableBuildRaf = 0;
 
@@ -8626,7 +8612,6 @@ function ensureOuProjectionTableChrome() {
     ["pr-market", "Market", "sortable ou-proj-long-th ou-proj-th-market"],
     ["pr-side", "Side", "sortable ou-proj-long-th num ou-proj-th-side"],
     ["pr-mu", "Proj", "sortable ou-proj-long-th num ou-proj-th-mu"],
-    ["pr-avg", "Rabbit Hole", "sortable ou-proj-long-th num ou-proj-th-avg"],
     ["pr-book", "Book", "sortable ou-proj-long-th ou-proj-th-book"],
     ["pr-line", "Line", "sortable ou-proj-long-th num ou-proj-th-line"],
     ["pr-odds", "Odds", "sortable ou-proj-long-th num ou-proj-th-odds"],
@@ -8673,7 +8658,7 @@ function initOuTableSortOnce() {
       if (key === "golfer" || key === "pr-golfer" || key === "pr-book") ouTableSort.dir = 1;
       else if (key === "pr-tee-time" || key === "pr-market" || key === "pr-side" || key === "pr-line")
         ouTableSort.dir = 1;
-      else if (key === "pr-mu" || key === "pr-avg") ouTableSort.dir = -1;
+      else if (key === "pr-mu") ouTableSort.dir = -1;
       else ouTableSort.dir = -1;
     }
     scheduleBuildOuTable(true);
@@ -9088,7 +9073,7 @@ function ouTableSortValueProjRow(row, sortKey) {
   if (sortKey === "pr-market") return colIdx;
   if (sortKey === "pr-side") return side === "over" ? 0 : 1;
   if (sortKey === "pr-mu") return mu;
-  if (sortKey === "pr-avg") return num(ouProjectionRowMarketAvgHit(row).avg, NaN);
+  if (sortKey === "pr-avg") return NaN;
   if (sortKey === "pr-book") return String(row.bookKey || "").toLowerCase();
   if (sortKey === "pr-line" || sortKey === "pr-dk-line") {
     return Number.isFinite(row.bookLine) ? row.bookLine : NaN;
@@ -9351,22 +9336,6 @@ function selectedOuProjBookFilter() {
 
 function buildOuTable() {
   const buildGen = ++ouTableBuildGen;
-  // Sidecars: hydrate in place — do NOT full-rebuild the priced table when they land.
-  if (!OU_RH_STATS?.players || !Object.keys(OU_RH_STATS.players).length) {
-    void ensureOuRhStatsLoaded().then(() => {
-      if (buildGen !== ouTableBuildGen) return;
-      if (activeAppTabId() === "ou") {
-        invalidateOuProjectionAvgCaches({ wipeRows: false });
-        scheduleBuildOuTable(true);
-      }
-    });
-  }
-  if (!ouRhFiltersReady) {
-    void ensureOuRhFiltersLoaded().then(() => {
-      populateOuRhFilterSelects();
-      syncOuProjAvgColumnHeader();
-    });
-  }
   if (!PLAYER_HEADSHOTS) {
     void ensurePlayerHeadshotsLoaded().then(() => {
       if (buildGen !== ouTableBuildGen) return;
@@ -9378,7 +9347,6 @@ function buildOuTable() {
   if (!table) return;
   updateOuDkStatusNoteVisibility();
   initOuTableSortOnce();
-  syncOuProjAvgColumnHeader();
   const round = getOuRound();
   const tbody = table.querySelector("tbody");
   if (!tbody) return;
@@ -9452,7 +9420,7 @@ function buildOuTable() {
   const bookRowsTotal = bookRows.length;
   if (bookRows.length > OU_BOOK_ROW_RENDER_CAP) bookRows = bookRows.slice(0, OU_BOOK_ROW_RENDER_CAP);
 
-  const projColCount = 14;
+  const projColCount = 13;
   const flatRowKeys = new Set(
     bookRows.map((rr) =>
       ouProjMakeExpandKey(String(rr.player.player_name || ""), rr.col.label, rr.side, rr.bookKey),
@@ -9597,26 +9565,12 @@ function buildOuProjectionBookRowNodes(r, projColCount) {
   muTd.textContent = formatOuProjectedMean(mu);
   tr.appendChild(muTd);
 
-  const avgTd = document.createElement("td");
-  avgTd.className = "ou-cell ou-proj-long-td num ou-proj-td-avg";
-  const avgHit = ouProjectionRowMarketAvgHit(r);
-  if (
-    avgHit.source === "pending" ||
-    (!Number.isFinite(avgHit.avg) &&
-      avgHit.source !== "betsperts-rh" &&
-      (ouPlayerAvgHistoryPending(player) || avgHit.source === "pending"))
-  ) {
-    avgTd.textContent = "…";
-  } else {
-    avgTd.textContent = formatOuMarketAverage(avgHit.avg, col.market, avgHit);
-  }
-  avgTd.title = ouPlayerMarketAverageTitle(col.market, avgHit);
-  tr.appendChild(avgTd);
-
   const bookTd = document.createElement("td");
   bookTd.className = "ou-cell ou-proj-long-td ou-proj-td-book";
-    bookTd.innerHTML = bookBadgeHtml(bookKey);
-  if (r.isBestBook) bookTd.title = "Best available price for this side";
+  bookTd.innerHTML = bookBadgeHtml(bookKey, { markOnly: true });
+  bookTd.title = r.isBestBook
+    ? `${bookMeta(bookKey).label} — best available price for this side`
+    : bookMeta(bookKey).label;
   tr.appendChild(bookTd);
 
   const lineTd = document.createElement("td");
@@ -10218,7 +10172,12 @@ function bookMarkSvgDataUri(bookKey, shortLabel) {
 function bookBadgeHtml(book, opts = {}) {
   const m = bookMeta(book);
   const markSrc = bookMarkSvgDataUri(m.key || book, m.short);
-  return `<span class="book-logo-pill book-logo-pill-instant" title="${m.label}"><img class="book-logo-img-inline" src="${markSrc}" alt="" width="22" height="22" decoding="async" /><span class="book-logo-name">${m.label}</span></span>`;
+  const markOnly = !!opts.markOnly;
+  const nameHtml = markOnly ? "" : `<span class="book-logo-name">${m.label}</span>`;
+  const pillClass = markOnly
+    ? "book-logo-pill book-logo-pill-instant book-logo-pill-mark-only"
+    : "book-logo-pill book-logo-pill-instant";
+  return `<span class="${pillClass}" title="${m.label}"><img class="book-logo-img-inline" src="${markSrc}" alt="${m.label}" width="28" height="28" decoding="async" />${nameHtml}</span>`;
 }
 
 function modelAmericanFromProb(p) {
@@ -29295,11 +29254,9 @@ function initAlphaCaddieThemeToggle() {
 
 document.addEventListener("DOMContentLoaded", () => {
   initAlphaCaddieThemeToggle();
-  // Defer Round-projections sidecars until idle — don't compete with projections.json on first paint.
+  // Defer headshots until idle — don't compete with projections.json on first paint.
   const kickOuSidecars = () => {
     void ensurePlayerHeadshotsLoaded();
-    void ensureOuRhFiltersLoaded().then(() => populateOuRhFilterSelects());
-    void ensureOuRhStatsLoaded();
   };
   if (typeof requestIdleCallback === "function") requestIdleCallback(kickOuSidecars, { timeout: 1200 });
   else setTimeout(kickOuSidecars, 200);
@@ -29388,24 +29345,6 @@ document.addEventListener("DOMContentLoaded", () => {
     ouTableSort = { key: "pr-best-roi", dir: -1 };
     scheduleBuildOuTable(true);
   });
-  document.getElementById("ou-proj-avg-window")?.addEventListener("change", () => {
-    ouProjExpandedKey = "";
-    invalidateOuProjectionAvgCaches();
-    syncOuProjAvgColumnHeader();
-    scheduleBuildOuTable(true);
-  });
-  const onOuRhFilterChange = () => {
-    ouProjExpandedKey = "";
-    invalidateOuProjectionAvgCaches();
-    syncOuProjAvgColumnHeader();
-    void (async () => {
-      await fetchOuRhStatsForFilters(ouRhFilterState());
-      scheduleBuildOuTable(true);
-    })();
-  };
-  for (const id of ["ou-rh-timeframe", "ou-rh-region", "ou-rh-ctype", "ou-rh-course"]) {
-    document.getElementById(id)?.addEventListener("change", onOuRhFilterChange);
-  }
   syncOuProjKellyPrefsToUi();
   let ouBankrollRebuildTimer = 0;
   const rebuildOuForBankroll = () => {

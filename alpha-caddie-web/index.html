@@ -26,7 +26,7 @@
     onload="this.media='all'"
   />
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" /></noscript>
-  <link rel="stylesheet" href="styles.css?v=29" />
+  <link rel="stylesheet" href="styles.css?v=30" />
   <link rel="preconnect" href="https://pga-tour-res.cloudinary.com" crossorigin />
   <link rel="preload" href="data/player_headshots.json" as="fetch" crossorigin />
   <link rel="preload" href="player-history/ou-season-avgs-2026.json" as="fetch" crossorigin />
@@ -190,31 +190,6 @@
                 <option value="underdog">Underdog</option>
                 <option value="onyx">Onyx</option>
                 <option value="courtside">Courtside</option>
-              </select>
-            </label>
-            <label class="toolbar-label ou-filter-field">Time frame
-              <select id="ou-rh-timeframe" title="Rabbit Hole time frame for Round projections stats">
-                <option value="all" selected>All</option>
-              </select>
-            </label>
-            <label class="toolbar-label ou-filter-field">Region
-              <select id="ou-rh-region" title="Rabbit Hole region filter">
-                <option value="all" selected>All</option>
-              </select>
-            </label>
-            <label class="toolbar-label ou-filter-field">Course type
-              <select id="ou-rh-ctype" title="Rabbit Hole course type filter">
-                <option value="all" selected>All</option>
-              </select>
-            </label>
-            <label class="toolbar-label ou-filter-field">Course
-              <select id="ou-rh-course" title="Rabbit Hole course filter">
-                <option value="all" selected>All</option>
-              </select>
-            </label>
-            <label class="toolbar-label ou-filter-field" hidden aria-hidden="true">Average
-              <select id="ou-proj-avg-window" title="Legacy average window (unused)">
-                <option value="season" selected>This season</option>
               </select>
             </label>
             <label class="toolbar-label ou-filter-field">Bankroll
@@ -1238,9 +1213,9 @@
           <dd>Who, which stat, and Over or Under on the book line.</dd>
           <dt>Proj</dt>
           <dd>Model projection for that stat this round.</dd>
-          <dt>Average</dt>
-          <dd>Player historical average for that market in the selected window (This season, last N rounds, or at this course).</dd>
-          <dt>DK / PP Line &amp; Odds</dt>
+          <dt>Book</dt>
+          <dd>Sportsbook for this price row (logo mark; hover for the full name).</dd>
+          <dt>Line &amp; Odds</dt>
           <dd>DraftKings and PrizePicks posted lines and American prices for the side shown.</dd>
           <dt>DK Edge / PP Edge</dt>
           <dd>Model probability minus break-even at each book&apos;s posted odds (Prop Pricing Model: distribution-based P(over/under), not μ vs line). Positive = +EV.</dd>
@@ -1462,6 +1437,6 @@
     </div>
   </dialog>
 
-  <script src="app.js?v=384"></script>
+  <script src="app.js?v=385"></script>
 </body>
 </html>

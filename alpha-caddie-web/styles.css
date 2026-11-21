@@ -1940,8 +1940,9 @@ body {
 }
 #table-ou.table-ou-book-rows thead th.ou-proj-th-book,
 #table-ou.table-ou-book-rows tbody td.ou-proj-td-book {
-  width: 88px;
-  min-width: 80px;
+  width: 44px;
+  min-width: 40px;
+  max-width: 52px;
   white-space: nowrap;
 }
 #table-ou.table-ou-book-rows thead th.ou-proj-th-line,
@@ -2366,13 +2367,26 @@ body {
 }
 #table-ou.table-ou-projections .ou-proj-th-book,
 #table-ou.table-ou-projections .ou-proj-td-book {
-  width: 48px;
-  min-width: 44px;
-  max-width: 56px;
+  width: 44px;
+  min-width: 40px;
+  max-width: 52px;
   text-align: center;
   vertical-align: middle;
-  padding-left: 6px;
-  padding-right: 6px;
+  padding-left: 4px;
+  padding-right: 4px;
+}
+#table-ou.table-ou-projections .ou-proj-td-book .book-logo-pill-mark-only {
+  padding: 0;
+  border: none;
+  background: transparent;
+  gap: 0;
+}
+#table-ou.table-ou-projections .ou-proj-td-book .book-logo-img-inline {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  display: block;
+  margin: 0 auto;
 }
 #table-ou.table-ou-projections .ou-proj-th-book-head {
   display: inline-flex;
