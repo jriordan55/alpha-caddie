@@ -106,13 +106,28 @@ function loadCourseCoordsCache() {
 
 export function courseCoordinatesForProjections(proj) {
   const meta = projectionExportMeta(proj);
-  const raw = meta?.course_used ?? proj?.course_used ?? "";
-  const key = normCourseNameKey(raw);
-  const hard = COURSE_COORDINATES_BY_NAME[key];
-  if (hard) return { lat: hard.lat, lon: hard.lon, timezone: hard.timezone || null };
-  const hit = loadCourseCoordsCache()[key];
-  if (hit && Number.isFinite(num(hit.lat, NaN)) && Number.isFinite(num(hit.lon, NaN))) {
-    return { lat: hit.lat, lon: hit.lon, timezone: hit.timezone || null };
+  const raw = String(meta?.course_used ?? proj?.course_used ?? "").trim();
+  if (!raw) return null;
+  const parts = [raw, ...raw.split(/\s*[·;|]\s*/).map((p) => p.trim()).filter(Boolean)];
+  for (const part of parts) {
+    const key = normCourseNameKey(part);
+    if (!key) continue;
+    const hard = COURSE_COORDINATES_BY_NAME[key];
+    if (hard) return { lat: hard.lat, lon: hard.lon, timezone: hard.timezone || null };
+    // Prefix match for parentheticals / dual-course labels
+    for (const [known, coords] of Object.entries(COURSE_COORDINATES_BY_NAME)) {
+      if (key === known || key.startsWith(known) || known.startsWith(key) || key.includes(known)) {
+        return { lat: coords.lat, lon: coords.lon, timezone: coords.timezone || null };
+      }
+    }
+    const hit = loadCourseCoordsCache()[key];
+    if (hit && Number.isFinite(num(hit.lat, NaN)) && Number.isFinite(num(hit.lon, NaN))) {
+      return { lat: hit.lat, lon: hit.lon, timezone: hit.timezone || null };
+    }
+  }
+  if (/sea\s*island/i.test(raw) && COURSE_COORDINATES_BY_NAME["sea island golf club"]) {
+    const c = COURSE_COORDINATES_BY_NAME["sea island golf club"];
+    return { lat: c.lat, lon: c.lon, timezone: c.timezone || null };
   }
   return null;
 }

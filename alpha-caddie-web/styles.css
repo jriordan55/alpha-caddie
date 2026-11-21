@@ -1893,6 +1893,14 @@ body {
   z-index: 2;
   overflow: visible;
 }
+.ou-auto-round-line {
+  display: inline-flex;
+  align-items: center;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--golf-text);
+  white-space: nowrap;
+}
 .ou-toolbar-projections .ou-golfer-inline input#ou-player-filter {
   min-width: 180px;
   max-width: 300px;
@@ -1940,9 +1948,9 @@ body {
 }
 #table-ou.table-ou-book-rows thead th.ou-proj-th-book,
 #table-ou.table-ou-book-rows tbody td.ou-proj-td-book {
-  width: 44px;
-  min-width: 40px;
-  max-width: 52px;
+  width: 48px;
+  min-width: 44px;
+  max-width: 56px;
   white-space: nowrap;
 }
 #table-ou.table-ou-book-rows thead th.ou-proj-th-line,
@@ -2397,25 +2405,39 @@ html[data-theme="light"] .player-golfer-course {
 }
 #table-ou.table-ou-projections .ou-proj-th-book,
 #table-ou.table-ou-projections .ou-proj-td-book {
-  width: 44px;
-  min-width: 40px;
-  max-width: 52px;
+  width: 48px;
+  min-width: 44px;
+  max-width: 56px;
   text-align: center;
   vertical-align: middle;
   padding-left: 4px;
   padding-right: 4px;
 }
 #table-ou.table-ou-projections .ou-proj-td-book .book-logo-pill-mark-only {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   padding: 0;
   border: none;
   background: transparent;
   gap: 0;
 }
-#table-ou.table-ou-projections .ou-proj-td-book .book-logo-img-inline {
-  width: 28px;
+.book-logo-mark-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
   height: 28px;
+  padding: 0 6px;
   border-radius: 8px;
-  display: block;
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  box-sizing: border-box;
+  user-select: none;
+}
+#table-ou.table-ou-projections .ou-proj-td-book .book-logo-mark-chip {
   margin: 0 auto;
 }
 #table-ou.table-ou-projections .ou-proj-th-book-head {

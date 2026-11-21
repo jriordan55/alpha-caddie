@@ -3776,6 +3776,39 @@ function dgIdsEliminatedFromEventPostCut() {
   return out;
 }
 
+function ouFieldStartDateYmd() {
+  const payload = ouProjectionsPayload();
+  const meta = payload.meta || {};
+  const raw = String(
+    meta.datagolf_field_date_start ||
+      payload.datagolf_field_date_start ||
+      DATA?.meta?.datagolf_field_date_start ||
+      "",
+  ).trim();
+  const m = raw.match(/^(\d{4}-\d{2}-\d{2})/);
+  return m ? m[1] : "";
+}
+
+/** Calendar date for the active model round (event start + round−1 days). */
+function ouActiveRoundDateLabel(roundNum = ouDisplayRoundAuto()) {
+  const ymd = ouFieldStartDateYmd();
+  if (!ymd) return "";
+  const r = Math.round(num(roundNum, NaN));
+  const [y, mo, d] = ymd.split("-").map((x) => parseInt(x, 10));
+  if (![y, mo, d].every(Number.isFinite)) return "";
+  const dt = new Date(Date.UTC(y, mo - 1, d + (Number.isFinite(r) && r >= 1 ? r - 1 : 0)));
+  try {
+    return dt.toLocaleDateString("en-US", {
+      weekday: "short",
+      month: "short",
+      day: "numeric",
+      timeZone: "UTC",
+    });
+  } catch {
+    return ymd;
+  }
+}
+
 function updateRoundLabels() {
   const ar = document.getElementById("auto-round");
   const payload = ouProjectionsPayload();
@@ -3785,16 +3818,28 @@ function updateRoundLabels() {
   if (ar) {
     ar.hidden = false;
     const rawLabel = meta.display_round_label && String(meta.display_round_label).trim();
-    let label = "";
+    let dayName = "";
     if (rawLabel && Number.isFinite(exportedR) && exportedR === dr) {
-      label = rawLabel.replace(/\s*\([^)]*America\/New_York[^)]*\)\s*/i, "").trim();
-    } else {
-      label = `R${dr}`;
+      const cleaned = rawLabel.replace(/\s*\([^)]*America\/[^)]*\)\s*/gi, "").trim();
+      const dayM = cleaned.match(/—\s*([A-Za-z]+)/);
+      if (dayM) dayName = dayM[1];
     }
-    const ev = String(payload.event_name || meta.event_name || "").trim();
+    const ev = formatEventNameForDisplay(payload.event_name || meta.event_name || "");
     const tourTag = ouProjectionsTourLabel();
-    const roundPart = label.startsWith("R") ? label : `R${dr}`;
-    ar.textContent = ev ? `${tourTag} · ${ev} · ${roundPart}` : `${tourTag} · ${roundPart}`;
+    const dateLabel = ouActiveRoundDateLabel(dr);
+    const roundPart = Number.isFinite(dr) ? `R${dr}` : "Round";
+    const bits = [tourTag, ev, roundPart];
+    if (dayName) bits.push(dayName);
+    if (dateLabel) bits.push(dateLabel);
+    ar.textContent = bits.filter(Boolean).join(" · ");
+    ar.title = [
+      ev || null,
+      Number.isFinite(dr) ? `Round ${dr}` : null,
+      dateLabel || null,
+      meta.course_used ? formatCourseNameForDisplay(meta.course_used) : null,
+    ]
+      .filter(Boolean)
+      .join("\n");
   }
 }
 
@@ -5064,13 +5109,21 @@ const COURSE_COORDINATES_BY_NAME = {
   "hamilton golf and country club": { lat: 43.267, lon: -79.934 },
   "glen abbey golf club": { lat: 43.452, lon: -79.691 },
   "shinnecock hills golf club": { lat: 40.8847, lon: -72.4651 },
+  "sea island golf club": { lat: 31.133, lon: -81.3727 },
+  "sea island golf club (seaside course)": { lat: 31.133, lon: -81.3727 },
+  "sea island golf club (plantation course)": { lat: 31.168, lon: -81.37 },
+  "sea island golf club seaside course": { lat: 31.133, lon: -81.3727 },
+  "sea island golf club plantation course": { lat: 31.168, lon: -81.37 },
 };
 
 function normCourseKeyForForecast(name) {
   return String(name || "")
     .trim()
     .toLowerCase()
-    .replace(/\s+/g, " ");
+    .replace(/[·|;]+/g, " ")
+    .replace(/[()]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 /** Cached Open-Meteo hourly payload; recomputed player snapshots when tee times / round change. */
@@ -5086,8 +5139,26 @@ function courseCoordinatesFromMeta() {
   if (baked && Number.isFinite(num(baked.lat, NaN)) && Number.isFinite(num(baked.lon, NaN))) {
     return { lat: num(baked.lat), lon: num(baked.lon) };
   }
-  const key = normCourseKeyForForecast(DATA?.meta?.course_used || "");
-  return COURSE_COORDINATES_BY_NAME[key] || null;
+  const raw = String(DATA?.meta?.course_used || DATA?.course_used || "").trim();
+  if (!raw) return null;
+  const parts = raw
+    .split(/\s*[·;|]\s*/)
+    .map((p) => p.trim())
+    .filter(Boolean);
+  const candidates = [raw, ...parts].map(normCourseKeyForForecast).filter(Boolean);
+  for (const key of candidates) {
+    if (COURSE_COORDINATES_BY_NAME[key]) return COURSE_COORDINATES_BY_NAME[key];
+  }
+  // Prefix / contains match (dual-course labels, parentheticals).
+  for (const key of candidates) {
+    for (const [known, coords] of Object.entries(COURSE_COORDINATES_BY_NAME)) {
+      if (key === known || key.startsWith(known) || known.startsWith(key) || key.includes(known)) {
+        return coords;
+      }
+    }
+  }
+  if (/sea\s*island/i.test(raw)) return COURSE_COORDINATES_BY_NAME["sea island golf club"];
+  return null;
 }
 
 function forecastTimezoneFromMeta() {
@@ -5627,8 +5698,6 @@ async function ensureForecastWeatherLoaded() {
 }
 
 function syncForecastWaveBannerTexts() {
-  const fallback =
-    "Morning and afternoon snapshots appear once the venue forecast loads.";
   const slots = DATA.meta?.forecast_wave_slots;
   const morning = slots && typeof slots === "object" ? slots.morning : null;
   const afternoon = slots && typeof slots === "object" ? slots.afternoon : null;
@@ -5639,6 +5708,16 @@ function syncForecastWaveBannerTexts() {
     !["open_meteo_fetch_failed", "empty_hourly", "no_course_coords", "no_players"].includes(status);
   const summaryText =
     typeof DATA.meta?.forecast_wave_summary === "string" ? DATA.meta.forecast_wave_summary.trim() : "";
+  const statusFallback =
+    status === "no_course_coords"
+      ? "Weather unavailable — venue coordinates not mapped for this course."
+      : status === "open_meteo_fetch_failed"
+        ? "Weather fetch failed — retry on refresh."
+        : status === "no_players"
+          ? "Weather waiting on field / tee times."
+          : status === "empty_hourly"
+            ? "Weather returned no hourly data."
+            : "Loading venue forecast…";
   for (const id of ["ou-weather-wave-summary", "ev-weather-wave-summary"]) {
     const el = document.getElementById(id);
     if (!el) continue;
@@ -5655,7 +5734,7 @@ function syncForecastWaveBannerTexts() {
       el.hidden = true;
     } else {
       el.classList.remove("weather-wave-banner");
-      el.textContent = fallback;
+      el.textContent = statusFallback;
     }
   }
 }
@@ -10172,7 +10251,7 @@ function attachBookLogoWithFallback(imgEl, fallbackEl, domain) {
   imgEl.src = urls[0];
 }
 
-/** Instant inline book marks — no network, no blank circles. */
+/** Instant CSS book marks — no network / data-URI images (those were blanking in the Book column). */
 const BOOK_MARK_COLORS = Object.freeze({
   draftkings: { bg: "#53d337", fg: "#0a0a0a" },
   fanduel: { bg: "#1493ff", fg: "#ffffff" },
@@ -10186,30 +10265,25 @@ const BOOK_MARK_COLORS = Object.freeze({
   betmgm: { bg: "#c4a035", fg: "#111111" },
 });
 
-function bookMarkSvgDataUri(bookKey, shortLabel) {
+function bookMarkChipHtml(bookKey, shortLabel) {
   const colors = BOOK_MARK_COLORS[bookKey] || { bg: "#394048", fg: "#ffffff" };
   const label = String(shortLabel || "BK")
     .slice(0, 3)
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;");
-  const svg =
-    `<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 44 44">` +
-    `<rect width="44" height="44" rx="10" fill="${colors.bg}"/>` +
-    `<text x="22" y="27" text-anchor="middle" font-family="system-ui,Segoe UI,sans-serif" font-size="14" font-weight="800" fill="${colors.fg}">${label}</text>` +
-    `</svg>`;
-  return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+  return `<span class="book-logo-mark-chip" style="background:${colors.bg};color:${colors.fg}">${label}</span>`;
 }
 
 function bookBadgeHtml(book, opts = {}) {
   const m = bookMeta(book);
-  const markSrc = bookMarkSvgDataUri(m.key || book, m.short);
+  const markHtml = bookMarkChipHtml(m.key || book, m.short);
   const markOnly = !!opts.markOnly;
   const nameHtml = markOnly ? "" : `<span class="book-logo-name">${m.label}</span>`;
   const pillClass = markOnly
     ? "book-logo-pill book-logo-pill-instant book-logo-pill-mark-only"
     : "book-logo-pill book-logo-pill-instant";
-  return `<span class="${pillClass}" title="${m.label}"><img class="book-logo-img-inline" src="${markSrc}" alt="${m.label}" width="28" height="28" decoding="async" />${nameHtml}</span>`;
+  return `<span class="${pillClass}" title="${m.label}">${markHtml}${nameHtml}</span>`;
 }
 
 function modelAmericanFromProb(p) {
