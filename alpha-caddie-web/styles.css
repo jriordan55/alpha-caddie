@@ -56,7 +56,7 @@ html[data-theme="dark"] {
   --golf-shadow-sm: none;
   --golf-shadow-md: none;
   --golf-shadow-lg: 0 12px 40px rgba(0, 0, 0, 0.45);
-  --golf-content-max: 1280px;
+  --golf-content-max: none;
   --golf-logo-grad: linear-gradient(145deg, rgba(var(--golf-green-rgb), 0.22), #0e1316);
   --golf-rain: #3b719f;
 }
@@ -153,8 +153,9 @@ body {
   box-shadow: var(--golf-shadow-sm);
 }
 .nav-inner {
-  max-width: var(--golf-content-max);
-  margin: 0 auto;
+  max-width: none;
+  width: 100%;
+  margin: 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -289,11 +290,13 @@ body {
 }
 
 .content-wrapper {
-  max-width: var(--golf-content-max);
-  margin: 0 auto;
-  padding: 28px 24px 56px;
-  padding-left: max(24px, env(safe-area-inset-left, 0px));
-  padding-right: max(24px, env(safe-area-inset-right, 0px));
+  max-width: none;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 20px 16px 48px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
 }
 
 .tabs {
@@ -1897,20 +1900,80 @@ body {
   letter-spacing: 0.08em;
 }
 
-/* Round projections table: always allow horizontal swipe (iOS Safari can ignore :has fallback). */
+/* Round projections table: full-bleed, one book price per row. */
 .ou-table-scroll-shell {
   position: relative;
-  max-width: 100%;
+  max-width: none;
+  width: 100%;
 }
 #panel-ou .ou-table-card.table-wrap {
   overflow-x: auto;
   overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-x: contain;
-  max-width: 100%;
+  max-width: none;
+  width: 100%;
   scrollbar-gutter: stable;
   scrollbar-width: auto;
   scrollbar-color: rgba(160, 200, 160, 0.7) rgba(0, 0, 0, 0.35);
+}
+#panel-ou,
+#panel-ou .ou-filter-card {
+  max-width: none;
+  width: 100%;
+}
+#table-ou.table-ou-projections.table-ou-book-rows {
+  width: 100%;
+  table-layout: auto;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+#table-ou.table-ou-book-rows thead th.ou-proj-th-book,
+#table-ou.table-ou-book-rows tbody td.ou-proj-td-book {
+  width: 88px;
+  min-width: 80px;
+  white-space: nowrap;
+}
+#table-ou.table-ou-book-rows thead th.ou-proj-th-line,
+#table-ou.table-ou-book-rows tbody td.ou-proj-td-line,
+#table-ou.table-ou-book-rows thead th.ou-proj-th-odds,
+#table-ou.table-ou-book-rows tbody td.ou-proj-td-odds,
+#table-ou.table-ou-book-rows thead th.ou-proj-th-edge,
+#table-ou.table-ou-book-rows tbody td.ou-proj-td-edge,
+#table-ou.table-ou-book-rows thead th.ou-proj-th-roi,
+#table-ou.table-ou-book-rows tbody td.ou-proj-td-roi,
+#table-ou.table-ou-book-rows thead th.ou-proj-th-kelly,
+#table-ou.table-ou-book-rows tbody td.ou-proj-td-kelly {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+#table-ou.table-ou-book-rows tbody td.ou-proj-td-edge.pos,
+#table-ou.table-ou-book-rows tbody td.ou-proj-td-roi.pos {
+  color: var(--golf-green-bright);
+  font-weight: 700;
+}
+#table-ou.table-ou-book-rows tbody td.ou-proj-td-edge.neg,
+#table-ou.table-ou-book-rows tbody td.ou-proj-td-roi.neg {
+  color: var(--golf-ou-over);
+}
+#table-ou.table-ou-book-rows tbody tr.ou-proj-best-book-row td {
+  background-image: linear-gradient(
+    90deg,
+    rgba(var(--golf-green-rgb), 0.08),
+    transparent 28%
+  );
+}
+#table-ou.table-ou-book-rows thead th.ou-proj-th-golfer,
+#table-ou.table-ou-book-rows tbody td.ou-proj-td-golfer {
+  width: 200px;
+  min-width: 180px;
+  max-width: 240px;
+}
+#table-ou.table-ou-book-rows thead th.ou-proj-th-market,
+#table-ou.table-ou-book-rows tbody td.ou-proj-td-market {
+  width: 110px;
+  min-width: 100px;
+  max-width: 140px;
 }
 #panel-ou .ou-table-card.table-wrap::-webkit-scrollbar {
   height: 14px;
