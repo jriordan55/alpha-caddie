@@ -1,0 +1,91 @@
+Betsperts pull → C:\Users\student\Documents\golfModel\data\betsperts
+API https://api.betspertsgolf.com concurrency=8 session=no
+players index + profiles…
+player stats × 3627 × 12 endpoints (concurrency 8)…
+  players 50/3627 ok=50 skip=3 fail=0 6.24/s 8.0s
+  players 100/3627 ok=100 skip=3 fail=0 6.62/s 15.1s
+  players 150/3627 ok=150 skip=3 fail=0 6.69/s 22.4s
+  players 200/3627 ok=200 skip=3 fail=0 6.59/s 30.4s
+  players 250/3627 ok=249 skip=3 fail=0 6.55/s 38.2s
+  players 300/3627 ok=300 skip=3 fail=0 6.47/s 46.3s
+  players 350/3627 ok=351 skip=3 fail=0 6.66/s 52.5s
+  players 400/3627 ok=400 skip=3 fail=0 6.77/s 59.1s
+  players 450/3627 ok=450 skip=3 fail=0 6.80/s 66.2s
+  players 500/3627 ok=500 skip=3 fail=0 6.89/s 72.6s
+  players 550/3627 ok=550 skip=3 fail=0 6.88/s 80.0s
+  players 600/3627 ok=600 skip=3 fail=0 6.86/s 87.4s
+  players 650/3627 ok=650 skip=3 fail=0 6.91/s 94.1s
+  players 700/3627 ok=702 skip=3 fail=0 6.84/s 102.4s
+  players 750/3627 ok=750 skip=3 fail=0 6.83/s 109.8s
+  players 800/3627 ok=800 skip=3 fail=0 6.88/s 116.2s
+  players 850/3627 ok=850 skip=3 fail=0 6.81/s 124.8s
+  players 900/3627 ok=900 skip=3 fail=0 6.69/s 134.5s
+  players 950/3627 ok=949 skip=3 fail=0 6.67/s 142.3s
+  players 1000/3627 ok=1000 skip=3 fail=0 6.67/s 149.9s
+  players 1050/3627 ok=1050 skip=3 fail=0 6.74/s 155.8s
+  players 1100/3627 ok=1100 skip=3 fail=0 6.73/s 163.4s
+  players 1150/3627 ok=1150 skip=3 fail=0 6.74/s 170.6s
+  players 1200/3627 ok=1200 skip=3 fail=0 6.76/s 177.6s
+  players 1250/3627 ok=1250 skip=3 fail=0 6.80/s 183.9s
+  players 1300/3627 ok=1299 skip=3 fail=0 6.82/s 190.7s
+  players 1350/3627 ok=1350 skip=3 fail=0 6.82/s 197.8s
+  players 1400/3627 ok=1400 skip=3 fail=0 6.82/s 205.4s
+  players 1450/3627 ok=1450 skip=3 fail=0 6.83/s 212.3s
+  players 1500/3627 ok=1500 skip=3 fail=0 6.84/s 219.3s
+  players 1550/3627 ok=1550 skip=3 fail=0 6.85/s 226.1s
+  players 1600/3627 ok=1600 skip=3 fail=0 6.80/s 235.1s
+  players 1650/3627 ok=1650 skip=3 fail=0 6.81/s 242.4s
+  players 1700/3627 ok=1700 skip=3 fail=0 6.85/s 248.1s
+  players 1750/3627 ok=1751 skip=3 fail=0 6.89/s 254.1s
+  players 1800/3627 ok=1800 skip=3 fail=0 6.92/s 259.9s
+  players 1850/3627 ok=1850 skip=3 fail=0 6.97/s 265.6s
+  players 1900/3627 ok=1900 skip=3 fail=0 7.00/s 271.2s
+  players 1950/3627 ok=1949 skip=3 fail=0 7.04/s 277.0s
+  players 2000/3627 ok=2000 skip=3 fail=0 7.08/s 282.5s
+  players 2050/3627 ok=2050 skip=3 fail=0 7.11/s 288.1s
+  players 2100/3627 ok=2100 skip=3 fail=0 7.12/s 294.8s
+  players 2150/3627 ok=2149 skip=3 fail=0 7.13/s 301.4s
+  players 2200/3627 ok=2200 skip=3 fail=0 7.16/s 307.2s
+  players 2250/3627 ok=2250 skip=3 fail=0 7.19/s 312.7s
+  players 2300/3627 ok=2300 skip=3 fail=0 7.22/s 318.5s
+  players 2350/3627 ok=2350 skip=3 fail=0 7.23/s 324.8s
+  players 2400/3627 ok=2399 skip=3 fail=0 7.26/s 330.5s
+  players 2450/3627 ok=2450 skip=3 fail=0 7.29/s 335.9s
+  players 2500/3627 ok=2500 skip=3 fail=0 7.32/s 341.7s
+  players 2550/3627 ok=2550 skip=3 fail=0 7.34/s 347.6s
+  players 2600/3627 ok=2600 skip=3 fail=0 7.33/s 354.8s
+  players 2650/3627 ok=2649 skip=3 fail=0 7.31/s 362.4s
+  players 2700/3627 ok=2700 skip=3 fail=0 7.34/s 368.0s
+  players 2750/3627 ok=2749 skip=3 fail=0 7.36/s 373.9s
+  players 2800/3627 ok=2800 skip=3 fail=0 7.37/s 379.7s
+  players 2850/3627 ok=2850 skip=3 fail=0 7.39/s 385.6s
+  players 2900/3627 ok=2900 skip=3 fail=0 7.41/s 391.3s
+  players 2950/3627 ok=2951 skip=3 fail=0 7.43/s 397.2s
+  players 3000/3627 ok=3000 skip=3 fail=0 7.45/s 402.7s
+  players 3050/3627 ok=3050 skip=3 fail=0 7.47/s 408.2s
+  players 3100/3627 ok=3100 skip=3 fail=0 7.49/s 414.0s
+  players 3150/3627 ok=3150 skip=3 fail=0 7.51/s 419.7s
+  players 3200/3627 ok=3200 skip=3 fail=0 7.49/s 427.2s
+  players 3250/3627 ok=3250 skip=3 fail=0 7.51/s 432.9s
+  players 3300/3627 ok=3300 skip=3 fail=0 7.52/s 438.8s
+  players 3350/3627 ok=3350 skip=3 fail=0 7.53/s 445.0s
+  players 3400/3627 ok=3400 skip=3 fail=0 7.55/s 450.6s
+  players 3450/3627 ok=3450 skip=3 fail=0 7.56/s 456.4s
+  players 3500/3627 ok=3500 skip=3 fail=0 7.57/s 462.6s
+  players 3550/3627 ok=3549 skip=3 fail=0 7.57/s 468.7s
+  players 3600/3627 ok=3600 skip=3 fail=0 7.59/s 474.6s
+  players 3627/3627 ok=3627 skip=3 fail=0 7.59/s 477.8s
+players done ok=3627 skip=3 fail=0
+manifest {
+  "started": "2026-11-20T22:18:39.086Z",
+  "api": "https://api.betspertsgolf.com",
+  "session": false,
+  "players": 3627,
+  "playerOk": 3627,
+  "playerSkip": 3,
+  "playerFail": 0,
+  "rabbitAuth": false,
+  "finished": "2026-11-20T22:26:37.750Z",
+  "playerFiles": 3627,
+  "courseFiles": 120
+}
