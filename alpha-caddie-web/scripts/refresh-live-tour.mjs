@@ -122,6 +122,9 @@ if (tour === "pga") {
 }
 run("fetch-book-odds-into-projections.mjs", "Sportsbook odds merge", {}, softOpt);
 run("merge-live-round-meta-into-projections.mjs", "Display round + prior-round difficulty", {}, softOpt);
+// Drop yesterday's sportsbook O/U lines from active props once display_round advances
+// (keeps them in props_prior_rounds). Stops R(n-1) lines pairing with R(n) μ.
+run("archive-prior-round-book-props.mjs", "Archive prior-round book props", {}, softOpt);
 run("merge-field-teetimes-into-projections.mjs", "Tee times", {}, softOpt);
 // Hard gate: 9pm / push:live must never publish without venue weather (banner + μ).
 // Soft mode does NOT apply — missing coords / Open-Meteo failure aborts the tour publish.

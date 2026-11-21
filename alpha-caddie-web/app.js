@@ -7487,12 +7487,27 @@ function scheduleBuildOuTable(immediate = false) {
   });
 }
 
+/**
+ * Pick book prop rows for the active O/U round only.
+ * Never fall back to a prior round (that mixed yesterday's R2 lines with today's R3 μ).
+ * Unnumbered rows are kept only when the market has no round-tagged props at all.
+ */
+function propRowsForExactOuRound(mktRows, wantR) {
+  const rows = Array.isArray(mktRows) ? mktRows : [];
+  if (!Number.isFinite(wantR) || wantR < 1) return rows;
+  const numbered = rows.filter((r) => Number.isFinite(Math.round(num(r.round_num, NaN))));
+  const exact = numbered.filter((r) => Math.round(num(r.round_num, NaN)) === wantR);
+  if (exact.length) return exact;
+  if (numbered.length) return [];
+  return rows.filter((r) => !Number.isFinite(Math.round(num(r.round_num, NaN))));
+}
+
 /** DraftKings round O/U rows only (Round projections tab). Default: toolbar round; `allRounds` keeps every round in DATA.props. */
 function draftKingsRoundPropsOnly(allRounds = false) {
   const wantR = allRounds ? NaN : Math.round(getOuRound());
   const props = ouProjectionsPayload().props;
   const propsLen = Array.isArray(props) ? props.length : 0;
-  const sig = `${allRounds ? "all" : `r${wantR}`}|n${propsLen}|rev${projectionsDataRev}`;
+  const sig = `${allRounds ? "all" : `r${wantR}`}|n${propsLen}|rev${projectionsDataRev}|exact`;
   if (!allRounds && ouDkRoundPropsCacheSig === sig) return ouDkRoundPropsCache;
 
   const filterForRound = (roundFilter) =>
@@ -7528,21 +7543,7 @@ function draftKingsRoundPropsOnly(allRounds = false) {
     }
     out = [];
     for (const mktRows of byMarket.values()) {
-      const unnumbered = mktRows.filter((r) => !Number.isFinite(Math.round(num(r.round_num, NaN))));
-      const numbered = mktRows.filter((r) => Number.isFinite(Math.round(num(r.round_num, NaN))));
-      const rounds = [...new Set(numbered.map((r) => Math.round(num(r.round_num, NaN))))]
-        .filter((n) => n >= 1 && n <= 4)
-        .sort((a, b) => b - a);
-      let pickRound = rounds.includes(wantR) ? wantR : rounds.find((r) => r <= wantR);
-      if (!Number.isFinite(pickRound)) pickRound = rounds[0];
-      out.push(...unnumbered);
-      if (Number.isFinite(pickRound)) {
-        for (const r of numbered) {
-          if (Math.round(num(r.round_num, NaN)) === pickRound) out.push(r);
-        }
-      } else {
-        out.push(...numbered);
-      }
+      out.push(...propRowsForExactOuRound(mktRows, wantR));
     }
   }
 
@@ -7561,7 +7562,7 @@ function prizePicksRoundPropsOnly(allRounds = false) {
   const wantR = allRounds ? NaN : Math.round(getOuRound());
   const props = ouProjectionsPayload().props;
   const propsLen = Array.isArray(props) ? props.length : 0;
-  const sig = `${allRounds ? "all" : `r${wantR}`}|n${propsLen}|rev${projectionsDataRev}`;
+  const sig = `${allRounds ? "all" : `r${wantR}`}|n${propsLen}|rev${projectionsDataRev}|exact`;
   if (!allRounds && ouPpRoundPropsCacheSig === sig) return ouPpRoundPropsCache;
 
   const filterForRound = (roundFilter) =>
@@ -7597,21 +7598,7 @@ function prizePicksRoundPropsOnly(allRounds = false) {
     }
     out = [];
     for (const mktRows of byMarket.values()) {
-      const unnumbered = mktRows.filter((r) => !Number.isFinite(Math.round(num(r.round_num, NaN))));
-      const numbered = mktRows.filter((r) => Number.isFinite(Math.round(num(r.round_num, NaN))));
-      const rounds = [...new Set(numbered.map((r) => Math.round(num(r.round_num, NaN))))]
-        .filter((n) => n >= 1 && n <= 4)
-        .sort((a, b) => b - a);
-      let pickRound = rounds.includes(wantR) ? wantR : rounds.find((r) => r <= wantR);
-      if (!Number.isFinite(pickRound)) pickRound = rounds[0];
-      out.push(...unnumbered);
-      if (Number.isFinite(pickRound)) {
-        for (const r of numbered) {
-          if (Math.round(num(r.round_num, NaN)) === pickRound) out.push(r);
-        }
-      } else {
-        out.push(...numbered);
-      }
+      out.push(...propRowsForExactOuRound(mktRows, wantR));
     }
   }
 
@@ -7673,21 +7660,7 @@ function roundPropsForSource(source, allRounds = false) {
   }
   const out = [];
   for (const mktRows of byMarket.values()) {
-    const unnumbered = mktRows.filter((r) => !Number.isFinite(Math.round(num(r.round_num, NaN))));
-    const numbered = mktRows.filter((r) => Number.isFinite(Math.round(num(r.round_num, NaN))));
-    const rounds = [...new Set(numbered.map((r) => Math.round(num(r.round_num, NaN))))]
-      .filter((n) => n >= 1 && n <= 4)
-      .sort((a, b) => b - a);
-    let pickRound = rounds.includes(wantR) ? wantR : rounds.find((r) => r <= wantR);
-    if (!Number.isFinite(pickRound)) pickRound = rounds[0];
-    out.push(...unnumbered);
-    if (Number.isFinite(pickRound)) {
-      for (const r of numbered) {
-        if (Math.round(num(r.round_num, NaN)) === pickRound) out.push(r);
-      }
-    } else {
-      out.push(...numbered);
-    }
+    out.push(...propRowsForExactOuRound(mktRows, wantR));
   }
   return out;
 }
