@@ -1150,7 +1150,7 @@ async function ensureOuRhStatsLoaded() {
   if (ouRhStatsLoadPromise) return ouRhStatsLoadPromise;
   ouRhStatsLoadPromise = (async () => {
     try {
-      const res = await fetch("data/betsperts_rh_ou_stats.json", { cache: "no-store" });
+      const res = await fetch("data/betsperts_rh_ou_stats.json", { cache: "force-cache" });
       if (res.ok) {
         OU_RH_STATS = await res.json();
         OU_PROJ_AVG_CACHE.clear();
@@ -1397,7 +1397,7 @@ function createPlayerAvatarEl({ dg_id, player_name, size = 36 } = {}) {
     const img = document.createElement("img");
     img.className = "player-avatar-img";
     img.alt = "";
-    img.loading = "eager";
+    img.loading = "lazy";
     img.decoding = "async";
     img.fetchPriority = "low";
     img.referrerPolicy = "no-referrer";
@@ -7014,8 +7014,12 @@ function propPricingSigmaForOu(market, row, mu, opts = {}) {
     if (Number.isFinite(s) && s > 0.05) return finish(s * weatherMult);
   }
 
-  const histSd = ouPlayerMarketStdDev(market, row);
-  if (Number.isFinite(histSd)) return finish(histSd * weatherMult);
+  // Skip history-walk σ on Round projections — field history is not loaded for this tab.
+  // Formula / projection sdKey above is enough for table pricing speed.
+  if (opts.useHistorySigma) {
+    const histSd = ouPlayerMarketStdDev(market, row);
+    if (Number.isFinite(histSd)) return finish(histSd * weatherMult);
+  }
 
   if (Number.isFinite(mu) && mu > 0) {
     let sig = mu * propPricingLeagueSdMultiplier(mKey);
@@ -9347,17 +9351,14 @@ function selectedOuProjBookFilter() {
 
 function buildOuTable() {
   const buildGen = ++ouTableBuildGen;
-  // If sidecars land mid-build, one cheap rebuild fills Rabbit Hole + headshots.
-  if (!OU_SEASON_AVGS) {
-    void ensureOuSeasonAvgsLoaded().then(() => {
-      if (buildGen !== ouTableBuildGen) return;
-      if (activeAppTabId() === "ou") scheduleBuildOuTable(true);
-    });
-  }
+  // Sidecars: hydrate in place — do NOT full-rebuild the priced table when they land.
   if (!OU_RH_STATS?.players || !Object.keys(OU_RH_STATS.players).length) {
     void ensureOuRhStatsLoaded().then(() => {
       if (buildGen !== ouTableBuildGen) return;
-      if (activeAppTabId() === "ou") scheduleBuildOuTable(true);
+      if (activeAppTabId() === "ou") {
+        invalidateOuProjectionAvgCaches({ wipeRows: false });
+        scheduleBuildOuTable(true);
+      }
     });
   }
   if (!ouRhFiltersReady) {
@@ -26620,7 +26621,6 @@ async function refreshAll() {
   const tab = activeAppTabId() || "ou";
   if (tab === "ou") {
     buildOuTable();
-    void ensurePlayerHistoryLoadedForTab("ou");
   } else if (tab === "ev") buildEvTable();
   else if (tab === "matchup-analysis") buildMatchupAnalysisTool();
 
@@ -28106,7 +28106,7 @@ function showAppTab(tab) {
   });
   if (tab === "ou")
     requestAnimationFrame(() => {
-      void ensurePlayerHistoryLoadedForTab("ou");
+      // Do NOT load field-*.json (~16MB) here — Average is Rabbit Hole, not history.
       scheduleBuildOuTable(true);
       syncOuChartCard();
       const ouProjCanvas = document.querySelector("#table-ou tbody .ou-proj-detail-canvas");
@@ -28172,7 +28172,8 @@ function activeAppTabId() {
 }
 
 function ensurePlayerHistoryLoadedForTab(tab) {
-  if (!["props", "course-fit", "ou"].includes(String(tab || ""))) return Promise.resolve();
+  // Round projections (ou) uses Rabbit Hole stats — never pull field-*.json for that tab.
+  if (!["props", "course-fit"].includes(String(tab || ""))) return Promise.resolve();
   const p =
     tab === "props"
       ? (async () => {
@@ -28188,25 +28189,22 @@ function ensurePlayerHistoryLoadedForTab(tab) {
           }
           return historyBucketLoaded(dg) || historyBucketResolved(dg);
         })()
-      : tab === "ou"
-        ? scheduleOuProjectionFieldHistoryLoad()
-        : (async () => {
-            // course-fit: field by-dg shards only
-            const seasonYear = ouProjectionFieldHistorySeasonYear();
-            await ensurePropsFieldPlayerHistoryLoaded({
-              seasonYear,
-              ids: ouProjectionFieldPlayerDgIds(),
-            });
-            return true;
-          })();
+      : (async () => {
+          // course-fit: field by-dg shards only
+          const seasonYear = ouProjectionFieldHistorySeasonYear();
+          await ensurePropsFieldPlayerHistoryLoaded({
+            seasonYear,
+            ids: ouProjectionFieldPlayerDgIds(),
+          });
+          return true;
+        })();
   return p.then(() => {
     if (activeAppTabId() !== tab) return;
     if (tab === "props") renderPropsTrendsNow();
     if (tab === "course-fit") buildCourseFitTab();
-    if (tab === "ou") buildOuTable();
   }).catch(() => {
     if (activeAppTabId() === "props") renderPropsTrendsNow();
-    if (activeAppTabId() === "ou") buildOuTable();
+    if (activeAppTabId() === "course-fit") buildCourseFitTab();
   });
 }
 
@@ -29297,11 +29295,14 @@ function initAlphaCaddieThemeToggle() {
 
 document.addEventListener("DOMContentLoaded", () => {
   initAlphaCaddieThemeToggle();
-  // Kick these immediately so Round projections paints with RH stats + headshots.
-  void ensurePlayerHeadshotsLoaded();
-  void ensureOuSeasonAvgsLoaded();
-  void ensureOuRhFiltersLoaded().then(() => populateOuRhFilterSelects());
-  void ensureOuRhStatsLoaded();
+  // Defer Round-projections sidecars until idle — don't compete with projections.json on first paint.
+  const kickOuSidecars = () => {
+    void ensurePlayerHeadshotsLoaded();
+    void ensureOuRhFiltersLoaded().then(() => populateOuRhFilterSelects());
+    void ensureOuRhStatsLoaded();
+  };
+  if (typeof requestIdleCallback === "function") requestIdleCallback(kickOuSidecars, { timeout: 1200 });
+  else setTimeout(kickOuSidecars, 200);
   syncWeatherUiFromState();
   initPropsTopTableSortOnce();
   configureRoundPickerUi();
@@ -29390,10 +29391,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("ou-proj-avg-window")?.addEventListener("change", () => {
     ouProjExpandedKey = "";
     invalidateOuProjectionAvgCaches();
-    ouFieldHistoryLoadedSig = "";
     syncOuProjAvgColumnHeader();
-    scheduleOuCourseShardForProjAvg();
-    void scheduleOuProjectionFieldHistoryLoad();
     scheduleBuildOuTable(true);
   });
   const onOuRhFilterChange = () => {
@@ -29409,17 +29407,21 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById(id)?.addEventListener("change", onOuRhFilterChange);
   }
   syncOuProjKellyPrefsToUi();
-  document.getElementById("ou-proj-bankroll")?.addEventListener("change", () => {
+  let ouBankrollRebuildTimer = 0;
+  const rebuildOuForBankroll = () => {
     saveOuProjKellyPrefs();
     ouProjectionFlatRowsCacheSig = "";
     scheduleBuildOuTable(true);
     refreshMatchupAnalysisKellyDisplay();
-  });
+  };
+  document.getElementById("ou-proj-bankroll")?.addEventListener("change", rebuildOuForBankroll);
   document.getElementById("ou-proj-bankroll")?.addEventListener("input", () => {
     saveOuProjKellyPrefs();
-    ouProjectionFlatRowsCacheSig = "";
-    scheduleBuildOuTable();
-    refreshMatchupAnalysisKellyDisplay();
+    if (ouBankrollRebuildTimer) clearTimeout(ouBankrollRebuildTimer);
+    ouBankrollRebuildTimer = setTimeout(() => {
+      ouBankrollRebuildTimer = 0;
+      rebuildOuForBankroll();
+    }, 280);
   });
   document.getElementById("ou-proj-kelly-fraction")?.addEventListener("change", () => {
     saveOuProjKellyPrefs();

@@ -277,7 +277,10 @@ const server = http.createServer((req, res) => {
       // Headshots map + slim season avgs are safe to cache briefly (big UX win on Round projections).
       const base = path.basename(filePath).toLowerCase();
       const cacheableSidecar =
-        base === "player_headshots.json" || /^ou-season-avgs-\d{4}\.json$/.test(base);
+        base === "player_headshots.json" ||
+        base === "betsperts_rh_ou_stats.json" ||
+        base === "betsperts_rh_filters.json" ||
+        /^ou-season-avgs-\d{4}\.json$/.test(base);
       if (cacheableSidecar) {
         res.setHeader("Cache-Control", "public, max-age=300, stale-while-revalidate=86400");
       } else {
