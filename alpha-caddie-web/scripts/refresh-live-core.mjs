@@ -237,6 +237,13 @@ run(
   softOpt,
 );
 
+run(
+  "build-betsperts-rh-ou-stats.mjs",
+  "Rabbit Hole OU market stats (SG/BoB/DrAcc/GIR/Bogey) → data/betsperts_rh_ou_stats.json",
+  {},
+  softOpt,
+);
+
 run("build-player-headshots.mjs", "PGA/Betsperts player headshot map → data/player_headshots.json", {}, softOpt);
 
 await mirrorPublishArtifacts();

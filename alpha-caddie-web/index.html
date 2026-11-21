@@ -26,7 +26,7 @@
     onload="this.media='all'"
   />
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" /></noscript>
-  <link rel="stylesheet" href="styles.css?v=28" />
+  <link rel="stylesheet" href="styles.css?v=29" />
   <link rel="preconnect" href="https://pga-tour-res.cloudinary.com" crossorigin />
   <link rel="preload" href="data/player_headshots.json" as="fetch" crossorigin />
   <link rel="preload" href="player-history/ou-season-avgs-2026.json" as="fetch" crossorigin />
@@ -192,15 +192,29 @@
                 <option value="courtside">Courtside</option>
               </select>
             </label>
-            <label class="toolbar-label ou-filter-field">Average
-              <select id="ou-proj-avg-window" title="Window for the Average column (player history for the selected market)">
+            <label class="toolbar-label ou-filter-field">Time frame
+              <select id="ou-rh-timeframe" title="Rabbit Hole time frame for Round projections stats">
+                <option value="all" selected>All</option>
+              </select>
+            </label>
+            <label class="toolbar-label ou-filter-field">Region
+              <select id="ou-rh-region" title="Rabbit Hole region filter">
+                <option value="all" selected>All</option>
+              </select>
+            </label>
+            <label class="toolbar-label ou-filter-field">Course type
+              <select id="ou-rh-ctype" title="Rabbit Hole course type filter">
+                <option value="all" selected>All</option>
+              </select>
+            </label>
+            <label class="toolbar-label ou-filter-field">Course
+              <select id="ou-rh-course" title="Rabbit Hole course filter">
+                <option value="all" selected>All</option>
+              </select>
+            </label>
+            <label class="toolbar-label ou-filter-field" hidden aria-hidden="true">Average
+              <select id="ou-proj-avg-window" title="Legacy average window (unused)">
                 <option value="season" selected>This season</option>
-                <option value="4">Last 4 rounds</option>
-                <option value="12">Last 12 rounds</option>
-                <option value="24">Last 24 rounds</option>
-                <option value="36">Last 36 rounds</option>
-                <option value="48">Last 48 rounds</option>
-                <option value="course">At this course</option>
               </select>
             </label>
             <label class="toolbar-label ou-filter-field">Bankroll
@@ -1448,6 +1462,6 @@
     </div>
   </dialog>
 
-  <script src="app.js?v=382"></script>
+  <script src="app.js?v=383"></script>
 </body>
 </html>

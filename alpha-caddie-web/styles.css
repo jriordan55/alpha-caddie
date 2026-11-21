@@ -2335,7 +2335,8 @@ body {
 }
 #table-ou.table-ou-projections .ou-proj-th-avg,
 #table-ou.table-ou-projections .ou-proj-td-avg {
-  min-width: 4rem;
+  min-width: 6.5rem;
+  white-space: nowrap;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
 }

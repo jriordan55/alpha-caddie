@@ -1082,6 +1082,246 @@ function ouSeasonAvgFromSidecar(market, player, windowMode) {
   return { avg: hit.avg, n: Math.round(num(hit.n, 0)), source: "season-sidecar", windowMode: "season" };
 }
 
+/** @type {{ players?: Record<string, object>, filters?: object, n?: number } | null} */
+let OU_RH_STATS = null;
+/** @type {{ timeframes?: Array<{value:string,label:string}>, regions?: string[], types?: string[], courses?: Array<{id:string,name:string}> } | null} */
+let OU_RH_FILTERS = null;
+let ouRhStatsLoadPromise = null;
+let ouRhFiltersLoadPromise = null;
+let ouRhLiveFetchPromise = null;
+let ouRhFiltersReady = false;
+
+function ouRhFilterState() {
+  const timeframe = String(document.getElementById("ou-rh-timeframe")?.value || "all").trim() || "all";
+  const region = String(document.getElementById("ou-rh-region")?.value || "all").trim() || "all";
+  const ctype = String(document.getElementById("ou-rh-ctype")?.value || "all").trim() || "all";
+  const course = String(document.getElementById("ou-rh-course")?.value || "all").trim() || "all";
+  return { timeframe, region, ctype, course };
+}
+
+function ouRhFiltersAreAll(state = ouRhFilterState()) {
+  return (
+    (!state.timeframe || state.timeframe === "all") &&
+    (!state.region || state.region === "all") &&
+    (!state.ctype || state.ctype === "all") &&
+    (!state.course || state.course === "all")
+  );
+}
+
+function ouRhFilterCacheKey(state = ouRhFilterState()) {
+  return `${state.timeframe}|${state.region}|${state.ctype}|${state.course}`;
+}
+
+async function ensureOuRhFiltersLoaded() {
+  if (OU_RH_FILTERS) return OU_RH_FILTERS;
+  if (ouRhFiltersLoadPromise) return ouRhFiltersLoadPromise;
+  ouRhFiltersLoadPromise = (async () => {
+    try {
+      const res = await fetch("data/betsperts_rh_filters.json", { cache: "force-cache" });
+      if (res.ok) OU_RH_FILTERS = await res.json();
+    } catch {
+      /* optional */
+    }
+    if (!OU_RH_FILTERS) {
+      const y = new Date().getFullYear();
+      OU_RH_FILTERS = {
+        timeframes: [
+          { value: "all", label: "All" },
+          { value: "round:12", label: "Last 12 rounds" },
+          { value: "round:24", label: "Last 24 rounds" },
+          { value: "round:36", label: "Last 36 rounds" },
+          { value: "round:50", label: "Last 50 rounds" },
+          { value: "round:100", label: "Last 100 rounds" },
+          { value: `season:${y}`, label: `${y} season` },
+          { value: `season:${y - 1}`, label: `${y - 1} season` },
+        ],
+        regions: [],
+        types: [],
+        courses: [],
+      };
+    }
+    return OU_RH_FILTERS;
+  })();
+  return ouRhFiltersLoadPromise;
+}
+
+async function ensureOuRhStatsLoaded() {
+  if (OU_RH_STATS?.players) return OU_RH_STATS;
+  if (ouRhStatsLoadPromise) return ouRhStatsLoadPromise;
+  ouRhStatsLoadPromise = (async () => {
+    try {
+      const res = await fetch("data/betsperts_rh_ou_stats.json", { cache: "no-store" });
+      if (res.ok) {
+        OU_RH_STATS = await res.json();
+        OU_PROJ_AVG_CACHE.clear();
+      }
+    } catch {
+      /* optional */
+    }
+    if (!OU_RH_STATS) OU_RH_STATS = { players: {}, filters: { timeframe: "all" }, n: 0 };
+    return OU_RH_STATS;
+  })();
+  return ouRhStatsLoadPromise;
+}
+
+function populateOuRhFilterSelects() {
+  const meta = OU_RH_FILTERS;
+  if (!meta || ouRhFiltersReady) return;
+  const fill = (id, options, allLabel = "All") => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const cur = String(el.value || "all");
+    el.innerHTML = "";
+    const optAll = document.createElement("option");
+    optAll.value = "all";
+    optAll.textContent = allLabel;
+    el.appendChild(optAll);
+    for (const o of options || []) {
+      const opt = document.createElement("option");
+      if (typeof o === "string") {
+        opt.value = o;
+        opt.textContent = o;
+      } else {
+        opt.value = String(o.value ?? o.id ?? "");
+        opt.textContent = String(o.label ?? o.name ?? opt.value);
+      }
+      if (!opt.value) continue;
+      el.appendChild(opt);
+    }
+    el.value = [...el.options].some((x) => x.value === cur) ? cur : "all";
+  };
+  fill("ou-rh-timeframe", meta.timeframes || []);
+  fill("ou-rh-region", (meta.regions || []).map((r) => ({ value: r, label: r })));
+  fill("ou-rh-ctype", (meta.types || []).map((t) => ({ value: t, label: t })));
+  fill(
+    "ou-rh-course",
+    (meta.courses || []).map((c) => ({ value: String(c.id), label: c.name })),
+  );
+  ouRhFiltersReady = true;
+}
+
+async function fetchOuRhStatsForFilters(state = ouRhFilterState()) {
+  if (ouRhFiltersAreAll(state)) {
+    await ensureOuRhStatsLoaded();
+    return OU_RH_STATS;
+  }
+  if (ouRhLiveFetchPromise) return ouRhLiveFetchPromise;
+  ouRhLiveFetchPromise = (async () => {
+    try {
+      const res = await fetch("/api/betsperts-rh-ou", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify(state),
+        cache: "no-store",
+      });
+      const j = await res.json().catch(() => null);
+      if (res.ok && j?.ok && j.players) {
+        OU_RH_STATS = {
+          generatedAt: j.generatedAt,
+          filters: j.filters || state,
+          n: j.n,
+          players: j.players,
+          live: true,
+        };
+        OU_PROJ_AVG_CACHE.clear();
+        ouProjectionFlatRowsCache = null;
+        ouProjectionFlatRowsCacheSig = "";
+        return OU_RH_STATS;
+      }
+      console.warn("[ou-rh] live filter fetch failed", res.status, j?.error);
+    } catch (e) {
+      console.warn("[ou-rh] live filter fetch error", e?.message || e);
+    } finally {
+      ouRhLiveFetchPromise = null;
+    }
+    return OU_RH_STATS;
+  })();
+  return ouRhLiveFetchPromise;
+}
+
+function ouRhPlayerRow(player) {
+  const id = Math.round(num(player?.dg_id, NaN));
+  if (!Number.isFinite(id) || !OU_RH_STATS?.players) return null;
+  return OU_RH_STATS.players[String(id)] || null;
+}
+
+/** Rabbit Hole market stat for Round projections Average column. */
+function ouRhMarketStatHit(market, player) {
+  const mKey = ouModelMarketKey(market) || "Total score";
+  const row = ouRhPlayerRow(player);
+  const n = Math.round(num(row?.rounds, 0));
+  const empty = { avg: NaN, n: 0, source: OU_RH_STATS?.players ? "betsperts-rh" : "pending", metric: mKey };
+  if (!row) return empty;
+  if (mKey === "Total score") {
+    const v = num(row.sg_total, NaN);
+    return {
+      avg: v,
+      n,
+      source: "betsperts-rh",
+      metric: "SG:TOT",
+      label: "SG: Total",
+      display: Number.isFinite(v) ? (v >= 0 ? v.toFixed(2) : v.toFixed(2)) : "—",
+    };
+  }
+  if (mKey === "Birdies") {
+    const v = num(row.bob_pct, NaN);
+    return {
+      avg: v,
+      n,
+      source: "betsperts-rh",
+      metric: "BoB %",
+      label: "Birdie or Better %",
+      display: Number.isFinite(v) ? `${v.toFixed(1)}%` : "—",
+    };
+  }
+  if (mKey === "Fairways hit") {
+    const v = num(row.dr_accuracy, NaN);
+    return {
+      avg: v,
+      n,
+      source: "betsperts-rh",
+      metric: "Dr Accuracy %",
+      label: "Dr Accuracy",
+      display: Number.isFinite(v) ? `${v.toFixed(1)}%` : "—",
+    };
+  }
+  if (mKey === "GIR") {
+    const v = num(row.gir_pct, NaN);
+    return {
+      avg: v,
+      n,
+      source: "betsperts-rh",
+      metric: "GIR %",
+      label: "GIR%",
+      display: Number.isFinite(v) ? `${v.toFixed(1)}%` : "—",
+    };
+  }
+  if (mKey === "Bogeys") {
+    const bog = num(row.bogey_pct, NaN);
+    const dbl = num(row.double_bogey_pct, NaN);
+    const sum = [bog, dbl].every(Number.isFinite) ? bog + dbl : Number.isFinite(bog) ? bog : dbl;
+    return {
+      avg: sum,
+      n,
+      source: "betsperts-rh",
+      metric: "Bogey % + Double Bogey+ %",
+      label: "Bogey% / Dbl%",
+      bogey_pct: bog,
+      double_bogey_pct: dbl,
+      display:
+        Number.isFinite(bog) && Number.isFinite(dbl)
+          ? `${bog.toFixed(1)}% / ${dbl.toFixed(1)}%`
+          : Number.isFinite(bog)
+            ? `${bog.toFixed(1)}%`
+            : Number.isFinite(dbl)
+              ? `${dbl.toFixed(1)}%`
+              : "—",
+    };
+  }
+  // Pars / other: no RH mapping
+  return { avg: NaN, n, source: "betsperts-rh", metric: mKey, display: "—" };
+}
+
 function resolvePgaPlayerIdForHeadshot({ dg_id, player_name } = {}) {
   const map = PLAYER_HEADSHOTS;
   const dg = Math.round(num(dg_id, NaN));
@@ -3736,10 +3976,25 @@ function invalidateOuProjectionAvgCaches({ wipeRows = true } = {}) {
   }
 }
 
+function ouRhFilterSummaryLabel(state = ouRhFilterState()) {
+  const parts = [];
+  if (state.timeframe && state.timeframe !== "all") {
+    const tf = (OU_RH_FILTERS?.timeframes || []).find((t) => t.value === state.timeframe);
+    parts.push(tf?.label || state.timeframe);
+  }
+  if (state.region && state.region !== "all") parts.push(state.region);
+  if (state.ctype && state.ctype !== "all") parts.push(state.ctype);
+  if (state.course && state.course !== "all") {
+    const c = (OU_RH_FILTERS?.courses || []).find((x) => String(x.id) === String(state.course));
+    parts.push(c?.name || `Course ${state.course}`);
+  }
+  return parts.length ? parts.join(" · ") : "All";
+}
+
 function syncOuProjAvgColumnHeader() {
   const th = document.querySelector("#table-ou thead th[data-sort-key='pr-avg']");
   if (!th) return;
-  const label = ouProjAvgWindowLabel();
+  const label = "Rabbit Hole";
   const sortInd = th.querySelector(".sort-ind");
   for (const child of [...th.childNodes]) {
     if (child !== sortInd) th.removeChild(child);
@@ -3751,13 +4006,18 @@ function syncOuProjAvgColumnHeader() {
       `<span class="sort-ind"><span class="sort-up">▲</span><span class="sort-down">▼</span></span>`,
     );
   }
-  th.title = `Historical average — ${label}`;
+  th.title = `Betsperts Rabbit Hole — ${ouRhFilterSummaryLabel()} (Round→SG:TOT, Birdies→BoB%, Fairways→Dr Acc, GIR→GIR%, Bogeys→Bogey%/Dbl%)`;
 }
 
-/** Live average for one projection row (always uses toolbar window + row market). */
+/** Live Rabbit Hole (or legacy average) hit for one projection row. */
 function ouProjectionRowMarketAvgHit(row) {
   const { player, col } = row;
   const mKey = ouModelMarketKey(col?.market) || ouModelMarketKey(col?.label) || "Total score";
+  const rh = ouRhMarketStatHit(mKey, player);
+  if (rh.source === "betsperts-rh" && (Number.isFinite(rh.avg) || rh.display === "—" || mKey === "Pars")) {
+    return rh;
+  }
+  if (rh.source === "pending") return rh;
   return ouCachedPlayerMarketAverage(mKey, player, ouProjAvgWindowMode());
 }
 
@@ -4035,11 +4295,20 @@ function ouCachedPlayerMarketAverage(market, player, windowMode = ouProjAvgWindo
 }
 
 function ouPlayerMarketAverageTitle(market, hit) {
+  if (hit?.source === "betsperts-rh") {
+    const filt = ouRhFilterSummaryLabel();
+    const metric = hit.label || hit.metric || ouModelMarketKey(market) || "stat";
+    const n = Math.round(num(hit?.n, 0));
+    if (!Number.isFinite(hit?.avg) && hit.display === "—") {
+      return `Rabbit Hole ${metric} · ${filt} — no data`;
+    }
+    return n > 0 ? `Rabbit Hole ${metric} · ${filt} · n=${n}` : `Rabbit Hole ${metric} · ${filt}`;
+  }
   const label = ouProjAvgWindowLabel(hit?.windowMode);
   const n = Math.round(num(hit?.n, 0));
   if (!Number.isFinite(hit?.avg)) {
     if (hit?.source === "pending" || ouFieldHistoryLoadPromise || ouCourseShardForProjAvgPromise) {
-      return `${label} — loading history…`;
+      return `${label} — loading…`;
     }
     return `${label} — no rounds in window`;
   }
@@ -7067,7 +7336,7 @@ let ouGolferSuggestLabelsSig = "";
 /** @type {string[]} */
 let ouGolferSuggestLabels = [];
 let ouProjTableChromeReady = false;
-const OU_PROJ_TABLE_CHROME_VER = 10;
+const OU_PROJ_TABLE_CHROME_VER = 11;
 let ouProjTableChromeBuiltVer = 0;
 let ouTableBuildRaf = 0;
 
@@ -8353,7 +8622,7 @@ function ensureOuProjectionTableChrome() {
     ["pr-market", "Market", "sortable ou-proj-long-th ou-proj-th-market"],
     ["pr-side", "Side", "sortable ou-proj-long-th num ou-proj-th-side"],
     ["pr-mu", "Proj", "sortable ou-proj-long-th num ou-proj-th-mu"],
-    ["pr-avg", "Average", "sortable ou-proj-long-th num ou-proj-th-avg"],
+    ["pr-avg", "Rabbit Hole", "sortable ou-proj-long-th num ou-proj-th-avg"],
     ["pr-book", "Book", "sortable ou-proj-long-th ou-proj-th-book"],
     ["pr-line", "Line", "sortable ou-proj-long-th num ou-proj-th-line"],
     ["pr-odds", "Odds", "sortable ou-proj-long-th num ou-proj-th-odds"],
@@ -8465,10 +8734,20 @@ function formatOuProjectedMean(mu) {
   return Number.isFinite(mu) ? mu.toFixed(1) : "—";
 }
 
-/** Average column: never show bogus 0.0 when counting stats lack real history. */
-function formatOuMarketAverage(mu, market) {
+/** Average / Rabbit Hole column display. */
+function formatOuMarketAverage(mu, market, hit = null) {
+  if (hit?.display) return hit.display;
   if (!Number.isFinite(mu)) return "—";
   const mKey = ouModelMarketKey(market) || "Total score";
+  if (hit?.source === "betsperts-rh") {
+    if (mKey === "Total score") return mu.toFixed(2);
+    if (mKey === "Bogeys" && Number.isFinite(hit.bogey_pct) && Number.isFinite(hit.double_bogey_pct)) {
+      return `${hit.bogey_pct.toFixed(1)}% / ${hit.double_bogey_pct.toFixed(1)}%`;
+    }
+    if (mKey === "Birdies" || mKey === "GIR" || mKey === "Fairways hit" || mKey === "Bogeys") {
+      return `${mu.toFixed(1)}%`;
+    }
+  }
   if (mu === 0 && mKey !== "Total score") return "—";
   return mu.toFixed(1);
 }
@@ -8671,11 +8950,13 @@ function ouProjectionFlatRowsForPlayers(players, cols, bookFilter = "best") {
 
 function ouProjectionFlatRowsCacheKey(players, cols, bookFilter = "best") {
   const avgWindow = ouProjAvgWindowMode();
+  const rhKey = ouRhFilterCacheKey();
   const round = getOuRound();
   const colSig = cols.map((c) => c.label).join("\x1e");
   return [
     `r${round}`,
     `aw${avgWindow}`,
+    `rh${rhKey}`,
     `bf${bookFilter || "all"}`,
     `br${Math.round(ouProjBankrollFromUi())}`,
     `kf${ouProjKellyFractionFromUi()}`,
@@ -9066,11 +9347,23 @@ function selectedOuProjBookFilter() {
 
 function buildOuTable() {
   const buildGen = ++ouTableBuildGen;
-  // If sidecars land mid-build, one cheap rebuild fills Average + headshots.
+  // If sidecars land mid-build, one cheap rebuild fills Rabbit Hole + headshots.
   if (!OU_SEASON_AVGS) {
     void ensureOuSeasonAvgsLoaded().then(() => {
       if (buildGen !== ouTableBuildGen) return;
       if (activeAppTabId() === "ou") scheduleBuildOuTable(true);
+    });
+  }
+  if (!OU_RH_STATS?.players || !Object.keys(OU_RH_STATS.players).length) {
+    void ensureOuRhStatsLoaded().then(() => {
+      if (buildGen !== ouTableBuildGen) return;
+      if (activeAppTabId() === "ou") scheduleBuildOuTable(true);
+    });
+  }
+  if (!ouRhFiltersReady) {
+    void ensureOuRhFiltersLoaded().then(() => {
+      populateOuRhFilterSelects();
+      syncOuProjAvgColumnHeader();
     });
   }
   if (!PLAYER_HEADSHOTS) {
@@ -9306,10 +9599,15 @@ function buildOuProjectionBookRowNodes(r, projColCount) {
   const avgTd = document.createElement("td");
   avgTd.className = "ou-cell ou-proj-long-td num ou-proj-td-avg";
   const avgHit = ouProjectionRowMarketAvgHit(r);
-  if (!Number.isFinite(avgHit.avg) && (ouPlayerAvgHistoryPending(player) || avgHit.source === "pending")) {
+  if (
+    avgHit.source === "pending" ||
+    (!Number.isFinite(avgHit.avg) &&
+      avgHit.source !== "betsperts-rh" &&
+      (ouPlayerAvgHistoryPending(player) || avgHit.source === "pending"))
+  ) {
     avgTd.textContent = "…";
   } else {
-    avgTd.textContent = formatOuMarketAverage(avgHit.avg, col.market);
+    avgTd.textContent = formatOuMarketAverage(avgHit.avg, col.market, avgHit);
   }
   avgTd.title = ouPlayerMarketAverageTitle(col.market, avgHit);
   tr.appendChild(avgTd);
@@ -28999,9 +29297,11 @@ function initAlphaCaddieThemeToggle() {
 
 document.addEventListener("DOMContentLoaded", () => {
   initAlphaCaddieThemeToggle();
-  // Kick these immediately so Round projections paints with avgs + headshots.
+  // Kick these immediately so Round projections paints with RH stats + headshots.
   void ensurePlayerHeadshotsLoaded();
   void ensureOuSeasonAvgsLoaded();
+  void ensureOuRhFiltersLoaded().then(() => populateOuRhFilterSelects());
+  void ensureOuRhStatsLoaded();
   syncWeatherUiFromState();
   initPropsTopTableSortOnce();
   configureRoundPickerUi();
@@ -29096,6 +29396,18 @@ document.addEventListener("DOMContentLoaded", () => {
     void scheduleOuProjectionFieldHistoryLoad();
     scheduleBuildOuTable(true);
   });
+  const onOuRhFilterChange = () => {
+    ouProjExpandedKey = "";
+    invalidateOuProjectionAvgCaches();
+    syncOuProjAvgColumnHeader();
+    void (async () => {
+      await fetchOuRhStatsForFilters(ouRhFilterState());
+      scheduleBuildOuTable(true);
+    })();
+  };
+  for (const id of ["ou-rh-timeframe", "ou-rh-region", "ou-rh-ctype", "ou-rh-course"]) {
+    document.getElementById(id)?.addEventListener("change", onOuRhFilterChange);
+  }
   syncOuProjKellyPrefsToUi();
   document.getElementById("ou-proj-bankroll")?.addEventListener("change", () => {
     saveOuProjKellyPrefs();

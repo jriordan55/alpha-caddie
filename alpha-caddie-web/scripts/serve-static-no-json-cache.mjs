@@ -5,6 +5,9 @@
  *
  * POST /api/admin/refresh-dk-round-props — remote DK scrape (npm run push:dk-round-projections on Render).
  * Requires GOLF_ADMIN_REFRESH_SECRET; send Authorization: Bearer <secret>.
+ *
+ * POST /api/betsperts-rh-ou — Rabbit Hole OU market stats for Round projections filters.
+ * Body JSON: { timeframe, region, ctype, course }. Uses BETSPERTS_SESSION_KEY / betsperts.local.json.
  */
 import http from "http";
 import fs from "fs";
@@ -12,11 +15,15 @@ import path from "path";
 import { spawn } from "child_process";
 import { fileURLToPath } from "url";
 import { resolveGolfModelDir } from "./resolve-golf-model-dir.mjs";
+import { fetchRhOuStatsBundle, resolveBetspertsSessionKey } from "./betsperts-rh-ou.mjs";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const root = path.resolve(__dirname, "..");
 const REPO_ROOT = resolveGolfModelDir(root);
 let dkRefreshBusy = false;
+let rhOuBusy = false;
+const rhOuCache = new Map();
+const RH_OU_CACHE_TTL_MS = 5 * 60 * 1000;
 
 const MIME = {
   ".html": "text/html; charset=utf-8",
@@ -115,6 +122,116 @@ function handleAdminRefreshDkRound(req, res) {
   return true;
 }
 
+function readJsonBody(req, limit = 1e6) {
+  return new Promise((resolve, reject) => {
+    const chunks = [];
+    let size = 0;
+    req.on("data", (c) => {
+      size += c.length;
+      if (size > limit) {
+        reject(new Error("body too large"));
+        req.destroy();
+        return;
+      }
+      chunks.push(c);
+    });
+    req.on("end", () => {
+      const raw = Buffer.concat(chunks).toString("utf8");
+      if (!raw.trim()) {
+        resolve({});
+        return;
+      }
+      try {
+        resolve(JSON.parse(raw));
+      } catch (e) {
+        reject(e);
+      }
+    });
+    req.on("error", reject);
+  });
+}
+
+async function handleBetspertsRhOu(req, res) {
+  if (req.method !== "POST" && req.method !== "GET") {
+    res.statusCode = 405;
+    res.setHeader("Allow", "GET, POST");
+    res.end("Method not allowed");
+    return true;
+  }
+  if (!resolveBetspertsSessionKey()) {
+    res.statusCode = 503;
+    res.setHeader("Content-Type", "application/json; charset=utf-8");
+    res.end(JSON.stringify({ ok: false, error: "BETSPERTS_SESSION_KEY not configured" }));
+    return true;
+  }
+  let filters = { timeframe: "all" };
+  try {
+    if (req.method === "POST") {
+      const body = await readJsonBody(req);
+      filters = {
+        timeframe: body.timeframe || body.time || "all",
+        region: body.region || "",
+        ctype: body.ctype || body.courseType || "",
+        course: body.course || "",
+      };
+    } else {
+      const u = new URL(req.url || "/", "http://127.0.0.1");
+      filters = {
+        timeframe: u.searchParams.get("timeframe") || "all",
+        region: u.searchParams.get("region") || "",
+        ctype: u.searchParams.get("ctype") || "",
+        course: u.searchParams.get("course") || "",
+      };
+    }
+  } catch {
+    res.statusCode = 400;
+    res.setHeader("Content-Type", "application/json; charset=utf-8");
+    res.end(JSON.stringify({ ok: false, error: "invalid json body" }));
+    return true;
+  }
+
+  const cacheKey = JSON.stringify(filters);
+  const hit = rhOuCache.get(cacheKey);
+  if (hit && Date.now() - hit.at < RH_OU_CACHE_TTL_MS) {
+    res.statusCode = 200;
+    res.setHeader("Content-Type", "application/json; charset=utf-8");
+    res.setHeader("Cache-Control", "no-store");
+    res.end(JSON.stringify(hit.payload));
+    return true;
+  }
+  if (rhOuBusy) {
+    res.statusCode = 409;
+    res.setHeader("Content-Type", "application/json; charset=utf-8");
+    res.end(JSON.stringify({ ok: false, error: "rabbit hole request already in progress" }));
+    return true;
+  }
+  rhOuBusy = true;
+  try {
+    const bundle = await fetchRhOuStatsBundle(filters);
+    const payload = bundle.ok
+      ? {
+          ok: true,
+          generatedAt: bundle.generatedAt,
+          filters: bundle.filters,
+          n: bundle.n,
+          players: bundle.players,
+        }
+      : { ok: false, error: bundle.error || "fetch_failed" };
+    if (bundle.ok) rhOuCache.set(cacheKey, { at: Date.now(), payload });
+    res.statusCode = bundle.ok ? 200 : 502;
+    res.setHeader("Content-Type", "application/json; charset=utf-8");
+    res.setHeader("Cache-Control", "no-store");
+    res.end(JSON.stringify(payload));
+  } catch (e) {
+    res.statusCode = 500;
+    res.setHeader("Content-Type", "application/json; charset=utf-8");
+    res.end(JSON.stringify({ ok: false, error: String(e?.message || e) }));
+  } finally {
+    rhOuBusy = false;
+  }
+  return true;
+}
+
 const server = http.createServer((req, res) => {
   let pathname = "/";
   try {
@@ -127,6 +244,11 @@ const server = http.createServer((req, res) => {
 
   if (pathname === "/api/admin/refresh-dk-round-props") {
     handleAdminRefreshDkRound(req, res);
+    return;
+  }
+
+  if (pathname === "/api/betsperts-rh-ou") {
+    void handleBetspertsRhOu(req, res);
     return;
   }
 
