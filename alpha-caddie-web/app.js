@@ -1057,10 +1057,8 @@ function pgaTourHeadshotUrl(pgaId, size = 72) {
   const id = Math.round(num(pgaId, NaN));
   if (!Number.isFinite(id) || id <= 0) return "";
   const s = Math.max(32, Math.min(160, Math.round(size) || 72));
-  const theme = document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
-  const bg = theme === "light" ? "F2EFE8" : "080C0F";
-  const stub = theme === "light" ? "default_avatar_light.webp" : "default_avatar_dark.webp";
-  return `https://pga-tour-res.cloudinary.com/image/upload/c_thumb,g_face,z_0.7,q_auto,f_auto,w_${s},h_${s},b_rgb:${bg},d_stub:${stub}/headshots_${id}`;
+  // Theme-neutral plate so toggling light/dark never reloads every headshot (circle bg is CSS).
+  return `https://pga-tour-res.cloudinary.com/image/upload/c_thumb,g_face,z_0.7,q_auto,f_auto,w_${s},h_${s},b_rgb:14181C,d_stub:default_avatar_dark.webp/headshots_${id}`;
 }
 
 function betspertsHeadshotUrl(player_name) {
@@ -28857,7 +28855,10 @@ function syncAlphaCaddieThemeToggleUi(theme) {
 
 function applyAlphaCaddieTheme(theme, { persist = true } = {}) {
   const t = theme === "light" ? "light" : "dark";
-  document.documentElement.setAttribute("data-theme", t);
+  const root = document.documentElement;
+  // Kill CSS transitions for one frame so the swap is instant (no fade / table rebuild).
+  root.classList.add("theme-switching");
+  root.setAttribute("data-theme", t);
   if (persist) {
     try {
       localStorage.setItem(ALPHACADDIE_THEME_KEY, t);
@@ -28866,9 +28867,9 @@ function applyAlphaCaddieTheme(theme, { persist = true } = {}) {
     }
   }
   syncAlphaCaddieThemeToggleUi(t);
-  // Cloudinary headshot bg/stub follows theme — refresh visible tables.
-  if (activeAppTabId() === "ou") buildOuTable();
-  if (activeAppTabId() === "live-stats") void buildLiveStatsTab();
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => root.classList.remove("theme-switching"));
+  });
 }
 
 function initAlphaCaddieThemeToggle() {

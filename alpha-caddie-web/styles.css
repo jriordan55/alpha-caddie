@@ -1,7 +1,7 @@
 /*
  * Exact palette sampled from reference screenshots:
- *   Dark  — SG Leaders + Lift/Clean/Place (#080c0f bg, #00d088 accent)
- *   Light — Wind Watch + Iron Men (#f2efe8 / #f7f7f7 paper, #00704c forest)
+ *   Dark  — SG Leaders + Lift/Clean/Place (#080c0f bg, #00d088 accent, #3c1c24 neg chips)
+ *   Light — Wind Watch (#f2efe8 paper) + Iron Men (#f7f7f7 / #fff cards, #00734c forest, #86c9a8 bars)
  */
 :root,
 html[data-theme="dark"] {
@@ -17,7 +17,7 @@ html[data-theme="dark"] {
   --golf-green-soft: #14c48c;
   --golf-green-bright: #00d088;
   --golf-green-muted: #08684c;
-  --golf-green-chip-strong: #048860;
+  --golf-green-chip-strong: #00a86a;
   --golf-green-bar-secondary: #394048;
   --golf-text: #ffffff;
   --golf-text-muted: #8a8f94;
@@ -29,6 +29,8 @@ html[data-theme="dark"] {
   --golf-chip-neutral: #14181c;
   --golf-bar-track: #1a1f24;
   --golf-bar-inactive: #394048;
+  --golf-pos: #00d088;
+  --golf-neg: #f0b4b8;
   --golf-focus-ring: rgba(var(--golf-green-rgb), 0.45);
   --golf-focus-surface: rgba(var(--golf-green-rgb), 0.12);
   --golf-focus-border: rgba(var(--golf-green-rgb), 0.35);
@@ -69,13 +71,13 @@ html[data-theme="light"] {
   --golf-elevated-soft: #f7f7f7;
   --golf-border: #e4e0d8;
   --golf-card-border: #e0e0e0;
-  --golf-green: #00704c;
-  --golf-green-rgb: 0, 112, 76;
-  --golf-green-soft: #007048;
-  --golf-green-bright: #00704c;
-  --golf-green-muted: #80c8a0;
-  --golf-green-chip-strong: #00704c;
-  --golf-green-bar-secondary: #80c8a0;
+  --golf-green: #00734c;
+  --golf-green-rgb: 0, 115, 76;
+  --golf-green-soft: #00734c;
+  --golf-green-bright: #00734c;
+  --golf-green-muted: #86c9a8;
+  --golf-green-chip-strong: #00734c;
+  --golf-green-bar-secondary: #86c9a8;
   --golf-text: #111111;
   --golf-text-muted: #757575;
   --golf-text-subtle: #8a8a8a;
@@ -86,6 +88,8 @@ html[data-theme="light"] {
   --golf-chip-neutral: #efefef;
   --golf-bar-track: #efefef;
   --golf-bar-inactive: #e0e0e0;
+  --golf-pos: #00734c;
+  --golf-neg: #b42318;
   --golf-focus-ring: rgba(var(--golf-green-rgb), 0.35);
   --golf-focus-surface: rgba(var(--golf-green-rgb), 0.1);
   --golf-focus-border: rgba(var(--golf-green-rgb), 0.28);
@@ -113,6 +117,13 @@ html[data-theme="light"] {
   --golf-rain: #3b719f;
 }
 
+/* Instant theme flip — no fade when toggling */
+html.theme-switching,
+html.theme-switching * {
+  transition: none !important;
+  animation: none !important;
+}
+
 * { box-sizing: border-box; }
 html {
   -webkit-text-size-adjust: 100%;
@@ -135,7 +146,6 @@ body {
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .app-nav {
@@ -1949,12 +1959,12 @@ body {
 }
 #table-ou.table-ou-book-rows tbody td.ou-proj-td-edge.pos,
 #table-ou.table-ou-book-rows tbody td.ou-proj-td-roi.pos {
-  color: var(--golf-green-bright);
+  color: var(--golf-pos);
   font-weight: 700;
 }
 #table-ou.table-ou-book-rows tbody td.ou-proj-td-edge.neg,
 #table-ou.table-ou-book-rows tbody td.ou-proj-td-roi.neg {
-  color: var(--golf-ou-over);
+  color: var(--golf-neg);
 }
 #table-ou.table-ou-book-rows tbody tr.ou-proj-best-book-row td {
   background-image: linear-gradient(
@@ -2105,8 +2115,8 @@ body {
   font-variant-numeric: tabular-nums;
   color: var(--golf-text);
 }
-#table-ou td.ou-proj-cell-edge.pos { color: #1ecf77; }
-#table-ou td.ou-proj-cell-edge.neg { color: #ff646f; }
+#table-ou td.ou-proj-cell-edge.pos { color: var(--golf-pos); }
+#table-ou td.ou-proj-cell-edge.neg { color: var(--golf-neg); }
 
 #table-ou.table-ou-projections thead th.ou-proj-th-market,
 #table-ou.table-ou-projections thead th.ou-proj-th-side,
@@ -2525,7 +2535,7 @@ body {
 #table-ou.table-ou-projections .ou-proj-td-best.has-kelly,
 #table-ou.table-ou-projections .ou-proj-kelly-line,
 #table-ou.table-ou-projections .ou-proj-best-kelly {
-  color: #1ecf77;
+  color: var(--golf-pos);
 }
 #table-ou.table-ou-projections .ou-proj-kelly-stack,
 #table-ou.table-ou-projections .ou-proj-best-stack {
@@ -2581,7 +2591,7 @@ body {
 #table-ou.table-ou-projections td.ou-proj-td-ox-edge.pos,
 #table-ou.table-ou-projections td.ou-proj-td-cs-edge.pos,
 #table-ou.table-ou-projections td.ou-proj-td-delta-avg.pos,
-#table-ou.table-ou-projections td.ou-proj-td-delta-best.pos { color: #1ecf77; }
+#table-ou.table-ou-projections td.ou-proj-td-delta-best.pos { color: var(--golf-pos); }
 #table-ou.table-ou-projections td.ou-proj-td-dk-edge.neg,
 #table-ou.table-ou-projections td.ou-proj-td-pp-edge.neg,
 #table-ou.table-ou-projections td.ou-proj-td-sl-edge.neg,
@@ -2592,7 +2602,7 @@ body {
 #table-ou.table-ou-projections td.ou-proj-td-ox-edge.neg,
 #table-ou.table-ou-projections td.ou-proj-td-cs-edge.neg,
 #table-ou.table-ou-projections td.ou-proj-td-delta-avg.neg,
-#table-ou.table-ou-projections td.ou-proj-td-delta-best.neg { color: #ff646f; }
+#table-ou.table-ou-projections td.ou-proj-td-delta-best.neg { color: var(--golf-neg); }
 #table-ou.table-ou-projections td.ou-proj-empty-td {
   padding: 20px 18px;
   font-size: 0.88rem;
@@ -2748,10 +2758,10 @@ body {
   margin-bottom: 5px;
 }
 #table-ou .ou-edge.pos {
-  color: #1ecf77;
+  color: var(--golf-pos);
 }
 #table-ou .ou-edge.neg {
-  color: #ff646f;
+  color: var(--golf-neg);
 }
 #table-ou .ou-edge-odds {
   color: var(--golf-text);
