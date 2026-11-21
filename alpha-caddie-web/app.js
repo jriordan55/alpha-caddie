@@ -2266,6 +2266,8 @@ function mergeDgFieldTeeTimesIntoPlayers(fieldUpdatesRaw) {
   if (!DATA.meta) DATA.meta = {};
   const ds = fieldUpdatesRaw.date_start != null ? String(fieldUpdatesRaw.date_start).trim() : "";
   if (ds) DATA.meta.datagolf_field_date_start = ds;
+  const multi = String(fieldUpdatesRaw.multi_course || "").trim().toLowerCase();
+  if (multi === "yes" || multi === "true" || multi === "1") DATA.meta.multi_course = true;
   const flist =
     fieldUpdatesRaw.field ??
     fieldUpdatesRaw.field_updates ??
@@ -2286,6 +2288,9 @@ function mergeDgFieldTeeTimesIntoPlayers(fieldUpdatesRaw) {
     if (!Array.isArray(tt)) {
       delete p.dg_teetime_local;
       delete p.dg_tee_wave;
+      delete p.dg_course_num;
+      delete p.dg_course_name;
+      delete p.dg_course_code;
       continue;
     }
     const rnd = Math.round(num(p.round, NaN));
@@ -2293,6 +2298,14 @@ function mergeDgFieldTeeTimesIntoPlayers(fieldUpdatesRaw) {
     if (slot && slot.teetime != null && String(slot.teetime).trim() !== "") {
       p.dg_teetime_local = String(slot.teetime).trim();
       p.dg_tee_wave = String(slot.wave || "").trim();
+      const cnum = Math.round(num(slot.course_num ?? slot.courseNum, NaN));
+      if (Number.isFinite(cnum) && cnum > 0) {
+        p.dg_course_num = cnum;
+        const rawName = String(slot.course_name || slot.courseName || "").trim();
+        p.dg_course_name = rawName || p.dg_course_name;
+      }
+      const code = String(slot.course_code || slot.courseCode || "").trim();
+      if (code) p.dg_course_code = code;
       n++;
     } else {
       delete p.dg_teetime_local;
@@ -3802,11 +3815,12 @@ function formatEventNameForDisplay(raw) {
   return s;
 }
 
-/** Event first, then venue — status bar used to show only `course_used`, which reads like the wrong “tournament”. */
+/** Event first, then venue — dual-course weeks list both sides (Seaside · Plantation). */
 function metaEventVenueLabel() {
   const m = DATA.meta || {};
   const ev = m.event_name ? formatEventNameForDisplay(m.event_name) : "";
-  const course = m.course_used ? formatCourseNameForDisplay(m.course_used) : "";
+  const dual = ouFieldDualCourseSummaryLabel();
+  const course = dual || (m.course_used ? formatCourseNameForDisplay(m.course_used) : "");
   if (ev && course) return enforceCourseDisplayAcronyms(`${ev} · ${course}`);
   return enforceCourseDisplayAcronyms(ev || course || "");
 }
@@ -8940,12 +8954,14 @@ function ouProjectionFlatRowsForPlayers(players, cols, bookFilter = "best") {
 function ouProjectionFlatRowsCacheKey(players, cols, bookFilter = "best") {
   const avgWindow = ouProjAvgWindowMode();
   const rhKey = ouRhFilterCacheKey();
+  const courseKey = selectedOuCourseFilter() || "all";
   const round = getOuRound();
   const colSig = cols.map((c) => c.label).join("\x1e");
   return [
     `r${round}`,
     `aw${avgWindow}`,
     `rh${rhKey}`,
+    `cf${courseKey}`,
     `bf${bookFilter || "all"}`,
     `br${Math.round(ouProjBankrollFromUi())}`,
     `kf${ouProjKellyFractionFromUi()}`,
@@ -9343,6 +9359,7 @@ function buildOuTable() {
     });
   }
   ensureOuMarketFilterValid();
+  populateOuCourseFilterOptions();
   const table = document.getElementById("table-ou");
   if (!table) return;
   updateOuDkStatusNoteVisibility();
@@ -9406,6 +9423,10 @@ function buildOuTable() {
   }
   if (teeWave) {
     flatRows = flatRows.filter((r) => playerMatchesTeeWaveFilter(r.player, teeWave));
+  }
+  const courseFilter = selectedOuCourseFilter();
+  if (courseFilter) {
+    flatRows = flatRows.filter((r) => playerMatchesOuCourseFilter(r.player, courseFilter));
   }
   let bookRows = expandOuProjectionBookPriceRows(flatRows, bookFilter);
   const k = ouTableSort.key;
@@ -9545,9 +9566,20 @@ function buildOuProjectionBookRowNodes(r, projColCount) {
   nameText.className = "player-golfer-name";
   nameText.textContent = displayGolferName(rawName);
   nameStack.appendChild(nameText);
+  const courseShort = playerTeeCourseShortLabel(player);
+  if (courseShort && ouFieldIsMultiCourse()) {
+    const courseEl = document.createElement("span");
+    courseEl.className = "player-golfer-course";
+    courseEl.textContent = courseShort;
+    courseEl.title = String(player.dg_course_name || courseShort);
+    const tone = courseShort.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+    if (tone) courseEl.dataset.courseTone = tone;
+    nameStack.appendChild(courseEl);
+  }
   golferWrap.appendChild(nameStack);
   nameTd.appendChild(golferWrap);
   nameTd.dataset.playerValue = rawName;
+  if (courseShort) nameTd.dataset.course = courseShort;
   tr.appendChild(nameTd);
 
   const mktTd = document.createElement("td");
@@ -20613,6 +20645,118 @@ function selectedOuTeeWaveFilter() {
   return String(document.getElementById("ou-tee-wave-filter")?.value || "").trim().toLowerCase();
 }
 
+function selectedOuCourseFilter() {
+  return String(document.getElementById("ou-course-filter")?.value || "").trim();
+}
+
+/** Live / tee course codes → short side labels. */
+const DG_COURSE_CODE_SHORT = Object.freeze({
+  SS: "Seaside",
+  PL: "Plantation",
+  NC: "North",
+  SC: "South",
+  OC: "Ocean",
+});
+
+function titleCaseCourseSide(s) {
+  const t = String(s || "").trim();
+  if (!t) return "";
+  return t.replace(/\w\S*/g, (w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase());
+}
+
+/** Short side label for dual-course display (Seaside / Plantation / North…). */
+function playerTeeCourseShortLabel(player) {
+  if (!player || typeof player !== "object") return "";
+  const code = String(player.dg_course_code || "").trim().toUpperCase();
+  if (code && DG_COURSE_CODE_SHORT[code]) return DG_COURSE_CODE_SHORT[code];
+  const name = String(player.dg_course_name || "").trim();
+  if (name) {
+    const paren = name.match(/\(([^)]+)\)/);
+    if (paren) {
+      const cleaned = paren[1].replace(/\bcourse\b/gi, "").replace(/\s+/g, " ").trim();
+      return titleCaseCourseSide(cleaned || paren[1]);
+    }
+    const side = name.match(
+      /\b(North|South|East|West|Seaside|Plantation|Ocean|Resort|Links)\b(?:\s+Course)?\s*$/i,
+    );
+    if (side) return titleCaseCourseSide(side[1]);
+    const mid = name.match(/\b(Seaside|Plantation|North|South)\b/i);
+    if (mid) return titleCaseCourseSide(mid[1]);
+  }
+  if (code) return code;
+  const cnum = Math.round(num(player.dg_course_num, NaN));
+  if (cnum === 776) return "Seaside";
+  if (cnum === 889 || cnum === 231) return "Plantation";
+  if (cnum === 947 || cnum === 104) return "North";
+  if (cnum === 4 || cnum === 939) return "South";
+  return "";
+}
+
+function playerTeeCourseFilterKey(player) {
+  const n = Math.round(num(player?.dg_course_num, NaN));
+  if (Number.isFinite(n) && n > 0) return String(n);
+  const short = playerTeeCourseShortLabel(player);
+  return short ? `name:${short.toLowerCase()}` : "";
+}
+
+/** Distinct tee courses in the active Round projections field (this round). */
+function ouFieldTeeCourseOptions() {
+  const round = getOuRound();
+  const map = new Map();
+  for (const p of DATA?.players || []) {
+    if (!samePlayerRound(p, round)) continue;
+    const key = playerTeeCourseFilterKey(p);
+    const label = playerTeeCourseShortLabel(p);
+    if (!key || !label) continue;
+    if (!map.has(key)) map.set(key, label);
+  }
+  return [...map.entries()]
+    .map(([value, label]) => ({ value, label }))
+    .sort((a, b) => a.label.localeCompare(b.label));
+}
+
+function ouFieldIsMultiCourse() {
+  if (DATA?.meta?.multi_course === true) return true;
+  return ouFieldTeeCourseOptions().length >= 2;
+}
+
+function ouFieldDualCourseSummaryLabel() {
+  const opts = ouFieldTeeCourseOptions();
+  if (opts.length < 2) return "";
+  return opts.map((o) => o.label).join(" · ");
+}
+
+function populateOuCourseFilterOptions() {
+  const el = document.getElementById("ou-course-filter");
+  if (!el) return;
+  const opts = ouFieldTeeCourseOptions();
+  const wrap = el.closest(".ou-filter-field");
+  if (wrap) wrap.hidden = opts.length < 2;
+  if (opts.length < 2) {
+    el.innerHTML = `<option value="">All courses</option>`;
+    el.value = "";
+    return;
+  }
+  const cur = String(el.value || "");
+  el.innerHTML = "";
+  const all = document.createElement("option");
+  all.value = "";
+  all.textContent = "All courses";
+  el.appendChild(all);
+  for (const o of opts) {
+    const opt = document.createElement("option");
+    opt.value = o.value;
+    opt.textContent = o.label;
+    el.appendChild(opt);
+  }
+  el.value = [...el.options].some((x) => x.value === cur) ? cur : "";
+}
+
+function playerMatchesOuCourseFilter(player, courseFilter = selectedOuCourseFilter()) {
+  if (!courseFilter) return true;
+  return playerTeeCourseFilterKey(player) === courseFilter;
+}
+
 function playerMatchesTeeWaveFilter(player, waveFilter) {
   if (!waveFilter) return true;
   const norm = normalizedTeeWave(player);
@@ -22917,9 +23061,23 @@ function normalizeHistoryCourseNamesInPayload(payload) {
 
 function normalizeStoredCourseUsedLabels() {
   const m = DATA.meta;
-  if (m && m.course_used) m.course_used = formatCourseNameForDisplay(m.course_used);
+  // Dual-course labels use " · " — don't run through single-course pretty formatter.
+  const prettyDual = (raw) => {
+    const s = String(raw || "").trim();
+    if (!s) return s;
+    if (s.includes(" · ") || s.includes(";")) {
+      return s
+        .split(/\s*[·;]\s*/)
+        .map((part) => formatCourseNameForDisplay(part.trim()) || part.trim())
+        .filter(Boolean)
+        .join(" · ");
+    }
+    return formatCourseNameForDisplay(s);
+  };
+  if (m && m.course_used) m.course_used = prettyDual(m.course_used);
+  if (DATA.course_used) DATA.course_used = prettyDual(DATA.course_used);
   for (const p of DATA.players || []) {
-    if (p && p.course_used) p.course_used = formatCourseNameForDisplay(p.course_used);
+    if (p && p.course_used) p.course_used = prettyDual(p.course_used);
   }
 }
 
@@ -29372,6 +29530,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const ouEl = document.getElementById("ou-tee-wave-filter");
     const v = String(/** @type {HTMLSelectElement} */ (e.target)?.value || "");
     if (ouEl && ouEl.value !== v) ouEl.value = v;
+    scheduleBuildOuTable(true);
+  });
+  document.getElementById("ou-course-filter")?.addEventListener("change", () => {
+    ouProjExpandedKey = "";
     scheduleBuildOuTable(true);
   });
   document.getElementById("ou-tee-wave-filter")?.addEventListener("change", (e) => {

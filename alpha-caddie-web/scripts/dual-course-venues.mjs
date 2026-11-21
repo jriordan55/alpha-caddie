@@ -16,6 +16,10 @@ export const COURSE_NUM_CANONICAL_NAME = Object.freeze({
   104: "Torrey Pines Golf Course North Course",
   4: "Torrey Pines Golf Course South Course",
   939: "Torrey Pines Golf Course South Course",
+  // Sea Island — RSM Classic (Seaside + Plantation)
+  776: "Sea Island Golf Club (Seaside Course)",
+  889: "Sea Island Golf Club (Plantation Course)",
+  231: "Sea Island Golf Club (Plantation Course)",
 });
 
 /** 2026 Rocket Classic North hole pars (PGA Tour First Look / local coverage). */
@@ -101,6 +105,24 @@ export function resolveEventCourseUsed(opts = {}) {
     if (COURSE_NUM_CANONICAL_NAME[only]) return COURSE_NUM_CANONICAL_NAME[only];
   }
 
+  // Dual-course weeks: keep both sides visible (don't collapse to a repeated club name).
+  if (nums.size >= 2) {
+    const labels = [...nums]
+      .map((n) => COURSE_NUM_CANONICAL_NAME[n] || "")
+      .filter(Boolean);
+    const uniq = [...new Set(labels)];
+    if (uniq.length >= 2) return uniq.join(" · ");
+    // Fall back to semicolon field course_name when present
+    const rawMulti = String(fieldRaw?.course_name || courseUsed || "").trim();
+    if (rawMulti.includes(";")) {
+      return rawMulti
+        .split(";")
+        .map((s) => s.trim())
+        .filter(Boolean)
+        .join(" · ");
+    }
+  }
+
   return canonicalizeCourseName(courseUsed, nums.size === 1 ? [...nums][0] : NaN) || courseUsed;
 }
 
@@ -136,6 +158,13 @@ export function dualCourseSiblingKeys(courseKey) {
       "torrey pines golf course south course",
       "torrey pines north course",
       "torrey pines south course",
+    ].filter((x) => x !== k);
+  }
+  if (k.startsWith("sea island")) {
+    return [
+      "sea island golf club seaside course",
+      "sea island golf club plantation course",
+      "sea island golf club",
     ].filter((x) => x !== k);
   }
   return [];

@@ -2244,6 +2244,36 @@ body {
   text-overflow: ellipsis;
   max-width: 14rem;
 }
+.player-golfer-course {
+  display: inline-flex;
+  align-items: center;
+  max-width: 14rem;
+  padding: 1px 7px;
+  border-radius: 999px;
+  font-size: 0.62rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  line-height: 1.35;
+  color: var(--golf-text);
+  background: color-mix(in srgb, var(--golf-accent, #3d8bfd) 18%, transparent);
+  border: 1px solid color-mix(in srgb, var(--golf-accent, #3d8bfd) 35%, var(--golf-card-border));
+  white-space: nowrap;
+}
+.player-golfer-course[data-course-tone="seaside"],
+.player-golfer-course[data-course-tone="south"],
+.player-golfer-course[data-course-tone="ocean"] {
+  background: color-mix(in srgb, #0ea5e9 22%, transparent);
+  border-color: color-mix(in srgb, #0ea5e9 45%, var(--golf-card-border));
+}
+.player-golfer-course[data-course-tone="plantation"],
+.player-golfer-course[data-course-tone="north"],
+.player-golfer-course[data-course-tone="resort"] {
+  background: color-mix(in srgb, #22c55e 20%, transparent);
+  border-color: color-mix(in srgb, #22c55e 42%, var(--golf-card-border));
+}
+html[data-theme="light"] .player-golfer-course {
+  color: #0f172a;
+}
 .player-avatar {
   position: relative;
   flex: 0 0 auto;

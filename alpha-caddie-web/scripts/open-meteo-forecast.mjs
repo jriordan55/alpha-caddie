@@ -569,12 +569,16 @@ export function mergeFieldTeeTimesIntoProjections(proj, fieldUpdatesRaw) {
         delete p.dg_course_num;
         delete p.dg_course_name;
       }
+      const code = String(slot.course_code || slot.courseCode || "").trim();
+      if (code) p.dg_course_code = code;
+      else delete p.dg_course_code;
       n++;
     } else {
       delete p.dg_teetime_local;
       delete p.dg_tee_wave;
       delete p.dg_course_num;
       delete p.dg_course_name;
+      delete p.dg_course_code;
     }
   }
   return n;

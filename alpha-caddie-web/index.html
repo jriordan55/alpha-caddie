@@ -26,7 +26,7 @@
     onload="this.media='all'"
   />
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" /></noscript>
-  <link rel="stylesheet" href="styles.css?v=30" />
+  <link rel="stylesheet" href="styles.css?v=31" />
   <link rel="preconnect" href="https://pga-tour-res.cloudinary.com" crossorigin />
   <link rel="preload" href="data/player_headshots.json" as="fetch" crossorigin />
   <link rel="preload" href="player-history/ou-season-avgs-2026.json" as="fetch" crossorigin />
@@ -170,6 +170,12 @@
                 <option value="">All waves</option>
                 <option value="morning">Morning</option>
                 <option value="afternoon">Afternoon</option>
+              </select>
+            </label>
+            <label class="toolbar-label ou-filter-field" id="ou-course-filter-wrap" hidden>
+              Course
+              <select id="ou-course-filter" title="Filter to one course when the event uses two layouts">
+                <option value="">All courses</option>
               </select>
             </label>
             <label class="toolbar-label ou-filter-field">Market
@@ -1437,6 +1443,6 @@
     </div>
   </dialog>
 
-  <script src="app.js?v=385"></script>
+  <script src="app.js?v=386"></script>
 </body>
 </html>
