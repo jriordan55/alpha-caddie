@@ -1022,15 +1022,64 @@ async function ensurePlayerHeadshotsLoaded() {
   if (playerHeadshotsLoadPromise) return playerHeadshotsLoadPromise;
   playerHeadshotsLoadPromise = (async () => {
     try {
-      const res = await fetch(`data/player_headshots.json?v=${Date.now()}`, { cache: "no-store" });
+      // Allow browser cache — busting every load made headshots feel "forever".
+      const res = await fetch("data/player_headshots.json", { cache: "force-cache" });
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       PLAYER_HEADSHOTS = await res.json();
     } catch {
-      PLAYER_HEADSHOTS = { dgToPga: {}, nameToPga: {}, betspertsByName: {} };
+      try {
+        const res2 = await fetch(cacheBustFetchUrl("data/player_headshots.json"), { cache: "no-store" });
+        if (res2.ok) PLAYER_HEADSHOTS = await res2.json();
+        else throw new Error("headshots missing");
+      } catch {
+        PLAYER_HEADSHOTS = { dgToPga: {}, nameToPga: {}, betspertsByName: {} };
+      }
     }
     return PLAYER_HEADSHOTS;
   })();
   return playerHeadshotsLoadPromise;
+}
+
+/** @type {{ meta?: object, byDgId?: Record<string, Record<string, { avg: number, n: number }>> } | null} */
+let OU_SEASON_AVGS = null;
+let ouSeasonAvgsLoadPromise = null;
+
+async function ensureOuSeasonAvgsLoaded() {
+  if (OU_SEASON_AVGS) return OU_SEASON_AVGS;
+  if (ouSeasonAvgsLoadPromise) return ouSeasonAvgsLoadPromise;
+  let y = new Date().getFullYear();
+  try {
+    if (typeof propsFieldDefaultSeasonYear === "function") y = propsFieldDefaultSeasonYear() || y;
+  } catch {
+    /* ignore */
+  }
+  ouSeasonAvgsLoadPromise = (async () => {
+    const years = [y, y - 1, new Date().getFullYear()];
+    for (const year of [...new Set(years.filter((n) => Number.isFinite(n)))]) {
+      try {
+        const res = await fetch(`player-history/ou-season-avgs-${year}.json`, { cache: "force-cache" });
+        if (!res.ok) continue;
+        OU_SEASON_AVGS = await res.json();
+        OU_PROJ_AVG_CACHE.clear();
+        return OU_SEASON_AVGS;
+      } catch {
+        /* try next */
+      }
+    }
+    OU_SEASON_AVGS = { meta: {}, byDgId: {} };
+    return OU_SEASON_AVGS;
+  })();
+  return ouSeasonAvgsLoadPromise;
+}
+
+function ouSeasonAvgFromSidecar(market, player, windowMode) {
+  if (windowMode !== "season" && windowMode !== "this season") return null;
+  const id = Math.round(num(player?.dg_id, NaN));
+  if (!Number.isFinite(id) || !OU_SEASON_AVGS?.byDgId) return null;
+  const mKey = OU_STAT_MAP[market] ? market : ouModelMarketKey(market) || "Total score";
+  const hit = OU_SEASON_AVGS.byDgId[String(id)]?.[mKey];
+  if (!hit || !Number.isFinite(hit.avg)) return null;
+  return { avg: hit.avg, n: Math.round(num(hit.n, 0)), source: "season-sidecar", windowMode: "season" };
 }
 
 function resolvePgaPlayerIdForHeadshot({ dg_id, player_name } = {}) {
@@ -1090,7 +1139,7 @@ function playerInitialsFromName(name) {
 }
 
 /** Circular headshot node matching screenshot leaderboards. */
-function createPlayerAvatarEl({ dg_id, player_name, size = 36, deferImage = false } = {}) {
+function createPlayerAvatarEl({ dg_id, player_name, size = 36 } = {}) {
   const wrap = document.createElement("span");
   wrap.className = "player-avatar";
   wrap.style.width = `${size}px`;
@@ -1103,14 +1152,14 @@ function createPlayerAvatarEl({ dg_id, player_name, size = 36, deferImage = fals
   initials.className = "player-avatar-initials";
   initials.textContent = playerInitialsFromName(player_name);
   wrap.appendChild(initials);
-  if (deferImage) return wrap;
   const url = playerHeadshotUrl({ dg_id, player_name, size: Math.round(size * 2) });
   if (url) {
     const img = document.createElement("img");
     img.className = "player-avatar-img";
     img.alt = "";
-    img.loading = "lazy";
+    img.loading = "eager";
     img.decoding = "async";
+    img.fetchPriority = "low";
     img.referrerPolicy = "no-referrer";
     img.src = url;
     img.onerror = function onHeadshotErr() {
@@ -3974,6 +4023,12 @@ function ouCachedPlayerMarketAverage(market, player, windowMode = ouProjAvgWindo
   const mKey = OU_STAT_MAP[market] ? market : ouModelMarketKey(market) || "Total score";
   const cacheKey = `${historyMutationEpoch}|${windowMode}|${id}|${mKey}`;
   if (OU_PROJ_AVG_CACHE.has(cacheKey)) return OU_PROJ_AVG_CACHE.get(cacheKey);
+  // Instant path: 42KB season sidecar (no 16MB field bundle).
+  const side = ouSeasonAvgFromSidecar(mKey, player, windowMode);
+  if (side) {
+    OU_PROJ_AVG_CACHE.set(cacheKey, side);
+    return side;
+  }
   const hit = ouPlayerMarketAverage(mKey, player, windowMode);
   OU_PROJ_AVG_CACHE.set(cacheKey, hit);
   return hit;
@@ -9011,6 +9066,19 @@ function selectedOuProjBookFilter() {
 
 function buildOuTable() {
   const buildGen = ++ouTableBuildGen;
+  // If sidecars land mid-build, one cheap rebuild fills Average + headshots.
+  if (!OU_SEASON_AVGS) {
+    void ensureOuSeasonAvgsLoaded().then(() => {
+      if (buildGen !== ouTableBuildGen) return;
+      if (activeAppTabId() === "ou") scheduleBuildOuTable(true);
+    });
+  }
+  if (!PLAYER_HEADSHOTS) {
+    void ensurePlayerHeadshotsLoaded().then(() => {
+      if (buildGen !== ouTableBuildGen) return;
+      hydrateVisiblePlayerAvatars();
+    });
+  }
   ensureOuMarketFilterValid();
   const table = document.getElementById("table-ou");
   if (!table) return;
@@ -9062,13 +9130,6 @@ function buildOuTable() {
   }
   const q = pf && pf instanceof HTMLInputElement ? String(pf.value || "").trim().toLowerCase() : "";
   const teeWave = selectedOuTeeWaveFilter();
-
-  // History shards after the table is interactive — never on the critical path.
-  if (!window.__ouFieldHistoryKickoff) {
-    window.__ouFieldHistoryKickoff = setTimeout(() => {
-      if (activeAppTabId() === "ou") ensureOuFieldHistoryOnce();
-    }, 2500);
-  }
 
   const projMarketSel = String(document.getElementById("ou-proj-market-filter")?.value || "").trim();
   const bookFilter = selectedOuProjBookFilter();
@@ -9214,7 +9275,6 @@ function buildOuProjectionBookRowNodes(r, projColCount) {
       dg_id: player.dg_id,
       player_name: rawName,
       size: 32,
-      deferImage: true,
     }),
   );
   const nameStack = document.createElement("span");
@@ -9256,7 +9316,7 @@ function buildOuProjectionBookRowNodes(r, projColCount) {
 
   const bookTd = document.createElement("td");
   bookTd.className = "ou-cell ou-proj-long-td ou-proj-td-book";
-  bookTd.innerHTML = bookBadgeHtml(bookKey, { textFirst: true });
+    bookTd.innerHTML = bookBadgeHtml(bookKey);
   if (r.isBestBook) bookTd.title = "Best available price for this side";
   tr.appendChild(bookTd);
 
@@ -9355,16 +9415,11 @@ function finishOuProjectionTablePaint(buildGen) {
   syncOuTableHorizontalScroll();
   syncOuChartCard();
   syncForecastWaveBannerTexts();
-  // Headshots after paint — never block first interaction.
-  const hydrate = () => {
+  // Fill any avatars that painted before the headshot map arrived.
+  void ensurePlayerHeadshotsLoaded().then(() => {
     if (buildGen !== ouTableBuildGen) return;
-    void ensurePlayerHeadshotsLoaded().then(() => {
-      if (buildGen !== ouTableBuildGen) return;
-      hydrateVisiblePlayerAvatars();
-    });
-  };
-  if (typeof requestIdleCallback === "function") requestIdleCallback(hydrate, { timeout: 1200 });
-  else setTimeout(hydrate, 200);
+    hydrateVisiblePlayerAvatars();
+  });
   if (ouProjExpandedDetail) {
     requestAnimationFrame(() => {
       if (buildGen !== ouTableBuildGen) return;
@@ -9832,23 +9887,39 @@ function attachBookLogoWithFallback(imgEl, fallbackEl, domain) {
   imgEl.src = urls[0];
 }
 
+/** Instant inline book marks — no network, no blank circles. */
+const BOOK_MARK_COLORS = Object.freeze({
+  draftkings: { bg: "#53d337", fg: "#0a0a0a" },
+  fanduel: { bg: "#1493ff", fg: "#ffffff" },
+  caesars: { bg: "#c4a35a", fg: "#1a1208" },
+  kalshi: { bg: "#00d26a", fg: "#0a0a0a" },
+  prizepicks: { bg: "#8b5cf6", fg: "#ffffff" },
+  sleeper: { bg: "#1a2332", fg: "#7dd3fc" },
+  underdog: { bg: "#f97316", fg: "#ffffff" },
+  onyx: { bg: "#111827", fg: "#f9fafb" },
+  courtside: { bg: "#0ea5e9", fg: "#ffffff" },
+  betmgm: { bg: "#c4a035", fg: "#111111" },
+});
+
+function bookMarkSvgDataUri(bookKey, shortLabel) {
+  const colors = BOOK_MARK_COLORS[bookKey] || { bg: "#394048", fg: "#ffffff" };
+  const label = String(shortLabel || "BK")
+    .slice(0, 3)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;");
+  const svg =
+    `<svg xmlns="http://www.w3.org/2000/svg" width="44" height="44" viewBox="0 0 44 44">` +
+    `<rect width="44" height="44" rx="10" fill="${colors.bg}"/>` +
+    `<text x="22" y="27" text-anchor="middle" font-family="system-ui,Segoe UI,sans-serif" font-size="14" font-weight="800" fill="${colors.fg}">${label}</text>` +
+    `</svg>`;
+  return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
+}
+
 function bookBadgeHtml(book, opts = {}) {
   const m = bookMeta(book);
-  const textFirst = opts.textFirst !== false;
-  // Round projections: text badge only — remote favicons stall the tab and often fail blank.
-  if (textFirst || opts.skipRemoteLogo) {
-    return `<span class="book-logo-pill book-logo-pill-text" title="${m.label}"><span class="book-logo-mark">${m.short}</span><span class="book-logo-name">${m.label}</span></span>`;
-  }
-  const slug = bookLogoSlugFromDomain(m.domain);
-  const localLogo = slug ? `logos/${slug}.png` : "";
-  const favicon = bookFaviconUrlFromDomain(m.domain);
-  const imgSrc = localLogo || favicon;
-  const onErr =
-    "this.style.display='none';var n=this.nextElementSibling;if(n)n.style.display='inline-flex';";
-  const mark = imgSrc
-    ? `<img class="book-logo-img-inline" src="${imgSrc}" alt="" loading="lazy" decoding="async" onerror="${onErr}" /><span class="book-logo-mark" style="display:none">${m.short}</span>`
-    : `<span class="book-logo-mark">${m.short}</span>`;
-  return `<span class="book-logo-pill" title="${m.label}">${mark}<span class="book-logo-name">${m.label}</span></span>`;
+  const markSrc = bookMarkSvgDataUri(m.key || book, m.short);
+  return `<span class="book-logo-pill book-logo-pill-instant" title="${m.label}"><img class="book-logo-img-inline" src="${markSrc}" alt="" width="22" height="22" decoding="async" /><span class="book-logo-name">${m.label}</span></span>`;
 }
 
 function modelAmericanFromProb(p) {
@@ -28928,7 +28999,9 @@ function initAlphaCaddieThemeToggle() {
 
 document.addEventListener("DOMContentLoaded", () => {
   initAlphaCaddieThemeToggle();
+  // Kick these immediately so Round projections paints with avgs + headshots.
   void ensurePlayerHeadshotsLoaded();
+  void ensureOuSeasonAvgsLoaded();
   syncWeatherUiFromState();
   initPropsTopTableSortOnce();
   configureRoundPickerUi();

@@ -152,10 +152,18 @@ const server = http.createServer((req, res) => {
     const ext = path.extname(filePath).toLowerCase();
     res.setHeader("Content-Type", MIME[ext] || "application/octet-stream");
     if (ext === ".json" || ext === ".csv") {
-      res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0");
-      res.setHeader("Pragma", "no-cache");
-      res.setHeader("Expires", "0");
-      res.setHeader("Surrogate-Control", "no-store");
+      // Headshots map + slim season avgs are safe to cache briefly (big UX win on Round projections).
+      const base = path.basename(filePath).toLowerCase();
+      const cacheableSidecar =
+        base === "player_headshots.json" || /^ou-season-avgs-\d{4}\.json$/.test(base);
+      if (cacheableSidecar) {
+        res.setHeader("Cache-Control", "public, max-age=300, stale-while-revalidate=86400");
+      } else {
+        res.setHeader("Cache-Control", "no-store, no-cache, must-revalidate, proxy-revalidate, max-age=0");
+        res.setHeader("Pragma", "no-cache");
+        res.setHeader("Expires", "0");
+        res.setHeader("Surrogate-Control", "no-store");
+      }
     } else if (ext === ".html" || ext === ".htm") {
       /* Pick up new ?v= on app.js/styles without relying on CDN defaults (mobile Safari caches aggressively). */
       res.setHeader("Cache-Control", "max-age=0, must-revalidate");

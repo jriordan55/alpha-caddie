@@ -205,6 +205,7 @@ if (!envTruthy("GOLF_REFRESH_LIVE_SKIP_HISTORY_SHARDS", false)) {
   run("sync-field-history-from-csv.mjs", "CSV → field player-history shards", tourArtifactEnv(), softOpt);
   run("patch-current-event-history-shards.mjs", "Patch live rows into field history shards", tourArtifactEnv(), softOpt);
   run("rebuild-field-season-bundle.mjs", "Rebuild field-{year}.json for Trends", tourArtifactEnv(), softOpt);
+  run("build-ou-season-avgs.mjs", "Slim season avgs for Round projections Average column", tourArtifactEnv(), softOpt);
 }
 
 run(
