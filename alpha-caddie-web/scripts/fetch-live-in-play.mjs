@@ -545,6 +545,24 @@ async function main() {
     ...(liveHoleStats && typeof liveHoleStats === "object" ? { live_hole_stats: liveHoleStats } : {}),
   };
 
+  // preds/in-play `info.current_round` often lags field_updates overnight — never store a lower
+  // round than field_updates / projections display_round (UI was labeling R3 μ as R2).
+  {
+    const consensus = tournamentRoundFallbackFromBundle(parsed, fieldUpdates, readProjectionsRoot());
+    if (Number.isFinite(consensus) && consensus >= 1) {
+      if (!bundle.info || typeof bundle.info !== "object") bundle.info = {};
+      const prevInfoR = Math.round(num(bundle.info.current_round, NaN));
+      if (!Number.isFinite(prevInfoR) || prevInfoR < consensus) {
+        bundle.info.current_round = consensus;
+        if (Number.isFinite(prevInfoR) && prevInfoR !== consensus) {
+          console.warn(
+            `[fetch-live-in-play] bumped info.current_round ${prevInfoR} → ${consensus} (field_updates/projections ahead of preds)`,
+          );
+        }
+      }
+    }
+  }
+
   fs.mkdirSync(path.dirname(liveOutPath), { recursive: true });
   const token = compositeLiveBundleToken(
     parsed,

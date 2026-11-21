@@ -493,12 +493,13 @@ function ouEffectiveUiModelRoundFromMeta() {
   const live = Math.round(num(m.datagolf_live_current_round, NaN));
   const field = Math.round(num(m.datagolf_field_current_round, NaN));
   const ok = (x) => Number.isFinite(x) && x >= 1 && x <= 4;
-  const parts = [ex, live, field].filter(ok);
-  if (!parts.length) return NaN;
-  const mn = Math.min(...parts);
-  const mx = Math.max(...parts);
-  if (mx > mn && ok(live) && live === mn && ok(ex) && ok(field) && ex === field && field === mx) return mx;
-  return mn;
+  // Prefer stored display/field; only let live raise the round, never pull it down.
+  let out = NaN;
+  if (ok(ex) && ok(field)) out = Math.max(ex, field);
+  else if (ok(ex)) out = ex;
+  else if (ok(field)) out = field;
+  if (ok(live) && (!ok(out) || live > out)) out = live;
+  return out;
 }
 
 function ouCurrentEventLiveRoundNum() {
@@ -773,12 +774,13 @@ function effectiveUiModelRoundFromMeta() {
   const live = Math.round(num(m.datagolf_live_current_round, NaN));
   const field = Math.round(num(m.datagolf_field_current_round, NaN));
   const ok = (x) => Number.isFinite(x) && x >= 1 && x <= 4;
-  const parts = [ex, live, field].filter(ok);
-  if (!parts.length) return NaN;
-  const mn = Math.min(...parts);
-  const mx = Math.max(...parts);
-  if (mx > mn && ok(live) && live === mn && ok(ex) && ok(field) && ex === field && field === mx) return mx;
-  return mn;
+  // Prefer stored display/field; only let live raise the round, never pull it down.
+  let out = NaN;
+  if (ok(ex) && ok(field)) out = Math.max(ex, field);
+  else if (ok(ex)) out = ex;
+  else if (ok(field)) out = field;
+  if (ok(live) && (!ok(out) || live > out)) out = live;
+  return out;
 }
 
 /** Results tab removed from `index.html`; keep guards so leftover JS does not touch missing DOM. */
@@ -2380,6 +2382,9 @@ function dgLiveBundleConsensusCurrentRound(j) {
     const r = Math.round(num(v, NaN));
     if (Number.isFinite(r) && r >= 1 && r <= 4) cands.push(r);
   };
+  // field_updates.current_round advances at rollover before preds/in-play `info` / player rows.
+  const fu = j.field_updates;
+  if (fu && typeof fu === "object") push(fu.current_round ?? fu.currentRound);
   push(info.current_round);
   push(j.current_round);
   const lh = j.live_hole_stats;
@@ -2388,8 +2393,6 @@ function dgLiveBundleConsensusCurrentRound(j) {
     const lhi = lh.info && typeof lh.info === "object" ? lh.info : {};
     push(lhi.current_round);
   }
-  const fu = j.field_updates;
-  if (fu && typeof fu === "object") push(fu.current_round ?? fu.currentRound);
   for (const row of Array.isArray(j.data) ? j.data : []) {
     if (row && typeof row === "object") push(row.round ?? row.Round);
   }
@@ -7786,22 +7789,39 @@ function draftKingsPostedRounds() {
   return [...out].sort((a, b) => a - b);
 }
 
-/** Default auto round: cap stale export/live with calendar week; prefer latest DK round within cap. */
+/**
+ * Active O/U round for Round projections.
+ * Prefer the round stored on projections.json (`display_round` / field) — that is the round
+ * whose μ / weather were baked. Never regress to a lagging preds/in-play or yesterday's DK card
+ * (that labeled R3 data as R2 overnight).
+ */
 function preferredOuRoundForPicker() {
   if (eventTournamentWeekNotStarted()) return 1;
+  const ok = (x) => Number.isFinite(x) && x >= 1 && x <= 4;
   const cal = calendarTournamentRoundFromDateStart(ouTournamentDateStartIso());
-  const meta = ouEffectiveUiModelRoundFromMeta();
+  const m = ouProjectionsPayload()?.meta || {};
+  const display = Math.round(num(m.display_round, NaN));
+  const field = Math.round(num(m.datagolf_field_current_round, NaN));
   const live = ouCurrentEventLiveRoundNum();
-  const dkRounds = draftKingsPostedRounds();
-  const capParts = [cal, meta, live].filter((x) => Number.isFinite(x) && x >= 1 && x <= 4);
-  const cap = capParts.length ? Math.min(...capParts) : Number.isFinite(cal) ? cal : 1;
-  if (dkRounds.length) {
-    const eligible = dkRounds.filter((r) => r <= cap);
-    if (eligible.length) return Math.max(...eligible);
+
+  // Stored publish round (what the sheet was built for).
+  let desired = NaN;
+  if (ok(display) && ok(field)) desired = Math.max(display, field);
+  else if (ok(display)) desired = display;
+  else if (ok(field)) desired = field;
+
+  // Live may advance mid-round; never use it to pull BELOW the stored publish round.
+  if (ok(live) && (!ok(desired) || live > desired)) desired = live;
+
+  // Calendar caps a too-high export (e.g. stale R4 mid-week), but does not force yesterday
+  // when display_round already says today and calendar agrees (≥ stored).
+  if (ok(cal)) {
+    if (!ok(desired)) desired = cal;
+    else if (desired > cal) desired = cal;
+    else if (ok(display) && display <= cal) desired = Math.max(desired, display);
   }
-  if (Number.isFinite(live) && live >= 1 && live <= 4) return Math.min(live, cap);
-  if (Number.isFinite(meta) && meta >= 1 && meta <= 4) return Math.min(meta, cap);
-  if (Number.isFinite(cal) && cal >= 1 && cal <= 4) return cal;
+
+  if (ok(desired)) return desired;
   return 1;
 }
 

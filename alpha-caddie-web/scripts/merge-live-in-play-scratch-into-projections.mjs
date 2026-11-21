@@ -96,12 +96,18 @@ export function mergeLiveInPlayScratchOntoProjections(proj, live) {
     return { playersTouched: 0, inPlayPricing: false };
   }
 
-  const liveR = Math.round(
-    num(
-      meta.datagolf_live_current_round ?? proj.datagolf_live_current_round ?? fu.current_round ?? info.current_round,
-      NaN,
-    ),
-  );
+  // Prefer field_updates / stored display over lagging preds info.current_round (overnight R2→R3).
+  const liveRCands = [
+    meta.datagolf_live_current_round,
+    proj.datagolf_live_current_round,
+    fu.current_round ?? fu.currentRound,
+    proj.display_round,
+    meta.display_round,
+    info.current_round,
+  ]
+    .map((v) => Math.round(num(v, NaN)))
+    .filter((r) => Number.isFinite(r) && r >= 1 && r <= 4);
+  const liveR = liveRCands.length ? Math.max(...liveRCands) : NaN;
 
   const fwHoles = Math.round(num(meta.projection_course_basis?.fairway_holes_modeled, 14)) || 14;
   const actualsByDg = resolveLiveRoundActualsByDg(live, {

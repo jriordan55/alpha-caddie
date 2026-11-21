@@ -156,6 +156,13 @@ async function main() {
     proj.datagolf_field_current_round = r;
     /** Keeps disk JSON aligned with merge: preds/in-play poll alone often lags info.current_round. */
     proj.datagolf_live_current_round = r;
+    // Flat export schema — also write root aliases used by the web app applyPayload.
+    if (proj.meta && typeof proj.meta === "object") {
+      proj.meta.display_round = r;
+      proj.meta.datagolf_field_current_round = r;
+      proj.meta.datagolf_live_current_round = r;
+      proj.meta.display_round_label = proj.display_round_label;
+    }
   }
 
   if (!hasLh) {
