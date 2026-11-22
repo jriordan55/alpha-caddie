@@ -100,68 +100,8 @@
     }
   ],
   "_meta": {
-    "pulledAt": "2026-11-22T02:38:44.449Z",
+    "pulledAt": "2026-11-22T09:18:46.116Z",
     "detailStatus": 200,
     "tournamentsStatus": 200
-  },
-  "auth": {
-    "holeBreakdown": [],
-    "correlated": [
-      {
-        "CourseNum": "11",
-        "CourseName": "TPC Sawgrass",
-        "CourseNums": "[11]"
-      },
-      {
-        "CourseNum": "250",
-        "CourseName": "Le Golf National",
-        "CourseNums": "[250]"
-      },
-      {
-        "CourseNum": "503",
-        "CourseName": "TPC River Highlands",
-        "CourseNums": "[503]"
-      },
-      {
-        "CourseNum": "510",
-        "CourseName": "TPC Scottsdale",
-        "CourseNums": "[510]"
-      },
-      {
-        "CourseNum": "700",
-        "CourseName": "TPC Boston",
-        "CourseNums": "[700]"
-      },
-      {
-        "CourseNum": "704",
-        "CourseName": "Pete Dye Stadium Course",
-        "CourseNums": "[704]"
-      },
-      {
-        "CourseNum": "883",
-        "CourseName": "TPC Twin Cities",
-        "CourseNums": "[883]"
-      },
-      {
-        "CourseNum": "921",
-        "CourseName": "TPC Craig Ranch",
-        "CourseNums": "[921, 894, 944]"
-      },
-      {
-        "CourseNum": "925",
-        "CourseName": "Dunes Golf & Beach Club",
-        "CourseNums": "[925]"
-      },
-      {
-        "CourseNum": "947",
-        "CourseName": "Detroit GC",
-        "CourseNums": "[947, 876]"
-      }
-    ],
-    "_meta": {
-      "pulledAt": "2026-11-22T02:38:44.563Z",
-      "holeStatus": 200,
-      "correlatedStatus": 200
-    }
   }
 }

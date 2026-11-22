@@ -99,63 +99,8 @@
     }
   ],
   "_meta": {
-    "pulledAt": "2026-11-22T02:38:42.085Z",
+    "pulledAt": "2026-11-22T09:18:45.463Z",
     "detailStatus": 200,
     "tournamentsStatus": 200
-  },
-  "auth": {
-    "holeBreakdown": [],
-    "correlated": [
-      {
-        "CourseNum": "513",
-        "CourseName": "TPC Southwind",
-        "CourseNums": "[513]"
-      },
-      {
-        "CourseNum": "688",
-        "CourseName": "East Lake GC",
-        "CourseNums": "[688, 933]"
-      },
-      {
-        "CourseNum": "746",
-        "CourseName": "The Country Club of Jackson",
-        "CourseNums": "[746]"
-      },
-      {
-        "CourseNum": "752",
-        "CourseName": "Sedgefield CC",
-        "CourseNums": "[752]"
-      },
-      {
-        "CourseNum": "770",
-        "CourseName": "TPC San Antonio (Oaks)",
-        "CourseNums": "[770]"
-      },
-      {
-        "CourseNum": "776",
-        "CourseName": "Sea Island GC (Seaside)",
-        "CourseNums": "[776]"
-      },
-      {
-        "CourseNum": "897",
-        "CourseName": "Memorial Park Golf Course",
-        "CourseNums": "[897]"
-      },
-      {
-        "CourseNum": "921",
-        "CourseName": "TPC Craig Ranch",
-        "CourseNums": "[921, 894, 944]"
-      },
-      {
-        "CourseNum": "925",
-        "CourseName": "Dunes Golf & Beach Club",
-        "CourseNums": "[925]"
-      }
-    ],
-    "_meta": {
-      "pulledAt": "2026-11-22T02:38:42.173Z",
-      "holeStatus": 200,
-      "correlatedStatus": 200
-    }
   }
 }

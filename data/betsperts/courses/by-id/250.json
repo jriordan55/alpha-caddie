@@ -96,43 +96,8 @@
     }
   ],
   "_meta": {
-    "pulledAt": "2026-11-22T02:38:42.646Z",
+    "pulledAt": "2026-11-22T09:18:45.579Z",
     "detailStatus": 200,
     "tournamentsStatus": 200
-  },
-  "auth": {
-    "holeBreakdown": [],
-    "correlated": [
-      {
-        "CourseNum": "9",
-        "CourseName": "Bay Hill Club & Lodge",
-        "CourseNums": "[9]"
-      },
-      {
-        "CourseNum": "11",
-        "CourseName": "TPC Sawgrass",
-        "CourseNums": "[11]"
-      },
-      {
-        "CourseNum": "23",
-        "CourseName": "Muirfield Village GC",
-        "CourseNums": "[23, 893]"
-      },
-      {
-        "CourseNum": "503",
-        "CourseName": "TPC River Highlands",
-        "CourseNums": "[503]"
-      },
-      {
-        "CourseNum": "928",
-        "CourseName": "PGA National (Champion)",
-        "CourseNums": "[928, 734]"
-      }
-    ],
-    "_meta": {
-      "pulledAt": "2026-11-22T02:38:42.732Z",
-      "holeStatus": 200,
-      "correlatedStatus": 200
-    }
   }
 }

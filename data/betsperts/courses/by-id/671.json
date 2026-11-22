@@ -97,53 +97,8 @@
     }
   ],
   "_meta": {
-    "pulledAt": "2026-11-22T02:38:44.720Z",
+    "pulledAt": "2026-11-22T09:18:46.237Z",
     "detailStatus": 200,
     "tournamentsStatus": 200
-  },
-  "auth": {
-    "holeBreakdown": [],
-    "correlated": [
-      {
-        "CourseNum": "23",
-        "CourseName": "Muirfield Village GC",
-        "CourseNums": "[23, 893]"
-      },
-      {
-        "CourseNum": "36",
-        "CourseName": "Firestone CC (South)",
-        "CourseNums": "[36]"
-      },
-      {
-        "CourseNum": "514",
-        "CourseName": "Oak Hill CC",
-        "CourseNums": "[514, 558]"
-      },
-      {
-        "CourseNum": "611",
-        "CourseName": "Southern Hills CC",
-        "CourseNums": "[611]"
-      },
-      {
-        "CourseNum": "689",
-        "CourseName": "Bethpage State Park (Black)",
-        "CourseNums": "[689, 880]"
-      },
-      {
-        "CourseNum": "872",
-        "CourseName": "Quail Hollow Club",
-        "CourseNums": "[872, 698, 241]"
-      },
-      {
-        "CourseNum": "896",
-        "CourseName": "Olympia Fields CC (North)",
-        "CourseNums": "[896]"
-      }
-    ],
-    "_meta": {
-      "pulledAt": "2026-11-22T02:38:44.825Z",
-      "holeStatus": 200,
-      "correlatedStatus": 200
-    }
   }
 }

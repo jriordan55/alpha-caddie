@@ -7184,140 +7184,6 @@ ev_backtest_all,2026-11-21T02:28:12Z,,(all events),,,(all),(all),Pars,,,,12.5,un
 ev_backtest_all,2026-11-21T02:28:12Z,,(all events),,,(all),(all),Pars,,,,15.0,under,14,5,9,0,-3.96,-28.3
 ev_backtest_all,2026-11-21T02:28:12Z,,(all events),,,(all),(all),Pars,,,,17.5,under,6,2,4,0,-2.00,-33.3
 ev_backtest_all,2026-11-21T02:28:12Z,,(all events),,,(all),(all),Pars,,,,20.0,under,1,0,1,0,-1.00,-100.0
-model_vs_book,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Birdies,0.937,0.736,75,,,,,,,,
-model_vs_book,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Bogeys,1.128,1.068,32,,,,,,,,
-model_vs_book,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Fairways hit,1.282,1.169,12,,,,,,,,
-model_vs_book,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,GIR,1.472,1.314,12,,,,,,,,
-model_vs_book,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Pars,0.875,0.732,32,,,,,,,,
-model_vs_book,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Total score,1.503,1.420,52,,,,,,,,
-ev_backtest,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Birdies,,,,0.0,over,5,1,4,0,-3.12,-62.5
-ev_backtest,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Birdies,,,,0.0,under,57,32,25,0,2.83,5.0
-ev_backtest,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Birdies,,,,10.0,under,35,16,19,0,-6.12,-17.5
-ev_backtest,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Birdies,,,,12.5,under,35,16,19,0,-6.12,-17.5
-ev_backtest,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Birdies,,,,15.0,under,34,16,18,0,-5.12,-15.1
-ev_backtest,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Birdies,,,,17.5,under,29,14,15,0,-3.32,-11.4
-ev_backtest,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Birdies,,,,2.5,over,3,1,2,0,-1.12,-37.4
-ev_backtest,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Birdies,,,,2.5,under,49,28,21,0,3.89,7.9
-ev_backtest,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Birdies,,,,20.0,under,18,7,11,0,-4.95,-27.5
-ev_backtest,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Birdies,,,,5.0,over,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Birdies,,,,5.0,under,41,21,20,0,-2.53,-6.2
-ev_backtest,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Birdies,,,,7.5,under,37,18,19,0,-3.50,-9.5
-ev_backtest,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Bogeys,,,,0.0,over,30,17,13,0,-2.91,-9.7
-ev_backtest,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Bogeys,,,,0.0,under,43,36,7,0,-7.00,-16.3
-ev_backtest,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Bogeys,,,,10.0,over,14,7,7,0,-2.86,-20.4
-ev_backtest,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Bogeys,,,,10.0,under,43,36,7,0,-7.00,-16.3
-ev_backtest,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Bogeys,,,,12.5,over,4,2,2,0,-0.76,-19.0
-ev_backtest,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Bogeys,,,,12.5,under,43,36,7,0,-7.00,-16.3
-ev_backtest,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Bogeys,,,,15.0,over,3,1,2,0,-1.29,-42.9
-ev_backtest,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Bogeys,,,,2.5,over,28,17,11,0,-0.91,-3.3
-ev_backtest,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Bogeys,,,,2.5,under,43,36,7,0,-7.00,-16.3
-ev_backtest,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Bogeys,,,,5.0,over,26,15,11,0,-2.88,-11.1
-ev_backtest,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Bogeys,,,,5.0,under,43,36,7,0,-7.00,-16.3
-ev_backtest,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Bogeys,,,,7.5,over,22,13,9,0,-1.88,-8.5
-ev_backtest,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Bogeys,,,,7.5,under,43,36,7,0,-7.00,-16.3
-ev_backtest,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Fairways hit,,,,0.0,under,75,20,55,0,-50.46,-67.3
-ev_backtest,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Fairways hit,,,,10.0,under,9,4,5,0,-1.76,-19.5
-ev_backtest,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Fairways hit,,,,12.5,under,9,4,5,0,-1.76,-19.5
-ev_backtest,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Fairways hit,,,,15.0,under,7,2,5,0,-3.01,-42.9
-ev_backtest,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Fairways hit,,,,17.5,under,5,2,3,0,-1.01,-20.1
-ev_backtest,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Fairways hit,,,,2.5,under,12,5,7,0,-2.46,-20.5
-ev_backtest,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Fairways hit,,,,20.0,under,1,0,1,0,-1.00,-100.0
-ev_backtest,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Fairways hit,,,,5.0,under,11,5,6,0,-1.46,-13.2
-ev_backtest,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Fairways hit,,,,7.5,under,10,5,5,0,-0.46,-4.6
-ev_backtest,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,GIR,,,,0.0,under,75,33,42,0,-33.20,-44.3
-ev_backtest,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,GIR,,,,10.0,under,10,9,1,0,6.65,66.5
-ev_backtest,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,GIR,,,,12.5,under,5,4,1,0,2.31,46.2
-ev_backtest,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,GIR,,,,15.0,under,4,4,0,0,3.31,82.7
-ev_backtest,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,GIR,,,,17.5,under,3,3,0,0,2.42,80.5
-ev_backtest,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,GIR,,,,2.5,under,12,11,1,0,7.80,65.0
-ev_backtest,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,GIR,,,,20.0,under,3,3,0,0,2.42,80.5
-ev_backtest,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,GIR,,,,5.0,under,11,10,1,0,7.21,65.5
-ev_backtest,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,GIR,,,,7.5,under,11,10,1,0,7.21,65.5
-ev_backtest,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Pars,,,,0.0,over,2,1,1,0,0.16,8.0
-ev_backtest,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Pars,,,,0.0,under,62,22,40,0,-31.59,-51.0
-ev_backtest,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Pars,,,,10.0,under,6,5,1,0,2.86,47.6
-ev_backtest,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Pars,,,,12.5,under,3,3,0,0,2.47,82.2
-ev_backtest,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Pars,,,,2.5,under,18,10,8,0,0.41,2.3
-ev_backtest,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Pars,,,,5.0,under,15,8,7,0,-0.37,-2.5
-ev_backtest,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Pars,,,,7.5,under,10,6,4,0,0.66,6.6
-ev_backtest,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Total score,,,,0.0,over,52,32,20,0,8.14,15.7
-ev_backtest,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Total score,,,,0.0,under,23,13,10,0,-10.00,-43.5
-ev_backtest,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Total score,,,,10.0,over,38,25,13,0,9.59,25.2
-ev_backtest,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Total score,,,,12.5,over,34,22,12,0,8.02,23.6
-ev_backtest,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Total score,,,,15.0,over,29,18,11,0,5.88,20.3
-ev_backtest,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Total score,,,,17.5,over,22,13,9,0,3.40,15.5
-ev_backtest,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Total score,,,,2.5,over,51,31,20,0,7.23,14.2
-ev_backtest,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Total score,,,,2.5,under,23,13,10,0,-10.00,-43.5
-ev_backtest,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Total score,,,,20.0,over,15,10,5,0,4.64,30.9
-ev_backtest,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Total score,,,,5.0,over,51,31,20,0,7.23,14.2
-ev_backtest,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Total score,,,,7.5,over,47,30,17,0,9.21,19.6
-model_vs_book_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Birdies,0.937,0.736,75,,,,,,,,
-model_vs_book_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Bogeys,1.128,1.068,32,,,,,,,,
-model_vs_book_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Fairways hit,1.282,1.169,12,,,,,,,,
-model_vs_book_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),GIR,1.472,1.314,12,,,,,,,,
-model_vs_book_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Pars,0.875,0.732,32,,,,,,,,
-model_vs_book_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Total score,1.503,1.420,52,,,,,,,,
-ev_backtest_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Birdies,,,,0.0,over,5,1,4,0,-3.12,-62.5
-ev_backtest_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Birdies,,,,0.0,under,57,32,25,0,2.83,5.0
-ev_backtest_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Birdies,,,,10.0,under,35,16,19,0,-6.12,-17.5
-ev_backtest_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Birdies,,,,12.5,under,35,16,19,0,-6.12,-17.5
-ev_backtest_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Birdies,,,,15.0,under,34,16,18,0,-5.12,-15.1
-ev_backtest_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Birdies,,,,17.5,under,29,14,15,0,-3.32,-11.4
-ev_backtest_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Birdies,,,,2.5,over,3,1,2,0,-1.12,-37.4
-ev_backtest_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Birdies,,,,2.5,under,49,28,21,0,3.89,7.9
-ev_backtest_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Birdies,,,,20.0,under,18,7,11,0,-4.95,-27.5
-ev_backtest_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Birdies,,,,5.0,over,1,0,1,0,-1.00,-100.0
-ev_backtest_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Birdies,,,,5.0,under,41,21,20,0,-2.53,-6.2
-ev_backtest_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Birdies,,,,7.5,under,37,18,19,0,-3.50,-9.5
-ev_backtest_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Bogeys,,,,0.0,over,30,17,13,0,-2.91,-9.7
-ev_backtest_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Bogeys,,,,0.0,under,43,36,7,0,-7.00,-16.3
-ev_backtest_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Bogeys,,,,10.0,over,14,7,7,0,-2.86,-20.4
-ev_backtest_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Bogeys,,,,10.0,under,43,36,7,0,-7.00,-16.3
-ev_backtest_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Bogeys,,,,12.5,over,4,2,2,0,-0.76,-19.0
-ev_backtest_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Bogeys,,,,12.5,under,43,36,7,0,-7.00,-16.3
-ev_backtest_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Bogeys,,,,15.0,over,3,1,2,0,-1.29,-42.9
-ev_backtest_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Bogeys,,,,2.5,over,28,17,11,0,-0.91,-3.3
-ev_backtest_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Bogeys,,,,2.5,under,43,36,7,0,-7.00,-16.3
-ev_backtest_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Bogeys,,,,5.0,over,26,15,11,0,-2.88,-11.1
-ev_backtest_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Bogeys,,,,5.0,under,43,36,7,0,-7.00,-16.3
-ev_backtest_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Bogeys,,,,7.5,over,22,13,9,0,-1.88,-8.5
-ev_backtest_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Bogeys,,,,7.5,under,43,36,7,0,-7.00,-16.3
-ev_backtest_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Fairways hit,,,,0.0,under,75,20,55,0,-50.46,-67.3
-ev_backtest_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Fairways hit,,,,10.0,under,9,4,5,0,-1.76,-19.5
-ev_backtest_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Fairways hit,,,,12.5,under,9,4,5,0,-1.76,-19.5
-ev_backtest_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Fairways hit,,,,15.0,under,7,2,5,0,-3.01,-42.9
-ev_backtest_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Fairways hit,,,,17.5,under,5,2,3,0,-1.01,-20.1
-ev_backtest_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Fairways hit,,,,2.5,under,12,5,7,0,-2.46,-20.5
-ev_backtest_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Fairways hit,,,,20.0,under,1,0,1,0,-1.00,-100.0
-ev_backtest_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Fairways hit,,,,5.0,under,11,5,6,0,-1.46,-13.2
-ev_backtest_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Fairways hit,,,,7.5,under,10,5,5,0,-0.46,-4.6
-ev_backtest_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),GIR,,,,0.0,under,75,33,42,0,-33.20,-44.3
-ev_backtest_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),GIR,,,,10.0,under,10,9,1,0,6.65,66.5
-ev_backtest_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),GIR,,,,12.5,under,5,4,1,0,2.31,46.2
-ev_backtest_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),GIR,,,,15.0,under,4,4,0,0,3.31,82.7
-ev_backtest_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),GIR,,,,17.5,under,3,3,0,0,2.42,80.5
-ev_backtest_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),GIR,,,,2.5,under,12,11,1,0,7.80,65.0
-ev_backtest_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),GIR,,,,20.0,under,3,3,0,0,2.42,80.5
-ev_backtest_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),GIR,,,,5.0,under,11,10,1,0,7.21,65.5
-ev_backtest_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),GIR,,,,7.5,under,11,10,1,0,7.21,65.5
-ev_backtest_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Pars,,,,0.0,over,2,1,1,0,0.16,8.0
-ev_backtest_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Pars,,,,0.0,under,62,22,40,0,-31.59,-51.0
-ev_backtest_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Pars,,,,10.0,under,6,5,1,0,2.86,47.6
-ev_backtest_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Pars,,,,12.5,under,3,3,0,0,2.47,82.2
-ev_backtest_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Pars,,,,2.5,under,18,10,8,0,0.41,2.3
-ev_backtest_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Pars,,,,5.0,under,15,8,7,0,-0.37,-2.5
-ev_backtest_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Pars,,,,7.5,under,10,6,4,0,0.66,6.6
-ev_backtest_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Total score,,,,0.0,over,52,32,20,0,8.14,15.7
-ev_backtest_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Total score,,,,0.0,under,23,13,10,0,-10.00,-43.5
-ev_backtest_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Total score,,,,10.0,over,38,25,13,0,9.59,25.2
-ev_backtest_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Total score,,,,12.5,over,34,22,12,0,8.02,23.6
-ev_backtest_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Total score,,,,15.0,over,29,18,11,0,5.88,20.3
-ev_backtest_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Total score,,,,17.5,over,22,13,9,0,3.40,15.5
-ev_backtest_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Total score,,,,2.5,over,51,31,20,0,7.23,14.2
-ev_backtest_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Total score,,,,2.5,under,23,13,10,0,-10.00,-43.5
-ev_backtest_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Total score,,,,20.0,over,15,10,5,0,4.64,30.9
-ev_backtest_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Total score,,,,5.0,over,51,31,20,0,7.23,14.2
-ev_backtest_by_market,2026-11-22T02:18:46Z,2026-11-22T02:18:38.765Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Total score,,,,7.5,over,47,30,17,0,9.21,19.6
 model_vs_book_all,2026-11-22T02:38:14Z,,(all events),,,(all),(all),Birdies,0.593,0.457,2295,,,,,,,,
 model_vs_book_all,2026-11-22T02:38:14Z,,(all events),,,(all),(all),Bogeys,0.712,0.575,1172,,,,,,,,
 model_vs_book_all,2026-11-22T02:38:14Z,,(all events),,,(all),(all),Fairways hit,0.740,0.575,853,,,,,,,,
@@ -7427,3 +7293,246 @@ ev_backtest_all,2026-11-22T02:38:14Z,,(all events),,,(all),(all),Pars,,,,12.5,un
 ev_backtest_all,2026-11-22T02:38:14Z,,(all events),,,(all),(all),Pars,,,,15.0,under,14,5,9,0,-3.96,-28.3
 ev_backtest_all,2026-11-22T02:38:14Z,,(all events),,,(all),(all),Pars,,,,17.5,under,6,2,4,0,-2.00,-33.3
 ev_backtest_all,2026-11-22T02:38:14Z,,(all events),,,(all),(all),Pars,,,,20.0,under,1,0,1,0,-1.00,-100.0
+model_vs_book,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Birdies,0.937,0.736,75,,,,,,,,
+model_vs_book,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Bogeys,1.128,1.068,32,,,,,,,,
+model_vs_book,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Fairways hit,1.282,1.169,12,,,,,,,,
+model_vs_book,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,GIR,1.472,1.314,12,,,,,,,,
+model_vs_book,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Pars,0.875,0.732,32,,,,,,,,
+model_vs_book,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Total score,1.503,1.420,52,,,,,,,,
+ev_backtest,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Birdies,,,,0.0,over,5,1,4,0,-3.12,-62.5
+ev_backtest,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Birdies,,,,0.0,under,57,32,25,0,2.83,5.0
+ev_backtest,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Birdies,,,,10.0,under,35,16,19,0,-6.12,-17.5
+ev_backtest,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Birdies,,,,12.5,under,35,16,19,0,-6.12,-17.5
+ev_backtest,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Birdies,,,,15.0,under,34,16,18,0,-5.12,-15.1
+ev_backtest,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Birdies,,,,17.5,under,29,14,15,0,-3.32,-11.4
+ev_backtest,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Birdies,,,,2.5,over,3,1,2,0,-1.12,-37.4
+ev_backtest,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Birdies,,,,2.5,under,49,28,21,0,3.89,7.9
+ev_backtest,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Birdies,,,,20.0,under,18,7,11,0,-4.95,-27.5
+ev_backtest,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Birdies,,,,5.0,over,1,0,1,0,-1.00,-100.0
+ev_backtest,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Birdies,,,,5.0,under,41,21,20,0,-2.53,-6.2
+ev_backtest,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Birdies,,,,7.5,under,37,18,19,0,-3.50,-9.5
+ev_backtest,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Bogeys,,,,0.0,over,30,17,13,0,-2.91,-9.7
+ev_backtest,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Bogeys,,,,0.0,under,43,36,7,0,-7.00,-16.3
+ev_backtest,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Bogeys,,,,10.0,over,14,7,7,0,-2.86,-20.4
+ev_backtest,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Bogeys,,,,10.0,under,43,36,7,0,-7.00,-16.3
+ev_backtest,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Bogeys,,,,12.5,over,4,2,2,0,-0.76,-19.0
+ev_backtest,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Bogeys,,,,12.5,under,43,36,7,0,-7.00,-16.3
+ev_backtest,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Bogeys,,,,15.0,over,3,1,2,0,-1.29,-42.9
+ev_backtest,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Bogeys,,,,2.5,over,28,17,11,0,-0.91,-3.3
+ev_backtest,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Bogeys,,,,2.5,under,43,36,7,0,-7.00,-16.3
+ev_backtest,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Bogeys,,,,5.0,over,26,15,11,0,-2.88,-11.1
+ev_backtest,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Bogeys,,,,5.0,under,43,36,7,0,-7.00,-16.3
+ev_backtest,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Bogeys,,,,7.5,over,22,13,9,0,-1.88,-8.5
+ev_backtest,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Bogeys,,,,7.5,under,43,36,7,0,-7.00,-16.3
+ev_backtest,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Fairways hit,,,,0.0,under,75,20,55,0,-50.46,-67.3
+ev_backtest,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Fairways hit,,,,10.0,under,9,4,5,0,-1.76,-19.5
+ev_backtest,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Fairways hit,,,,12.5,under,9,4,5,0,-1.76,-19.5
+ev_backtest,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Fairways hit,,,,15.0,under,7,2,5,0,-3.01,-42.9
+ev_backtest,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Fairways hit,,,,17.5,under,5,2,3,0,-1.01,-20.1
+ev_backtest,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Fairways hit,,,,2.5,under,12,5,7,0,-2.46,-20.5
+ev_backtest,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Fairways hit,,,,20.0,under,1,0,1,0,-1.00,-100.0
+ev_backtest,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Fairways hit,,,,5.0,under,11,5,6,0,-1.46,-13.2
+ev_backtest,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Fairways hit,,,,7.5,under,10,5,5,0,-0.46,-4.6
+ev_backtest,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,GIR,,,,0.0,under,75,31,44,0,-35.20,-46.9
+ev_backtest,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,GIR,,,,10.0,under,10,9,1,0,6.65,66.5
+ev_backtest,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,GIR,,,,12.5,under,5,4,1,0,2.31,46.2
+ev_backtest,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,GIR,,,,15.0,under,4,4,0,0,3.31,82.7
+ev_backtest,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,GIR,,,,17.5,under,3,3,0,0,2.42,80.5
+ev_backtest,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,GIR,,,,2.5,under,12,11,1,0,7.80,65.0
+ev_backtest,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,GIR,,,,20.0,under,3,3,0,0,2.42,80.5
+ev_backtest,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,GIR,,,,5.0,under,11,10,1,0,7.21,65.5
+ev_backtest,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,GIR,,,,7.5,under,11,10,1,0,7.21,65.5
+ev_backtest,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Pars,,,,0.0,over,2,1,1,0,0.16,8.0
+ev_backtest,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Pars,,,,0.0,under,62,28,34,0,-25.59,-41.3
+ev_backtest,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Pars,,,,10.0,under,6,5,1,0,2.86,47.6
+ev_backtest,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Pars,,,,12.5,under,3,3,0,0,2.47,82.2
+ev_backtest,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Pars,,,,2.5,under,18,10,8,0,0.41,2.3
+ev_backtest,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Pars,,,,5.0,under,15,8,7,0,-0.37,-2.5
+ev_backtest,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Pars,,,,7.5,under,10,6,4,0,0.66,6.6
+ev_backtest,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Total score,,,,0.0,over,52,32,20,0,8.14,15.7
+ev_backtest,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Total score,,,,0.0,under,23,12,11,0,-11.00,-47.8
+ev_backtest,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Total score,,,,10.0,over,38,25,13,0,9.59,25.2
+ev_backtest,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Total score,,,,12.5,over,34,22,12,0,8.02,23.6
+ev_backtest,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Total score,,,,15.0,over,29,18,11,0,5.88,20.3
+ev_backtest,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Total score,,,,17.5,over,22,13,9,0,3.40,15.5
+ev_backtest,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Total score,,,,2.5,over,51,31,20,0,7.23,14.2
+ev_backtest,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Total score,,,,2.5,under,23,12,11,0,-11.00,-47.8
+ev_backtest,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Total score,,,,20.0,over,15,10,5,0,4.64,30.9
+ev_backtest,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Total score,,,,5.0,over,51,31,20,0,7.23,14.2
+ev_backtest,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,default,default,Total score,,,,7.5,over,47,30,17,0,9.21,19.6
+model_vs_book_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Birdies,0.937,0.736,75,,,,,,,,
+model_vs_book_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Bogeys,1.128,1.068,32,,,,,,,,
+model_vs_book_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Fairways hit,1.282,1.169,12,,,,,,,,
+model_vs_book_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),GIR,1.472,1.314,12,,,,,,,,
+model_vs_book_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Pars,0.875,0.732,32,,,,,,,,
+model_vs_book_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Total score,1.503,1.420,52,,,,,,,,
+ev_backtest_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Birdies,,,,0.0,over,5,1,4,0,-3.12,-62.5
+ev_backtest_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Birdies,,,,0.0,under,57,32,25,0,2.83,5.0
+ev_backtest_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Birdies,,,,10.0,under,35,16,19,0,-6.12,-17.5
+ev_backtest_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Birdies,,,,12.5,under,35,16,19,0,-6.12,-17.5
+ev_backtest_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Birdies,,,,15.0,under,34,16,18,0,-5.12,-15.1
+ev_backtest_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Birdies,,,,17.5,under,29,14,15,0,-3.32,-11.4
+ev_backtest_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Birdies,,,,2.5,over,3,1,2,0,-1.12,-37.4
+ev_backtest_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Birdies,,,,2.5,under,49,28,21,0,3.89,7.9
+ev_backtest_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Birdies,,,,20.0,under,18,7,11,0,-4.95,-27.5
+ev_backtest_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Birdies,,,,5.0,over,1,0,1,0,-1.00,-100.0
+ev_backtest_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Birdies,,,,5.0,under,41,21,20,0,-2.53,-6.2
+ev_backtest_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Birdies,,,,7.5,under,37,18,19,0,-3.50,-9.5
+ev_backtest_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Bogeys,,,,0.0,over,30,17,13,0,-2.91,-9.7
+ev_backtest_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Bogeys,,,,0.0,under,43,36,7,0,-7.00,-16.3
+ev_backtest_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Bogeys,,,,10.0,over,14,7,7,0,-2.86,-20.4
+ev_backtest_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Bogeys,,,,10.0,under,43,36,7,0,-7.00,-16.3
+ev_backtest_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Bogeys,,,,12.5,over,4,2,2,0,-0.76,-19.0
+ev_backtest_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Bogeys,,,,12.5,under,43,36,7,0,-7.00,-16.3
+ev_backtest_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Bogeys,,,,15.0,over,3,1,2,0,-1.29,-42.9
+ev_backtest_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Bogeys,,,,2.5,over,28,17,11,0,-0.91,-3.3
+ev_backtest_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Bogeys,,,,2.5,under,43,36,7,0,-7.00,-16.3
+ev_backtest_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Bogeys,,,,5.0,over,26,15,11,0,-2.88,-11.1
+ev_backtest_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Bogeys,,,,5.0,under,43,36,7,0,-7.00,-16.3
+ev_backtest_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Bogeys,,,,7.5,over,22,13,9,0,-1.88,-8.5
+ev_backtest_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Bogeys,,,,7.5,under,43,36,7,0,-7.00,-16.3
+ev_backtest_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Fairways hit,,,,0.0,under,75,20,55,0,-50.46,-67.3
+ev_backtest_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Fairways hit,,,,10.0,under,9,4,5,0,-1.76,-19.5
+ev_backtest_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Fairways hit,,,,12.5,under,9,4,5,0,-1.76,-19.5
+ev_backtest_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Fairways hit,,,,15.0,under,7,2,5,0,-3.01,-42.9
+ev_backtest_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Fairways hit,,,,17.5,under,5,2,3,0,-1.01,-20.1
+ev_backtest_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Fairways hit,,,,2.5,under,12,5,7,0,-2.46,-20.5
+ev_backtest_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Fairways hit,,,,20.0,under,1,0,1,0,-1.00,-100.0
+ev_backtest_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Fairways hit,,,,5.0,under,11,5,6,0,-1.46,-13.2
+ev_backtest_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Fairways hit,,,,7.5,under,10,5,5,0,-0.46,-4.6
+ev_backtest_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),GIR,,,,0.0,under,75,31,44,0,-35.20,-46.9
+ev_backtest_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),GIR,,,,10.0,under,10,9,1,0,6.65,66.5
+ev_backtest_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),GIR,,,,12.5,under,5,4,1,0,2.31,46.2
+ev_backtest_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),GIR,,,,15.0,under,4,4,0,0,3.31,82.7
+ev_backtest_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),GIR,,,,17.5,under,3,3,0,0,2.42,80.5
+ev_backtest_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),GIR,,,,2.5,under,12,11,1,0,7.80,65.0
+ev_backtest_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),GIR,,,,20.0,under,3,3,0,0,2.42,80.5
+ev_backtest_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),GIR,,,,5.0,under,11,10,1,0,7.21,65.5
+ev_backtest_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),GIR,,,,7.5,under,11,10,1,0,7.21,65.5
+ev_backtest_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Pars,,,,0.0,over,2,1,1,0,0.16,8.0
+ev_backtest_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Pars,,,,0.0,under,62,28,34,0,-25.59,-41.3
+ev_backtest_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Pars,,,,10.0,under,6,5,1,0,2.86,47.6
+ev_backtest_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Pars,,,,12.5,under,3,3,0,0,2.47,82.2
+ev_backtest_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Pars,,,,2.5,under,18,10,8,0,0.41,2.3
+ev_backtest_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Pars,,,,5.0,under,15,8,7,0,-0.37,-2.5
+ev_backtest_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Pars,,,,7.5,under,10,6,4,0,0.66,6.6
+ev_backtest_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Total score,,,,0.0,over,52,32,20,0,8.14,15.7
+ev_backtest_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Total score,,,,0.0,under,23,12,11,0,-11.00,-47.8
+ev_backtest_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Total score,,,,10.0,over,38,25,13,0,9.59,25.2
+ev_backtest_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Total score,,,,12.5,over,34,22,12,0,8.02,23.6
+ev_backtest_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Total score,,,,15.0,over,29,18,11,0,5.88,20.3
+ev_backtest_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Total score,,,,17.5,over,22,13,9,0,3.40,15.5
+ev_backtest_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Total score,,,,2.5,over,51,31,20,0,7.23,14.2
+ev_backtest_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Total score,,,,2.5,under,23,12,11,0,-11.00,-47.8
+ev_backtest_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Total score,,,,20.0,over,15,10,5,0,4.64,30.9
+ev_backtest_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Total score,,,,5.0,over,51,31,20,0,7.23,14.2
+ev_backtest_by_market,2026-11-22T09:12:12Z,2026-11-22T09:12:09.250Z,The RSM Classic,Sea Island Golf Club Seaside · Sea Island Golf Club Plantation,3,(all),(all),Total score,,,,7.5,over,47,30,17,0,9.21,19.6
+model_vs_book_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Birdies,0.593,0.457,2295,,,,,,,,
+model_vs_book_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Bogeys,0.712,0.575,1172,,,,,,,,
+model_vs_book_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Fairways hit,0.740,0.575,853,,,,,,,,
+model_vs_book_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),GIR,0.940,0.739,902,,,,,,,,
+model_vs_book_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Pars,0.531,0.422,1176,,,,,,,,
+model_vs_book_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Total score,1.042,0.752,2033,,,,,,,,
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Birdies,,,,0.0,under,1341,656,573,112,-8.68,-0.6
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Birdies,,,,10.0,under,311,153,151,7,-15.91,-5.1
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Birdies,,,,12.5,under,177,83,93,1,-22.11,-12.5
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Birdies,,,,15.0,under,106,52,54,0,-10.07,-9.5
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Birdies,,,,17.5,under,59,28,31,0,-7.71,-13.1
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Birdies,,,,2.5,under,1012,489,440,83,-16.14,-1.6
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Birdies,,,,20.0,under,33,15,18,0,-4.70,-14.2
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Birdies,,,,5.0,under,743,357,328,58,-20.71,-2.8
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Birdies,,,,7.5,under,503,248,228,27,-14.90,-3.0
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Bogeys,,,,0.0,over,284,124,122,38,-15.37,-5.4
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Bogeys,,,,0.0,under,738,398,315,25,-66.94,-9.1
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Bogeys,,,,10.0,over,117,55,57,5,-8.69,-7.4
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Bogeys,,,,12.5,over,66,32,32,2,-1.40,-2.1
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Bogeys,,,,2.5,over,227,101,98,28,-12.77,-5.6
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Bogeys,,,,2.5,under,628,341,270,17,-70.98,-11.3
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Bogeys,,,,5.0,over,190,85,87,18,-13.91,-7.3
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Bogeys,,,,5.0,under,543,306,226,11,-55.69,-10.3
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Bogeys,,,,7.5,over,150,71,67,12,-7.31,-4.9
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Bogeys,,,,7.5,under,464,270,186,8,-44.44,-9.6
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Fairways hit,,,,0.0,over,146,89,57,0,20.21,13.8
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Fairways hit,,,,0.0,under,706,366,340,0,-146.76,-20.8
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Fairways hit,,,,10.0,over,49,32,17,0,11.85,24.2
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Fairways hit,,,,10.0,under,151,80,71,0,0.33,0.2
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Fairways hit,,,,12.5,over,34,23,11,0,9.19,27.0
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Fairways hit,,,,15.0,over,23,17,6,0,9.35,40.7
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Fairways hit,,,,17.5,over,18,14,4,0,8.63,47.9
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Fairways hit,,,,2.5,over,111,69,42,0,17.01,15.3
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Fairways hit,,,,2.5,under,330,176,154,0,-1.52,-0.5
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Fairways hit,,,,5.0,over,87,56,31,0,16.75,19.3
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Fairways hit,,,,5.0,under,242,128,114,0,-1.95,-0.8
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Fairways hit,,,,7.5,over,68,43,25,0,12.51,18.4
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Fairways hit,,,,7.5,under,198,107,91,0,3.57,1.8
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),GIR,,,,0.0,over,61,34,27,0,5.43,8.9
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),GIR,,,,0.0,under,956,455,501,0,-225.66,-23.6
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),GIR,,,,10.0,under,310,174,136,0,11.66,3.8
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),GIR,,,,12.5,under,210,122,88,0,14.39,6.9
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),GIR,,,,15.0,under,164,96,68,0,13.41,8.2
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),GIR,,,,17.5,under,112,69,43,0,16.26,14.5
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),GIR,,,,2.5,over,35,22,13,0,8.35,23.9
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),GIR,,,,2.5,under,582,291,291,0,-45.58,-7.8
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),GIR,,,,5.0,over,18,13,5,0,7.47,41.5
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),GIR,,,,5.0,under,498,249,249,0,-36.34,-7.3
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),GIR,,,,7.5,over,9,6,3,0,2.65,29.4
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),GIR,,,,7.5,under,389,206,183,0,-7.13,-1.8
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Pars,,,,0.0,over,229,121,100,8,9.44,4.1
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Pars,,,,0.0,under,403,180,210,13,-109.01,-27.0
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Pars,,,,2.5,over,110,62,45,3,11.51,10.5
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Pars,,,,2.5,under,129,67,57,5,4.73,3.7
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Pars,,,,5.0,over,50,30,19,1,8.66,17.3
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Pars,,,,5.0,under,76,40,35,1,1.65,2.2
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Pars,,,,7.5,over,20,13,7,0,4.20,21.0
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Total score,,,,0.0,over,764,383,381,0,-49.34,-6.5
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Total score,,,,0.0,under,681,374,307,0,1.81,0.3
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Total score,,,,10.0,over,206,115,91,0,9.88,4.8
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Total score,,,,12.5,over,154,88,66,0,10.45,6.8
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Total score,,,,15.0,over,133,77,56,0,11.13,8.4
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Total score,,,,17.5,over,113,65,48,0,8.57,7.6
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Total score,,,,2.5,over,594,299,295,0,-36.50,-6.1
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Total score,,,,5.0,over,441,236,205,0,-1.06,-0.2
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Total score,,,,7.5,over,306,164,142,0,-0.75,-0.2
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Birdies,,,,0.0,over,274,127,143,4,-26.28,-9.6
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Birdies,,,,2.5,over,199,96,103,0,-17.16,-8.6
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Birdies,,,,5.0,over,150,70,80,0,-17.34,-11.6
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Bogeys,,,,10.0,under,393,233,157,3,-43.67,-11.1
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Bogeys,,,,12.5,under,347,207,140,0,-48.29,-13.9
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Bogeys,,,,15.0,under,184,102,82,0,-12.00,-6.5
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Fairways hit,,,,12.5,under,122,61,61,0,-6.31,-5.2
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Fairways hit,,,,15.0,under,98,49,49,0,-3.80,-3.9
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Fairways hit,,,,17.5,under,74,33,41,0,-9.33,-12.6
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Fairways hit,,,,20.0,under,47,20,27,0,-8.51,-18.1
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Pars,,,,10.0,over,6,4,2,0,0.96,16.0
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Total score,,,,10.0,under,159,108,51,0,46.86,29.5
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Total score,,,,12.5,under,103,75,28,0,39.24,38.1
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Total score,,,,15.0,under,82,60,22,0,31.10,37.9
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Total score,,,,2.5,under,514,292,222,0,14.43,2.8
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Total score,,,,5.0,under,327,195,132,0,41.42,12.7
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Total score,,,,7.5,under,233,147,86,0,45.14,19.4
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Bogeys,,,,17.5,under,119,69,50,0,4.07,3.4
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Bogeys,,,,20.0,under,78,48,30,0,10.34,13.3
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),GIR,,,,20.0,under,82,57,25,0,23.54,28.7
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Birdies,,,,10.0,over,90,48,42,0,1.79,2.0
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Birdies,,,,7.5,over,114,58,56,0,-3.72,-3.3
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),GIR,,,,10.0,over,4,3,1,0,1.41,35.3
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Total score,,,,17.5,under,64,48,16,0,26.06,40.7
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Bogeys,,,,15.0,over,42,22,20,0,0.13,0.3
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Bogeys,,,,17.5,over,17,11,6,0,2.52,14.8
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Total score,,,,20.0,over,97,55,42,0,6.09,6.3
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Birdies,,,,12.5,over,74,42,32,0,5.71,7.7
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Birdies,,,,15.0,over,63,35,28,0,4.10,6.5
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Birdies,,,,17.5,over,51,26,25,0,2.54,5.0
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Birdies,,,,20.0,over,36,17,19,0,2.26,6.3
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Pars,,,,12.5,over,3,2,1,0,0.35,11.7
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Total score,,,,20.0,under,60,44,16,0,23.17,38.6
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),GIR,,,,12.5,over,3,2,1,0,0.81,27.0
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),GIR,,,,15.0,over,2,2,0,0,1.81,90.5
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Pars,,,,7.5,under,46,23,23,0,-3.06,-6.7
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Fairways hit,,,,20.0,over,8,7,1,0,4.99,62.4
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Bogeys,,,,20.0,over,1,1,0,0,0.88,88.0
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Pars,,,,10.0,under,35,18,17,0,-1.47,-4.2
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Pars,,,,12.5,under,27,15,12,0,1.43,5.3
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Pars,,,,15.0,under,14,5,9,0,-3.96,-28.3
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Pars,,,,17.5,under,6,2,4,0,-2.00,-33.3
+ev_backtest_all,2026-11-22T09:18:33Z,,(all events),,,(all),(all),Pars,,,,20.0,under,1,0,1,0,-1.00,-100.0

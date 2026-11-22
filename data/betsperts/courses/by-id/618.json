@@ -108,73 +108,8 @@
     }
   ],
   "_meta": {
-    "pulledAt": "2026-11-22T02:38:43.908Z",
+    "pulledAt": "2026-11-22T09:18:45.924Z",
     "detailStatus": 200,
     "tournamentsStatus": 200
-  },
-  "auth": {
-    "holeBreakdown": [],
-    "correlated": [
-      {
-        "CourseNum": "5",
-        "CourseName": "Pebble Beach Golf Links",
-        "CourseNums": "[5, 666]"
-      },
-      {
-        "CourseNum": "11",
-        "CourseName": "TPC Sawgrass",
-        "CourseNums": "[11]"
-      },
-      {
-        "CourseNum": "14",
-        "CourseName": "Augusta National GC",
-        "CourseNums": "[14]"
-      },
-      {
-        "CourseNum": "528",
-        "CourseName": "Pinehurst No. 2",
-        "CourseNums": "[528]"
-      },
-      {
-        "CourseNum": "541",
-        "CourseName": "Royal Birkdale GC",
-        "CourseNums": "[541]"
-      },
-      {
-        "CourseNum": "608",
-        "CourseName": "Oakmont CC",
-        "CourseNums": "[608]"
-      },
-      {
-        "CourseNum": "697",
-        "CourseName": "Ocean Course at Kiawah Island",
-        "CourseNums": "[697]"
-      },
-      {
-        "CourseNum": "709",
-        "CourseName": "Royal Troon",
-        "CourseNums": "[709]"
-      },
-      {
-        "CourseNum": "778",
-        "CourseName": "Royal St. Georges GC",
-        "CourseNums": "[778]"
-      },
-      {
-        "CourseNum": "891",
-        "CourseName": "Winged Foot GC",
-        "CourseNums": "[891]"
-      },
-      {
-        "CourseNum": "945",
-        "CourseName": "The Renaissance Club",
-        "CourseNums": "[945, 977]"
-      }
-    ],
-    "_meta": {
-      "pulledAt": "2026-11-22T02:38:44.031Z",
-      "holeStatus": 200,
-      "correlatedStatus": 200
-    }
   }
 }

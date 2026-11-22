@@ -99,43 +99,8 @@
     }
   ],
   "_meta": {
-    "pulledAt": "2026-11-22T02:38:44.152Z",
+    "pulledAt": "2026-11-22T09:18:46.000Z",
     "detailStatus": 200,
     "tournamentsStatus": 200
-  },
-  "auth": {
-    "holeBreakdown": [],
-    "correlated": [
-      {
-        "CourseNum": "237",
-        "CourseName": "TPC Potomac at Avenel Farm",
-        "CourseNums": "[237]"
-      },
-      {
-        "CourseNum": "611",
-        "CourseName": "Southern Hills CC",
-        "CourseNums": "[611]"
-      },
-      {
-        "CourseNum": "689",
-        "CourseName": "Bethpage State Park (Black)",
-        "CourseNums": "[689, 880]"
-      },
-      {
-        "CourseNum": "891",
-        "CourseName": "Winged Foot GC",
-        "CourseNums": "[891]"
-      },
-      {
-        "CourseNum": "896",
-        "CourseName": "Olympia Fields CC (North)",
-        "CourseNums": "[896]"
-      }
-    ],
-    "_meta": {
-      "pulledAt": "2026-11-22T02:38:44.242Z",
-      "holeStatus": 200,
-      "correlatedStatus": 200
-    }
   }
 }

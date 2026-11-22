@@ -105,58 +105,8 @@
     }
   ],
   "_meta": {
-    "pulledAt": "2026-11-22T02:38:44.704Z",
+    "pulledAt": "2026-11-22T09:18:46.236Z",
     "detailStatus": 200,
     "tournamentsStatus": 200
-  },
-  "auth": {
-    "holeBreakdown": [],
-    "correlated": [
-      {
-        "CourseNum": "4",
-        "CourseName": "Torrey Pines GC (South)",
-        "CourseNums": "[4, 939, 744]"
-      },
-      {
-        "CourseNum": "9",
-        "CourseName": "Bay Hill Club & Lodge",
-        "CourseNums": "[9]"
-      },
-      {
-        "CourseNum": "14",
-        "CourseName": "Augusta National GC",
-        "CourseNums": "[14]"
-      },
-      {
-        "CourseNum": "513",
-        "CourseName": "TPC Southwind",
-        "CourseNums": "[513]"
-      },
-      {
-        "CourseNum": "697",
-        "CourseName": "Ocean Course at Kiawah Island",
-        "CourseNums": "[697]"
-      },
-      {
-        "CourseNum": "872",
-        "CourseName": "Quail Hollow Club",
-        "CourseNums": "[872, 698, 241]"
-      },
-      {
-        "CourseNum": "898",
-        "CourseName": "The Concession Golf Club",
-        "CourseNums": "[898]"
-      },
-      {
-        "CourseNum": "928",
-        "CourseName": "PGA National (Champion)",
-        "CourseNums": "[928, 734]"
-      }
-    ],
-    "_meta": {
-      "pulledAt": "2026-11-22T02:38:44.801Z",
-      "holeStatus": 200,
-      "correlatedStatus": 200
-    }
   }
 }

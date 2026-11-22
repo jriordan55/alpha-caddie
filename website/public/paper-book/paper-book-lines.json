@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-22T02:16:40.617Z",
+  "updated_at": "2026-11-22T09:11:31.803Z",
   "event_name": "The RSM Classic",
   "round": 3,
   "round_label": "R3 — Saturday (auto, America/New_York)",
@@ -8,25 +8,25 @@
       "cards": [],
       "fetchError": "",
       "count": 0,
-      "fetchedAt": "2026-11-22T02:16:40.617Z"
+      "fetchedAt": "2026-11-22T09:11:31.804Z"
     },
     "prizepicks": {
       "cards": [],
       "fetchError": "PrizePicks partner API does not expose per-pick posted odds for standard lines",
       "count": 0,
-      "fetchedAt": "2026-11-22T02:16:40.618Z"
+      "fetchedAt": "2026-11-22T09:11:31.805Z"
     },
     "sleeper": {
       "cards": [],
       "fetchError": "",
       "count": 0,
-      "fetchedAt": "2026-11-22T02:16:40.618Z"
+      "fetchedAt": "2026-11-22T09:11:31.805Z"
     },
     "underdog": {
       "cards": [],
       "fetchError": "Underdog API HTTP 426",
       "count": 0,
-      "fetchedAt": "2026-11-22T02:16:41.390Z"
+      "fetchedAt": "2026-11-22T09:11:32.380Z"
     },
     "kalshi": {
       "cards": [
@@ -38,24 +38,24 @@
           "playerName": "Castillo, Ricky",
           "market": "Total score",
           "line": 69.5,
-          "overOdds": 317,
-          "underOdds": -317,
+          "overOdds": 400,
+          "underOdds": -400,
           "overBookOdds": {
             "kind": "american",
-            "raw": 317,
-            "display": "+317"
+            "raw": 400,
+            "display": "+400"
           },
           "underBookOdds": {
             "kind": "american",
-            "raw": -317,
-            "display": "-317"
+            "raw": -400,
+            "display": "-400"
           },
-          "overPayoutMultiplier": 4.17,
-          "underPayoutMultiplier": 1.3154574132492114,
+          "overPayoutMultiplier": 5,
+          "underPayoutMultiplier": 1.25,
           "oddsSource": "book_api_live",
           "bookId": "kalshi",
           "gradeable": true,
-          "fetchedAt": "2026-11-22T02:16:41.529Z"
+          "fetchedAt": "2026-11-22T09:11:32.448Z"
         },
         {
           "cardKey": "22002|Total score",
@@ -82,7 +82,7 @@
           "oddsSource": "book_api_live",
           "bookId": "kalshi",
           "gradeable": true,
-          "fetchedAt": "2026-11-22T02:16:41.529Z"
+          "fetchedAt": "2026-11-22T09:11:32.448Z"
         },
         {
           "cardKey": "14577|Total score",
@@ -92,24 +92,24 @@
           "playerName": "English, Harris",
           "market": "Total score",
           "line": 69.5,
-          "overOdds": 245,
-          "underOdds": -245,
+          "overOdds": 456,
+          "underOdds": -456,
           "overBookOdds": {
             "kind": "american",
-            "raw": 245,
-            "display": "+245"
+            "raw": 456,
+            "display": "+456"
           },
           "underBookOdds": {
             "kind": "american",
-            "raw": -245,
-            "display": "-245"
+            "raw": -456,
+            "display": "-456"
           },
-          "overPayoutMultiplier": 3.45,
-          "underPayoutMultiplier": 1.4081632653061225,
+          "overPayoutMultiplier": 5.56,
+          "underPayoutMultiplier": 1.219298245614035,
           "oddsSource": "book_api_live",
           "bookId": "kalshi",
           "gradeable": true,
-          "fetchedAt": "2026-11-22T02:16:41.529Z"
+          "fetchedAt": "2026-11-22T09:11:32.448Z"
         },
         {
           "cardKey": "23465|Total score",
@@ -119,24 +119,24 @@
           "playerName": "Greyserman, Max",
           "market": "Total score",
           "line": 69.5,
-          "overOdds": 1567,
-          "underOdds": -1567,
+          "overOdds": 376,
+          "underOdds": -376,
           "overBookOdds": {
             "kind": "american",
-            "raw": 1567,
-            "display": "+1567"
+            "raw": 376,
+            "display": "+376"
           },
           "underBookOdds": {
             "kind": "american",
-            "raw": -1567,
-            "display": "-1567"
+            "raw": -376,
+            "display": "-376"
           },
-          "overPayoutMultiplier": 16.67,
-          "underPayoutMultiplier": 1.0638162093171666,
+          "overPayoutMultiplier": 4.76,
+          "underPayoutMultiplier": 1.2659574468085106,
           "oddsSource": "book_api_live",
           "bookId": "kalshi",
           "gradeable": true,
-          "fetchedAt": "2026-11-22T02:16:41.529Z"
+          "fetchedAt": "2026-11-22T09:11:32.448Z"
         },
         {
           "cardKey": "27194|Total score",
@@ -146,24 +146,24 @@
           "playerName": "Hall, Harry",
           "market": "Total score",
           "line": 69.5,
-          "overOdds": 525,
-          "underOdds": -525,
+          "overOdds": 400,
+          "underOdds": -400,
           "overBookOdds": {
             "kind": "american",
-            "raw": 525,
-            "display": "+525"
+            "raw": 400,
+            "display": "+400"
           },
           "underBookOdds": {
             "kind": "american",
-            "raw": -525,
-            "display": "-525"
+            "raw": -400,
+            "display": "-400"
           },
-          "overPayoutMultiplier": 6.25,
-          "underPayoutMultiplier": 1.1904761904761905,
+          "overPayoutMultiplier": 5,
+          "underPayoutMultiplier": 1.25,
           "oddsSource": "book_api_live",
           "bookId": "kalshi",
           "gradeable": true,
-          "fetchedAt": "2026-11-22T02:16:41.529Z"
+          "fetchedAt": "2026-11-22T09:11:32.448Z"
         },
         {
           "cardKey": "25157|Total score",
@@ -173,24 +173,24 @@
           "playerName": "Hodges, Lee",
           "market": "Total score",
           "line": 68.5,
-          "overOdds": 163,
-          "underOdds": -163,
+          "overOdds": 186,
+          "underOdds": -186,
           "overBookOdds": {
             "kind": "american",
-            "raw": 163,
-            "display": "+163"
+            "raw": 186,
+            "display": "+186"
           },
           "underBookOdds": {
             "kind": "american",
-            "raw": -163,
-            "display": "-163"
+            "raw": -186,
+            "display": "-186"
           },
-          "overPayoutMultiplier": 2.63,
-          "underPayoutMultiplier": 1.6134969325153374,
+          "overPayoutMultiplier": 2.8600000000000003,
+          "underPayoutMultiplier": 1.5376344086021505,
           "oddsSource": "book_api_live",
           "bookId": "kalshi",
           "gradeable": true,
-          "fetchedAt": "2026-11-22T02:16:41.529Z"
+          "fetchedAt": "2026-11-22T09:11:32.448Z"
         },
         {
           "cardKey": "23838|Total score",
@@ -200,24 +200,24 @@
           "playerName": "Hojgaard, Rasmus",
           "market": "Total score",
           "line": 68.5,
-          "overOdds": 163,
-          "underOdds": -163,
+          "overOdds": 217,
+          "underOdds": -217,
           "overBookOdds": {
             "kind": "american",
-            "raw": 163,
-            "display": "+163"
+            "raw": 217,
+            "display": "+217"
           },
           "underBookOdds": {
             "kind": "american",
-            "raw": -163,
-            "display": "-163"
+            "raw": -217,
+            "display": "-217"
           },
-          "overPayoutMultiplier": 2.63,
-          "underPayoutMultiplier": 1.6134969325153374,
+          "overPayoutMultiplier": 3.17,
+          "underPayoutMultiplier": 1.4608294930875576,
           "oddsSource": "book_api_live",
           "bookId": "kalshi",
           "gradeable": true,
-          "fetchedAt": "2026-11-22T02:16:41.529Z"
+          "fetchedAt": "2026-11-22T09:11:32.448Z"
         },
         {
           "cardKey": "13470|Total score",
@@ -227,24 +227,24 @@
           "playerName": "Kizzire, Patton",
           "market": "Total score",
           "line": 69.5,
-          "overOdds": 326,
-          "underOdds": -326,
+          "overOdds": 257,
+          "underOdds": -257,
           "overBookOdds": {
             "kind": "american",
-            "raw": 326,
-            "display": "+326"
+            "raw": 257,
+            "display": "+257"
           },
           "underBookOdds": {
             "kind": "american",
-            "raw": -326,
-            "display": "-326"
+            "raw": -257,
+            "display": "-257"
           },
-          "overPayoutMultiplier": 4.26,
-          "underPayoutMultiplier": 1.3067484662576687,
+          "overPayoutMultiplier": 3.57,
+          "underPayoutMultiplier": 1.3891050583657587,
           "oddsSource": "book_api_live",
           "bookId": "kalshi",
           "gradeable": true,
-          "fetchedAt": "2026-11-22T02:16:41.529Z"
+          "fetchedAt": "2026-11-22T09:11:32.448Z"
         },
         {
           "cardKey": "21943|Total score",
@@ -254,24 +254,24 @@
           "playerName": "Lebioda, Hank",
           "market": "Total score",
           "line": 70.5,
-          "overOdds": 285,
-          "underOdds": -285,
+          "overOdds": 506,
+          "underOdds": -506,
           "overBookOdds": {
             "kind": "american",
-            "raw": 285,
-            "display": "+285"
+            "raw": 506,
+            "display": "+506"
           },
           "underBookOdds": {
             "kind": "american",
-            "raw": -285,
-            "display": "-285"
+            "raw": -506,
+            "display": "-506"
           },
-          "overPayoutMultiplier": 3.85,
-          "underPayoutMultiplier": 1.3508771929824561,
+          "overPayoutMultiplier": 6.06,
+          "underPayoutMultiplier": 1.1976284584980237,
           "oddsSource": "book_api_live",
           "bookId": "kalshi",
           "gradeable": true,
-          "fetchedAt": "2026-11-22T02:16:41.529Z"
+          "fetchedAt": "2026-11-22T09:11:32.448Z"
         },
         {
           "cardKey": "15310|Total score",
@@ -281,24 +281,24 @@
           "playerName": "Li, Haotong",
           "market": "Total score",
           "line": 68.5,
-          "overOdds": 194,
-          "underOdds": -194,
+          "overOdds": 376,
+          "underOdds": -376,
           "overBookOdds": {
             "kind": "american",
-            "raw": 194,
-            "display": "+194"
+            "raw": 376,
+            "display": "+376"
           },
           "underBookOdds": {
             "kind": "american",
-            "raw": -194,
-            "display": "-194"
+            "raw": -376,
+            "display": "-376"
           },
-          "overPayoutMultiplier": 2.94,
-          "underPayoutMultiplier": 1.5154639175257731,
+          "overPayoutMultiplier": 4.76,
+          "underPayoutMultiplier": 1.2659574468085106,
           "oddsSource": "book_api_live",
           "bookId": "kalshi",
           "gradeable": true,
-          "fetchedAt": "2026-11-22T02:16:41.529Z"
+          "fetchedAt": "2026-11-22T09:11:32.448Z"
         },
         {
           "cardKey": "23505|Total score",
@@ -308,24 +308,24 @@
           "playerName": "McGreevy, Max",
           "market": "Total score",
           "line": 68.5,
-          "overOdds": 233,
-          "underOdds": -233,
+          "overOdds": 239,
+          "underOdds": -239,
           "overBookOdds": {
             "kind": "american",
-            "raw": 233,
-            "display": "+233"
+            "raw": 239,
+            "display": "+239"
           },
           "underBookOdds": {
             "kind": "american",
-            "raw": -233,
-            "display": "-233"
+            "raw": -239,
+            "display": "-239"
           },
-          "overPayoutMultiplier": 3.33,
-          "underPayoutMultiplier": 1.4291845493562232,
+          "overPayoutMultiplier": 3.39,
+          "underPayoutMultiplier": 1.4184100418410042,
           "oddsSource": "book_api_live",
           "bookId": "kalshi",
           "gradeable": true,
-          "fetchedAt": "2026-11-22T02:16:41.529Z"
+          "fetchedAt": "2026-11-22T09:11:32.448Z"
         },
         {
           "cardKey": "23841|Total score",
@@ -335,24 +335,24 @@
           "playerName": "Neergaard-Petersen, Rasmus",
           "market": "Total score",
           "line": 67.5,
-          "overOdds": 228,
-          "underOdds": -228,
+          "overOdds": 264,
+          "underOdds": -264,
           "overBookOdds": {
             "kind": "american",
-            "raw": 228,
-            "display": "+228"
+            "raw": 264,
+            "display": "+264"
           },
           "underBookOdds": {
             "kind": "american",
-            "raw": -228,
-            "display": "-228"
+            "raw": -264,
+            "display": "-264"
           },
-          "overPayoutMultiplier": 3.28,
-          "underPayoutMultiplier": 1.4385964912280702,
+          "overPayoutMultiplier": 3.64,
+          "underPayoutMultiplier": 1.378787878787879,
           "oddsSource": "book_api_live",
           "bookId": "kalshi",
           "gradeable": true,
-          "fetchedAt": "2026-11-22T02:16:41.529Z"
+          "fetchedAt": "2026-11-22T09:11:32.448Z"
         },
         {
           "cardKey": "22465|Total score",
@@ -362,24 +362,24 @@
           "playerName": "Penge, Marco",
           "market": "Total score",
           "line": 68.5,
-          "overOdds": 308,
-          "underOdds": -308,
+          "overOdds": 208,
+          "underOdds": -208,
           "overBookOdds": {
             "kind": "american",
-            "raw": 308,
-            "display": "+308"
+            "raw": 208,
+            "display": "+208"
           },
           "underBookOdds": {
             "kind": "american",
-            "raw": -308,
-            "display": "-308"
+            "raw": -208,
+            "display": "-208"
           },
-          "overPayoutMultiplier": 4.08,
-          "underPayoutMultiplier": 1.3246753246753247,
+          "overPayoutMultiplier": 3.08,
+          "underPayoutMultiplier": 1.4807692307692308,
           "oddsSource": "book_api_live",
           "bookId": "kalshi",
           "gradeable": true,
-          "fetchedAt": "2026-11-22T02:16:41.529Z"
+          "fetchedAt": "2026-11-22T09:11:32.448Z"
         },
         {
           "cardKey": "19872|Total score",
@@ -389,24 +389,24 @@
           "playerName": "Riley, Davis",
           "market": "Total score",
           "line": 68.5,
-          "overOdds": 251,
-          "underOdds": -251,
+          "overOdds": 160,
+          "underOdds": -160,
           "overBookOdds": {
             "kind": "american",
-            "raw": 251,
-            "display": "+251"
+            "raw": 160,
+            "display": "+160"
           },
           "underBookOdds": {
             "kind": "american",
-            "raw": -251,
-            "display": "-251"
+            "raw": -160,
+            "display": "-160"
           },
-          "overPayoutMultiplier": 3.51,
-          "underPayoutMultiplier": 1.3984063745019921,
+          "overPayoutMultiplier": 2.6,
+          "underPayoutMultiplier": 1.625,
           "oddsSource": "book_api_live",
           "bookId": "kalshi",
           "gradeable": true,
-          "fetchedAt": "2026-11-22T02:16:41.529Z"
+          "fetchedAt": "2026-11-22T09:11:32.448Z"
         },
         {
           "cardKey": "26850|Total score",
@@ -416,24 +416,24 @@
           "playerName": "Svensson, Jesper",
           "market": "Total score",
           "line": 68.5,
-          "overOdds": 156,
-          "underOdds": -156,
+          "overOdds": 203,
+          "underOdds": -203,
           "overBookOdds": {
             "kind": "american",
-            "raw": 156,
-            "display": "+156"
+            "raw": 203,
+            "display": "+203"
           },
           "underBookOdds": {
             "kind": "american",
-            "raw": -156,
-            "display": "-156"
+            "raw": -203,
+            "display": "-203"
           },
-          "overPayoutMultiplier": 2.56,
-          "underPayoutMultiplier": 1.641025641025641,
+          "overPayoutMultiplier": 3.03,
+          "underPayoutMultiplier": 1.4926108374384237,
           "oddsSource": "book_api_live",
           "bookId": "kalshi",
           "gradeable": true,
-          "fetchedAt": "2026-11-22T02:16:41.529Z"
+          "fetchedAt": "2026-11-22T09:11:32.448Z"
         },
         {
           "cardKey": "26649|Total score",
@@ -443,29 +443,29 @@
           "playerName": "Thorbjornsen, Michael",
           "market": "Total score",
           "line": 67.5,
-          "overOdds": 270,
-          "underOdds": -270,
+          "overOdds": 170,
+          "underOdds": -170,
           "overBookOdds": {
             "kind": "american",
-            "raw": 270,
-            "display": "+270"
+            "raw": 170,
+            "display": "+170"
           },
           "underBookOdds": {
             "kind": "american",
-            "raw": -270,
-            "display": "-270"
+            "raw": -170,
+            "display": "-170"
           },
-          "overPayoutMultiplier": 3.7,
-          "underPayoutMultiplier": 1.3703703703703702,
+          "overPayoutMultiplier": 2.7,
+          "underPayoutMultiplier": 1.5882352941176472,
           "oddsSource": "book_api_live",
           "bookId": "kalshi",
           "gradeable": true,
-          "fetchedAt": "2026-11-22T02:16:41.529Z"
+          "fetchedAt": "2026-11-22T09:11:32.448Z"
         }
       ],
       "fetchError": "",
       "count": 16,
-      "fetchedAt": "2026-11-22T02:16:41.529Z"
+      "fetchedAt": "2026-11-22T09:11:32.448Z"
     },
     "dk_matchups": {
       "cards": [
@@ -496,7 +496,7 @@
           "oddsSource": "draftkings_matchups",
           "bookId": "dk_matchups",
           "gradeable": true,
-          "fetchedAt": "2026-11-22T02:16:41.560Z"
+          "fetchedAt": "2026-11-22T09:11:32.463Z"
         },
         {
           "cardKind": "matchup",
@@ -525,7 +525,7 @@
           "oddsSource": "draftkings_matchups",
           "bookId": "dk_matchups",
           "gradeable": true,
-          "fetchedAt": "2026-11-22T02:16:41.560Z"
+          "fetchedAt": "2026-11-22T09:11:32.463Z"
         },
         {
           "cardKind": "matchup",
@@ -554,7 +554,7 @@
           "oddsSource": "draftkings_matchups",
           "bookId": "dk_matchups",
           "gradeable": true,
-          "fetchedAt": "2026-11-22T02:16:41.560Z"
+          "fetchedAt": "2026-11-22T09:11:32.463Z"
         },
         {
           "cardKind": "matchup",
@@ -583,7 +583,7 @@
           "oddsSource": "draftkings_matchups",
           "bookId": "dk_matchups",
           "gradeable": true,
-          "fetchedAt": "2026-11-22T02:16:41.560Z"
+          "fetchedAt": "2026-11-22T09:11:32.463Z"
         },
         {
           "cardKind": "matchup",
@@ -612,7 +612,7 @@
           "oddsSource": "draftkings_matchups",
           "bookId": "dk_matchups",
           "gradeable": true,
-          "fetchedAt": "2026-11-22T02:16:41.560Z"
+          "fetchedAt": "2026-11-22T09:11:32.463Z"
         },
         {
           "cardKind": "matchup",
@@ -641,7 +641,7 @@
           "oddsSource": "draftkings_matchups",
           "bookId": "dk_matchups",
           "gradeable": true,
-          "fetchedAt": "2026-11-22T02:16:41.560Z"
+          "fetchedAt": "2026-11-22T09:11:32.463Z"
         },
         {
           "cardKind": "matchup",
@@ -670,7 +670,7 @@
           "oddsSource": "draftkings_matchups",
           "bookId": "dk_matchups",
           "gradeable": true,
-          "fetchedAt": "2026-11-22T02:16:41.560Z"
+          "fetchedAt": "2026-11-22T09:11:32.463Z"
         },
         {
           "cardKind": "matchup",
@@ -699,7 +699,7 @@
           "oddsSource": "draftkings_matchups",
           "bookId": "dk_matchups",
           "gradeable": true,
-          "fetchedAt": "2026-11-22T02:16:41.560Z"
+          "fetchedAt": "2026-11-22T09:11:32.463Z"
         },
         {
           "cardKind": "matchup",
@@ -728,7 +728,7 @@
           "oddsSource": "draftkings_matchups",
           "bookId": "dk_matchups",
           "gradeable": true,
-          "fetchedAt": "2026-11-22T02:16:41.560Z"
+          "fetchedAt": "2026-11-22T09:11:32.463Z"
         },
         {
           "cardKind": "matchup",
@@ -757,12 +757,12 @@
           "oddsSource": "draftkings_matchups",
           "bookId": "dk_matchups",
           "gradeable": true,
-          "fetchedAt": "2026-11-22T02:16:41.560Z"
+          "fetchedAt": "2026-11-22T09:11:32.463Z"
         }
       ],
       "fetchError": "",
       "count": 10,
-      "fetchedAt": "2026-11-22T02:16:41.560Z"
+      "fetchedAt": "2026-11-22T09:11:32.463Z"
     }
   }
 }

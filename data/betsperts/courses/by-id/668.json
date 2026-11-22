@@ -99,53 +99,8 @@
     }
   ],
   "_meta": {
-    "pulledAt": "2026-11-22T02:38:44.042Z",
+    "pulledAt": "2026-11-22T09:18:45.958Z",
     "detailStatus": 200,
     "tournamentsStatus": 200
-  },
-  "auth": {
-    "holeBreakdown": [],
-    "correlated": [
-      {
-        "CourseNum": "14",
-        "CourseName": "Augusta National GC",
-        "CourseNums": "[14]"
-      },
-      {
-        "CourseNum": "236",
-        "CourseName": "Erin Hills",
-        "CourseNums": "[236]"
-      },
-      {
-        "CourseNum": "541",
-        "CourseName": "Royal Birkdale GC",
-        "CourseNums": "[541]"
-      },
-      {
-        "CourseNum": "618",
-        "CourseName": "Shinnecock Hills GC",
-        "CourseNums": "[618]"
-      },
-      {
-        "CourseNum": "778",
-        "CourseName": "Royal St. Georges GC",
-        "CourseNums": "[778]"
-      },
-      {
-        "CourseNum": "885",
-        "CourseName": "Royal Portrush GC",
-        "CourseNums": "[885]"
-      },
-      {
-        "CourseNum": "945",
-        "CourseName": "The Renaissance Club",
-        "CourseNums": "[945, 977]"
-      }
-    ],
-    "_meta": {
-      "pulledAt": "2026-11-22T02:38:44.128Z",
-      "holeStatus": 200,
-      "correlatedStatus": 200
-    }
   }
 }
