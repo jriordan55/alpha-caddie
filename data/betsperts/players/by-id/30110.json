@@ -4429,18 +4429,18 @@
       },
       {
         "CourseLength": "Average",
-        "StrokesGainedAverage": "0.15464088600643433",
-        "Rounds": "187"
+        "StrokesGainedAverage": "0.14471590921113436",
+        "Rounds": "182"
       },
       {
         "CourseLength": "Long",
-        "StrokesGainedAverage": "0.009099990576505661",
-        "Rounds": "100"
+        "StrokesGainedAverage": "-0.041739139422450375",
+        "Rounds": "92"
       },
       {
         "CourseLength": "Short",
-        "StrokesGainedAverage": "0.1484571476493563",
-        "Rounds": "175"
+        "StrokesGainedAverage": "0.18547486624154966",
+        "Rounds": "179"
       },
       {
         "CourseLength": "Very Long",
@@ -4449,25 +4449,25 @@
       },
       {
         "CourseLength": "Very Short",
-        "StrokesGainedAverage": "-0.14663716608378213",
-        "Rounds": "113"
+        "StrokesGainedAverage": "-0.13540983406185617",
+        "Rounds": "122"
       }
     ],
     "byScoringCondition": [
       {
         "Condition": "Average",
-        "StrokesGainedAverage": "0.0673154350245159",
-        "Rounds": "156"
+        "StrokesGainedAverage": "-0.0076129052187165905",
+        "Rounds": "162"
       },
       {
         "Condition": "Difficult",
-        "StrokesGainedAverage": "0.4324691355642345",
+        "StrokesGainedAverage": "0.4894444435880876",
         "Rounds": "162"
       },
       {
         "Condition": "Easy",
-        "StrokesGainedAverage": "0.02331080533111015",
-        "Rounds": "154"
+        "StrokesGainedAverage": "0.0019402933626699803",
+        "Rounds": "140"
       },
       {
         "Condition": "Very Difficult",
@@ -4476,8 +4476,8 @@
       },
       {
         "Condition": "Very Easy",
-        "StrokesGainedAverage": "-0.15452172390144805",
-        "Rounds": "115"
+        "StrokesGainedAverage": "-0.10243900928918909",
+        "Rounds": "123"
       }
     ],
     "byFieldStrength": [
@@ -4564,7 +4564,7 @@
     ]
   },
   "_meta": {
-    "pulledAt": "2026-11-22T02:43:02.096Z",
+    "pulledAt": "2026-11-23T02:40:57.064Z",
     "ok": true
   }
 }

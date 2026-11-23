@@ -139,8 +139,13 @@
     "byCourseLength": [
       {
         "CourseLength": "Short",
-        "StrokesGainedAverage": "-1.115000041667372",
-        "Rounds": "4"
+        "StrokesGainedAverage": "-0.8666667174547911",
+        "Rounds": "3"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-1.8600000143051147",
+        "Rounds": "1"
       }
     ],
     "byScoringCondition": [
@@ -194,7 +199,7 @@
     ]
   },
   "_meta": {
-    "pulledAt": "2026-11-22T02:39:05.755Z",
+    "pulledAt": "2026-11-23T02:36:39.670Z",
     "ok": true
   }
 }

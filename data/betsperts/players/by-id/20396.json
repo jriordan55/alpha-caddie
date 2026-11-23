@@ -1527,18 +1527,18 @@
     "byCourseLength": [
       {
         "CourseLength": "Average",
-        "StrokesGainedAverage": "0.0706493558434697",
-        "Rounds": "77"
+        "StrokesGainedAverage": "0.051518991778168495",
+        "Rounds": "79"
       },
       {
         "CourseLength": "Long",
-        "StrokesGainedAverage": "0.6381249838741496",
-        "Rounds": "32"
+        "StrokesGainedAverage": "0.7263333177814881",
+        "Rounds": "30"
       },
       {
         "CourseLength": "Short",
-        "StrokesGainedAverage": "0.5573214119566339",
-        "Rounds": "56"
+        "StrokesGainedAverage": "0.5103636175394058",
+        "Rounds": "55"
       },
       {
         "CourseLength": "Very Long",
@@ -1547,30 +1547,30 @@
       },
       {
         "CourseLength": "Very Short",
-        "StrokesGainedAverage": "-1.8939999878406524",
-        "Rounds": "10"
+        "StrokesGainedAverage": "-1.436363615772941",
+        "Rounds": "11"
       }
     ],
     "byScoringCondition": [
       {
         "Condition": "Average",
-        "StrokesGainedAverage": "-0.31549999564886094",
-        "Rounds": "40"
+        "StrokesGainedAverage": "-0.43444444239139557",
+        "Rounds": "36"
       },
       {
         "Condition": "Difficult",
-        "StrokesGainedAverage": "-0.1777419367384526",
-        "Rounds": "62"
+        "StrokesGainedAverage": "-0.17656250263098627",
+        "Rounds": "64"
       },
       {
         "Condition": "Easy",
-        "StrokesGainedAverage": "-0.26235293224453926",
-        "Rounds": "17"
+        "StrokesGainedAverage": "-0.24149999264627695",
+        "Rounds": "20"
       },
       {
         "Condition": "Very Difficult",
-        "StrokesGainedAverage": "0.8609876470801271",
-        "Rounds": "81"
+        "StrokesGainedAverage": "0.9176249951124191",
+        "Rounds": "80"
       },
       {
         "Condition": "Very Easy",
@@ -1647,7 +1647,7 @@
     ]
   },
   "_meta": {
-    "pulledAt": "2026-11-22T02:43:06.289Z",
+    "pulledAt": "2026-11-23T02:41:01.821Z",
     "ok": true
   }
 }

@@ -4315,17 +4315,17 @@
       },
       {
         "CourseLength": "Average",
-        "StrokesGainedAverage": "0.21810810806582104",
-        "Rounds": "152"
+        "StrokesGainedAverage": "0.2187412559360891",
+        "Rounds": "147"
       },
       {
         "CourseLength": "Long",
-        "StrokesGainedAverage": "-0.5135227198797193",
-        "Rounds": "88"
+        "StrokesGainedAverage": "-0.5351219435290593",
+        "Rounds": "82"
       },
       {
         "CourseLength": "Short",
-        "StrokesGainedAverage": "0.1754069701378602",
+        "StrokesGainedAverage": "0.16860464924599888",
         "Rounds": "172"
       },
       {
@@ -4335,25 +4335,25 @@
       },
       {
         "CourseLength": "Very Short",
-        "StrokesGainedAverage": "0.03541401048801887",
-        "Rounds": "157"
+        "StrokesGainedAverage": "0.03821428127897283",
+        "Rounds": "168"
       }
     ],
     "byScoringCondition": [
       {
         "Condition": "Average",
-        "StrokesGainedAverage": "-0.08176923147760905",
-        "Rounds": "132"
+        "StrokesGainedAverage": "-0.06843283622344928",
+        "Rounds": "136"
       },
       {
         "Condition": "Difficult",
-        "StrokesGainedAverage": "0.1250000035671412",
+        "StrokesGainedAverage": "0.14094339864644803",
         "Rounds": "106"
       },
       {
         "Condition": "Easy",
-        "StrokesGainedAverage": "0.35438270175852526",
-        "Rounds": "170"
+        "StrokesGainedAverage": "0.3587162009490704",
+        "Rounds": "156"
       },
       {
         "Condition": "Very Difficult",
@@ -4362,8 +4362,8 @@
       },
       {
         "Condition": "Very Easy",
-        "StrokesGainedAverage": "-0.21325153082700596",
-        "Rounds": "163"
+        "StrokesGainedAverage": "-0.1941618468031029",
+        "Rounds": "173"
       }
     ],
     "byFieldStrength": [
@@ -4450,7 +4450,7 @@
     ]
   },
   "_meta": {
-    "pulledAt": "2026-11-22T02:44:48.301Z",
+    "pulledAt": "2026-11-23T02:42:49.991Z",
     "ok": true
   }
 }

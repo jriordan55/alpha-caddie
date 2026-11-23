@@ -490,12 +490,17 @@
       },
       {
         "CourseLength": "Short",
-        "StrokesGainedAverage": "-0.918181846680289",
-        "Rounds": "22"
+        "StrokesGainedAverage": "-0.9266666960680768",
+        "Rounds": "21"
       },
       {
         "CourseLength": "Very Long",
         "StrokesGainedAverage": "1.6799999475479126",
+        "Rounds": "1"
+      },
+      {
+        "CourseLength": "Very Short",
+        "StrokesGainedAverage": "-0.7400000095367432",
         "Rounds": "1"
       }
     ],
@@ -590,7 +595,7 @@
     ]
   },
   "_meta": {
-    "pulledAt": "2026-11-22T02:42:45.056Z",
+    "pulledAt": "2026-11-23T02:40:40.633Z",
     "ok": true
   }
 }

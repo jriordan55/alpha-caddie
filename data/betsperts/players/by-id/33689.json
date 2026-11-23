@@ -339,18 +339,18 @@
     "byScoringCondition": [
       {
         "Condition": "Average",
-        "StrokesGainedAverage": "0.16200006008148193",
-        "Rounds": "5"
+        "StrokesGainedAverage": "3.7600001096725464",
+        "Rounds": "2"
       },
       {
         "Condition": "Difficult",
-        "StrokesGainedAverage": "-1.2833333512147267",
-        "Rounds": "3"
+        "StrokesGainedAverage": "-1.9249999895691872",
+        "Rounds": "4"
       },
       {
         "Condition": "Easy",
-        "StrokesGainedAverage": "-2.082500085234642",
-        "Rounds": "4"
+        "StrokesGainedAverage": "-2.1100000739097595",
+        "Rounds": "5"
       },
       {
         "Condition": "Very Difficult",
@@ -359,8 +359,8 @@
       },
       {
         "Condition": "Very Easy",
-        "StrokesGainedAverage": "0.21000000834465027",
-        "Rounds": "2"
+        "StrokesGainedAverage": "-0.07333332300186157",
+        "Rounds": "3"
       }
     ],
     "byFieldStrength": [
@@ -427,7 +427,7 @@
     ]
   },
   "_meta": {
-    "pulledAt": "2026-11-22T02:42:15.933Z",
+    "pulledAt": "2026-11-23T02:40:07.177Z",
     "ok": true
   }
 }

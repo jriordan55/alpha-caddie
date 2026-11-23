@@ -7,7 +7,7 @@
     "Name": "Mackenzie Hughes",
     "BirthPlace": "Hamilton, Ontario, Canada",
     "BirthDate": "November 23, 1990",
-    "Age": "35",
+    "Age": "36",
     "Height": "6ft 1in",
     "Weight": "180 lbs",
     "Nationality": "Canada",
@@ -5799,18 +5799,18 @@
       },
       {
         "CourseLength": "Average",
-        "StrokesGainedAverage": "0.09764084124832716",
-        "Rounds": "284"
+        "StrokesGainedAverage": "0.11465454123914241",
+        "Rounds": "275"
       },
       {
         "CourseLength": "Long",
-        "StrokesGainedAverage": "-0.07452831252144193",
-        "Rounds": "110"
+        "StrokesGainedAverage": "-0.21591837799214586",
+        "Rounds": "102"
       },
       {
         "CourseLength": "Short",
-        "StrokesGainedAverage": "0.33448274994814964",
-        "Rounds": "232"
+        "StrokesGainedAverage": "0.3917083230568096",
+        "Rounds": "240"
       },
       {
         "CourseLength": "Very Long",
@@ -5819,35 +5819,35 @@
       },
       {
         "CourseLength": "Very Short",
-        "StrokesGainedAverage": "0.33588955503391343",
-        "Rounds": "163"
+        "StrokesGainedAverage": "0.27790696461966563",
+        "Rounds": "172"
       }
     ],
     "byScoringCondition": [
       {
         "Condition": "Average",
-        "StrokesGainedAverage": "0.18067959854288876",
-        "Rounds": "208"
+        "StrokesGainedAverage": "0.18213268908808863",
+        "Rounds": "213"
       },
       {
         "Condition": "Difficult",
-        "StrokesGainedAverage": "0.12049999380251393",
-        "Rounds": "160"
+        "StrokesGainedAverage": "0.23345911192397276",
+        "Rounds": "159"
       },
       {
         "Condition": "Easy",
-        "StrokesGainedAverage": "0.11227777430580722",
-        "Rounds": "182"
+        "StrokesGainedAverage": "0.022080923091469473",
+        "Rounds": "175"
       },
       {
         "Condition": "Very Difficult",
-        "StrokesGainedAverage": "0.16557893211904326",
-        "Rounds": "95"
+        "StrokesGainedAverage": "-0.020786532608980543",
+        "Rounds": "89"
       },
       {
         "Condition": "Very Easy",
-        "StrokesGainedAverage": "0.31089201282727325",
-        "Rounds": "215"
+        "StrokesGainedAverage": "0.3654954886517009",
+        "Rounds": "224"
       }
     ],
     "byFieldStrength": [
@@ -5934,7 +5934,7 @@
     ]
   },
   "_meta": {
-    "pulledAt": "2026-11-22T02:43:13.964Z",
+    "pulledAt": "2026-11-23T02:41:09.340Z",
     "ok": true
   }
 }

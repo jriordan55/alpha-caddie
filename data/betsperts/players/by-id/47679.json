@@ -1819,18 +1819,18 @@
     "byCourseLength": [
       {
         "CourseLength": "Average",
-        "StrokesGainedAverage": "0.1433000079728663",
-        "Rounds": "100"
+        "StrokesGainedAverage": "0.18333334143972024",
+        "Rounds": "96"
       },
       {
         "CourseLength": "Long",
-        "StrokesGainedAverage": "-0.010571448717798505",
-        "Rounds": "35"
+        "StrokesGainedAverage": "0.22939391976053064",
+        "Rounds": "33"
       },
       {
         "CourseLength": "Short",
-        "StrokesGainedAverage": "0.7279999937862158",
-        "Rounds": "70"
+        "StrokesGainedAverage": "0.6448648556362133",
+        "Rounds": "74"
       },
       {
         "CourseLength": "Very Long",
@@ -1839,29 +1839,29 @@
       },
       {
         "CourseLength": "Very Short",
-        "StrokesGainedAverage": "0.5394444457358785",
-        "Rounds": "18"
+        "StrokesGainedAverage": "0.08700001165270806",
+        "Rounds": "20"
       }
     ],
     "byScoringCondition": [
       {
         "Condition": "Average",
-        "StrokesGainedAverage": "0.5458928512276283",
-        "Rounds": "56"
-      },
-      {
-        "Condition": "Difficult",
-        "StrokesGainedAverage": "0.26938776154907385",
-        "Rounds": "49"
-      },
-      {
-        "Condition": "Easy",
-        "StrokesGainedAverage": "0.2010909113694321",
+        "StrokesGainedAverage": "0.27872726544737814",
         "Rounds": "55"
       },
       {
+        "Condition": "Difficult",
+        "StrokesGainedAverage": "0.26022727719762107",
+        "Rounds": "44"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": "0.5213114727349555",
+        "Rounds": "61"
+      },
+      {
         "Condition": "Very Difficult",
-        "StrokesGainedAverage": "-0.02305555623024702",
+        "StrokesGainedAverage": "-0.12722220965143707",
         "Rounds": "36"
       },
       {
@@ -1949,7 +1949,7 @@
     ]
   },
   "_meta": {
-    "pulledAt": "2026-11-22T02:45:57.678Z",
+    "pulledAt": "2026-11-23T02:44:02.331Z",
     "ok": true
   }
 }

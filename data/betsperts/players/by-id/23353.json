@@ -3401,18 +3401,18 @@
       },
       {
         "CourseLength": "Average",
-        "StrokesGainedAverage": "-0.5154838653641843",
-        "Rounds": "128"
+        "StrokesGainedAverage": "-0.5272881298373311",
+        "Rounds": "122"
       },
       {
         "CourseLength": "Long",
-        "StrokesGainedAverage": "-0.5196052613226991",
-        "Rounds": "76"
+        "StrokesGainedAverage": "-0.46797297250580144",
+        "Rounds": "74"
       },
       {
         "CourseLength": "Short",
-        "StrokesGainedAverage": "-0.4221848742801602",
-        "Rounds": "119"
+        "StrokesGainedAverage": "-0.4381746022651593",
+        "Rounds": "126"
       },
       {
         "CourseLength": "Very Long",
@@ -3421,25 +3421,25 @@
       },
       {
         "CourseLength": "Very Short",
-        "StrokesGainedAverage": "-0.9127500025322661",
-        "Rounds": "80"
+        "StrokesGainedAverage": "-0.9211111140241961",
+        "Rounds": "81"
       }
     ],
     "byScoringCondition": [
       {
         "Condition": "Average",
-        "StrokesGainedAverage": "-0.6211214954921297",
+        "StrokesGainedAverage": "-0.673738317877472",
         "Rounds": "111"
       },
       {
         "Condition": "Difficult",
-        "StrokesGainedAverage": "-0.5432653024184461",
+        "StrokesGainedAverage": "-0.45806122175893005",
         "Rounds": "98"
       },
       {
         "Condition": "Easy",
-        "StrokesGainedAverage": "-0.43016259734162954",
-        "Rounds": "133"
+        "StrokesGainedAverage": "-0.41583332827625175",
+        "Rounds": "130"
       },
       {
         "Condition": "Very Difficult",
@@ -3448,8 +3448,8 @@
       },
       {
         "Condition": "Very Easy",
-        "StrokesGainedAverage": "-0.5669512268292104",
-        "Rounds": "82"
+        "StrokesGainedAverage": "-0.6143529481090167",
+        "Rounds": "85"
       }
     ],
     "byFieldStrength": [
@@ -3536,7 +3536,7 @@
     ]
   },
   "_meta": {
-    "pulledAt": "2026-11-22T02:41:42.741Z",
+    "pulledAt": "2026-11-23T02:39:30.442Z",
     "ok": true
   }
 }

@@ -5710,18 +5710,18 @@
       },
       {
         "CourseLength": "Average",
-        "StrokesGainedAverage": "-0.09976414655212243",
-        "Rounds": "220"
+        "StrokesGainedAverage": "-0.11671428050668467",
+        "Rounds": "218"
       },
       {
         "CourseLength": "Long",
-        "StrokesGainedAverage": "-0.2902752294487089",
-        "Rounds": "109"
+        "StrokesGainedAverage": "-0.3301980213843065",
+        "Rounds": "101"
       },
       {
         "CourseLength": "Short",
-        "StrokesGainedAverage": "-0.4492703958098725",
-        "Rounds": "233"
+        "StrokesGainedAverage": "-0.34778243659461644",
+        "Rounds": "239"
       },
       {
         "CourseLength": "Very Long",
@@ -5730,35 +5730,35 @@
       },
       {
         "CourseLength": "Very Short",
-        "StrokesGainedAverage": "-0.16088435779876856",
-        "Rounds": "147"
+        "StrokesGainedAverage": "-0.2658278177930227",
+        "Rounds": "151"
       }
     ],
     "byScoringCondition": [
       {
         "Condition": "Average",
-        "StrokesGainedAverage": "0.07817142381199768",
-        "Rounds": "183"
+        "StrokesGainedAverage": "0.031978018633038785",
+        "Rounds": "190"
       },
       {
         "Condition": "Difficult",
-        "StrokesGainedAverage": "-0.3831446471524501",
-        "Rounds": "159"
+        "StrokesGainedAverage": "-0.37506328512549025",
+        "Rounds": "158"
       },
       {
         "Condition": "Easy",
-        "StrokesGainedAverage": "-0.07716666906037264",
-        "Rounds": "184"
+        "StrokesGainedAverage": "-0.020783136037728155",
+        "Rounds": "170"
       },
       {
         "Condition": "Very Difficult",
-        "StrokesGainedAverage": "0.09384614100249913",
-        "Rounds": "78"
+        "StrokesGainedAverage": "0.07607593741032141",
+        "Rounds": "79"
       },
       {
         "Condition": "Very Easy",
-        "StrokesGainedAverage": "-0.5058479568109526",
-        "Rounds": "171"
+        "StrokesGainedAverage": "-0.5024157336630514",
+        "Rounds": "178"
       }
     ],
     "byFieldStrength": [
@@ -5845,7 +5845,7 @@
     ]
   },
   "_meta": {
-    "pulledAt": "2026-11-22T02:44:40.700Z",
+    "pulledAt": "2026-11-23T02:42:42.100Z",
     "ok": true
   }
 }

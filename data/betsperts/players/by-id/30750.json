@@ -1956,18 +1956,18 @@
       },
       {
         "CourseLength": "Average",
-        "StrokesGainedAverage": "-1.009361678694791",
+        "StrokesGainedAverage": "-0.8102127447565819",
         "Rounds": "51"
       },
       {
         "CourseLength": "Long",
-        "StrokesGainedAverage": "-0.5727659490435048",
-        "Rounds": "47"
+        "StrokesGainedAverage": "-0.5205128125559825",
+        "Rounds": "39"
       },
       {
         "CourseLength": "Short",
-        "StrokesGainedAverage": "-1.2362745172325886",
-        "Rounds": "51"
+        "StrokesGainedAverage": "-1.3403448315080384",
+        "Rounds": "58"
       },
       {
         "CourseLength": "Very Long",
@@ -1976,25 +1976,25 @@
       },
       {
         "CourseLength": "Very Short",
-        "StrokesGainedAverage": "-1.9200000118109442",
-        "Rounds": "42"
+        "StrokesGainedAverage": "-1.9053488478584344",
+        "Rounds": "43"
       }
     ],
     "byScoringCondition": [
       {
         "Condition": "Average",
-        "StrokesGainedAverage": "-0.8495348672880683",
-        "Rounds": "45"
+        "StrokesGainedAverage": "-0.7649999811229381",
+        "Rounds": "46"
       },
       {
         "Condition": "Difficult",
-        "StrokesGainedAverage": "-0.9005555174210005",
-        "Rounds": "18"
+        "StrokesGainedAverage": "-0.9431578606171044",
+        "Rounds": "19"
       },
       {
         "Condition": "Easy",
-        "StrokesGainedAverage": "-1.495507264158864",
-        "Rounds": "75"
+        "StrokesGainedAverage": "-1.4795312696369365",
+        "Rounds": "70"
       },
       {
         "Condition": "Very Difficult",
@@ -2003,8 +2003,8 @@
       },
       {
         "Condition": "Very Easy",
-        "StrokesGainedAverage": "-0.9340844948999059",
-        "Rounds": "71"
+        "StrokesGainedAverage": "-1.0267567458638065",
+        "Rounds": "74"
       }
     ],
     "byFieldStrength": [
@@ -2076,7 +2076,7 @@
     ]
   },
   "_meta": {
-    "pulledAt": "2026-11-22T02:45:46.812Z",
+    "pulledAt": "2026-11-23T02:43:50.405Z",
     "ok": true
   }
 }

@@ -3415,13 +3415,13 @@
       },
       {
         "CourseLength": "Long",
-        "StrokesGainedAverage": "0.04163935108751547",
-        "Rounds": "61"
+        "StrokesGainedAverage": "0.006666672465048339",
+        "Rounds": "57"
       },
       {
         "CourseLength": "Short",
-        "StrokesGainedAverage": "-0.33530201526646247",
-        "Rounds": "149"
+        "StrokesGainedAverage": "-0.2531333362932007",
+        "Rounds": "150"
       },
       {
         "CourseLength": "Very Long",
@@ -3430,8 +3430,8 @@
       },
       {
         "CourseLength": "Very Short",
-        "StrokesGainedAverage": "-0.054000003842843904",
-        "Rounds": "90"
+        "StrokesGainedAverage": "-0.15795699022309753",
+        "Rounds": "93"
       }
     ],
     "byScoringCondition": [
@@ -3442,13 +3442,13 @@
       },
       {
         "Condition": "Difficult",
-        "StrokesGainedAverage": "-0.5666666742075573",
-        "Rounds": "66"
+        "StrokesGainedAverage": "-0.6700000040121933",
+        "Rounds": "67"
       },
       {
         "Condition": "Easy",
-        "StrokesGainedAverage": "-0.4236734673684957",
-        "Rounds": "100"
+        "StrokesGainedAverage": "-0.3185263156890869",
+        "Rounds": "97"
       },
       {
         "Condition": "Very Difficult",
@@ -3457,8 +3457,8 @@
       },
       {
         "Condition": "Very Easy",
-        "StrokesGainedAverage": "-0.5361077852524861",
-        "Rounds": "167"
+        "StrokesGainedAverage": "-0.5520710069686174",
+        "Rounds": "169"
       }
     ],
     "byFieldStrength": [
@@ -3545,7 +3545,7 @@
     ]
   },
   "_meta": {
-    "pulledAt": "2026-11-22T02:40:48.372Z",
+    "pulledAt": "2026-11-23T02:38:29.302Z",
     "ok": true
   }
 }

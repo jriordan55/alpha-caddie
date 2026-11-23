@@ -7,7 +7,7 @@
     "Name": "Jerry Kelly",
     "BirthPlace": "Madison, Wisconsin",
     "BirthDate": "November 23, 1966",
-    "Age": "59",
+    "Age": "60",
     "Height": "5ft 11in",
     "Weight": "165 lbs",
     "Nationality": "United States",
@@ -1506,30 +1506,30 @@
     "byCourseLength": [
       {
         "CourseLength": "Average",
-        "StrokesGainedAverage": "0.15777778956625196",
-        "Rounds": "36"
+        "StrokesGainedAverage": "0.22846154524729803",
+        "Rounds": "39"
       },
       {
         "CourseLength": "Long",
-        "StrokesGainedAverage": "0.7069230750203133",
-        "Rounds": "26"
+        "StrokesGainedAverage": "0.5381818257949569",
+        "Rounds": "22"
       },
       {
         "CourseLength": "Short",
-        "StrokesGainedAverage": "0.13329546051946553",
+        "StrokesGainedAverage": "0.16795455088669603",
         "Rounds": "88"
       },
       {
         "CourseLength": "Very Short",
-        "StrokesGainedAverage": "-0.6331707439044627",
-        "Rounds": "41"
+        "StrokesGainedAverage": "-0.6119047740385646",
+        "Rounds": "42"
       }
     ],
     "byScoringCondition": [
       {
         "Condition": "Average",
-        "StrokesGainedAverage": "0.12799999846352472",
-        "Rounds": "45"
+        "StrokesGainedAverage": "0.11181818084283308",
+        "Rounds": "44"
       },
       {
         "Condition": "Difficult",
@@ -1538,8 +1538,8 @@
       },
       {
         "Condition": "Easy",
-        "StrokesGainedAverage": "0.032545456019314856",
-        "Rounds": "55"
+        "StrokesGainedAverage": "0.04696428669350488",
+        "Rounds": "56"
       },
       {
         "Condition": "Very Difficult",
@@ -1636,7 +1636,7 @@
     ]
   },
   "_meta": {
-    "pulledAt": "2026-11-22T02:42:09.408Z",
+    "pulledAt": "2026-11-23T02:40:01.032Z",
     "ok": true
   }
 }

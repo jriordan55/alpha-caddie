@@ -5605,17 +5605,17 @@
       },
       {
         "CourseLength": "Average",
-        "StrokesGainedAverage": "0.1395671001325051",
-        "Rounds": "239"
+        "StrokesGainedAverage": "0.10648888893425465",
+        "Rounds": "233"
       },
       {
         "CourseLength": "Long",
-        "StrokesGainedAverage": "-0.14918918226350536",
-        "Rounds": "111"
+        "StrokesGainedAverage": "-0.16115384008019015",
+        "Rounds": "104"
       },
       {
         "CourseLength": "Short",
-        "StrokesGainedAverage": "-0.18403509469996943",
+        "StrokesGainedAverage": "-0.14377193558928475",
         "Rounds": "228"
       },
       {
@@ -5625,35 +5625,35 @@
       },
       {
         "CourseLength": "Very Short",
-        "StrokesGainedAverage": "0.23151515122841704",
-        "Rounds": "165"
+        "StrokesGainedAverage": "0.21067415692665603",
+        "Rounds": "178"
       }
     ],
     "byScoringCondition": [
       {
         "Condition": "Average",
-        "StrokesGainedAverage": "-0.08572164807737488",
-        "Rounds": "200"
+        "StrokesGainedAverage": "-0.08212121030447458",
+        "Rounds": "204"
       },
       {
         "Condition": "Difficult",
-        "StrokesGainedAverage": "-0.2145270269263435",
-        "Rounds": "148"
+        "StrokesGainedAverage": "-0.256827586735117",
+        "Rounds": "145"
       },
       {
         "Condition": "Easy",
-        "StrokesGainedAverage": "0.0047692266698831165",
-        "Rounds": "201"
+        "StrokesGainedAverage": "-0.019459462810207058",
+        "Rounds": "191"
       },
       {
         "Condition": "Very Difficult",
-        "StrokesGainedAverage": "-0.11608695757129918",
-        "Rounds": "46"
+        "StrokesGainedAverage": "-0.0670833329980572",
+        "Rounds": "48"
       },
       {
         "Condition": "Very Easy",
-        "StrokesGainedAverage": "0.3145918362127731",
-        "Rounds": "196"
+        "StrokesGainedAverage": "0.34083743674194283",
+        "Rounds": "203"
       }
     ],
     "byFieldStrength": [
@@ -5740,7 +5740,7 @@
     ]
   },
   "_meta": {
-    "pulledAt": "2026-11-22T02:40:10.225Z",
+    "pulledAt": "2026-11-23T02:37:45.408Z",
     "ok": true
   }
 }

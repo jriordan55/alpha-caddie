@@ -140,9 +140,14 @@
     ],
     "byScoringCondition": [
       {
-        "Condition": "Easy",
+        "Condition": "Average",
         "StrokesGainedAverage": "-2.065000042319298",
-        "Rounds": "4"
+        "Rounds": "2"
+      },
+      {
+        "Condition": "Easy",
+        "StrokesGainedAverage": null,
+        "Rounds": "2"
       },
       {
         "Condition": "Very Difficult",
@@ -204,7 +209,7 @@
     ]
   },
   "_meta": {
-    "pulledAt": "2026-11-22T02:45:26.823Z",
+    "pulledAt": "2026-11-23T02:43:30.395Z",
     "ok": true
   }
 }

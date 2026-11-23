@@ -663,18 +663,18 @@
     "byCourseLength": [
       {
         "CourseLength": "Average",
-        "StrokesGainedAverage": "-1.44571425215829",
-        "Rounds": "21"
+        "StrokesGainedAverage": "-1.6722221869147487",
+        "Rounds": "18"
       },
       {
         "CourseLength": "Long",
-        "StrokesGainedAverage": "-2.0309999991208314",
-        "Rounds": "10"
+        "StrokesGainedAverage": "-2.431249998509884",
+        "Rounds": "8"
       },
       {
         "CourseLength": "Short",
-        "StrokesGainedAverage": "-1.0580000180751086",
-        "Rounds": "5"
+        "StrokesGainedAverage": "-0.6349999976810068",
+        "Rounds": "8"
       },
       {
         "CourseLength": "Very Long",
@@ -683,30 +683,30 @@
       },
       {
         "CourseLength": "Very Short",
-        "StrokesGainedAverage": "-0.956874979659915",
-        "Rounds": "16"
+        "StrokesGainedAverage": "-0.9244444287485547",
+        "Rounds": "18"
       }
     ],
     "byScoringCondition": [
       {
         "Condition": "Average",
-        "StrokesGainedAverage": "-1.0625000079162419",
-        "Rounds": "8"
+        "StrokesGainedAverage": "-1.3991666637981932",
+        "Rounds": "12"
       },
       {
         "Condition": "Difficult",
-        "StrokesGainedAverage": "0.02500003343448043",
-        "Rounds": "4"
+        "StrokesGainedAverage": "-0.12199996896088124",
+        "Rounds": "5"
       },
       {
         "Condition": "Easy",
-        "StrokesGainedAverage": "-2.202857122002613",
-        "Rounds": "21"
+        "StrokesGainedAverage": "-2.329999975640984",
+        "Rounds": "17"
       },
       {
         "Condition": "Very Easy",
-        "StrokesGainedAverage": "-0.8212499851360917",
-        "Rounds": "24"
+        "StrokesGainedAverage": "-0.7547825973318971",
+        "Rounds": "23"
       }
     ],
     "byFieldStrength": [
@@ -778,7 +778,7 @@
     ]
   },
   "_meta": {
-    "pulledAt": "2026-11-22T02:45:58.591Z",
+    "pulledAt": "2026-11-23T02:44:03.202Z",
     "ok": true
   }
 }

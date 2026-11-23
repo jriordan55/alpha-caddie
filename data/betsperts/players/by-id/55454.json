@@ -1652,8 +1652,8 @@
     "byScoringCondition": [
       {
         "Condition": "Average",
-        "StrokesGainedAverage": "-0.7287878746336157",
-        "Rounds": "33"
+        "StrokesGainedAverage": "-1.0006451539454921",
+        "Rounds": "31"
       },
       {
         "Condition": "Difficult",
@@ -1662,8 +1662,8 @@
       },
       {
         "Condition": "Easy",
-        "StrokesGainedAverage": "-1.2135555552111732",
-        "Rounds": "47"
+        "StrokesGainedAverage": "-1.0136170228745074",
+        "Rounds": "49"
       },
       {
         "Condition": "Very Difficult",
@@ -1755,7 +1755,7 @@
     ]
   },
   "_meta": {
-    "pulledAt": "2026-11-22T02:39:57.013Z",
+    "pulledAt": "2026-11-23T02:37:34.920Z",
     "ok": true
   }
 }
