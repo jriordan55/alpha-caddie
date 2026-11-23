@@ -103,68 +103,8 @@
     }
   ],
   "_meta": {
-    "pulledAt": "2026-11-23T02:36:15.525Z",
+    "pulledAt": "2026-11-23T10:15:47.937Z",
     "detailStatus": 200,
     "tournamentsStatus": 200
-  },
-  "auth": {
-    "holeBreakdown": [],
-    "correlated": [
-      {
-        "CourseNum": "9",
-        "CourseName": "Bay Hill Club & Lodge",
-        "CourseNums": "[9]"
-      },
-      {
-        "CourseNum": "21",
-        "CourseName": "Colonial CC",
-        "CourseNums": "[21]"
-      },
-      {
-        "CourseNum": "23",
-        "CourseName": "Muirfield Village GC",
-        "CourseNums": "[23, 893]"
-      },
-      {
-        "CourseNum": "104",
-        "CourseName": "Torrey Pines GC (North)",
-        "CourseNums": "[104]"
-      },
-      {
-        "CourseNum": "513",
-        "CourseName": "TPC Southwind",
-        "CourseNums": "[513]"
-      },
-      {
-        "CourseNum": "611",
-        "CourseName": "Southern Hills CC",
-        "CourseNums": "[611]"
-      },
-      {
-        "CourseNum": "671",
-        "CourseName": "Valhalla Golf Club",
-        "CourseNums": "[671]"
-      },
-      {
-        "CourseNum": "688",
-        "CourseName": "East Lake GC",
-        "CourseNums": "[688, 933]"
-      },
-      {
-        "CourseNum": "872",
-        "CourseName": "Quail Hollow Club",
-        "CourseNums": "[872, 698, 241]"
-      },
-      {
-        "CourseNum": "921",
-        "CourseName": "TPC Craig Ranch",
-        "CourseNums": "[921, 894, 944]"
-      }
-    ],
-    "_meta": {
-      "pulledAt": "2026-11-23T02:36:15.658Z",
-      "holeStatus": 200,
-      "correlatedStatus": 200
-    }
   }
 }

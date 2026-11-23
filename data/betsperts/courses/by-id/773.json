@@ -104,78 +104,8 @@
     }
   ],
   "_meta": {
-    "pulledAt": "2026-11-23T02:36:15.502Z",
+    "pulledAt": "2026-11-23T10:15:48.950Z",
     "detailStatus": 200,
     "tournamentsStatus": 200
-  },
-  "auth": {
-    "holeBreakdown": [],
-    "correlated": [
-      {
-        "CourseNum": "21",
-        "CourseName": "Colonial CC",
-        "CourseNums": "[21]"
-      },
-      {
-        "CourseNum": "379",
-        "CourseName": "The Philadelphia Cricket Club (Wissahickon Course)",
-        "CourseNums": "[379]"
-      },
-      {
-        "CourseNum": "514",
-        "CourseName": "Oak Hill CC",
-        "CourseNums": "[514, 558]"
-      },
-      {
-        "CourseNum": "528",
-        "CourseName": "Pinehurst No. 2",
-        "CourseNums": "[528]"
-      },
-      {
-        "CourseNum": "608",
-        "CourseName": "Oakmont CC",
-        "CourseNums": "[608]"
-      },
-      {
-        "CourseNum": "688",
-        "CourseName": "East Lake GC",
-        "CourseNums": "[688, 933]"
-      },
-      {
-        "CourseNum": "752",
-        "CourseName": "Sedgefield CC",
-        "CourseNums": "[752]"
-      },
-      {
-        "CourseNum": "872",
-        "CourseName": "Quail Hollow Club",
-        "CourseNums": "[872, 698, 241]"
-      },
-      {
-        "CourseNum": "891",
-        "CourseName": "Winged Foot GC",
-        "CourseNums": "[891]"
-      },
-      {
-        "CourseNum": "896",
-        "CourseName": "Olympia Fields CC (North)",
-        "CourseNums": "[896]"
-      },
-      {
-        "CourseNum": "901",
-        "CourseName": "Wilmington CC",
-        "CourseNums": "[901]"
-      },
-      {
-        "CourseNum": "947",
-        "CourseName": "Detroit GC",
-        "CourseNums": "[947, 876]"
-      }
-    ],
-    "_meta": {
-      "pulledAt": "2026-11-23T02:36:15.648Z",
-      "holeStatus": 200,
-      "correlatedStatus": 200
-    }
   }
 }

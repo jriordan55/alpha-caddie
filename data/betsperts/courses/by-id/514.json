@@ -102,63 +102,8 @@
     }
   ],
   "_meta": {
-    "pulledAt": "2026-11-23T02:36:17.229Z",
+    "pulledAt": "2026-11-23T10:15:46.822Z",
     "detailStatus": 200,
     "tournamentsStatus": 200
-  },
-  "auth": {
-    "holeBreakdown": [],
-    "correlated": [
-      {
-        "CourseNum": "4",
-        "CourseName": "Torrey Pines GC (South)",
-        "CourseNums": "[4, 939, 744]"
-      },
-      {
-        "CourseNum": "14",
-        "CourseName": "Augusta National GC",
-        "CourseNums": "[14]"
-      },
-      {
-        "CourseNum": "23",
-        "CourseName": "Muirfield Village GC",
-        "CourseNums": "[23, 893]"
-      },
-      {
-        "CourseNum": "611",
-        "CourseName": "Southern Hills CC",
-        "CourseNums": "[611]"
-      },
-      {
-        "CourseNum": "654",
-        "CourseName": "The Country Club",
-        "CourseNums": "[654]"
-      },
-      {
-        "CourseNum": "689",
-        "CourseName": "Bethpage State Park (Black)",
-        "CourseNums": "[689, 880]"
-      },
-      {
-        "CourseNum": "697",
-        "CourseName": "Ocean Course at Kiawah Island",
-        "CourseNums": "[697]"
-      },
-      {
-        "CourseNum": "891",
-        "CourseName": "Winged Foot GC",
-        "CourseNums": "[891]"
-      },
-      {
-        "CourseNum": "896",
-        "CourseName": "Olympia Fields CC (North)",
-        "CourseNums": "[896]"
-      }
-    ],
-    "_meta": {
-      "pulledAt": "2026-11-23T02:36:17.332Z",
-      "holeStatus": 200,
-      "correlatedStatus": 200
-    }
   }
 }

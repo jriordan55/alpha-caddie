@@ -1,5 +1,5 @@
 {
-  "updated_at": "2026-11-23T02:15:01.568Z",
+  "updated_at": "2026-11-23T10:11:15.836Z",
   "event_name": "The RSM Classic",
   "round": 4,
   "round_label": "R4 — Sunday (auto, America/New_York)",
@@ -31,7 +31,7 @@
           "oddsSource": "book_api_live",
           "bookId": "draftkings",
           "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
+          "fetchedAt": "2026-11-23T10:11:15.836Z"
         },
         {
           "cardKey": "13872|Birdies",
@@ -58,88 +58,7 @@
           "oddsSource": "book_api_live",
           "bookId": "draftkings",
           "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
-        },
-        {
-          "cardKey": "29197|Birdies",
-          "eventName": "The RSM Classic",
-          "round": 4,
-          "dg_id": 29197,
-          "playerName": "Brennan, Michael",
-          "market": "Birdies",
-          "line": 5.5,
-          "overOdds": 118,
-          "underOdds": -168,
-          "overBookOdds": {
-            "kind": "american",
-            "raw": 118,
-            "display": "+118"
-          },
-          "underBookOdds": {
-            "kind": "american",
-            "raw": -168,
-            "display": "-168"
-          },
-          "overPayoutMultiplier": 2.1799999999999997,
-          "underPayoutMultiplier": 1.5952380952380953,
-          "oddsSource": "book_api_live",
-          "bookId": "draftkings",
-          "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
-        },
-        {
-          "cardKey": "29197|Pars",
-          "eventName": "The RSM Classic",
-          "round": 4,
-          "dg_id": 29197,
-          "playerName": "Brennan, Michael",
-          "market": "Pars",
-          "line": 10.5,
-          "overOdds": -164,
-          "underOdds": 116,
-          "overBookOdds": {
-            "kind": "american",
-            "raw": -164,
-            "display": "-164"
-          },
-          "underBookOdds": {
-            "kind": "american",
-            "raw": 116,
-            "display": "+116"
-          },
-          "overPayoutMultiplier": 1.6097560975609757,
-          "underPayoutMultiplier": 2.16,
-          "oddsSource": "book_api_live",
-          "bookId": "draftkings",
-          "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
-        },
-        {
-          "cardKey": "29197|Bogeys",
-          "eventName": "The RSM Classic",
-          "round": 4,
-          "dg_id": 29197,
-          "playerName": "Brennan, Michael",
-          "market": "Bogeys",
-          "line": 1.5,
-          "overOdds": -176,
-          "underOdds": 126,
-          "overBookOdds": {
-            "kind": "american",
-            "raw": -176,
-            "display": "-176"
-          },
-          "underBookOdds": {
-            "kind": "american",
-            "raw": 126,
-            "display": "+126"
-          },
-          "overPayoutMultiplier": 1.5681818181818183,
-          "underPayoutMultiplier": 2.26,
-          "oddsSource": "book_api_live",
-          "bookId": "draftkings",
-          "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
+          "fetchedAt": "2026-11-23T10:11:15.836Z"
         },
         {
           "cardKey": "29197|Total score",
@@ -166,7 +85,61 @@
           "oddsSource": "book_api_live",
           "bookId": "draftkings",
           "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
+          "fetchedAt": "2026-11-23T10:11:15.836Z"
+        },
+        {
+          "cardKey": "29197|Birdies",
+          "eventName": "The RSM Classic",
+          "round": 4,
+          "dg_id": 29197,
+          "playerName": "Brennan, Michael",
+          "market": "Birdies",
+          "line": 5.5,
+          "overOdds": 118,
+          "underOdds": -168,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": 118,
+            "display": "+118"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -168,
+            "display": "-168"
+          },
+          "overPayoutMultiplier": 2.1799999999999997,
+          "underPayoutMultiplier": 1.5952380952380953,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-23T10:11:15.836Z"
+        },
+        {
+          "cardKey": "27819|Total score",
+          "eventName": "The RSM Classic",
+          "round": 4,
+          "dg_id": 27819,
+          "playerName": "Castillo, Ricky",
+          "market": "Total score",
+          "line": 67.5,
+          "overOdds": -112,
+          "underOdds": -120,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -112,
+            "display": "-112"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -120,
+            "display": "-120"
+          },
+          "overPayoutMultiplier": 1.8928571428571428,
+          "underPayoutMultiplier": 1.8333333333333335,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-23T10:11:15.836Z"
         },
         {
           "cardKey": "27819|Birdies",
@@ -193,88 +166,7 @@
           "oddsSource": "book_api_live",
           "bookId": "draftkings",
           "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
-        },
-        {
-          "cardKey": "27819|Pars",
-          "eventName": "The RSM Classic",
-          "round": 4,
-          "dg_id": 27819,
-          "playerName": "Castillo, Ricky",
-          "market": "Pars",
-          "line": 11.5,
-          "overOdds": -112,
-          "underOdds": -126,
-          "overBookOdds": {
-            "kind": "american",
-            "raw": -112,
-            "display": "-112"
-          },
-          "underBookOdds": {
-            "kind": "american",
-            "raw": -126,
-            "display": "-126"
-          },
-          "overPayoutMultiplier": 1.8928571428571428,
-          "underPayoutMultiplier": 1.7936507936507935,
-          "oddsSource": "book_api_live",
-          "bookId": "draftkings",
-          "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
-        },
-        {
-          "cardKey": "27819|Bogeys",
-          "eventName": "The RSM Classic",
-          "round": 4,
-          "dg_id": 27819,
-          "playerName": "Castillo, Ricky",
-          "market": "Bogeys",
-          "line": 1.5,
-          "overOdds": -176,
-          "underOdds": 125,
-          "overBookOdds": {
-            "kind": "american",
-            "raw": -176,
-            "display": "-176"
-          },
-          "underBookOdds": {
-            "kind": "american",
-            "raw": 125,
-            "display": "+125"
-          },
-          "overPayoutMultiplier": 1.5681818181818183,
-          "underPayoutMultiplier": 2.25,
-          "oddsSource": "book_api_live",
-          "bookId": "draftkings",
-          "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
-        },
-        {
-          "cardKey": "27819|Total score",
-          "eventName": "The RSM Classic",
-          "round": 4,
-          "dg_id": 27819,
-          "playerName": "Castillo, Ricky",
-          "market": "Total score",
-          "line": 67.5,
-          "overOdds": -112,
-          "underOdds": -120,
-          "overBookOdds": {
-            "kind": "american",
-            "raw": -112,
-            "display": "-112"
-          },
-          "underBookOdds": {
-            "kind": "american",
-            "raw": -120,
-            "display": "-120"
-          },
-          "overPayoutMultiplier": 1.8928571428571428,
-          "underPayoutMultiplier": 1.8333333333333335,
-          "oddsSource": "book_api_live",
-          "bookId": "draftkings",
-          "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
+          "fetchedAt": "2026-11-23T10:11:15.836Z"
         },
         {
           "cardKey": "28309|Birdies",
@@ -301,7 +193,7 @@
           "oddsSource": "book_api_live",
           "bookId": "draftkings",
           "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
+          "fetchedAt": "2026-11-23T10:11:15.836Z"
         },
         {
           "cardKey": "14509|Birdies",
@@ -328,7 +220,34 @@
           "oddsSource": "book_api_live",
           "bookId": "draftkings",
           "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
+          "fetchedAt": "2026-11-23T10:11:15.836Z"
+        },
+        {
+          "cardKey": "22002|Total score",
+          "eventName": "The RSM Classic",
+          "round": 4,
+          "dg_id": 22002,
+          "playerName": "Dumont De Chassart, Adrien",
+          "market": "Total score",
+          "line": 68.5,
+          "overOdds": 112,
+          "underOdds": -152,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": 112,
+            "display": "+112"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -152,
+            "display": "-152"
+          },
+          "overPayoutMultiplier": 2.12,
+          "underPayoutMultiplier": 1.6578947368421053,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-23T10:11:15.836Z"
         },
         {
           "cardKey": "22002|Birdies",
@@ -355,88 +274,34 @@
           "oddsSource": "book_api_live",
           "bookId": "draftkings",
           "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
+          "fetchedAt": "2026-11-23T10:11:15.836Z"
         },
         {
-          "cardKey": "22002|Pars",
+          "cardKey": "14577|Total score",
           "eventName": "The RSM Classic",
           "round": 4,
-          "dg_id": 22002,
-          "playerName": "Dumont De Chassart, Adrien",
-          "market": "Pars",
-          "line": 11.5,
-          "overOdds": -110,
-          "underOdds": -128,
-          "overBookOdds": {
-            "kind": "american",
-            "raw": -110,
-            "display": "-110"
-          },
-          "underBookOdds": {
-            "kind": "american",
-            "raw": -128,
-            "display": "-128"
-          },
-          "overPayoutMultiplier": 1.9090909090909092,
-          "underPayoutMultiplier": 1.78125,
-          "oddsSource": "book_api_live",
-          "bookId": "draftkings",
-          "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
-        },
-        {
-          "cardKey": "22002|Bogeys",
-          "eventName": "The RSM Classic",
-          "round": 4,
-          "dg_id": 22002,
-          "playerName": "Dumont De Chassart, Adrien",
-          "market": "Bogeys",
-          "line": 2.5,
-          "overOdds": 128,
-          "underOdds": -182,
-          "overBookOdds": {
-            "kind": "american",
-            "raw": 128,
-            "display": "+128"
-          },
-          "underBookOdds": {
-            "kind": "american",
-            "raw": -182,
-            "display": "-182"
-          },
-          "overPayoutMultiplier": 2.2800000000000002,
-          "underPayoutMultiplier": 1.5494505494505495,
-          "oddsSource": "book_api_live",
-          "bookId": "draftkings",
-          "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
-        },
-        {
-          "cardKey": "22002|Total score",
-          "eventName": "The RSM Classic",
-          "round": 4,
-          "dg_id": 22002,
-          "playerName": "Dumont De Chassart, Adrien",
+          "dg_id": 14577,
+          "playerName": "English, Harris",
           "market": "Total score",
-          "line": 68.5,
-          "overOdds": 112,
-          "underOdds": -152,
+          "line": 67.5,
+          "overOdds": 100,
+          "underOdds": -136,
           "overBookOdds": {
             "kind": "american",
-            "raw": 112,
-            "display": "+112"
+            "raw": 100,
+            "display": "+100"
           },
           "underBookOdds": {
             "kind": "american",
-            "raw": -152,
-            "display": "-152"
+            "raw": -136,
+            "display": "-136"
           },
-          "overPayoutMultiplier": 2.12,
-          "underPayoutMultiplier": 1.6578947368421053,
+          "overPayoutMultiplier": 2,
+          "underPayoutMultiplier": 1.7352941176470589,
           "oddsSource": "book_api_live",
           "bookId": "draftkings",
           "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
+          "fetchedAt": "2026-11-23T10:11:15.836Z"
         },
         {
           "cardKey": "14577|Birdies",
@@ -463,88 +328,7 @@
           "oddsSource": "book_api_live",
           "bookId": "draftkings",
           "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
-        },
-        {
-          "cardKey": "14577|Pars",
-          "eventName": "The RSM Classic",
-          "round": 4,
-          "dg_id": 14577,
-          "playerName": "English, Harris",
-          "market": "Pars",
-          "line": 11.5,
-          "overOdds": -118,
-          "underOdds": -120,
-          "overBookOdds": {
-            "kind": "american",
-            "raw": -118,
-            "display": "-118"
-          },
-          "underBookOdds": {
-            "kind": "american",
-            "raw": -120,
-            "display": "-120"
-          },
-          "overPayoutMultiplier": 1.847457627118644,
-          "underPayoutMultiplier": 1.8333333333333335,
-          "oddsSource": "book_api_live",
-          "bookId": "draftkings",
-          "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
-        },
-        {
-          "cardKey": "14577|Bogeys",
-          "eventName": "The RSM Classic",
-          "round": 4,
-          "dg_id": 14577,
-          "playerName": "English, Harris",
-          "market": "Bogeys",
-          "line": 1.5,
-          "overOdds": -152,
-          "underOdds": 106,
-          "overBookOdds": {
-            "kind": "american",
-            "raw": -152,
-            "display": "-152"
-          },
-          "underBookOdds": {
-            "kind": "american",
-            "raw": 106,
-            "display": "+106"
-          },
-          "overPayoutMultiplier": 1.6578947368421053,
-          "underPayoutMultiplier": 2.06,
-          "oddsSource": "book_api_live",
-          "bookId": "draftkings",
-          "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
-        },
-        {
-          "cardKey": "14577|Total score",
-          "eventName": "The RSM Classic",
-          "round": 4,
-          "dg_id": 14577,
-          "playerName": "English, Harris",
-          "market": "Total score",
-          "line": 67.5,
-          "overOdds": 100,
-          "underOdds": -136,
-          "overBookOdds": {
-            "kind": "american",
-            "raw": 100,
-            "display": "+100"
-          },
-          "underBookOdds": {
-            "kind": "american",
-            "raw": -136,
-            "display": "-136"
-          },
-          "overPayoutMultiplier": 2,
-          "underPayoutMultiplier": 1.7352941176470589,
-          "oddsSource": "book_api_live",
-          "bookId": "draftkings",
-          "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
+          "fetchedAt": "2026-11-23T10:11:15.836Z"
         },
         {
           "cardKey": "26657|Birdies",
@@ -571,88 +355,7 @@
           "oddsSource": "book_api_live",
           "bookId": "draftkings",
           "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
-        },
-        {
-          "cardKey": "31343|Birdies",
-          "eventName": "The RSM Classic",
-          "round": 4,
-          "dg_id": 31343,
-          "playerName": "Ford, David",
-          "market": "Birdies",
-          "line": 4.5,
-          "overOdds": -116,
-          "underOdds": -122,
-          "overBookOdds": {
-            "kind": "american",
-            "raw": -116,
-            "display": "-116"
-          },
-          "underBookOdds": {
-            "kind": "american",
-            "raw": -122,
-            "display": "-122"
-          },
-          "overPayoutMultiplier": 1.8620689655172413,
-          "underPayoutMultiplier": 1.819672131147541,
-          "oddsSource": "book_api_live",
-          "bookId": "draftkings",
-          "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
-        },
-        {
-          "cardKey": "31343|Pars",
-          "eventName": "The RSM Classic",
-          "round": 4,
-          "dg_id": 31343,
-          "playerName": "Ford, David",
-          "market": "Pars",
-          "line": 11.5,
-          "overOdds": -122,
-          "underOdds": -115,
-          "overBookOdds": {
-            "kind": "american",
-            "raw": -122,
-            "display": "-122"
-          },
-          "underBookOdds": {
-            "kind": "american",
-            "raw": -115,
-            "display": "-115"
-          },
-          "overPayoutMultiplier": 1.819672131147541,
-          "underPayoutMultiplier": 1.8695652173913042,
-          "oddsSource": "book_api_live",
-          "bookId": "draftkings",
-          "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
-        },
-        {
-          "cardKey": "31343|Bogeys",
-          "eventName": "The RSM Classic",
-          "round": 4,
-          "dg_id": 31343,
-          "playerName": "Ford, David",
-          "market": "Bogeys",
-          "line": 1.5,
-          "overOdds": -176,
-          "underOdds": 126,
-          "overBookOdds": {
-            "kind": "american",
-            "raw": -176,
-            "display": "-176"
-          },
-          "underBookOdds": {
-            "kind": "american",
-            "raw": 126,
-            "display": "+126"
-          },
-          "overPayoutMultiplier": 1.5681818181818183,
-          "underPayoutMultiplier": 2.26,
-          "oddsSource": "book_api_live",
-          "bookId": "draftkings",
-          "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
+          "fetchedAt": "2026-11-23T10:11:15.836Z"
         },
         {
           "cardKey": "31343|Total score",
@@ -679,88 +382,34 @@
           "oddsSource": "book_api_live",
           "bookId": "draftkings",
           "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
+          "fetchedAt": "2026-11-23T10:11:15.836Z"
         },
         {
-          "cardKey": "23465|Birdies",
+          "cardKey": "31343|Birdies",
           "eventName": "The RSM Classic",
           "round": 4,
-          "dg_id": 23465,
-          "playerName": "Greyserman, Max",
+          "dg_id": 31343,
+          "playerName": "Ford, David",
           "market": "Birdies",
           "line": 4.5,
-          "overOdds": -136,
-          "underOdds": -104,
+          "overOdds": -116,
+          "underOdds": -122,
           "overBookOdds": {
             "kind": "american",
-            "raw": -136,
-            "display": "-136"
+            "raw": -116,
+            "display": "-116"
           },
           "underBookOdds": {
             "kind": "american",
-            "raw": -104,
-            "display": "-104"
+            "raw": -122,
+            "display": "-122"
           },
-          "overPayoutMultiplier": 1.7352941176470589,
-          "underPayoutMultiplier": 1.9615384615384617,
+          "overPayoutMultiplier": 1.8620689655172413,
+          "underPayoutMultiplier": 1.819672131147541,
           "oddsSource": "book_api_live",
           "bookId": "draftkings",
           "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
-        },
-        {
-          "cardKey": "23465|Pars",
-          "eventName": "The RSM Classic",
-          "round": 4,
-          "dg_id": 23465,
-          "playerName": "Greyserman, Max",
-          "market": "Pars",
-          "line": 11.5,
-          "overOdds": 108,
-          "underOdds": -154,
-          "overBookOdds": {
-            "kind": "american",
-            "raw": 108,
-            "display": "+108"
-          },
-          "underBookOdds": {
-            "kind": "american",
-            "raw": -154,
-            "display": "-154"
-          },
-          "overPayoutMultiplier": 2.08,
-          "underPayoutMultiplier": 1.6493506493506493,
-          "oddsSource": "book_api_live",
-          "bookId": "draftkings",
-          "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
-        },
-        {
-          "cardKey": "23465|Bogeys",
-          "eventName": "The RSM Classic",
-          "round": 4,
-          "dg_id": 23465,
-          "playerName": "Greyserman, Max",
-          "market": "Bogeys",
-          "line": 2.5,
-          "overOdds": 148,
-          "underOdds": -210,
-          "overBookOdds": {
-            "kind": "american",
-            "raw": 148,
-            "display": "+148"
-          },
-          "underBookOdds": {
-            "kind": "american",
-            "raw": -210,
-            "display": "-210"
-          },
-          "overPayoutMultiplier": 2.48,
-          "underPayoutMultiplier": 1.4761904761904763,
-          "oddsSource": "book_api_live",
-          "bookId": "draftkings",
-          "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
+          "fetchedAt": "2026-11-23T10:11:15.836Z"
         },
         {
           "cardKey": "23465|Total score",
@@ -787,7 +436,34 @@
           "oddsSource": "book_api_live",
           "bookId": "draftkings",
           "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
+          "fetchedAt": "2026-11-23T10:11:15.836Z"
+        },
+        {
+          "cardKey": "23465|Birdies",
+          "eventName": "The RSM Classic",
+          "round": 4,
+          "dg_id": 23465,
+          "playerName": "Greyserman, Max",
+          "market": "Birdies",
+          "line": 4.5,
+          "overOdds": -136,
+          "underOdds": -104,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -136,
+            "display": "-136"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -104,
+            "display": "-104"
+          },
+          "overPayoutMultiplier": 1.7352941176470589,
+          "underPayoutMultiplier": 1.9615384615384617,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-23T10:11:15.836Z"
         },
         {
           "cardKey": "12808|Birdies",
@@ -814,7 +490,7 @@
           "oddsSource": "book_api_live",
           "bookId": "draftkings",
           "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
+          "fetchedAt": "2026-11-23T10:11:15.836Z"
         },
         {
           "cardKey": "27194|Birdies",
@@ -841,7 +517,7 @@
           "oddsSource": "book_api_live",
           "bookId": "draftkings",
           "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
+          "fetchedAt": "2026-11-23T10:11:15.836Z"
         },
         {
           "cardKey": "22760|Birdies",
@@ -868,7 +544,34 @@
           "oddsSource": "book_api_live",
           "bookId": "draftkings",
           "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
+          "fetchedAt": "2026-11-23T10:11:15.836Z"
+        },
+        {
+          "cardKey": "23838|Total score",
+          "eventName": "The RSM Classic",
+          "round": 4,
+          "dg_id": 23838,
+          "playerName": "Hojgaard, Rasmus",
+          "market": "Total score",
+          "line": 67.5,
+          "overOdds": -138,
+          "underOdds": 102,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -138,
+            "display": "-138"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 102,
+            "display": "+102"
+          },
+          "overPayoutMultiplier": 1.7246376811594204,
+          "underPayoutMultiplier": 2.02,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-23T10:11:15.836Z"
         },
         {
           "cardKey": "23838|Birdies",
@@ -895,88 +598,7 @@
           "oddsSource": "book_api_live",
           "bookId": "draftkings",
           "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
-        },
-        {
-          "cardKey": "23838|Pars",
-          "eventName": "The RSM Classic",
-          "round": 4,
-          "dg_id": 23838,
-          "playerName": "Hojgaard, Rasmus",
-          "market": "Pars",
-          "line": 10.5,
-          "overOdds": -158,
-          "underOdds": 112,
-          "overBookOdds": {
-            "kind": "american",
-            "raw": -158,
-            "display": "-158"
-          },
-          "underBookOdds": {
-            "kind": "american",
-            "raw": 112,
-            "display": "+112"
-          },
-          "overPayoutMultiplier": 1.6329113924050633,
-          "underPayoutMultiplier": 2.12,
-          "oddsSource": "book_api_live",
-          "bookId": "draftkings",
-          "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
-        },
-        {
-          "cardKey": "23838|Bogeys",
-          "eventName": "The RSM Classic",
-          "round": 4,
-          "dg_id": 23838,
-          "playerName": "Hojgaard, Rasmus",
-          "market": "Bogeys",
-          "line": 2.5,
-          "overOdds": 110,
-          "underOdds": -156,
-          "overBookOdds": {
-            "kind": "american",
-            "raw": 110,
-            "display": "+110"
-          },
-          "underBookOdds": {
-            "kind": "american",
-            "raw": -203,
-            "display": "-203"
-          },
-          "overPayoutMultiplier": 2.1,
-          "underPayoutMultiplier": 1.641025641025641,
-          "oddsSource": "book_api_live",
-          "bookId": "draftkings",
-          "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
-        },
-        {
-          "cardKey": "23838|Total score",
-          "eventName": "The RSM Classic",
-          "round": 4,
-          "dg_id": 23838,
-          "playerName": "Hojgaard, Rasmus",
-          "market": "Total score",
-          "line": 67.5,
-          "overOdds": -138,
-          "underOdds": 102,
-          "overBookOdds": {
-            "kind": "american",
-            "raw": -138,
-            "display": "-138"
-          },
-          "underBookOdds": {
-            "kind": "american",
-            "raw": 102,
-            "display": "+102"
-          },
-          "overPayoutMultiplier": 1.7246376811594204,
-          "underPayoutMultiplier": 2.02,
-          "oddsSource": "book_api_live",
-          "bookId": "draftkings",
-          "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
+          "fetchedAt": "2026-11-23T10:11:15.836Z"
         },
         {
           "cardKey": "29827|Birdies",
@@ -1003,88 +625,7 @@
           "oddsSource": "book_api_live",
           "bookId": "draftkings",
           "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
-        },
-        {
-          "cardKey": "16243|Birdies",
-          "eventName": "The RSM Classic",
-          "round": 4,
-          "dg_id": 16243,
-          "playerName": "Koepka, Brooks",
-          "market": "Birdies",
-          "line": 4.5,
-          "overOdds": -172,
-          "underOdds": 122,
-          "overBookOdds": {
-            "kind": "american",
-            "raw": -172,
-            "display": "-172"
-          },
-          "underBookOdds": {
-            "kind": "american",
-            "raw": 122,
-            "display": "+122"
-          },
-          "overPayoutMultiplier": 1.5813953488372094,
-          "underPayoutMultiplier": 2.2199999999999998,
-          "oddsSource": "book_api_live",
-          "bookId": "draftkings",
-          "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
-        },
-        {
-          "cardKey": "16243|Pars",
-          "eventName": "The RSM Classic",
-          "round": 4,
-          "dg_id": 16243,
-          "playerName": "Koepka, Brooks",
-          "market": "Pars",
-          "line": 10.5,
-          "overOdds": -172,
-          "underOdds": 122,
-          "overBookOdds": {
-            "kind": "american",
-            "raw": -172,
-            "display": "-172"
-          },
-          "underBookOdds": {
-            "kind": "american",
-            "raw": 122,
-            "display": "+122"
-          },
-          "overPayoutMultiplier": 1.5813953488372094,
-          "underPayoutMultiplier": 2.2199999999999998,
-          "oddsSource": "book_api_live",
-          "bookId": "draftkings",
-          "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
-        },
-        {
-          "cardKey": "16243|Bogeys",
-          "eventName": "The RSM Classic",
-          "round": 4,
-          "dg_id": 16243,
-          "playerName": "Koepka, Brooks",
-          "market": "Bogeys",
-          "line": 1.5,
-          "overOdds": -205,
-          "underOdds": 144,
-          "overBookOdds": {
-            "kind": "american",
-            "raw": -205,
-            "display": "-205"
-          },
-          "underBookOdds": {
-            "kind": "american",
-            "raw": 144,
-            "display": "+144"
-          },
-          "overPayoutMultiplier": 1.4878048780487805,
-          "underPayoutMultiplier": 2.44,
-          "oddsSource": "book_api_live",
-          "bookId": "draftkings",
-          "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
+          "fetchedAt": "2026-11-23T10:11:15.836Z"
         },
         {
           "cardKey": "16243|Total score",
@@ -1111,7 +652,34 @@
           "oddsSource": "book_api_live",
           "bookId": "draftkings",
           "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
+          "fetchedAt": "2026-11-23T10:11:15.836Z"
+        },
+        {
+          "cardKey": "16243|Birdies",
+          "eventName": "The RSM Classic",
+          "round": 4,
+          "dg_id": 16243,
+          "playerName": "Koepka, Brooks",
+          "market": "Birdies",
+          "line": 4.5,
+          "overOdds": -172,
+          "underOdds": 122,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -172,
+            "display": "-172"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 122,
+            "display": "+122"
+          },
+          "overPayoutMultiplier": 1.5813953488372094,
+          "underPayoutMultiplier": 2.2199999999999998,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-23T10:11:15.836Z"
         },
         {
           "cardKey": "16395|Birdies",
@@ -1138,88 +706,7 @@
           "oddsSource": "book_api_live",
           "bookId": "draftkings",
           "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
-        },
-        {
-          "cardKey": "32319|Birdies",
-          "eventName": "The RSM Classic",
-          "round": 4,
-          "dg_id": 32319,
-          "playerName": "Koivun, Jackson",
-          "market": "Birdies",
-          "line": 4.5,
-          "overOdds": -168,
-          "underOdds": 118,
-          "overBookOdds": {
-            "kind": "american",
-            "raw": -168,
-            "display": "-168"
-          },
-          "underBookOdds": {
-            "kind": "american",
-            "raw": 118,
-            "display": "+118"
-          },
-          "overPayoutMultiplier": 1.5952380952380953,
-          "underPayoutMultiplier": 2.1799999999999997,
-          "oddsSource": "book_api_live",
-          "bookId": "draftkings",
-          "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
-        },
-        {
-          "cardKey": "32319|Pars",
-          "eventName": "The RSM Classic",
-          "round": 4,
-          "dg_id": 32319,
-          "playerName": "Koivun, Jackson",
-          "market": "Pars",
-          "line": 11.5,
-          "overOdds": -105,
-          "underOdds": -134,
-          "overBookOdds": {
-            "kind": "american",
-            "raw": -105,
-            "display": "-105"
-          },
-          "underBookOdds": {
-            "kind": "american",
-            "raw": -134,
-            "display": "-134"
-          },
-          "overPayoutMultiplier": 1.9523809523809523,
-          "underPayoutMultiplier": 1.7462686567164178,
-          "oddsSource": "book_api_live",
-          "bookId": "draftkings",
-          "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
-        },
-        {
-          "cardKey": "32319|Bogeys",
-          "eventName": "The RSM Classic",
-          "round": 4,
-          "dg_id": 32319,
-          "playerName": "Koivun, Jackson",
-          "market": "Bogeys",
-          "line": 1.5,
-          "overOdds": -132,
-          "underOdds": -106,
-          "overBookOdds": {
-            "kind": "american",
-            "raw": -132,
-            "display": "-132"
-          },
-          "underBookOdds": {
-            "kind": "american",
-            "raw": -106,
-            "display": "-106"
-          },
-          "overPayoutMultiplier": 1.7575757575757576,
-          "underPayoutMultiplier": 1.9433962264150944,
-          "oddsSource": "book_api_live",
-          "bookId": "draftkings",
-          "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
+          "fetchedAt": "2026-11-23T10:11:15.836Z"
         },
         {
           "cardKey": "32319|Total score",
@@ -1246,88 +733,34 @@
           "oddsSource": "book_api_live",
           "bookId": "draftkings",
           "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
+          "fetchedAt": "2026-11-23T10:11:15.836Z"
         },
         {
-          "cardKey": "15310|Birdies",
+          "cardKey": "32319|Birdies",
           "eventName": "The RSM Classic",
           "round": 4,
-          "dg_id": 15310,
-          "playerName": "Li, Haotong",
+          "dg_id": 32319,
+          "playerName": "Koivun, Jackson",
           "market": "Birdies",
           "line": 4.5,
-          "overOdds": -120,
-          "underOdds": -118,
+          "overOdds": -168,
+          "underOdds": 118,
           "overBookOdds": {
             "kind": "american",
-            "raw": -120,
-            "display": "-120"
+            "raw": -168,
+            "display": "-168"
           },
           "underBookOdds": {
             "kind": "american",
-            "raw": -118,
-            "display": "-118"
+            "raw": 118,
+            "display": "+118"
           },
-          "overPayoutMultiplier": 1.8333333333333335,
-          "underPayoutMultiplier": 1.847457627118644,
+          "overPayoutMultiplier": 1.5952380952380953,
+          "underPayoutMultiplier": 2.1799999999999997,
           "oddsSource": "book_api_live",
           "bookId": "draftkings",
           "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
-        },
-        {
-          "cardKey": "15310|Pars",
-          "eventName": "The RSM Classic",
-          "round": 4,
-          "dg_id": 15310,
-          "playerName": "Li, Haotong",
-          "market": "Pars",
-          "line": 11.5,
-          "overOdds": 108,
-          "underOdds": -152,
-          "overBookOdds": {
-            "kind": "american",
-            "raw": 108,
-            "display": "+108"
-          },
-          "underBookOdds": {
-            "kind": "american",
-            "raw": -152,
-            "display": "-152"
-          },
-          "overPayoutMultiplier": 2.08,
-          "underPayoutMultiplier": 1.6578947368421053,
-          "oddsSource": "book_api_live",
-          "bookId": "draftkings",
-          "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
-        },
-        {
-          "cardKey": "15310|Bogeys",
-          "eventName": "The RSM Classic",
-          "round": 4,
-          "dg_id": 15310,
-          "playerName": "Li, Haotong",
-          "market": "Bogeys",
-          "line": 2.5,
-          "overOdds": 125,
-          "underOdds": -175,
-          "overBookOdds": {
-            "kind": "american",
-            "raw": 125,
-            "display": "+125"
-          },
-          "underBookOdds": {
-            "kind": "american",
-            "raw": -175,
-            "display": "-175"
-          },
-          "overPayoutMultiplier": 2.25,
-          "underPayoutMultiplier": 1.5714285714285714,
-          "oddsSource": "book_api_live",
-          "bookId": "draftkings",
-          "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
+          "fetchedAt": "2026-11-23T10:11:15.836Z"
         },
         {
           "cardKey": "15310|Total score",
@@ -1354,7 +787,61 @@
           "oddsSource": "book_api_live",
           "bookId": "draftkings",
           "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
+          "fetchedAt": "2026-11-23T10:11:15.836Z"
+        },
+        {
+          "cardKey": "15310|Birdies",
+          "eventName": "The RSM Classic",
+          "round": 4,
+          "dg_id": 15310,
+          "playerName": "Li, Haotong",
+          "market": "Birdies",
+          "line": 4.5,
+          "overOdds": -120,
+          "underOdds": -118,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -120,
+            "display": "-120"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -118,
+            "display": "-118"
+          },
+          "overPayoutMultiplier": 1.8333333333333335,
+          "underPayoutMultiplier": 1.847457627118644,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-23T10:11:15.836Z"
+        },
+        {
+          "cardKey": "23505|Total score",
+          "eventName": "The RSM Classic",
+          "round": 4,
+          "dg_id": 23505,
+          "playerName": "McGreevy, Max",
+          "market": "Total score",
+          "line": 67.5,
+          "overOdds": -144,
+          "underOdds": 106,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -144,
+            "display": "-144"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 106,
+            "display": "+106"
+          },
+          "overPayoutMultiplier": 1.6944444444444444,
+          "underPayoutMultiplier": 2.06,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-23T10:11:15.836Z"
         },
         {
           "cardKey": "23505|Birdies",
@@ -1381,88 +868,7 @@
           "oddsSource": "book_api_live",
           "bookId": "draftkings",
           "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
-        },
-        {
-          "cardKey": "23505|Pars",
-          "eventName": "The RSM Classic",
-          "round": 4,
-          "dg_id": 23505,
-          "playerName": "McGreevy, Max",
-          "market": "Pars",
-          "line": 11.5,
-          "overOdds": -134,
-          "underOdds": -105,
-          "overBookOdds": {
-            "kind": "american",
-            "raw": -134,
-            "display": "-134"
-          },
-          "underBookOdds": {
-            "kind": "american",
-            "raw": -105,
-            "display": "-105"
-          },
-          "overPayoutMultiplier": 1.7462686567164178,
-          "underPayoutMultiplier": 1.9523809523809523,
-          "oddsSource": "book_api_live",
-          "bookId": "draftkings",
-          "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
-        },
-        {
-          "cardKey": "23505|Bogeys",
-          "eventName": "The RSM Classic",
-          "round": 4,
-          "dg_id": 23505,
-          "playerName": "McGreevy, Max",
-          "market": "Bogeys",
-          "line": 1.5,
-          "overOdds": -194,
-          "underOdds": 136,
-          "overBookOdds": {
-            "kind": "american",
-            "raw": -194,
-            "display": "-194"
-          },
-          "underBookOdds": {
-            "kind": "american",
-            "raw": 136,
-            "display": "+136"
-          },
-          "overPayoutMultiplier": 1.5154639175257731,
-          "underPayoutMultiplier": 2.3600000000000003,
-          "oddsSource": "book_api_live",
-          "bookId": "draftkings",
-          "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
-        },
-        {
-          "cardKey": "23505|Total score",
-          "eventName": "The RSM Classic",
-          "round": 4,
-          "dg_id": 23505,
-          "playerName": "McGreevy, Max",
-          "market": "Total score",
-          "line": 67.5,
-          "overOdds": -144,
-          "underOdds": 106,
-          "overBookOdds": {
-            "kind": "american",
-            "raw": -144,
-            "display": "-144"
-          },
-          "underBookOdds": {
-            "kind": "american",
-            "raw": 106,
-            "display": "+106"
-          },
-          "overPayoutMultiplier": 1.6944444444444444,
-          "underPayoutMultiplier": 2.06,
-          "oddsSource": "book_api_live",
-          "bookId": "draftkings",
-          "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
+          "fetchedAt": "2026-11-23T10:11:15.836Z"
         },
         {
           "cardKey": "18634|Birdies",
@@ -1489,7 +895,7 @@
           "oddsSource": "book_api_live",
           "bookId": "draftkings",
           "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
+          "fetchedAt": "2026-11-23T10:11:15.836Z"
         },
         {
           "cardKey": "17365|Birdies",
@@ -1516,88 +922,7 @@
           "oddsSource": "book_api_live",
           "bookId": "draftkings",
           "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
-        },
-        {
-          "cardKey": "23841|Birdies",
-          "eventName": "The RSM Classic",
-          "round": 4,
-          "dg_id": 23841,
-          "playerName": "Neergaard-Petersen, Rasmus",
-          "market": "Birdies",
-          "line": 4.5,
-          "overOdds": -120,
-          "underOdds": -120,
-          "overBookOdds": {
-            "kind": "american",
-            "raw": -120,
-            "display": "-120"
-          },
-          "underBookOdds": {
-            "kind": "american",
-            "raw": -120,
-            "display": "-120"
-          },
-          "overPayoutMultiplier": 1.8333333333333335,
-          "underPayoutMultiplier": 1.8333333333333335,
-          "oddsSource": "book_api_live",
-          "bookId": "draftkings",
-          "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
-        },
-        {
-          "cardKey": "23841|Pars",
-          "eventName": "The RSM Classic",
-          "round": 4,
-          "dg_id": 23841,
-          "playerName": "Neergaard-Petersen, Rasmus",
-          "market": "Pars",
-          "line": 11.5,
-          "overOdds": -112,
-          "underOdds": -126,
-          "overBookOdds": {
-            "kind": "american",
-            "raw": -112,
-            "display": "-112"
-          },
-          "underBookOdds": {
-            "kind": "american",
-            "raw": -126,
-            "display": "-126"
-          },
-          "overPayoutMultiplier": 1.8928571428571428,
-          "underPayoutMultiplier": 1.7936507936507935,
-          "oddsSource": "book_api_live",
-          "bookId": "draftkings",
-          "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
-        },
-        {
-          "cardKey": "23841|Bogeys",
-          "eventName": "The RSM Classic",
-          "round": 4,
-          "dg_id": 23841,
-          "playerName": "Neergaard-Petersen, Rasmus",
-          "market": "Bogeys",
-          "line": 1.5,
-          "overOdds": -196,
-          "underOdds": 140,
-          "overBookOdds": {
-            "kind": "american",
-            "raw": -196,
-            "display": "-196"
-          },
-          "underBookOdds": {
-            "kind": "american",
-            "raw": 140,
-            "display": "+140"
-          },
-          "overPayoutMultiplier": 1.510204081632653,
-          "underPayoutMultiplier": 2.4,
-          "oddsSource": "book_api_live",
-          "bookId": "draftkings",
-          "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
+          "fetchedAt": "2026-11-23T10:11:15.836Z"
         },
         {
           "cardKey": "23841|Total score",
@@ -1624,7 +949,34 @@
           "oddsSource": "book_api_live",
           "bookId": "draftkings",
           "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
+          "fetchedAt": "2026-11-23T10:11:15.836Z"
+        },
+        {
+          "cardKey": "23841|Birdies",
+          "eventName": "The RSM Classic",
+          "round": 4,
+          "dg_id": 23841,
+          "playerName": "Neergaard-Petersen, Rasmus",
+          "market": "Birdies",
+          "line": 4.5,
+          "overOdds": -120,
+          "underOdds": -120,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -120,
+            "display": "-120"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -120,
+            "display": "-120"
+          },
+          "overPayoutMultiplier": 1.8333333333333335,
+          "underPayoutMultiplier": 1.8333333333333335,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-23T10:11:15.836Z"
         },
         {
           "cardKey": "23475|Birdies",
@@ -1651,88 +1003,7 @@
           "oddsSource": "book_api_live",
           "bookId": "draftkings",
           "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
-        },
-        {
-          "cardKey": "22465|Birdies",
-          "eventName": "The RSM Classic",
-          "round": 4,
-          "dg_id": 22465,
-          "playerName": "Penge, Marco",
-          "market": "Birdies",
-          "line": 4.5,
-          "overOdds": -144,
-          "underOdds": 102,
-          "overBookOdds": {
-            "kind": "american",
-            "raw": -144,
-            "display": "-144"
-          },
-          "underBookOdds": {
-            "kind": "american",
-            "raw": 102,
-            "display": "+102"
-          },
-          "overPayoutMultiplier": 1.6944444444444444,
-          "underPayoutMultiplier": 2.02,
-          "oddsSource": "book_api_live",
-          "bookId": "draftkings",
-          "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
-        },
-        {
-          "cardKey": "22465|Pars",
-          "eventName": "The RSM Classic",
-          "round": 4,
-          "dg_id": 22465,
-          "playerName": "Penge, Marco",
-          "market": "Pars",
-          "line": 10.5,
-          "overOdds": -172,
-          "underOdds": 122,
-          "overBookOdds": {
-            "kind": "american",
-            "raw": -172,
-            "display": "-172"
-          },
-          "underBookOdds": {
-            "kind": "american",
-            "raw": 122,
-            "display": "+122"
-          },
-          "overPayoutMultiplier": 1.5813953488372094,
-          "underPayoutMultiplier": 2.2199999999999998,
-          "oddsSource": "book_api_live",
-          "bookId": "draftkings",
-          "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
-        },
-        {
-          "cardKey": "22465|Bogeys",
-          "eventName": "The RSM Classic",
-          "round": 4,
-          "dg_id": 22465,
-          "playerName": "Penge, Marco",
-          "market": "Bogeys",
-          "line": 2.5,
-          "overOdds": 125,
-          "underOdds": -176,
-          "overBookOdds": {
-            "kind": "american",
-            "raw": 125,
-            "display": "+125"
-          },
-          "underBookOdds": {
-            "kind": "american",
-            "raw": -176,
-            "display": "-176"
-          },
-          "overPayoutMultiplier": 2.25,
-          "underPayoutMultiplier": 1.5681818181818183,
-          "oddsSource": "book_api_live",
-          "bookId": "draftkings",
-          "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
+          "fetchedAt": "2026-11-23T10:11:15.836Z"
         },
         {
           "cardKey": "22465|Total score",
@@ -1759,7 +1030,34 @@
           "oddsSource": "book_api_live",
           "bookId": "draftkings",
           "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
+          "fetchedAt": "2026-11-23T10:11:15.836Z"
+        },
+        {
+          "cardKey": "22465|Birdies",
+          "eventName": "The RSM Classic",
+          "round": 4,
+          "dg_id": 22465,
+          "playerName": "Penge, Marco",
+          "market": "Birdies",
+          "line": 4.5,
+          "overOdds": -144,
+          "underOdds": 102,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -144,
+            "display": "-144"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 102,
+            "display": "+102"
+          },
+          "overPayoutMultiplier": 1.6944444444444444,
+          "underPayoutMultiplier": 2.02,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-23T10:11:15.836Z"
         },
         {
           "cardKey": "27164|Birdies",
@@ -1786,88 +1084,7 @@
           "oddsSource": "book_api_live",
           "bookId": "draftkings",
           "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
-        },
-        {
-          "cardKey": "21554|Birdies",
-          "eventName": "The RSM Classic",
-          "round": 4,
-          "dg_id": 21554,
-          "playerName": "Poston, J.T.",
-          "market": "Birdies",
-          "line": 4.5,
-          "overOdds": -148,
-          "underOdds": 104,
-          "overBookOdds": {
-            "kind": "american",
-            "raw": -148,
-            "display": "-148"
-          },
-          "underBookOdds": {
-            "kind": "american",
-            "raw": 104,
-            "display": "+104"
-          },
-          "overPayoutMultiplier": 1.6756756756756757,
-          "underPayoutMultiplier": 2.04,
-          "oddsSource": "book_api_live",
-          "bookId": "draftkings",
-          "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
-        },
-        {
-          "cardKey": "21554|Pars",
-          "eventName": "The RSM Classic",
-          "round": 4,
-          "dg_id": 21554,
-          "playerName": "Poston, J.T.",
-          "market": "Pars",
-          "line": 11.5,
-          "overOdds": -112,
-          "underOdds": -126,
-          "overBookOdds": {
-            "kind": "american",
-            "raw": -112,
-            "display": "-112"
-          },
-          "underBookOdds": {
-            "kind": "american",
-            "raw": -126,
-            "display": "-126"
-          },
-          "overPayoutMultiplier": 1.8928571428571428,
-          "underPayoutMultiplier": 1.7936507936507935,
-          "oddsSource": "book_api_live",
-          "bookId": "draftkings",
-          "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
-        },
-        {
-          "cardKey": "21554|Bogeys",
-          "eventName": "The RSM Classic",
-          "round": 4,
-          "dg_id": 21554,
-          "playerName": "Poston, J.T.",
-          "market": "Bogeys",
-          "line": 1.5,
-          "overOdds": -146,
-          "underOdds": 104,
-          "overBookOdds": {
-            "kind": "american",
-            "raw": -146,
-            "display": "-146"
-          },
-          "underBookOdds": {
-            "kind": "american",
-            "raw": 104,
-            "display": "+104"
-          },
-          "overPayoutMultiplier": 1.6849315068493151,
-          "underPayoutMultiplier": 2.04,
-          "oddsSource": "book_api_live",
-          "bookId": "draftkings",
-          "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
+          "fetchedAt": "2026-11-23T10:11:15.836Z"
         },
         {
           "cardKey": "21554|Total score",
@@ -1894,7 +1111,34 @@
           "oddsSource": "book_api_live",
           "bookId": "draftkings",
           "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
+          "fetchedAt": "2026-11-23T10:11:15.836Z"
+        },
+        {
+          "cardKey": "21554|Birdies",
+          "eventName": "The RSM Classic",
+          "round": 4,
+          "dg_id": 21554,
+          "playerName": "Poston, J.T.",
+          "market": "Birdies",
+          "line": 4.5,
+          "overOdds": -148,
+          "underOdds": 104,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -148,
+            "display": "-148"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": 104,
+            "display": "+104"
+          },
+          "overPayoutMultiplier": 1.6756756756756757,
+          "underPayoutMultiplier": 2.04,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-23T10:11:15.836Z"
         },
         {
           "cardKey": "19840|Birdies",
@@ -1921,7 +1165,7 @@
           "oddsSource": "book_api_live",
           "bookId": "draftkings",
           "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
+          "fetchedAt": "2026-11-23T10:11:15.836Z"
         },
         {
           "cardKey": "32055|Birdies",
@@ -1948,7 +1192,7 @@
           "oddsSource": "book_api_live",
           "bookId": "draftkings",
           "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
+          "fetchedAt": "2026-11-23T10:11:15.836Z"
         },
         {
           "cardKey": "18586|Birdies",
@@ -1975,88 +1219,7 @@
           "oddsSource": "book_api_live",
           "bookId": "draftkings",
           "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
-        },
-        {
-          "cardKey": "27364|Birdies",
-          "eventName": "The RSM Classic",
-          "round": 4,
-          "dg_id": 27364,
-          "playerName": "Thompson, Davis",
-          "market": "Birdies",
-          "line": 4.5,
-          "overOdds": -124,
-          "underOdds": -115,
-          "overBookOdds": {
-            "kind": "american",
-            "raw": -124,
-            "display": "-124"
-          },
-          "underBookOdds": {
-            "kind": "american",
-            "raw": -115,
-            "display": "-115"
-          },
-          "overPayoutMultiplier": 1.8064516129032258,
-          "underPayoutMultiplier": 1.8695652173913042,
-          "oddsSource": "book_api_live",
-          "bookId": "draftkings",
-          "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
-        },
-        {
-          "cardKey": "27364|Pars",
-          "eventName": "The RSM Classic",
-          "round": 4,
-          "dg_id": 27364,
-          "playerName": "Thompson, Davis",
-          "market": "Pars",
-          "line": 11.5,
-          "overOdds": -116,
-          "underOdds": -122,
-          "overBookOdds": {
-            "kind": "american",
-            "raw": -116,
-            "display": "-116"
-          },
-          "underBookOdds": {
-            "kind": "american",
-            "raw": -122,
-            "display": "-122"
-          },
-          "overPayoutMultiplier": 1.8620689655172413,
-          "underPayoutMultiplier": 1.819672131147541,
-          "oddsSource": "book_api_live",
-          "bookId": "draftkings",
-          "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
-        },
-        {
-          "cardKey": "27364|Bogeys",
-          "eventName": "The RSM Classic",
-          "round": 4,
-          "dg_id": 27364,
-          "playerName": "Thompson, Davis",
-          "market": "Bogeys",
-          "line": 1.5,
-          "overOdds": -176,
-          "underOdds": 125,
-          "overBookOdds": {
-            "kind": "american",
-            "raw": -176,
-            "display": "-176"
-          },
-          "underBookOdds": {
-            "kind": "american",
-            "raw": 125,
-            "display": "+125"
-          },
-          "overPayoutMultiplier": 1.5681818181818183,
-          "underPayoutMultiplier": 2.25,
-          "oddsSource": "book_api_live",
-          "bookId": "draftkings",
-          "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
+          "fetchedAt": "2026-11-23T10:11:15.836Z"
         },
         {
           "cardKey": "27364|Total score",
@@ -2083,88 +1246,34 @@
           "oddsSource": "book_api_live",
           "bookId": "draftkings",
           "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
+          "fetchedAt": "2026-11-23T10:11:15.836Z"
         },
         {
-          "cardKey": "26649|Birdies",
+          "cardKey": "27364|Birdies",
           "eventName": "The RSM Classic",
           "round": 4,
-          "dg_id": 26649,
-          "playerName": "Thorbjornsen, Michael",
+          "dg_id": 27364,
+          "playerName": "Thompson, Davis",
           "market": "Birdies",
           "line": 4.5,
-          "overOdds": -166,
-          "underOdds": 118,
+          "overOdds": -124,
+          "underOdds": -115,
           "overBookOdds": {
             "kind": "american",
-            "raw": -166,
-            "display": "-166"
+            "raw": -124,
+            "display": "-124"
           },
           "underBookOdds": {
             "kind": "american",
-            "raw": 118,
-            "display": "+118"
+            "raw": -115,
+            "display": "-115"
           },
-          "overPayoutMultiplier": 1.6024096385542168,
-          "underPayoutMultiplier": 2.1799999999999997,
+          "overPayoutMultiplier": 1.8064516129032258,
+          "underPayoutMultiplier": 1.8695652173913042,
           "oddsSource": "book_api_live",
           "bookId": "draftkings",
           "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
-        },
-        {
-          "cardKey": "26649|Pars",
-          "eventName": "The RSM Classic",
-          "round": 4,
-          "dg_id": 26649,
-          "playerName": "Thorbjornsen, Michael",
-          "market": "Pars",
-          "line": 11.5,
-          "overOdds": 106,
-          "underOdds": -150,
-          "overBookOdds": {
-            "kind": "american",
-            "raw": 106,
-            "display": "+106"
-          },
-          "underBookOdds": {
-            "kind": "american",
-            "raw": -150,
-            "display": "-150"
-          },
-          "overPayoutMultiplier": 2.06,
-          "underPayoutMultiplier": 1.6666666666666665,
-          "oddsSource": "book_api_live",
-          "bookId": "draftkings",
-          "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
-        },
-        {
-          "cardKey": "26649|Bogeys",
-          "eventName": "The RSM Classic",
-          "round": 4,
-          "dg_id": 26649,
-          "playerName": "Thorbjornsen, Michael",
-          "market": "Bogeys",
-          "line": 1.5,
-          "overOdds": -162,
-          "underOdds": 115,
-          "overBookOdds": {
-            "kind": "american",
-            "raw": -162,
-            "display": "-162"
-          },
-          "underBookOdds": {
-            "kind": "american",
-            "raw": 115,
-            "display": "+115"
-          },
-          "overPayoutMultiplier": 1.617283950617284,
-          "underPayoutMultiplier": 2.15,
-          "oddsSource": "book_api_live",
-          "bookId": "draftkings",
-          "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
+          "fetchedAt": "2026-11-23T10:11:15.836Z"
         },
         {
           "cardKey": "26649|Total score",
@@ -2191,88 +1300,34 @@
           "oddsSource": "book_api_live",
           "bookId": "draftkings",
           "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
+          "fetchedAt": "2026-11-23T10:11:15.836Z"
         },
         {
-          "cardKey": "23816|Birdies",
+          "cardKey": "26649|Birdies",
           "eventName": "The RSM Classic",
           "round": 4,
-          "dg_id": 23816,
-          "playerName": "Valimaki, Sami",
+          "dg_id": 26649,
+          "playerName": "Thorbjornsen, Michael",
           "market": "Birdies",
           "line": 4.5,
-          "overOdds": -138,
-          "underOdds": -104,
+          "overOdds": -166,
+          "underOdds": 118,
           "overBookOdds": {
             "kind": "american",
-            "raw": -138,
-            "display": "-138"
+            "raw": -166,
+            "display": "-166"
           },
           "underBookOdds": {
             "kind": "american",
-            "raw": -104,
-            "display": "-104"
+            "raw": 118,
+            "display": "+118"
           },
-          "overPayoutMultiplier": 1.7246376811594204,
-          "underPayoutMultiplier": 1.9615384615384617,
+          "overPayoutMultiplier": 1.6024096385542168,
+          "underPayoutMultiplier": 2.1799999999999997,
           "oddsSource": "book_api_live",
           "bookId": "draftkings",
           "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
-        },
-        {
-          "cardKey": "23816|Pars",
-          "eventName": "The RSM Classic",
-          "round": 4,
-          "dg_id": 23816,
-          "playerName": "Valimaki, Sami",
-          "market": "Pars",
-          "line": 11.5,
-          "overOdds": -104,
-          "underOdds": -136,
-          "overBookOdds": {
-            "kind": "american",
-            "raw": -104,
-            "display": "-104"
-          },
-          "underBookOdds": {
-            "kind": "american",
-            "raw": -136,
-            "display": "-136"
-          },
-          "overPayoutMultiplier": 1.9615384615384617,
-          "underPayoutMultiplier": 1.7352941176470589,
-          "oddsSource": "book_api_live",
-          "bookId": "draftkings",
-          "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
-        },
-        {
-          "cardKey": "23816|Bogeys",
-          "eventName": "The RSM Classic",
-          "round": 4,
-          "dg_id": 23816,
-          "playerName": "Valimaki, Sami",
-          "market": "Bogeys",
-          "line": 1.5,
-          "overOdds": -180,
-          "underOdds": 128,
-          "overBookOdds": {
-            "kind": "american",
-            "raw": -180,
-            "display": "-180"
-          },
-          "underBookOdds": {
-            "kind": "american",
-            "raw": 128,
-            "display": "+128"
-          },
-          "overPayoutMultiplier": 1.5555555555555556,
-          "underPayoutMultiplier": 2.2800000000000002,
-          "oddsSource": "book_api_live",
-          "bookId": "draftkings",
-          "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
+          "fetchedAt": "2026-11-23T10:11:15.836Z"
         },
         {
           "cardKey": "23816|Total score",
@@ -2299,7 +1354,34 @@
           "oddsSource": "book_api_live",
           "bookId": "draftkings",
           "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
+          "fetchedAt": "2026-11-23T10:11:15.836Z"
+        },
+        {
+          "cardKey": "23816|Birdies",
+          "eventName": "The RSM Classic",
+          "round": 4,
+          "dg_id": 23816,
+          "playerName": "Valimaki, Sami",
+          "market": "Birdies",
+          "line": 4.5,
+          "overOdds": -138,
+          "underOdds": -104,
+          "overBookOdds": {
+            "kind": "american",
+            "raw": -138,
+            "display": "-138"
+          },
+          "underBookOdds": {
+            "kind": "american",
+            "raw": -104,
+            "display": "-104"
+          },
+          "overPayoutMultiplier": 1.7246376811594204,
+          "underPayoutMultiplier": 1.9615384615384617,
+          "oddsSource": "book_api_live",
+          "bookId": "draftkings",
+          "gradeable": true,
+          "fetchedAt": "2026-11-23T10:11:15.836Z"
         },
         {
           "cardKey": "25319|Birdies",
@@ -2326,7 +1408,7 @@
           "oddsSource": "book_api_live",
           "bookId": "draftkings",
           "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
+          "fetchedAt": "2026-11-23T10:11:15.836Z"
         },
         {
           "cardKey": "15651|Birdies",
@@ -2353,7 +1435,7 @@
           "oddsSource": "book_api_live",
           "bookId": "draftkings",
           "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
+          "fetchedAt": "2026-11-23T10:11:15.836Z"
         },
         {
           "cardKey": "23656|Birdies",
@@ -2380,18 +1462,18 @@
           "oddsSource": "book_api_live",
           "bookId": "draftkings",
           "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.569Z"
+          "fetchedAt": "2026-11-23T10:11:15.836Z"
         }
       ],
       "fetchError": "",
-      "count": 88,
-      "fetchedAt": "2026-11-23T02:15:01.569Z"
+      "count": 54,
+      "fetchedAt": "2026-11-23T10:11:15.836Z"
     },
     "prizepicks": {
       "cards": [],
       "fetchError": "PrizePicks partner API does not expose per-pick posted odds for standard lines",
       "count": 0,
-      "fetchedAt": "2026-11-23T02:15:01.613Z"
+      "fetchedAt": "2026-11-23T10:11:15.845Z"
     },
     "sleeper": {
       "cards": [
@@ -2405,20 +1487,20 @@
           "line": 4.5,
           "overBookOdds": {
             "kind": "multiplier",
-            "raw": 1.95,
-            "display": "1.95x"
+            "raw": 1.94,
+            "display": "1.94x"
           },
           "underBookOdds": {
             "kind": "multiplier",
             "raw": 1.64,
             "display": "1.64x"
           },
-          "overPayoutMultiplier": 1.95,
+          "overPayoutMultiplier": 1.94,
           "underPayoutMultiplier": 1.64,
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.613Z"
+          "fetchedAt": "2026-11-23T10:11:15.845Z"
         },
         {
           "cardKey": "27164|Birdies",
@@ -2430,20 +1512,20 @@
           "line": 4.5,
           "overBookOdds": {
             "kind": "multiplier",
-            "raw": 1.93,
-            "display": "1.93x"
+            "raw": 1.94,
+            "display": "1.94x"
           },
           "underBookOdds": {
             "kind": "multiplier",
             "raw": 1.65,
             "display": "1.65x"
           },
-          "overPayoutMultiplier": 1.93,
+          "overPayoutMultiplier": 1.94,
           "underPayoutMultiplier": 1.65,
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.613Z"
+          "fetchedAt": "2026-11-23T10:11:15.845Z"
         },
         {
           "cardKey": "19840|Birdies",
@@ -2455,20 +1537,20 @@
           "line": 4.5,
           "overBookOdds": {
             "kind": "multiplier",
-            "raw": 1.8,
-            "display": "1.8x"
+            "raw": 1.81,
+            "display": "1.81x"
           },
           "underBookOdds": {
             "kind": "multiplier",
-            "raw": 1.76,
-            "display": "1.76x"
+            "raw": 1.75,
+            "display": "1.75x"
           },
-          "overPayoutMultiplier": 1.8,
-          "underPayoutMultiplier": 1.76,
+          "overPayoutMultiplier": 1.81,
+          "underPayoutMultiplier": 1.75,
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.613Z"
+          "fetchedAt": "2026-11-23T10:11:15.845Z"
         },
         {
           "cardKey": "18586|Birdies",
@@ -2493,7 +1575,7 @@
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.613Z"
+          "fetchedAt": "2026-11-23T10:11:15.845Z"
         },
         {
           "cardKey": "25319|Birdies",
@@ -2505,20 +1587,20 @@
           "line": 4.5,
           "overBookOdds": {
             "kind": "multiplier",
-            "raw": 1.98,
-            "display": "1.98x"
+            "raw": 1.99,
+            "display": "1.99x"
           },
           "underBookOdds": {
             "kind": "multiplier",
             "raw": 1.61,
             "display": "1.61x"
           },
-          "overPayoutMultiplier": 1.98,
+          "overPayoutMultiplier": 1.99,
           "underPayoutMultiplier": 1.61,
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.613Z"
+          "fetchedAt": "2026-11-23T10:11:15.845Z"
         },
         {
           "cardKey": "23656|Birdies",
@@ -2543,18 +1625,18 @@
           "oddsSource": "book_api_live",
           "bookId": "sleeper",
           "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:01.613Z"
+          "fetchedAt": "2026-11-23T10:11:15.845Z"
         }
       ],
       "fetchError": "",
       "count": 6,
-      "fetchedAt": "2026-11-23T02:15:01.613Z"
+      "fetchedAt": "2026-11-23T10:11:15.845Z"
     },
     "underdog": {
       "cards": [],
       "fetchError": "Underdog API HTTP 426",
       "count": 0,
-      "fetchedAt": "2026-11-23T02:15:05.684Z"
+      "fetchedAt": "2026-11-23T10:11:19.209Z"
     },
     "kalshi": {
       "cards": [
@@ -2566,24 +1648,24 @@
           "playerName": "Castillo, Ricky",
           "market": "Total score",
           "line": 69.5,
-          "overOdds": 102,
-          "underOdds": -102,
+          "overOdds": 400,
+          "underOdds": -400,
           "overBookOdds": {
             "kind": "american",
-            "raw": 102,
-            "display": "+102"
+            "raw": 400,
+            "display": "+400"
           },
           "underBookOdds": {
             "kind": "american",
-            "raw": -102,
-            "display": "-102"
+            "raw": -400,
+            "display": "-400"
           },
-          "overPayoutMultiplier": 2.02,
-          "underPayoutMultiplier": 1.9803921568627452,
+          "overPayoutMultiplier": 5,
+          "underPayoutMultiplier": 1.25,
           "oddsSource": "book_api_live",
           "bookId": "kalshi",
           "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:05.839Z"
+          "fetchedAt": "2026-11-23T10:11:19.280Z"
         },
         {
           "cardKey": "22002|Total score",
@@ -2593,24 +1675,24 @@
           "playerName": "Dumont De Chassart, Adrien",
           "market": "Total score",
           "line": 69.5,
-          "overOdds": -102,
-          "underOdds": 102,
+          "overOdds": 194,
+          "underOdds": -194,
           "overBookOdds": {
             "kind": "american",
-            "raw": -102,
-            "display": "-102"
+            "raw": 194,
+            "display": "+194"
           },
           "underBookOdds": {
             "kind": "american",
-            "raw": 102,
-            "display": "+102"
+            "raw": -194,
+            "display": "-194"
           },
-          "overPayoutMultiplier": 1.9803921568627452,
-          "underPayoutMultiplier": 2.02,
+          "overPayoutMultiplier": 2.94,
+          "underPayoutMultiplier": 1.5154639175257731,
           "oddsSource": "book_api_live",
           "bookId": "kalshi",
           "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:05.839Z"
+          "fetchedAt": "2026-11-23T10:11:19.280Z"
         },
         {
           "cardKey": "14577|Total score",
@@ -2620,24 +1702,24 @@
           "playerName": "English, Harris",
           "market": "Total score",
           "line": 69.5,
-          "overOdds": 102,
-          "underOdds": -102,
+          "overOdds": 426,
+          "underOdds": -426,
           "overBookOdds": {
             "kind": "american",
-            "raw": 102,
-            "display": "+102"
+            "raw": 426,
+            "display": "+426"
           },
           "underBookOdds": {
             "kind": "american",
-            "raw": -102,
-            "display": "-102"
+            "raw": -426,
+            "display": "-426"
           },
-          "overPayoutMultiplier": 2.02,
-          "underPayoutMultiplier": 1.9803921568627452,
+          "overPayoutMultiplier": 5.26,
+          "underPayoutMultiplier": 1.2347417840375587,
           "oddsSource": "book_api_live",
           "bookId": "kalshi",
           "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:05.839Z"
+          "fetchedAt": "2026-11-23T10:11:19.280Z"
         },
         {
           "cardKey": "23465|Total score",
@@ -2647,24 +1729,24 @@
           "playerName": "Greyserman, Max",
           "market": "Total score",
           "line": 69.5,
-          "overOdds": 102,
-          "underOdds": -102,
+          "overOdds": 335,
+          "underOdds": -335,
           "overBookOdds": {
             "kind": "american",
-            "raw": 102,
-            "display": "+102"
+            "raw": 335,
+            "display": "+335"
           },
           "underBookOdds": {
             "kind": "american",
-            "raw": -102,
-            "display": "-102"
+            "raw": -335,
+            "display": "-335"
           },
-          "overPayoutMultiplier": 2.02,
-          "underPayoutMultiplier": 1.9803921568627452,
+          "overPayoutMultiplier": 4.35,
+          "underPayoutMultiplier": 1.2985074626865671,
           "oddsSource": "book_api_live",
           "bookId": "kalshi",
           "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:05.839Z"
+          "fetchedAt": "2026-11-23T10:11:19.280Z"
         },
         {
           "cardKey": "27194|Total score",
@@ -2674,24 +1756,24 @@
           "playerName": "Hall, Harry",
           "market": "Total score",
           "line": 69.5,
-          "overOdds": -102,
-          "underOdds": 102,
+          "overOdds": 426,
+          "underOdds": -426,
           "overBookOdds": {
             "kind": "american",
-            "raw": -102,
-            "display": "-102"
+            "raw": 426,
+            "display": "+426"
           },
           "underBookOdds": {
             "kind": "american",
-            "raw": 102,
-            "display": "+102"
+            "raw": -426,
+            "display": "-426"
           },
-          "overPayoutMultiplier": 1.9803921568627452,
-          "underPayoutMultiplier": 2.02,
+          "overPayoutMultiplier": 5.26,
+          "underPayoutMultiplier": 1.2347417840375587,
           "oddsSource": "book_api_live",
           "bookId": "kalshi",
           "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:05.839Z"
+          "fetchedAt": "2026-11-23T10:11:19.280Z"
         },
         {
           "cardKey": "25157|Total score",
@@ -2701,24 +1783,24 @@
           "playerName": "Hodges, Lee",
           "market": "Total score",
           "line": 68.5,
-          "overOdds": -102,
-          "underOdds": 102,
+          "overOdds": 170,
+          "underOdds": -170,
           "overBookOdds": {
             "kind": "american",
-            "raw": -102,
-            "display": "-102"
+            "raw": 170,
+            "display": "+170"
           },
           "underBookOdds": {
             "kind": "american",
-            "raw": 102,
-            "display": "+102"
+            "raw": -170,
+            "display": "-170"
           },
-          "overPayoutMultiplier": 1.9803921568627452,
-          "underPayoutMultiplier": 2.02,
+          "overPayoutMultiplier": 2.7,
+          "underPayoutMultiplier": 1.5882352941176472,
           "oddsSource": "book_api_live",
           "bookId": "kalshi",
           "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:05.839Z"
+          "fetchedAt": "2026-11-23T10:11:19.280Z"
         },
         {
           "cardKey": "23838|Total score",
@@ -2728,24 +1810,24 @@
           "playerName": "Hojgaard, Rasmus",
           "market": "Total score",
           "line": 68.5,
-          "overOdds": -102,
-          "underOdds": 102,
+          "overOdds": 170,
+          "underOdds": -170,
           "overBookOdds": {
             "kind": "american",
-            "raw": -102,
-            "display": "-102"
+            "raw": 170,
+            "display": "+170"
           },
           "underBookOdds": {
             "kind": "american",
-            "raw": 102,
-            "display": "+102"
+            "raw": -170,
+            "display": "-170"
           },
-          "overPayoutMultiplier": 1.9803921568627452,
-          "underPayoutMultiplier": 2.02,
+          "overPayoutMultiplier": 2.7,
+          "underPayoutMultiplier": 1.5882352941176472,
           "oddsSource": "book_api_live",
           "bookId": "kalshi",
           "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:05.839Z"
+          "fetchedAt": "2026-11-23T10:11:19.280Z"
         },
         {
           "cardKey": "13470|Total score",
@@ -2755,24 +1837,24 @@
           "playerName": "Kizzire, Patton",
           "market": "Total score",
           "line": 69.5,
-          "overOdds": -102,
-          "underOdds": 102,
+          "overOdds": 163,
+          "underOdds": -163,
           "overBookOdds": {
             "kind": "american",
-            "raw": -102,
-            "display": "-102"
+            "raw": 163,
+            "display": "+163"
           },
           "underBookOdds": {
             "kind": "american",
-            "raw": 102,
-            "display": "+102"
+            "raw": -163,
+            "display": "-163"
           },
-          "overPayoutMultiplier": 1.9803921568627452,
-          "underPayoutMultiplier": 2.02,
+          "overPayoutMultiplier": 2.63,
+          "underPayoutMultiplier": 1.6134969325153374,
           "oddsSource": "book_api_live",
           "bookId": "kalshi",
           "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:05.839Z"
+          "fetchedAt": "2026-11-23T10:11:19.280Z"
         },
         {
           "cardKey": "21943|Total score",
@@ -2782,24 +1864,24 @@
           "playerName": "Lebioda, Hank",
           "market": "Total score",
           "line": 70.5,
-          "overOdds": 102,
-          "underOdds": -102,
+          "overOdds": 355,
+          "underOdds": -355,
           "overBookOdds": {
             "kind": "american",
-            "raw": 102,
-            "display": "+102"
+            "raw": 355,
+            "display": "+355"
           },
           "underBookOdds": {
             "kind": "american",
-            "raw": -102,
-            "display": "-102"
+            "raw": -355,
+            "display": "-355"
           },
-          "overPayoutMultiplier": 2.02,
-          "underPayoutMultiplier": 1.9803921568627452,
+          "overPayoutMultiplier": 4.55,
+          "underPayoutMultiplier": 1.2816901408450705,
           "oddsSource": "book_api_live",
           "bookId": "kalshi",
           "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:05.839Z"
+          "fetchedAt": "2026-11-23T10:11:19.280Z"
         },
         {
           "cardKey": "15310|Total score",
@@ -2809,24 +1891,24 @@
           "playerName": "Li, Haotong",
           "market": "Total score",
           "line": 68.5,
-          "overOdds": -102,
-          "underOdds": 102,
+          "overOdds": 133,
+          "underOdds": -133,
           "overBookOdds": {
             "kind": "american",
-            "raw": -102,
-            "display": "-102"
+            "raw": 133,
+            "display": "+133"
           },
           "underBookOdds": {
             "kind": "american",
-            "raw": 102,
-            "display": "+102"
+            "raw": -133,
+            "display": "-133"
           },
-          "overPayoutMultiplier": 1.9803921568627452,
-          "underPayoutMultiplier": 2.02,
+          "overPayoutMultiplier": 2.33,
+          "underPayoutMultiplier": 1.7518796992481203,
           "oddsSource": "book_api_live",
           "bookId": "kalshi",
           "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:05.839Z"
+          "fetchedAt": "2026-11-23T10:11:19.280Z"
         },
         {
           "cardKey": "23505|Total score",
@@ -2836,24 +1918,24 @@
           "playerName": "McGreevy, Max",
           "market": "Total score",
           "line": 68.5,
-          "overOdds": -102,
-          "underOdds": 102,
+          "overOdds": 228,
+          "underOdds": -228,
           "overBookOdds": {
             "kind": "american",
-            "raw": -102,
-            "display": "-102"
+            "raw": 228,
+            "display": "+228"
           },
           "underBookOdds": {
             "kind": "american",
-            "raw": 102,
-            "display": "+102"
+            "raw": -228,
+            "display": "-228"
           },
-          "overPayoutMultiplier": 1.9803921568627452,
-          "underPayoutMultiplier": 2.02,
+          "overPayoutMultiplier": 3.28,
+          "underPayoutMultiplier": 1.4385964912280702,
           "oddsSource": "book_api_live",
           "bookId": "kalshi",
           "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:05.839Z"
+          "fetchedAt": "2026-11-23T10:11:19.280Z"
         },
         {
           "cardKey": "23841|Total score",
@@ -2863,24 +1945,24 @@
           "playerName": "Neergaard-Petersen, Rasmus",
           "market": "Total score",
           "line": 67.5,
-          "overOdds": -102,
-          "underOdds": 102,
+          "overOdds": 113,
+          "underOdds": -113,
           "overBookOdds": {
             "kind": "american",
-            "raw": -102,
-            "display": "-102"
+            "raw": 113,
+            "display": "+113"
           },
           "underBookOdds": {
             "kind": "american",
-            "raw": 102,
-            "display": "+102"
+            "raw": -113,
+            "display": "-113"
           },
-          "overPayoutMultiplier": 1.9803921568627452,
-          "underPayoutMultiplier": 2.02,
+          "overPayoutMultiplier": 2.13,
+          "underPayoutMultiplier": 1.8849557522123894,
           "oddsSource": "book_api_live",
           "bookId": "kalshi",
           "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:05.839Z"
+          "fetchedAt": "2026-11-23T10:11:19.280Z"
         },
         {
           "cardKey": "22465|Total score",
@@ -2890,24 +1972,24 @@
           "playerName": "Penge, Marco",
           "market": "Total score",
           "line": 68.5,
-          "overOdds": -102,
-          "underOdds": 102,
+          "overOdds": 182,
+          "underOdds": -182,
           "overBookOdds": {
             "kind": "american",
-            "raw": -102,
-            "display": "-102"
+            "raw": 182,
+            "display": "+182"
           },
           "underBookOdds": {
             "kind": "american",
-            "raw": 102,
-            "display": "+102"
+            "raw": -182,
+            "display": "-182"
           },
-          "overPayoutMultiplier": 1.9803921568627452,
-          "underPayoutMultiplier": 2.02,
+          "overPayoutMultiplier": 2.8200000000000003,
+          "underPayoutMultiplier": 1.5494505494505495,
           "oddsSource": "book_api_live",
           "bookId": "kalshi",
           "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:05.839Z"
+          "fetchedAt": "2026-11-23T10:11:19.280Z"
         },
         {
           "cardKey": "19872|Total score",
@@ -2917,24 +1999,24 @@
           "playerName": "Riley, Davis",
           "market": "Total score",
           "line": 68.5,
-          "overOdds": -102,
-          "underOdds": 102,
+          "overOdds": 117,
+          "underOdds": -117,
           "overBookOdds": {
             "kind": "american",
-            "raw": -102,
-            "display": "-102"
+            "raw": 117,
+            "display": "+117"
           },
           "underBookOdds": {
             "kind": "american",
-            "raw": 102,
-            "display": "+102"
+            "raw": -117,
+            "display": "-117"
           },
-          "overPayoutMultiplier": 1.9803921568627452,
-          "underPayoutMultiplier": 2.02,
+          "overPayoutMultiplier": 2.17,
+          "underPayoutMultiplier": 1.8547008547008548,
           "oddsSource": "book_api_live",
           "bookId": "kalshi",
           "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:05.839Z"
+          "fetchedAt": "2026-11-23T10:11:19.280Z"
         },
         {
           "cardKey": "26850|Total score",
@@ -2944,24 +2026,24 @@
           "playerName": "Svensson, Jesper",
           "market": "Total score",
           "line": 68.5,
-          "overOdds": -102,
-          "underOdds": 102,
+          "overOdds": 138,
+          "underOdds": -138,
           "overBookOdds": {
             "kind": "american",
-            "raw": -102,
-            "display": "-102"
+            "raw": 138,
+            "display": "+138"
           },
           "underBookOdds": {
             "kind": "american",
-            "raw": 102,
-            "display": "+102"
+            "raw": -138,
+            "display": "-138"
           },
-          "overPayoutMultiplier": 1.9803921568627452,
-          "underPayoutMultiplier": 2.02,
+          "overPayoutMultiplier": 2.38,
+          "underPayoutMultiplier": 1.7246376811594204,
           "oddsSource": "book_api_live",
           "bookId": "kalshi",
           "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:05.839Z"
+          "fetchedAt": "2026-11-23T10:11:19.280Z"
         },
         {
           "cardKey": "26649|Total score",
@@ -2971,35 +2053,35 @@
           "playerName": "Thorbjornsen, Michael",
           "market": "Total score",
           "line": 67.5,
-          "overOdds": -102,
-          "underOdds": 102,
+          "overOdds": 138,
+          "underOdds": -138,
           "overBookOdds": {
             "kind": "american",
-            "raw": -102,
-            "display": "-102"
+            "raw": 138,
+            "display": "+138"
           },
           "underBookOdds": {
             "kind": "american",
-            "raw": 102,
-            "display": "+102"
+            "raw": -138,
+            "display": "-138"
           },
-          "overPayoutMultiplier": 1.9803921568627452,
-          "underPayoutMultiplier": 2.02,
+          "overPayoutMultiplier": 2.38,
+          "underPayoutMultiplier": 1.7246376811594204,
           "oddsSource": "book_api_live",
           "bookId": "kalshi",
           "gradeable": true,
-          "fetchedAt": "2026-11-23T02:15:05.839Z"
+          "fetchedAt": "2026-11-23T10:11:19.280Z"
         }
       ],
       "fetchError": "",
       "count": 16,
-      "fetchedAt": "2026-11-23T02:15:05.839Z"
+      "fetchedAt": "2026-11-23T10:11:19.280Z"
     },
     "dk_matchups": {
       "cards": [],
       "fetchError": "",
       "count": 0,
-      "fetchedAt": "2026-11-23T02:15:05.840Z"
+      "fetchedAt": "2026-11-23T10:11:19.281Z"
     }
   }
 }

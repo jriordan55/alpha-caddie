@@ -101,53 +101,8 @@
     }
   ],
   "_meta": {
-    "pulledAt": "2026-11-23T02:36:17.053Z",
+    "pulledAt": "2026-11-23T10:15:46.747Z",
     "detailStatus": 200,
     "tournamentsStatus": 200
-  },
-  "auth": {
-    "holeBreakdown": [],
-    "correlated": [
-      {
-        "CourseNum": "23",
-        "CourseName": "Muirfield Village GC",
-        "CourseNums": "[23, 893]"
-      },
-      {
-        "CourseNum": "43",
-        "CourseName": "Los Angeles CC (North)",
-        "CourseNums": "[43]"
-      },
-      {
-        "CourseNum": "500",
-        "CourseName": "Riviera CC",
-        "CourseNums": "[500]"
-      },
-      {
-        "CourseNum": "528",
-        "CourseName": "Pinehurst No. 2",
-        "CourseNums": "[528]"
-      },
-      {
-        "CourseNum": "611",
-        "CourseName": "Southern Hills CC",
-        "CourseNums": "[611]"
-      },
-      {
-        "CourseNum": "688",
-        "CourseName": "East Lake GC",
-        "CourseNums": "[688, 933]"
-      },
-      {
-        "CourseNum": "773",
-        "CourseName": "Aronimink GC",
-        "CourseNums": "[773]"
-      }
-    ],
-    "_meta": {
-      "pulledAt": "2026-11-23T02:36:17.226Z",
-      "holeStatus": 200,
-      "correlatedStatus": 200
-    }
   }
 }

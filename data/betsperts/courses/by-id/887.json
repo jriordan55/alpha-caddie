@@ -93,33 +93,8 @@
     }
   ],
   "_meta": {
-    "pulledAt": "2026-11-23T02:36:16.859Z",
+    "pulledAt": "2026-11-23T10:15:46.675Z",
     "detailStatus": 200,
     "tournamentsStatus": 200
-  },
-  "auth": {
-    "holeBreakdown": [],
-    "correlated": [
-      {
-        "CourseNum": "503",
-        "CourseName": "TPC River Highlands",
-        "CourseNums": "[503]"
-      },
-      {
-        "CourseNum": "875",
-        "CourseName": "Accordia Golf Narashino CC",
-        "CourseNums": "[875]"
-      },
-      {
-        "CourseNum": "947",
-        "CourseName": "Detroit GC",
-        "CourseNums": "[947, 876]"
-      }
-    ],
-    "_meta": {
-      "pulledAt": "2026-11-23T02:36:16.941Z",
-      "holeStatus": 200,
-      "correlatedStatus": 200
-    }
   }
 }

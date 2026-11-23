@@ -1,14 +1,6 @@
 {
-  "pulledAt": "2026-11-23T02:44:35.647Z",
-  "sessionProvided": true,
-  "results": {
-    "load-last50": 200,
-    "load-last100": 200,
-    "load-current-golfers-last50": 200,
-    "presetSplits": 200,
-    "recentForm": 200,
-    "regions": 200,
-    "types": 200,
-    "expertRankings": 200
-  }
+  "pulledAt": "2026-11-23T10:20:12.189Z",
+  "sessionProvided": false,
+  "withAuthFlag": false,
+  "note": "Put sessionKey in alpha-caddie-web/betsperts.local.json (or BETSPERTS_SESSION_KEY) to pull gated Rabbit Hole data."
 }

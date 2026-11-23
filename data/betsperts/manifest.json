@@ -1,5 +1,5 @@
 {
-  "started": "2026-11-23T02:36:13.883Z",
+  "started": "2026-11-23T10:15:45.532Z",
   "api": "https://api.betspertsgolf.com",
   "session": false,
   "withAuth": false,
@@ -12,18 +12,8 @@
   "playerOk": 3627,
   "playerSkip": 0,
   "playerFail": 0,
-  "rabbitAuth": true,
-  "rabbitEndpoints": {
-    "load-last50": 200,
-    "load-last100": 200,
-    "load-current-golfers-last50": 200,
-    "presetSplits": 200,
-    "recentForm": 200,
-    "regions": 200,
-    "types": 200,
-    "expertRankings": 200
-  },
-  "finished": "2026-11-23T02:44:35.672Z",
+  "rabbitAuth": false,
+  "finished": "2026-11-23T10:20:12.189Z",
   "playerFiles": 3627,
   "courseFiles": 120
 }

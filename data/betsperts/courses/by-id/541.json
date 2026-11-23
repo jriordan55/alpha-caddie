@@ -106,73 +106,8 @@
     }
   ],
   "_meta": {
-    "pulledAt": "2026-11-23T02:36:17.680Z",
+    "pulledAt": "2026-11-23T10:15:47.039Z",
     "detailStatus": 200,
     "tournamentsStatus": 200
-  },
-  "auth": {
-    "holeBreakdown": [],
-    "correlated": [
-      {
-        "CourseNum": "5",
-        "CourseName": "Pebble Beach Golf Links",
-        "CourseNums": "[5, 666]"
-      },
-      {
-        "CourseNum": "236",
-        "CourseName": "Erin Hills",
-        "CourseNums": "[236]"
-      },
-      {
-        "CourseNum": "618",
-        "CourseName": "Shinnecock Hills GC",
-        "CourseNums": "[618]"
-      },
-      {
-        "CourseNum": "658",
-        "CourseName": "Carnoustie GC",
-        "CourseNums": "[658]"
-      },
-      {
-        "CourseNum": "668",
-        "CourseName": "St. Andrews GC (Old Course)",
-        "CourseNums": "[668]"
-      },
-      {
-        "CourseNum": "697",
-        "CourseName": "Ocean Course at Kiawah Island",
-        "CourseNums": "[697]"
-      },
-      {
-        "CourseNum": "709",
-        "CourseName": "Royal Troon",
-        "CourseNums": "[709]"
-      },
-      {
-        "CourseNum": "778",
-        "CourseName": "Royal St. Georges GC",
-        "CourseNums": "[778]"
-      },
-      {
-        "CourseNum": "885",
-        "CourseName": "Royal Portrush GC",
-        "CourseNums": "[885]"
-      },
-      {
-        "CourseNum": "923",
-        "CourseName": "Royal Liverpool",
-        "CourseNums": "[923, 724]"
-      },
-      {
-        "CourseNum": "945",
-        "CourseName": "The Renaissance Club",
-        "CourseNums": "[945, 977]"
-      }
-    ],
-    "_meta": {
-      "pulledAt": "2026-11-23T02:36:17.781Z",
-      "holeStatus": 200,
-      "correlatedStatus": 200
-    }
   }
 }

@@ -102,43 +102,8 @@
     }
   ],
   "_meta": {
-    "pulledAt": "2026-11-23T02:36:17.683Z",
+    "pulledAt": "2026-11-23T10:15:47.060Z",
     "detailStatus": 200,
     "tournamentsStatus": 200
-  },
-  "auth": {
-    "holeBreakdown": [],
-    "correlated": [
-      {
-        "CourseNum": "11",
-        "CourseName": "TPC Sawgrass",
-        "CourseNums": "[11]"
-      },
-      {
-        "CourseNum": "658",
-        "CourseName": "Carnoustie GC",
-        "CourseNums": "[658]"
-      },
-      {
-        "CourseNum": "709",
-        "CourseName": "Royal Troon",
-        "CourseNums": "[709]"
-      },
-      {
-        "CourseNum": "778",
-        "CourseName": "Royal St. Georges GC",
-        "CourseNums": "[778]"
-      },
-      {
-        "CourseNum": "885",
-        "CourseName": "Royal Portrush GC",
-        "CourseNums": "[885]"
-      }
-    ],
-    "_meta": {
-      "pulledAt": "2026-11-23T02:36:17.777Z",
-      "holeStatus": 200,
-      "correlatedStatus": 200
-    }
   }
 }

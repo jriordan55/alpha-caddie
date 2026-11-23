@@ -105,58 +105,8 @@
     }
   ],
   "_meta": {
-    "pulledAt": "2026-11-23T02:36:16.315Z",
+    "pulledAt": "2026-11-23T10:15:48.952Z",
     "detailStatus": 200,
     "tournamentsStatus": 200
-  },
-  "auth": {
-    "holeBreakdown": [],
-    "correlated": [
-      {
-        "CourseNum": "238",
-        "CourseName": "Glen Oaks Club",
-        "CourseNums": "[238]"
-      },
-      {
-        "CourseNum": "514",
-        "CourseName": "Oak Hill CC",
-        "CourseNums": "[514, 558]"
-      },
-      {
-        "CourseNum": "608",
-        "CourseName": "Oakmont CC",
-        "CourseNums": "[608]"
-      },
-      {
-        "CourseNum": "654",
-        "CourseName": "The Country Club",
-        "CourseNums": "[654]"
-      },
-      {
-        "CourseNum": "715",
-        "CourseName": "Baltusrol GC",
-        "CourseNums": "[715]"
-      },
-      {
-        "CourseNum": "873",
-        "CourseName": "Ridgewood CC",
-        "CourseNums": "[873]"
-      },
-      {
-        "CourseNum": "891",
-        "CourseName": "Winged Foot GC",
-        "CourseNums": "[891]"
-      },
-      {
-        "CourseNum": "896",
-        "CourseName": "Olympia Fields CC (North)",
-        "CourseNums": "[896]"
-      }
-    ],
-    "_meta": {
-      "pulledAt": "2026-11-23T02:36:16.404Z",
-      "holeStatus": 200,
-      "correlatedStatus": 200
-    }
   }
 }

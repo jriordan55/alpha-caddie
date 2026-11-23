@@ -103,73 +103,8 @@
     }
   ],
   "_meta": {
-    "pulledAt": "2026-11-23T02:36:18.313Z",
+    "pulledAt": "2026-11-23T10:15:47.333Z",
     "detailStatus": 200,
     "tournamentsStatus": 200
-  },
-  "auth": {
-    "holeBreakdown": [],
-    "correlated": [
-      {
-        "CourseNum": "43",
-        "CourseName": "Los Angeles CC (North)",
-        "CourseNums": "[43]"
-      },
-      {
-        "CourseNum": "236",
-        "CourseName": "Erin Hills",
-        "CourseNums": "[236]"
-      },
-      {
-        "CourseNum": "541",
-        "CourseName": "Royal Birkdale GC",
-        "CourseNums": "[541]"
-      },
-      {
-        "CourseNum": "618",
-        "CourseName": "Shinnecock Hills GC",
-        "CourseNums": "[618]"
-      },
-      {
-        "CourseNum": "668",
-        "CourseName": "St. Andrews GC (Old Course)",
-        "CourseNums": "[668]"
-      },
-      {
-        "CourseNum": "697",
-        "CourseName": "Ocean Course at Kiawah Island",
-        "CourseNums": "[697]"
-      },
-      {
-        "CourseNum": "709",
-        "CourseName": "Royal Troon",
-        "CourseNums": "[709]"
-      },
-      {
-        "CourseNum": "778",
-        "CourseName": "Royal St. Georges GC",
-        "CourseNums": "[778]"
-      },
-      {
-        "CourseNum": "885",
-        "CourseName": "Royal Portrush GC",
-        "CourseNums": "[885]"
-      },
-      {
-        "CourseNum": "897",
-        "CourseName": "Memorial Park Golf Course",
-        "CourseNums": "[897]"
-      },
-      {
-        "CourseNum": "923",
-        "CourseName": "Royal Liverpool",
-        "CourseNums": "[923, 724]"
-      }
-    ],
-    "_meta": {
-      "pulledAt": "2026-11-23T02:36:18.404Z",
-      "holeStatus": 200,
-      "correlatedStatus": 200
-    }
   }
 }
