@@ -14,6 +14,7 @@
     "build:course-table:betsperts": "node scripts/overlay-course-table-betsperts.mjs",
     "build:betsperts-trad": "node scripts/overlay-projections-betsperts-trad.mjs",
     "build:betsperts-betting-viz": "node scripts/build-betsperts-betting-viz.mjs",
+    "build:course-key-stats": "node scripts/build-course-key-stats.mjs",
     "fetch:betsperts": "node scripts/fetch-betsperts-db.mjs",
     "fetch:betsperts:daily": "node scripts/fetch-betsperts-db.mjs --force",
     "fetch:betsperts:auth": "node scripts/fetch-betsperts-db.mjs --auth-only",

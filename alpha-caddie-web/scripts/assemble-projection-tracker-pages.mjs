@@ -87,6 +87,7 @@ const CADDIE_APP_DATA_FILES = [
   "betsperts_sg_by_dg.json",
   "player_headshots.json",
   "course_event_context.json",
+  "course_key_stats.json",
 ];
 
 const out = argOut();

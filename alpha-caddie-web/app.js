@@ -18796,6 +18796,44 @@ function cksScoreFieldFits(metrics, ctx) {
 let cksFieldExpanded = false;
 let cksWired = false;
 let cksRenderGen = 0;
+let COURSE_KEY_STATS_CACHE = null;
+let courseKeyStatsLoadPromise = null;
+
+async function ensureCourseKeyStatsLoaded() {
+  if (COURSE_KEY_STATS_CACHE) return COURSE_KEY_STATS_CACHE;
+  if (courseKeyStatsLoadPromise) return courseKeyStatsLoadPromise;
+  courseKeyStatsLoadPromise = (async () => {
+    try {
+      const res = await fetch(cacheBustFetchUrl("data/course_key_stats.json"), { cache: "no-store" });
+      if (res.ok) COURSE_KEY_STATS_CACHE = await res.json();
+    } catch {
+      COURSE_KEY_STATS_CACHE = null;
+    }
+    return COURSE_KEY_STATS_CACHE;
+  })().finally(() => {
+    courseKeyStatsLoadPromise = null;
+  });
+  return courseKeyStatsLoadPromise;
+}
+
+/** Prefer precomputed payload for this week's venue (instant); fall back to live regression. */
+function cksResolvePrecomputed(venueRaw, payload) {
+  if (!payload) return null;
+  const cur = payload.current;
+  const venueKey = normCourseNameKey(venueRaw);
+  if (cur?.metrics?.length) {
+    const curKey = normCourseNameKey(cur.venue || cur.venueLabel || payload.venue || "");
+    if (!venueKey || !curKey || curKey === venueKey || venueKey.includes(curKey) || curKey.includes(venueKey)) {
+      return cur;
+    }
+  }
+  const by = payload.byCourseKey || {};
+  if (venueKey && by[venueKey]?.metrics?.length) return by[venueKey];
+  for (const k of cksCourseKeysForVenue(venueRaw)) {
+    if (by[k]?.metrics?.length) return by[k];
+  }
+  return null;
+}
 
 function wireCourseKeyStatsUi() {
   if (cksWired) return;
@@ -18810,9 +18848,7 @@ function wireCourseKeyStatsUi() {
   });
 }
 
-async function buildCourseKeyStatsTab() {
-  wireCourseKeyStatsUi();
-  const gen = ++cksRenderGen;
+function cksPaintTab({ metrics, nRounds, nPlayers, fits, venueLabel, emptyMessage }) {
   const barsEl = document.getElementById("cks-bars");
   const emptyEl = document.getElementById("cks-empty");
   const venueEl = document.getElementById("cks-venue-line");
@@ -18822,49 +18858,23 @@ async function buildCourseKeyStatsTab() {
   const fieldBody = document.querySelector("#cks-field-table tbody");
   if (!barsEl) return;
 
-  const venueRaw = String(DATA?.meta?.course_used || DATA?.course_used || "").trim();
-  const venueLabel = formatDualOrSingleCourseForDisplay(venueRaw) || "—";
-  if (venueEl) venueEl.textContent = venueLabel;
-
-  if (emptyEl) {
-    emptyEl.hidden = false;
-    emptyEl.textContent = "Loading Rabbit Hole course history…";
-  }
-  barsEl.replaceChildren();
-
-  await Promise.all([
-    ensurePropsRhBootstrap().catch(() => null),
-    ensureBetspertsCourseFactsLoaded().catch(() => null),
-    ensurePlayerHeadshotsLoaded().catch(() => null),
-    ensureApproachSkillByDgId().catch(() => null),
-    loadPropsCoursesManifest().catch(() => null),
-  ]);
-  if (gen !== cksRenderGen) return;
-
-  const entries = venueRaw ? await cksGatherCourseEntries(venueRaw) : [];
-  if (gen !== cksRenderGen) return;
-  const ctx = cksVenueRhContext();
-  const { metrics, nRounds, nPlayers } = cksComputeKeyStats(entries, ctx);
-
   if (venueEl) {
-    venueEl.textContent = metrics.length
-      ? `${venueLabel} · ${nPlayers} players · ${nRounds} rounds`
+    venueEl.textContent = metrics?.length
+      ? `${venueLabel} · ${nPlayers || 0} players · ${nRounds || 0} rounds`
       : venueLabel;
   }
   if (emptyEl) {
-    if (!metrics.length) {
+    if (!metrics?.length) {
       emptyEl.hidden = false;
-      emptyEl.textContent = nRounds
-        ? "Not enough overlapping Rabbit Hole / course-history samples yet."
-        : "No course history shard for this venue yet.";
+      emptyEl.textContent = emptyMessage || "No course key stats yet.";
     } else {
       emptyEl.hidden = true;
     }
   }
 
   barsEl.replaceChildren();
-  const maxR = metrics[0]?.r || 1;
-  for (const m of metrics) {
+  const maxR = metrics?.[0]?.r || 1;
+  for (const m of metrics || []) {
     const row = document.createElement("div");
     row.className = "cks-bar-row";
     row.setAttribute("role", "listitem");
@@ -18875,19 +18885,18 @@ async function buildCourseKeyStatsTab() {
     track.className = "cks-bar-track";
     const fill = document.createElement("div");
     fill.className = "cks-bar-fill";
-    fill.style.width = `${Math.max(8, Math.round((m.r / maxR) * 100))}%`;
+    fill.style.width = `${Math.max(8, Math.round((num(m.r, 0) / maxR) * 100))}%`;
     track.appendChild(fill);
     const val = document.createElement("span");
     val.className = "cks-bar-val";
-    val.textContent = m.r.toFixed(2);
+    val.textContent = num(m.r, 0).toFixed(2);
     row.appendChild(name);
     row.appendChild(track);
     row.appendChild(val);
     barsEl.appendChild(row);
   }
 
-  const fits = cksScoreFieldFits(metrics, ctx);
-  const best = fits[0];
+  const best = fits?.[0];
   if (bestPlayerEl) {
     bestPlayerEl.replaceChildren();
     if (best) {
@@ -18906,7 +18915,7 @@ async function buildCourseKeyStatsTab() {
 
   if (fieldBody) {
     fieldBody.replaceChildren();
-    for (let i = 0; i < Math.min(fits.length, 40); i++) {
+    for (let i = 0; i < Math.min(fits?.length || 0, 40); i++) {
       const f = fits[i];
       const tr = document.createElement("tr");
       const tdR = document.createElement("td");
@@ -18922,7 +18931,7 @@ async function buildCourseKeyStatsTab() {
       tdF.textContent = String(f.fit);
       const tdM = document.createElement("td");
       tdM.className = "cks-field-matches";
-      tdM.textContent = f.parts.join(" · ") || "—";
+      tdM.textContent = (f.parts || []).join(" · ") || "—";
       tr.appendChild(tdR);
       tr.appendChild(tdG);
       tr.appendChild(tdF);
@@ -18932,6 +18941,66 @@ async function buildCourseKeyStatsTab() {
   }
   if (fieldBlock) fieldBlock.hidden = !cksFieldExpanded;
   void ensurePlayerHeadshotsLoaded().then(() => hydrateVisiblePlayerAvatars());
+}
+
+async function buildCourseKeyStatsTab() {
+  wireCourseKeyStatsUi();
+  const gen = ++cksRenderGen;
+  const barsEl = document.getElementById("cks-bars");
+  const emptyEl = document.getElementById("cks-empty");
+  if (!barsEl) return;
+
+  const venueRaw = String(DATA?.meta?.course_used || DATA?.course_used || "").trim();
+  const venueLabel = formatDualOrSingleCourseForDisplay(venueRaw) || "—";
+
+  if (emptyEl) {
+    emptyEl.hidden = false;
+    emptyEl.textContent = "Loading course key stats…";
+  }
+  barsEl.replaceChildren();
+
+  // Fast path: precomputed JSON (built in refresh pipeline).
+  const pre = await ensureCourseKeyStatsLoaded().catch(() => null);
+  if (gen !== cksRenderGen) return;
+  const baked = cksResolvePrecomputed(venueRaw, pre);
+  if (baked?.metrics?.length) {
+    void ensurePlayerHeadshotsLoaded().catch(() => null);
+    cksPaintTab({
+      metrics: baked.metrics,
+      nRounds: baked.nRounds,
+      nPlayers: baked.nPlayers,
+      fits: baked.fits || (baked.bestFit ? [baked.bestFit] : []),
+      venueLabel,
+    });
+    return;
+  }
+
+  // Slow fallback when precompute is missing / stale for this venue.
+  if (emptyEl) emptyEl.textContent = "Computing course key stats…";
+  await Promise.all([
+    ensurePropsRhBootstrap().catch(() => null),
+    ensureBetspertsCourseFactsLoaded().catch(() => null),
+    ensurePlayerHeadshotsLoaded().catch(() => null),
+    ensureApproachSkillByDgId().catch(() => null),
+    loadPropsCoursesManifest().catch(() => null),
+  ]);
+  if (gen !== cksRenderGen) return;
+
+  const entries = venueRaw ? await cksGatherCourseEntries(venueRaw) : [];
+  if (gen !== cksRenderGen) return;
+  const ctx = cksVenueRhContext();
+  const { metrics, nRounds, nPlayers } = cksComputeKeyStats(entries, ctx);
+  const fits = cksScoreFieldFits(metrics, ctx);
+  cksPaintTab({
+    metrics,
+    nRounds,
+    nPlayers,
+    fits,
+    venueLabel,
+    emptyMessage: nRounds
+      ? "Not enough overlapping Rabbit Hole / course-history samples yet."
+      : "No course history shard for this venue yet.",
+  });
 }
 
 function buildCourseFitTab() {

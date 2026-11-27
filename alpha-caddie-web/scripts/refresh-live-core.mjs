@@ -299,6 +299,13 @@ run(
 );
 
 run(
+  "build-course-key-stats.mjs",
+  "Course Key Stats precompute (finish correlations + field fit) → data/course_key_stats.json",
+  {},
+  softOpt,
+);
+
+run(
   "overlay-projections-betsperts-trad.mjs",
   "Prefer Betsperts RH traditional stats + form windows on projections players",
   {},
