@@ -7308,160 +7308,201 @@ html[data-theme="dark"] .nav-theme-toggle-icon {
   background: var(--golf-green);
 }
 
-/* —— Course Key Stats (replaces Course Fit) —— */
+/* Course Key Stats â€” dark tools panel (RickRunGood-style) */
+body:has(#panel-course-fit.active) .content-wrapper,
+body:has(#panel-course-fit.panel.active) .content-wrapper {
+  background: #0c0e10;
+}
+body:has(#panel-course-fit.active) .data-status-primary,
+body:has(#panel-course-fit.panel.active) .data-status-primary {
+  display: none;
+}
+.course-key-stats-panel {
+  --cks-bg: #0c0e10;
+  --cks-surface: #14171b;
+  --cks-line: rgba(255, 255, 255, 0.09);
+  --cks-text: #f4f6f5;
+  --cks-muted: #8b9198;
+  --cks-accent: #00e39a;
+  background: var(--cks-bg) !important;
+  color: var(--cks-text);
+  min-height: calc(100vh - 140px);
+  margin: 0 -4px;
+  padding-top: 12px;
+}
 .course-key-stats-panel .cks-shell {
-  max-width: 720px;
+  max-width: 920px;
   margin: 0 auto;
-  padding: 16px 16px 48px;
+  padding: 8px 20px 56px;
   display: flex;
   flex-direction: column;
-  gap: 28px;
+  gap: 20px;
 }
-.cks-card {
-  background: #12151a;
-  color: #f3f5f4;
-  border-radius: 18px;
-  padding: 22px 22px 18px;
-  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.35);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+.cks-tool {
+  background: var(--cks-surface);
+  border: 1px solid var(--cks-line);
+  border-left: 3px solid var(--cks-accent);
+  border-radius: 0;
+  overflow: hidden;
 }
-.cks-card-head {
-  margin-bottom: 18px;
+.cks-tool-head {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px 22px 14px;
+  border-bottom: 1px solid var(--cks-line);
 }
-.cks-title {
+.cks-tool-title {
   margin: 0;
-  font-size: 1.35rem;
-  font-weight: 750;
-  letter-spacing: -0.02em;
+  font-size: 1.1rem;
+  font-weight: 650;
+  letter-spacing: 0.01em;
   color: #fff;
 }
 .cks-venue {
-  margin: 4px 0 0;
-  font-size: 0.78rem;
-  color: rgba(255, 255, 255, 0.55);
+  margin: 0;
+  font-size: 0.7rem;
+  color: var(--cks-muted);
+}
+.cks-body {
+  padding: 22px 22px 20px;
 }
 .cks-wins-head {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  margin-bottom: 12px;
+  margin-bottom: 18px;
   gap: 12px;
 }
 .cks-wins-label {
-  font-size: 0.68rem;
+  font-size: 0.72rem;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.55);
+  color: rgba(255, 255, 255, 0.92);
 }
 .cks-wins-col {
-  font-size: 0.68rem;
-  font-weight: 600;
-  color: rgba(255, 255, 255, 0.45);
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--cks-muted);
 }
 .cks-bars {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
 }
 .cks-bar-row {
   display: grid;
-  grid-template-columns: minmax(7.5rem, 34%) 1fr 2.6rem;
-  gap: 10px;
+  grid-template-columns: minmax(9.5rem, 11.5rem) 1fr 2.75rem;
+  gap: 14px;
   align-items: center;
 }
 .cks-bar-name {
-  font-size: 0.86rem;
-  font-weight: 600;
+  font-size: 0.92rem;
+  font-weight: 500;
   color: rgba(255, 255, 255, 0.92);
-  line-height: 1.2;
+  line-height: 1.25;
 }
 .cks-bar-track {
-  height: 8px;
+  height: 10px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
+  background: #2a2f35;
   overflow: hidden;
 }
 .cks-bar-fill {
   height: 100%;
   border-radius: inherit;
-  background: #3ecf6a;
+  background: var(--cks-accent);
 }
 .cks-bar-val {
   text-align: right;
   font-variant-numeric: tabular-nums;
   font-weight: 700;
-  font-size: 0.9rem;
-  color: #3ecf6a;
+  font-size: 0.95rem;
+  color: var(--cks-accent);
 }
 .cks-empty {
   margin: 8px 0 0;
   font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.5) !important;
+  color: var(--cks-muted) !important;
 }
 .cks-best {
   display: grid;
-  grid-template-columns: auto 1fr auto;
-  gap: 12px;
+  grid-template-columns: 5.5rem 1fr auto;
+  gap: 14px;
   align-items: center;
-  margin-top: 20px;
-  padding-top: 16px;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid var(--cks-line);
 }
 .cks-best-lab {
-  font-size: 0.68rem;
+  font-size: 0.72rem;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.5);
+  color: var(--cks-muted);
 }
 .cks-best-player {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   min-width: 0;
+  color: #fff;
+}
+.cks-best-player .player-avatar,
+.cks-best-player img {
+  width: 32px !important;
+  height: 32px !important;
+  border-radius: 999px;
+  object-fit: cover;
 }
 .cks-best-name {
-  font-weight: 650;
-  font-size: 0.95rem;
+  font-weight: 600;
+  font-size: 0.98rem;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 .cks-best-fit {
-  font-weight: 750;
-  font-size: 0.95rem;
-  color: #3ecf6a;
+  font-weight: 700;
+  font-size: 0.98rem;
+  color: var(--cks-accent);
   font-variant-numeric: tabular-nums;
 }
 .cks-open-link {
-  margin-top: 16px;
+  display: inline-block;
+  margin-top: 18px;
   padding: 0;
   border: 0;
   background: none;
-  color: #3ecf6a;
+  color: var(--cks-accent);
   font: inherit;
-  font-size: 0.82rem;
-  font-weight: 650;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
   cursor: pointer;
 }
 .cks-open-link:hover {
   text-decoration: underline;
+  text-underline-offset: 3px;
 }
 .cks-field-block {
-  background: var(--golf-elevated-soft);
-  border: 1px solid var(--golf-border);
-  border-radius: 14px;
+  background: var(--cks-surface);
+  border: 1px solid var(--cks-line);
+  border-radius: 0;
   padding: 16px 18px 8px;
+  color: var(--cks-text);
 }
 .cks-field-title {
   margin: 0;
   font-size: 1.05rem;
+  color: #fff;
 }
 .cks-field-sub {
   margin: 4px 0 12px;
   font-size: 0.78rem;
-  color: var(--golf-text-muted);
+  color: var(--cks-muted);
 }
 .cks-field-golfer {
   display: flex;
@@ -7470,20 +7511,41 @@ html[data-theme="dark"] .nav-theme-toggle-icon {
 }
 .cks-field-fit {
   font-weight: 750;
-  color: var(--golf-green);
+  color: var(--cks-accent);
 }
 .cks-field-matches {
   font-size: 0.78rem;
-  color: var(--golf-text-muted);
+  color: var(--cks-muted);
+}
+.course-key-stats-panel .data-table {
+  color: var(--cks-text);
+}
+.course-key-stats-panel .data-table th,
+.course-key-stats-panel .data-table td {
+  border-color: var(--cks-line);
 }
 @media (max-width: 560px) {
+  .course-key-stats-panel .cks-shell {
+    padding: 4px 12px 40px;
+  }
+  .cks-body {
+    padding: 18px 16px 16px;
+  }
   .cks-bar-row {
     grid-template-columns: 1fr auto;
     grid-template-areas:
       "name val"
       "track track";
+    gap: 8px 12px;
   }
   .cks-bar-name { grid-area: name; }
   .cks-bar-val { grid-area: val; }
   .cks-bar-track { grid-area: track; }
+  .cks-best {
+    grid-template-columns: auto 1fr auto;
+  }
+  .cks-venue {
+    text-align: left;
+    width: 100%;
+  }
 }

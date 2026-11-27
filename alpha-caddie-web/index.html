@@ -578,23 +578,25 @@
     <!-- Course Key Stats (replaces Course fit) -->
     <section id="panel-course-fit" class="panel course-key-stats-panel" role="tabpanel" hidden>
       <div class="cks-shell">
-        <article class="cks-card" aria-label="Course Key Stats">
-          <header class="cks-card-head">
-            <h2 class="cks-title">Course Key Stats</h2>
+        <article class="cks-tool" aria-label="Course Key Stats">
+          <header class="cks-tool-head">
+            <h2 class="cks-tool-title">Course Key Stats</h2>
             <p class="cks-venue" id="cks-venue-line"></p>
           </header>
-          <div class="cks-wins-head">
-            <span class="cks-wins-label">What wins here</span>
-            <span class="cks-wins-col">Correlation to finish</span>
+          <div class="cks-body">
+            <div class="cks-wins-head">
+              <span class="cks-wins-label">What wins here</span>
+              <span class="cks-wins-col">Correlation to finish</span>
+            </div>
+            <div class="cks-bars" id="cks-bars" role="list"></div>
+            <p class="cks-empty text-muted" id="cks-empty" hidden>Loading Rabbit Hole course history…</p>
+            <div class="cks-best" id="cks-best">
+              <span class="cks-best-lab">Best fit</span>
+              <div class="cks-best-player" id="cks-best-player"></div>
+              <span class="cks-best-fit" id="cks-best-fit">—</span>
+            </div>
+            <button type="button" class="cks-open-link" id="cks-open-field">Open course key stats →</button>
           </div>
-          <div class="cks-bars" id="cks-bars" role="list"></div>
-          <p class="cks-empty text-muted" id="cks-empty" hidden>Loading Rabbit Hole course history…</p>
-          <div class="cks-best" id="cks-best">
-            <span class="cks-best-lab">Best fit</span>
-            <div class="cks-best-player" id="cks-best-player"></div>
-            <span class="cks-best-fit" id="cks-best-fit">—</span>
-          </div>
-          <button type="button" class="cks-open-link" id="cks-open-field">Open course key stats →</button>
         </article>
 
         <section class="cks-field-block" id="cks-field-block" hidden>
