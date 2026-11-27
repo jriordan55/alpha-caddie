@@ -18388,18 +18388,81 @@ function cksParseFinishRank(finText) {
   return m ? Math.round(num(m[1], NaN)) : NaN;
 }
 
+function cksYardsToLengthLabel(yards) {
+  const y = num(yards, NaN);
+  if (!Number.isFinite(y) || y <= 0) return null;
+  if (y < 6800) return "Very Short";
+  if (y < 7000) return "Short";
+  if (y < 7200) return "Average";
+  if (y < 7400) return "Long";
+  return "Very Long";
+}
+
 /** Venue Rabbit Hole context (greens / length / difficulty) for condition-labeled stats. */
 function cksVenueRhContext() {
   const facts = propsRhCourseFactsForVenue();
   const f = facts[0] || null;
+  const yards =
+    facts.reduce((a, x) => a + num(x?.yards, 0), 0) / Math.max(1, facts.filter((x) => num(x?.yards, 0) > 0).length) ||
+    num(f?.yards, NaN);
   return {
     facts,
     greens: f?.grass?.greens?.[0] || null,
     fairways: f?.grass?.fairways?.[0] || null,
     difficulty: f?.difficulty || null,
-    lengthLabel: null,
+    lengthLabel: cksYardsToLengthLabel(yards),
     types: f?.course_types || [],
+    preferredRhKeys: new Set(
+      [
+        f?.grass?.greens?.[0] ? `green:${String(f.grass.greens[0]).toLowerCase()}` : "",
+        f?.difficulty ? `condition:${String(f.difficulty).toLowerCase()}` : "",
+        cksYardsToLengthLabel(yards) ? `length:${String(cksYardsToLengthLabel(yards)).toLowerCase()}` : "",
+      ].filter(Boolean),
+    ),
   };
+}
+
+/**
+ * Dual-venue weeks (e.g. Seaside · Plantation) often only have a live shard.
+ * Also load parent / component history shards so regressions use full RH-era finishes.
+ */
+function cksCourseKeysForVenue(venueRaw) {
+  const raw = String(venueRaw || "").trim();
+  const keys = new Set();
+  if (!raw) return [];
+  const full = normCourseNameKey(raw);
+  if (full) keys.add(full);
+  const parts = raw.includes(" · ") || raw.includes(";") ? raw.split(/\s*[·;]\s*/) : [raw];
+  for (const part of parts) {
+    const k = normCourseNameKey(part);
+    if (!k) continue;
+    keys.add(k);
+    const tokens = k.split(/\s+/).filter(Boolean);
+    for (let i = tokens.length - 1; i >= 2; i--) keys.add(tokens.slice(0, i).join(" "));
+  }
+  for (const c of propsCoursesManifestCache?.courses || []) {
+    const ck = normCourseNameKey(c.course_key || "");
+    if (!ck) continue;
+    if (full.includes(ck) || [...keys].some((k) => k.includes(ck) || ck.includes(k))) keys.add(ck);
+  }
+  return [...keys];
+}
+
+async function cksGatherCourseEntries(venueRaw) {
+  await loadPropsCoursesManifest().catch(() => null);
+  const keys = cksCourseKeysForVenue(venueRaw);
+  const seen = new Set();
+  const entries = [];
+  for (const k of keys) {
+    const bucket = await ensurePropsCourseIndexForKeyAsync(k);
+    for (const e of bucket.entries || []) {
+      const dk = propsCourseWindowEntryDedupeKey(e);
+      if (seen.has(dk)) continue;
+      seen.add(dk);
+      entries.push(e);
+    }
+  }
+  return entries;
 }
 
 function cksPlayerRhSplitSg(dgId, kind, label) {
@@ -18420,6 +18483,13 @@ function cksPlayerRhSplitSg(dgId, kind, label) {
   return NaN;
 }
 
+function cksApproachSkillValue(dgId, sgKey) {
+  const id = Math.round(num(dgId, NaN));
+  if (!Number.isFinite(id) || !sgKey) return NaN;
+  const skill = approachSkillByDgIdCache?.get(id);
+  return num(skill?.[sgKey], NaN);
+}
+
 function cksPlayerFormMetric(dgId, key, ctx) {
   const id = Math.round(num(dgId, NaN));
   const row =
@@ -18431,122 +18501,240 @@ function cksPlayerFormMetric(dgId, key, ctx) {
   if (key === "sg_app") return num(rh?.sg_app ?? l50?.sg_app ?? row?.sg_app, NaN);
   if (key === "sg_ott") return num(rh?.sg_ott ?? l50?.sg_ott ?? row?.sg_ott, NaN);
   if (key === "sg_arg") return num(rh?.sg_arg ?? l50?.sg_arg ?? row?.sg_arg, NaN);
-  if (key === "sg_putt") return num(rh?.sg_putt ?? l50?.sg_putt ?? row?.sg_putt, NaN);
+  if (key === "sg_putt") {
+    const greenSplit = ctx?.greens ? cksPlayerRhSplitSg(id, "green", ctx.greens) : NaN;
+    if (Number.isFinite(greenSplit)) return greenSplit;
+    return num(rh?.sg_putt ?? l50?.sg_putt ?? row?.sg_putt, NaN);
+  }
+  if (key === "sg_t2g") return num(rh?.sg_t2g ?? row?.sg_t2g, NaN);
   if (key === "sg_total") return num(rh?.sg_total ?? l50?.sg_tot ?? row?.sg_total, NaN);
-  if (key === "driving_dist") return num(row?.driving_distance ?? row?.avg_driving_distance, NaN);
+  if (key === "driving_dist") {
+    return num(
+      row?.driving_distance ?? row?.avg_driving_distance ?? row?.adj_driving_distance ?? row?.average_driving_distance,
+      NaN,
+    );
+  }
   if (key === "driving_acc") return num(rh?.dr_accuracy ?? row?.driving_accuracy ?? row?.fairway_gain, NaN);
   if (key === "gir") return num(rh?.gir_pct ?? row?.gir, NaN);
   if (key === "prox_fw") return num(row?.prox_fw, NaN);
+  if (key === "birdies") return num(rh?.bob_pct ?? row?.birdies, NaN);
+  if (key.startsWith("appbin:")) return cksApproachSkillValue(id, key.slice(7));
+  if (key.startsWith("rh_green:")) return cksPlayerRhSplitSg(id, "green", key.slice(9));
+  if (key.startsWith("rh_length:")) return cksPlayerRhSplitSg(id, "length", key.slice(10));
+  if (key.startsWith("rh_condition:")) return cksPlayerRhSplitSg(id, "condition", key.slice(13));
   if (key === "rh_putt_green") return cksPlayerRhSplitSg(id, "green", ctx.greens);
-  if (key === "rh_length") return cksPlayerRhSplitSg(id, "length", ctx.difficulty === "Easy" ? "Short" : ctx.difficulty === "Difficult" ? "Long" : "Average");
+  if (key === "rh_length") return cksPlayerRhSplitSg(id, "length", ctx.lengthLabel);
   if (key === "rh_condition") return cksPlayerRhSplitSg(id, "condition", ctx.difficulty);
   return NaN;
 }
 
 /**
- * Correlate course-history round skills (+ RH condition splits) with finish proxy.
- * Finish proxy: prefer parsed fin_text (lower better → negated); else sg_total.
+ * Correlate course-history skills + every Rabbit Hole condition split + approach bins
+ * with finish position. Aggregates to player-event so finish isn't round-duplicated.
  */
 function cksComputeKeyStats(entries, ctx) {
-  const rounds = [];
+  const minY = propsRhMinSeasonYear();
+  /** @type {Map<string, object>} */
+  const eventMap = new Map();
+  let nRounds = 0;
   for (const e of entries || []) {
     const r = e.row || e;
     const dgId = Math.round(num(e.dgId ?? e.dg_id ?? r.dg_id, NaN));
     if (!Number.isFinite(dgId)) continue;
     const y = Math.round(num(r.year, NaN));
-    if (Number.isFinite(y) && y < propsRhMinSeasonYear()) continue;
-    const sgTot = num(r.sg_total, NaN);
+    if (Number.isFinite(y) && y < minY) continue;
+    nRounds += 1;
     const finish = cksParseFinishRank(r.fin_text);
-    let perf = NaN;
-    if (Number.isFinite(finish)) perf = -finish;
-    else if (Number.isFinite(sgTot)) perf = sgTot;
-    else continue;
-    rounds.push({
-      dgId,
+    const evKey = `${dgId}|${y}|${String(r.event_id || r.event_name || "").trim().toLowerCase()}`;
+    let ev = eventMap.get(evKey);
+    if (!ev) {
+      ev = {
+        dgId,
+        finish: NaN,
+        n: 0,
+        sg_app: 0,
+        sg_ott: 0,
+        sg_arg: 0,
+        sg_putt: 0,
+        sg_t2g: 0,
+        sg_total: 0,
+        gir: 0,
+        fairways: 0,
+        putts: 0,
+        birdies: 0,
+        bogeys: 0,
+        n_putts: 0,
+      };
+      eventMap.set(evKey, ev);
+    }
+    if (Number.isFinite(finish)) ev.finish = finish;
+    const bump = (key, v) => {
+      if (!Number.isFinite(v)) return;
+      ev[key] += v;
+      if (key === "putts") ev.n_putts += 1;
+    };
+    ev.n += 1;
+    bump("sg_app", num(r.sg_app, NaN));
+    bump("sg_ott", num(r.sg_ott, NaN));
+    bump("sg_arg", num(r.sg_arg, NaN));
+    bump("sg_putt", num(r.sg_putt, NaN));
+    bump("sg_t2g", num(r.sg_t2g, NaN));
+    bump("sg_total", num(r.sg_total, NaN));
+    bump("gir", num(r.gir, NaN));
+    bump("fairways", num(r.fairways, NaN));
+    bump("putts", num(r.putts, NaN));
+    bump("birdies", num(r.birdies, NaN));
+    bump("bogeys", num(r.bogeys ?? r.bogies, NaN));
+  }
+
+  const events = [];
+  for (const ev of eventMap.values()) {
+    if (ev.n < 1) continue;
+    const avg = (sum, count = ev.n) => (count > 0 ? sum / count : NaN);
+    const hasFinish = Number.isFinite(ev.finish);
+    const perf = hasFinish ? -ev.finish : avg(ev.sg_total);
+    if (!Number.isFinite(perf)) continue;
+    events.push({
+      dgId: ev.dgId,
       perf,
-      sg_app: num(r.sg_app, NaN),
-      sg_ott: num(r.sg_ott, NaN),
-      sg_arg: num(r.sg_arg, NaN),
-      sg_putt: num(r.sg_putt, NaN),
-      driving_dist: num(r.driving_dist ?? r.driving_distance, NaN),
-      driving_acc: num(r.driving_acc ?? r.driving_accuracy, NaN),
-      gir: num(r.gir, NaN),
-      fairways: num(r.fairways, NaN),
-      prox_fw: num(r.prox_fw, NaN),
-      putts: num(r.putts, NaN),
+      hasFinish,
+      sg_app: avg(ev.sg_app),
+      sg_ott: avg(ev.sg_ott),
+      sg_arg: avg(ev.sg_arg),
+      sg_putt: avg(ev.sg_putt),
+      sg_t2g: avg(ev.sg_t2g),
+      gir: avg(ev.gir),
+      fairways: avg(ev.fairways),
+      putts: avg(ev.putts, ev.n_putts),
+      birdies: avg(ev.birdies),
+      bogeys: avg(ev.bogeys),
     });
   }
 
+  // Prefer finish-backed events when we have enough; otherwise SG-total proxy.
+  const finishEvents = events.filter((e) => e.hasFinish);
+  const sample = finishEvents.length >= 12 ? finishEvents : events;
+
+  const out = [];
   const puttLabel = ctx.greens ? `SG: Putting (${ctx.greens})` : "SG: Putting";
-  const candidates = [
+  const eventCandidates = [
     { key: "sg_app", label: "SG: Approach", invert: false },
     { key: "sg_ott", label: "SG: Off-the-Tee", invert: false },
     { key: "sg_arg", label: "SG: Around-the-Green", invert: false },
     { key: "sg_putt", label: puttLabel, invert: false },
-    { key: "driving_dist", label: "Driving Distance", invert: false },
-    { key: "driving_acc", label: "Driving Accuracy", invert: false },
+    { key: "sg_t2g", label: "SG: Tee-to-Green", invert: false },
     { key: "gir", label: "GIR", invert: false },
-    { key: "prox_fw", label: "Proximity (FW)", invert: true },
     { key: "fairways", label: "Fairways Hit", invert: false },
+    { key: "birdies", label: "Birdies", invert: false },
+    { key: "bogeys", label: "Bogey Avoidance", invert: true },
+    { key: "putts", label: "Putts", invert: true },
   ];
-
-  const out = [];
-  for (const c of candidates) {
+  for (const c of eventCandidates) {
     const xs = [];
     const ys = [];
-    for (const r of rounds) {
-      let x = r[c.key];
-      if (!Number.isFinite(x) || !Number.isFinite(r.perf)) continue;
+    for (const ev of sample) {
+      let x = ev[c.key];
+      if (!Number.isFinite(x) || !Number.isFinite(ev.perf)) continue;
       if (c.invert) x = -x;
       xs.push(x);
-      ys.push(r.perf);
+      ys.push(ev.perf);
     }
     const r = cksPearson(xs, ys);
     if (!Number.isFinite(r) || r <= 0) continue;
-    out.push({ key: c.key, label: c.label, r, n: xs.length, source: "course-history" });
+    out.push({ key: c.key, label: c.label, r, n: xs.length, source: "course-history", venueBoost: 0 });
   }
 
-  // Rabbit Hole condition filters matched to this venue (greens / difficulty / length).
+  // Player-level avg finish at this course (finish-backed when possible).
   const byPlayer = new Map();
-  for (const r of rounds) {
-    const prev = byPlayer.get(r.dgId) || { n: 0, sum: 0 };
+  for (const ev of sample) {
+    const prev = byPlayer.get(ev.dgId) || { n: 0, sum: 0 };
     prev.n += 1;
-    prev.sum += r.perf;
-    byPlayer.set(r.dgId, prev);
+    prev.sum += ev.perf;
+    byPlayer.set(ev.dgId, prev);
   }
-  const rhCandidates = [];
-  if (ctx.greens) {
-    rhCandidates.push({
-      key: "rh_putt_green",
-      label: `SG: Putting (${ctx.greens})`,
-      kind: "green",
-      match: ctx.greens,
+
+  const playerCandidates = [];
+  const greenSeen = new Set();
+  const lengthSeen = new Set();
+  const conditionSeen = new Set();
+  for (const dgId of byPlayer.keys()) {
+    const viz = PROPS_RH_VIZ?.playersByDg?.[String(dgId)];
+    if (!viz) continue;
+    for (const g of viz.greenGrass || []) {
+      const lab = String(g.surface || "").trim();
+      if (!lab || greenSeen.has(lab.toLowerCase())) continue;
+      greenSeen.add(lab.toLowerCase());
+      playerCandidates.push({
+        key: `rh_green:${lab}`,
+        label: `SG: Putting (${lab})`,
+        venueBoost: ctx.preferredRhKeys?.has(`green:${lab.toLowerCase()}`) ? 0.015 : 0,
+      });
+    }
+    for (const g of viz.courseLength || []) {
+      const lab = String(g.label || "").trim();
+      if (!lab || lengthSeen.has(lab.toLowerCase())) continue;
+      lengthSeen.add(lab.toLowerCase());
+      playerCandidates.push({
+        key: `rh_length:${lab}`,
+        label: `Course Length (${lab})`,
+        venueBoost: ctx.preferredRhKeys?.has(`length:${lab.toLowerCase()}`) ? 0.015 : 0,
+      });
+    }
+    for (const g of viz.scoringCondition || []) {
+      const lab = String(g.label || "").trim();
+      if (!lab || conditionSeen.has(lab.toLowerCase())) continue;
+      conditionSeen.add(lab.toLowerCase());
+      playerCandidates.push({
+        key: `rh_condition:${lab}`,
+        label: `Scoring (${lab})`,
+        venueBoost: ctx.preferredRhKeys?.has(`condition:${lab.toLowerCase()}`) ? 0.015 : 0,
+      });
+    }
+  }
+
+  for (const def of APPROACH_SKILL_BIN_DEFS) {
+    let label = def.label;
+    if (/100-150/i.test(def.label)) label = "Proximity 100–150";
+    else if (/150-200/i.test(def.label)) label = "Proximity 150–200";
+    else if (/50-100/i.test(def.label)) label = "Proximity 50–100";
+    else if (/200\+/i.test(def.label)) label = "Proximity 200+";
+    else if (/Rough < 150/i.test(def.label)) label = "Proximity Rough <150";
+    else if (/Rough 150/i.test(def.label)) label = "Proximity Rough 150+";
+    playerCandidates.push({
+      key: `appbin:${def.sgKey}`,
+      label,
+      venueBoost: /150-200|100-150/i.test(def.label) ? 0.01 : 0,
     });
   }
-  if (ctx.difficulty) {
-    rhCandidates.push({
-      key: "rh_condition",
-      label: `Scoring (${ctx.difficulty})`,
-      kind: "condition",
-      match: ctx.difficulty,
-    });
-  }
-  for (const c of rhCandidates) {
+
+  playerCandidates.push(
+    { key: "driving_dist", label: "Driving Distance", venueBoost: 0 },
+    { key: "driving_acc", label: "Driving Accuracy", venueBoost: 0 },
+  );
+
+  for (const c of playerCandidates) {
     const xs = [];
     const ys = [];
     for (const [dgId, agg] of byPlayer) {
-      const x = cksPlayerRhSplitSg(dgId, c.kind, c.match);
+      const x = cksPlayerFormMetric(dgId, c.key, ctx);
       if (!Number.isFinite(x) || agg.n < 1) continue;
       xs.push(x);
       ys.push(agg.sum / agg.n);
     }
-    const r = cksPearson(xs, ys);
-    if (!Number.isFinite(r) || r <= 0) continue;
-    out.push({ key: c.key, label: c.label, r, n: xs.length, source: "rabbit-hole" });
+    const rRaw = cksPearson(xs, ys);
+    if (!Number.isFinite(rRaw) || rRaw <= 0) continue;
+    const r = Math.min(0.99, rRaw + (c.venueBoost || 0));
+    out.push({
+      key: c.key,
+      label: c.label,
+      r,
+      n: xs.length,
+      source: c.key.startsWith("rh_") ? "rabbit-hole" : c.key.startsWith("appbin:") ? "approach-skill" : "player-form",
+      venueBoost: c.venueBoost || 0,
+    });
   }
 
-  out.sort((a, b) => b.r - a.r);
-  // Dedupe labels (prefer higher r).
+  out.sort((a, b) => b.r - a.r || (b.venueBoost || 0) - (a.venueBoost || 0));
   const seen = new Set();
   const top = [];
   for (const row of out) {
@@ -18556,7 +18744,7 @@ function cksComputeKeyStats(entries, ctx) {
     top.push(row);
     if (top.length >= 5) break;
   }
-  return { metrics: top, nRounds: rounds.length, nPlayers: byPlayer.size };
+  return { metrics: top, nRounds, nPlayers: byPlayer.size };
 }
 
 function cksScoreFieldFits(metrics, ctx) {
@@ -18650,14 +18838,15 @@ async function buildCourseKeyStatsTab() {
     ensurePropsRhBootstrap().catch(() => null),
     ensureBetspertsCourseFactsLoaded().catch(() => null),
     ensurePlayerHeadshotsLoaded().catch(() => null),
+    ensureApproachSkillByDgId().catch(() => null),
+    loadPropsCoursesManifest().catch(() => null),
   ]);
   if (gen !== cksRenderGen) return;
 
-  const courseKey = normCourseNameKey(venueRaw);
-  const bucket = courseKey ? await ensurePropsCourseIndexForKeyAsync(courseKey) : { entries: [] };
+  const entries = venueRaw ? await cksGatherCourseEntries(venueRaw) : [];
   if (gen !== cksRenderGen) return;
   const ctx = cksVenueRhContext();
-  const { metrics, nRounds, nPlayers } = cksComputeKeyStats(bucket.entries || [], ctx);
+  const { metrics, nRounds, nPlayers } = cksComputeKeyStats(entries, ctx);
 
   if (venueEl) {
     venueEl.textContent = metrics.length

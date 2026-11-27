@@ -7377,7 +7377,7 @@ html[data-theme="dark"] .nav-theme-toggle-icon {
   line-height: 1.2;
 }
 .cks-bar-track {
-  height: 10px;
+  height: 8px;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.08);
   overflow: hidden;
@@ -7386,7 +7386,6 @@ html[data-theme="dark"] .nav-theme-toggle-icon {
   height: 100%;
   border-radius: inherit;
   background: #3ecf6a;
-  box-shadow: 0 0 12px rgba(62, 207, 106, 0.35);
 }
 .cks-bar-val {
   text-align: right;
