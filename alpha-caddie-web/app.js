@@ -18352,7 +18352,405 @@ function courseTableStaticDifficultyD() {
   return clamp(v - m, -3, 5);
 }
 
+/** Pearson r; needs ≥8 pairs. */
+function cksPearson(xs, ys) {
+  const n = xs.length;
+  if (n < 8) return NaN;
+  let sx = 0;
+  let sy = 0;
+  let sxx = 0;
+  let syy = 0;
+  let sxy = 0;
+  for (let i = 0; i < n; i++) {
+    sx += xs[i];
+    sy += ys[i];
+    sxx += xs[i] * xs[i];
+    syy += ys[i] * ys[i];
+    sxy += xs[i] * ys[i];
+  }
+  const nume = n * sxy - sx * sy;
+  const den = Math.sqrt((n * sxx - sx * sx) * (n * syy - sy * sy));
+  return den > 0 ? nume / den : NaN;
+}
+
+function cksMeanSd(vals) {
+  const xs = vals.filter((v) => Number.isFinite(v));
+  if (!xs.length) return { mean: NaN, sd: NaN };
+  const mean = xs.reduce((a, b) => a + b, 0) / xs.length;
+  const sd = Math.sqrt(xs.reduce((a, b) => a + (b - mean) ** 2, 0) / Math.max(1, xs.length)) || 1;
+  return { mean, sd };
+}
+
+function cksParseFinishRank(finText) {
+  const s = String(finText || "").trim().toUpperCase();
+  if (!s || s === "CUT" || s === "WD" || s === "DQ" || s === "MDF") return NaN;
+  const m = s.match(/T?(\d+)/);
+  return m ? Math.round(num(m[1], NaN)) : NaN;
+}
+
+/** Venue Rabbit Hole context (greens / length / difficulty) for condition-labeled stats. */
+function cksVenueRhContext() {
+  const facts = propsRhCourseFactsForVenue();
+  const f = facts[0] || null;
+  return {
+    facts,
+    greens: f?.grass?.greens?.[0] || null,
+    fairways: f?.grass?.fairways?.[0] || null,
+    difficulty: f?.difficulty || null,
+    lengthLabel: null,
+    types: f?.course_types || [],
+  };
+}
+
+function cksPlayerRhSplitSg(dgId, kind, label) {
+  const viz = PROPS_RH_VIZ?.playersByDg?.[String(dgId)];
+  if (!viz || !label) return NaN;
+  if (kind === "green") {
+    const hit = (viz.greenGrass || []).find((r) => String(r.surface || "").toLowerCase() === String(label).toLowerCase());
+    return num(hit?.sg, NaN);
+  }
+  if (kind === "length") {
+    const hit = (viz.courseLength || []).find((r) => String(r.label || "").toLowerCase() === String(label).toLowerCase());
+    return num(hit?.sg, NaN);
+  }
+  if (kind === "condition") {
+    const hit = (viz.scoringCondition || []).find((r) => String(r.label || "").toLowerCase() === String(label).toLowerCase());
+    return num(hit?.sg, NaN);
+  }
+  return NaN;
+}
+
+function cksPlayerFormMetric(dgId, key, ctx) {
+  const id = Math.round(num(dgId, NaN));
+  const row =
+    DATA.players.find((p) => Math.round(num(p.dg_id, NaN)) === id && samePlayerRound(p, 1)) ||
+    DATA.players.find((p) => Math.round(num(p.dg_id, NaN)) === id);
+  const rh = propsRhPlayerRow(id);
+  const win = row?.betsperts_form_windows?.average || PROPS_RH_VIZ?.playersByDg?.[String(id)]?.windows?.average;
+  const l50 = win?.["round-50"] || win?.["round-24"] || win?.["round-12"];
+  if (key === "sg_app") return num(rh?.sg_app ?? l50?.sg_app ?? row?.sg_app, NaN);
+  if (key === "sg_ott") return num(rh?.sg_ott ?? l50?.sg_ott ?? row?.sg_ott, NaN);
+  if (key === "sg_arg") return num(rh?.sg_arg ?? l50?.sg_arg ?? row?.sg_arg, NaN);
+  if (key === "sg_putt") return num(rh?.sg_putt ?? l50?.sg_putt ?? row?.sg_putt, NaN);
+  if (key === "sg_total") return num(rh?.sg_total ?? l50?.sg_tot ?? row?.sg_total, NaN);
+  if (key === "driving_dist") return num(row?.driving_distance ?? row?.avg_driving_distance, NaN);
+  if (key === "driving_acc") return num(rh?.dr_accuracy ?? row?.driving_accuracy ?? row?.fairway_gain, NaN);
+  if (key === "gir") return num(rh?.gir_pct ?? row?.gir, NaN);
+  if (key === "prox_fw") return num(row?.prox_fw, NaN);
+  if (key === "rh_putt_green") return cksPlayerRhSplitSg(id, "green", ctx.greens);
+  if (key === "rh_length") return cksPlayerRhSplitSg(id, "length", ctx.difficulty === "Easy" ? "Short" : ctx.difficulty === "Difficult" ? "Long" : "Average");
+  if (key === "rh_condition") return cksPlayerRhSplitSg(id, "condition", ctx.difficulty);
+  return NaN;
+}
+
+/**
+ * Correlate course-history round skills (+ RH condition splits) with finish proxy.
+ * Finish proxy: prefer parsed fin_text (lower better → negated); else sg_total.
+ */
+function cksComputeKeyStats(entries, ctx) {
+  const rounds = [];
+  for (const e of entries || []) {
+    const r = e.row || e;
+    const dgId = Math.round(num(e.dgId ?? e.dg_id ?? r.dg_id, NaN));
+    if (!Number.isFinite(dgId)) continue;
+    const y = Math.round(num(r.year, NaN));
+    if (Number.isFinite(y) && y < propsRhMinSeasonYear()) continue;
+    const sgTot = num(r.sg_total, NaN);
+    const finish = cksParseFinishRank(r.fin_text);
+    let perf = NaN;
+    if (Number.isFinite(finish)) perf = -finish;
+    else if (Number.isFinite(sgTot)) perf = sgTot;
+    else continue;
+    rounds.push({
+      dgId,
+      perf,
+      sg_app: num(r.sg_app, NaN),
+      sg_ott: num(r.sg_ott, NaN),
+      sg_arg: num(r.sg_arg, NaN),
+      sg_putt: num(r.sg_putt, NaN),
+      driving_dist: num(r.driving_dist ?? r.driving_distance, NaN),
+      driving_acc: num(r.driving_acc ?? r.driving_accuracy, NaN),
+      gir: num(r.gir, NaN),
+      fairways: num(r.fairways, NaN),
+      prox_fw: num(r.prox_fw, NaN),
+      putts: num(r.putts, NaN),
+    });
+  }
+
+  const puttLabel = ctx.greens ? `SG: Putting (${ctx.greens})` : "SG: Putting";
+  const candidates = [
+    { key: "sg_app", label: "SG: Approach", invert: false },
+    { key: "sg_ott", label: "SG: Off-the-Tee", invert: false },
+    { key: "sg_arg", label: "SG: Around-the-Green", invert: false },
+    { key: "sg_putt", label: puttLabel, invert: false },
+    { key: "driving_dist", label: "Driving Distance", invert: false },
+    { key: "driving_acc", label: "Driving Accuracy", invert: false },
+    { key: "gir", label: "GIR", invert: false },
+    { key: "prox_fw", label: "Proximity (FW)", invert: true },
+    { key: "fairways", label: "Fairways Hit", invert: false },
+  ];
+
+  const out = [];
+  for (const c of candidates) {
+    const xs = [];
+    const ys = [];
+    for (const r of rounds) {
+      let x = r[c.key];
+      if (!Number.isFinite(x) || !Number.isFinite(r.perf)) continue;
+      if (c.invert) x = -x;
+      xs.push(x);
+      ys.push(r.perf);
+    }
+    const r = cksPearson(xs, ys);
+    if (!Number.isFinite(r) || r <= 0) continue;
+    out.push({ key: c.key, label: c.label, r, n: xs.length, source: "course-history" });
+  }
+
+  // Rabbit Hole condition filters matched to this venue (greens / difficulty / length).
+  const byPlayer = new Map();
+  for (const r of rounds) {
+    const prev = byPlayer.get(r.dgId) || { n: 0, sum: 0 };
+    prev.n += 1;
+    prev.sum += r.perf;
+    byPlayer.set(r.dgId, prev);
+  }
+  const rhCandidates = [];
+  if (ctx.greens) {
+    rhCandidates.push({
+      key: "rh_putt_green",
+      label: `SG: Putting (${ctx.greens})`,
+      kind: "green",
+      match: ctx.greens,
+    });
+  }
+  if (ctx.difficulty) {
+    rhCandidates.push({
+      key: "rh_condition",
+      label: `Scoring (${ctx.difficulty})`,
+      kind: "condition",
+      match: ctx.difficulty,
+    });
+  }
+  for (const c of rhCandidates) {
+    const xs = [];
+    const ys = [];
+    for (const [dgId, agg] of byPlayer) {
+      const x = cksPlayerRhSplitSg(dgId, c.kind, c.match);
+      if (!Number.isFinite(x) || agg.n < 1) continue;
+      xs.push(x);
+      ys.push(agg.sum / agg.n);
+    }
+    const r = cksPearson(xs, ys);
+    if (!Number.isFinite(r) || r <= 0) continue;
+    out.push({ key: c.key, label: c.label, r, n: xs.length, source: "rabbit-hole" });
+  }
+
+  out.sort((a, b) => b.r - a.r);
+  // Dedupe labels (prefer higher r).
+  const seen = new Set();
+  const top = [];
+  for (const row of out) {
+    const lk = row.label.toLowerCase();
+    if (seen.has(lk)) continue;
+    seen.add(lk);
+    top.push(row);
+    if (top.length >= 5) break;
+  }
+  return { metrics: top, nRounds: rounds.length, nPlayers: byPlayer.size };
+}
+
+function cksScoreFieldFits(metrics, ctx) {
+  const field = [];
+  const seen = new Set();
+  for (const p of DATA.players || []) {
+    const dgId = Math.round(num(p.dg_id, NaN));
+    if (!Number.isFinite(dgId) || seen.has(dgId)) continue;
+    // Prefer round-1 projection rows when present.
+    if (DATA.players.some((x) => Math.round(num(x.dg_id, NaN)) === dgId && samePlayerRound(x, 1))) {
+      if (!samePlayerRound(p, 1)) continue;
+    }
+    seen.add(dgId);
+    field.push({
+      dgId,
+      name: displayGolferName(p.player_name) || String(p.player_name || ""),
+      player: p,
+    });
+  }
+  if (!metrics.length || !field.length) return [];
+
+  const metricVals = metrics.map((m) => field.map((f) => cksPlayerFormMetric(f.dgId, m.key, ctx)));
+  const metricZs = metricVals.map((col) => {
+    const { mean, sd } = cksMeanSd(col);
+    return col.map((v) => (Number.isFinite(v) && Number.isFinite(mean) ? (v - mean) / (sd || 1) : 0));
+  });
+  const wSum = metrics.reduce((a, m) => a + Math.max(0, m.r), 0) || 1;
+
+  const scored = field.map((f, i) => {
+    let score = 0;
+    const parts = [];
+    metrics.forEach((m, mi) => {
+      const z = metricZs[mi][i];
+      const w = Math.max(0, m.r) / wSum;
+      score += w * z;
+      if (z > 0.25) parts.push(m.label.replace(/^SG:\s*/i, ""));
+    });
+    return { ...f, raw: score, parts: parts.slice(0, 3) };
+  });
+
+  // Map raw z-blend to 0–99 fit via percentile ranks in field.
+  const sorted = [...scored].sort((a, b) => a.raw - b.raw);
+  const n = sorted.length;
+  for (let i = 0; i < n; i++) {
+    sorted[i].fit = Math.round((i / Math.max(1, n - 1)) * 99);
+  }
+  scored.sort((a, b) => b.fit - a.fit || b.raw - a.raw);
+  return scored;
+}
+
+let cksFieldExpanded = false;
+let cksWired = false;
+let cksRenderGen = 0;
+
+function wireCourseKeyStatsUi() {
+  if (cksWired) return;
+  cksWired = true;
+  document.getElementById("cks-open-field")?.addEventListener("click", () => {
+    cksFieldExpanded = true;
+    const block = document.getElementById("cks-field-block");
+    if (block) {
+      block.hidden = false;
+      block.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  });
+}
+
+async function buildCourseKeyStatsTab() {
+  wireCourseKeyStatsUi();
+  const gen = ++cksRenderGen;
+  const barsEl = document.getElementById("cks-bars");
+  const emptyEl = document.getElementById("cks-empty");
+  const venueEl = document.getElementById("cks-venue-line");
+  const bestPlayerEl = document.getElementById("cks-best-player");
+  const bestFitEl = document.getElementById("cks-best-fit");
+  const fieldBlock = document.getElementById("cks-field-block");
+  const fieldBody = document.querySelector("#cks-field-table tbody");
+  if (!barsEl) return;
+
+  const venueRaw = String(DATA?.meta?.course_used || DATA?.course_used || "").trim();
+  const venueLabel = formatDualOrSingleCourseForDisplay(venueRaw) || "—";
+  if (venueEl) venueEl.textContent = venueLabel;
+
+  if (emptyEl) {
+    emptyEl.hidden = false;
+    emptyEl.textContent = "Loading Rabbit Hole course history…";
+  }
+  barsEl.replaceChildren();
+
+  await Promise.all([
+    ensurePropsRhBootstrap().catch(() => null),
+    ensureBetspertsCourseFactsLoaded().catch(() => null),
+    ensurePlayerHeadshotsLoaded().catch(() => null),
+  ]);
+  if (gen !== cksRenderGen) return;
+
+  const courseKey = normCourseNameKey(venueRaw);
+  const bucket = courseKey ? await ensurePropsCourseIndexForKeyAsync(courseKey) : { entries: [] };
+  if (gen !== cksRenderGen) return;
+  const ctx = cksVenueRhContext();
+  const { metrics, nRounds, nPlayers } = cksComputeKeyStats(bucket.entries || [], ctx);
+
+  if (venueEl) {
+    venueEl.textContent = metrics.length
+      ? `${venueLabel} · ${nPlayers} players · ${nRounds} rounds`
+      : venueLabel;
+  }
+  if (emptyEl) {
+    if (!metrics.length) {
+      emptyEl.hidden = false;
+      emptyEl.textContent = nRounds
+        ? "Not enough overlapping Rabbit Hole / course-history samples yet."
+        : "No course history shard for this venue yet.";
+    } else {
+      emptyEl.hidden = true;
+    }
+  }
+
+  barsEl.replaceChildren();
+  const maxR = metrics[0]?.r || 1;
+  for (const m of metrics) {
+    const row = document.createElement("div");
+    row.className = "cks-bar-row";
+    row.setAttribute("role", "listitem");
+    const name = document.createElement("span");
+    name.className = "cks-bar-name";
+    name.textContent = m.label;
+    const track = document.createElement("div");
+    track.className = "cks-bar-track";
+    const fill = document.createElement("div");
+    fill.className = "cks-bar-fill";
+    fill.style.width = `${Math.max(8, Math.round((m.r / maxR) * 100))}%`;
+    track.appendChild(fill);
+    const val = document.createElement("span");
+    val.className = "cks-bar-val";
+    val.textContent = m.r.toFixed(2);
+    row.appendChild(name);
+    row.appendChild(track);
+    row.appendChild(val);
+    barsEl.appendChild(row);
+  }
+
+  const fits = cksScoreFieldFits(metrics, ctx);
+  const best = fits[0];
+  if (bestPlayerEl) {
+    bestPlayerEl.replaceChildren();
+    if (best) {
+      bestPlayerEl.appendChild(
+        createPlayerAvatarEl({ dg_id: best.dgId, player_name: best.name, size: 28 }),
+      );
+      const nm = document.createElement("span");
+      nm.className = "cks-best-name";
+      nm.textContent = best.name;
+      bestPlayerEl.appendChild(nm);
+    } else {
+      bestPlayerEl.textContent = "—";
+    }
+  }
+  if (bestFitEl) bestFitEl.textContent = best ? `${best.fit} fit` : "—";
+
+  if (fieldBody) {
+    fieldBody.replaceChildren();
+    for (let i = 0; i < Math.min(fits.length, 40); i++) {
+      const f = fits[i];
+      const tr = document.createElement("tr");
+      const tdR = document.createElement("td");
+      tdR.textContent = String(i + 1);
+      const tdG = document.createElement("td");
+      tdG.className = "cks-field-golfer";
+      tdG.appendChild(createPlayerAvatarEl({ dg_id: f.dgId, player_name: f.name, size: 28 }));
+      const nm = document.createElement("span");
+      nm.textContent = f.name;
+      tdG.appendChild(nm);
+      const tdF = document.createElement("td");
+      tdF.className = "num cks-field-fit";
+      tdF.textContent = String(f.fit);
+      const tdM = document.createElement("td");
+      tdM.className = "cks-field-matches";
+      tdM.textContent = f.parts.join(" · ") || "—";
+      tr.appendChild(tdR);
+      tr.appendChild(tdG);
+      tr.appendChild(tdF);
+      tr.appendChild(tdM);
+      fieldBody.appendChild(tr);
+    }
+  }
+  if (fieldBlock) fieldBlock.hidden = !cksFieldExpanded;
+  void ensurePlayerHeadshotsLoaded().then(() => hydrateVisiblePlayerAvatars());
+}
+
 function buildCourseFitTab() {
+  // Course Fit UI replaced by Course Key Stats (same tab id).
+  void buildCourseKeyStatsTab();
+  return;
   const capEl = document.getElementById("course-fit-radar-caption");
   const legEl = document.getElementById("course-fit-radar-legend");
   const simList = document.getElementById("course-fit-similar-list");
@@ -27920,8 +28318,8 @@ function updateHomePage() {
   lineEl.textContent = venue && venue !== "—" ? `${league} · ${venue}` : ev || "AlphaCaddie";
   if (metaEl) {
     metaEl.textContent = ev && course
-      ? `${ev} at ${course} — choose a tool below to explore projections, history, and edge.`
-      : "Choose a tool below to explore model projections, historical trends, course fit, and +EV opportunities.";
+      ? `${ev} at ${course} — choose a tool below to explore projections and edge.`
+      : "Choose a tool below to explore model projections, course fit, and +EV opportunities.";
   }
 }
 
@@ -29254,6 +29652,11 @@ function showHomeView() {
 
 function showAppTab(tab) {
   if (!tab) {
+    showHomeView();
+    return;
+  }
+  // Historical Trends removed from the app — old ?tab=props links go home.
+  if (tab === "props") {
     showHomeView();
     return;
   }

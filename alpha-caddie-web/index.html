@@ -68,8 +68,7 @@
   <main class="content-wrapper content-wrapper--home" id="content-wrapper">
     <nav class="tabs tabs--tool-nav" role="tablist" aria-label="Tools" hidden>
       <button type="button" class="tab" data-tab="ou" role="tab" aria-selected="false">Round projections</button>
-      <button type="button" class="tab" data-tab="props" role="tab">Historical Trends</button>
-      <button type="button" class="tab" data-tab="course-fit" role="tab">Course fit</button>
+      <button type="button" class="tab" data-tab="course-fit" role="tab">Course Key Stats</button>
       <button type="button" class="tab" data-tab="course-breakdown" role="tab">Course breakdown</button>
       <button type="button" class="tab" data-tab="matchup-analysis" role="tab">Matchup Analysis Tool</button>
       <button type="button" class="tab" data-tab="ev" role="tab">Odds Screen</button>
@@ -88,7 +87,7 @@
       <div class="home-hero">
         <p class="home-eyebrow">This week</p>
         <h1 class="home-title" id="home-event-line">Loading tournament…</h1>
-        <p class="home-lede" id="home-event-meta">Round projections, historical trends, course fit, and market odds for the current field.</p>
+        <p class="home-lede" id="home-event-meta">Round projections, course key stats, and market odds for the current field.</p>
       </div>
       <div class="home-grid" role="list">
         <button type="button" class="home-card" data-go-tab="ou" role="listitem">
@@ -96,15 +95,10 @@
           <span class="home-card-title">Round projections</span>
           <span class="home-card-desc">Model lines vs books — scores, birdies, GIR, and fairways with edge.</span>
         </button>
-        <button type="button" class="home-card" data-go-tab="props" role="listitem">
-          <span class="home-card-icon" aria-hidden="true">HT</span>
-          <span class="home-card-title">Historical Trends</span>
-          <span class="home-card-desc">Player and field history at this course — back to 2004.</span>
-        </button>
         <button type="button" class="home-card" data-go-tab="course-fit" role="listitem">
-          <span class="home-card-icon" aria-hidden="true">CF</span>
-          <span class="home-card-title">Course fit</span>
-          <span class="home-card-desc">Skill profile vs venue — radar, similar courses, past-event distributions.</span>
+          <span class="home-card-icon" aria-hidden="true">CK</span>
+          <span class="home-card-title">Course Key Stats</span>
+          <span class="home-card-desc">What wins here — Rabbit Hole correlations to finish and best-fit golfers.</span>
         </button>
         <button type="button" class="home-card" data-go-tab="course-breakdown" role="listitem">
           <span class="home-card-icon" aria-hidden="true">CB</span>
@@ -581,165 +575,47 @@
       </div>
     </section>
 
-    <!-- Course fit -->
-    <section id="panel-course-fit" class="panel course-fit-panel" role="tabpanel" hidden>
-      <div class="course-fit-shell">
-        <div class="ev-panel-head course-fit-head">
-          <h2 class="ev-devig-sr-only">Course fit</h2>
-          <button type="button" class="ev-help-btn tab-help-btn" data-tab-help="course-fit" aria-label="Help: Course fit tab">?</button>
-        </div>
-
-        <div class="course-fit-subtabs" role="tablist" aria-label="Views">
-          <button type="button" class="course-fit-subtab active" role="tab" aria-selected="true" data-course-fit-subtab="adjustments" id="course-fit-subtab-adjustments">Adjustments</button>
-          <button type="button" class="course-fit-subtab" role="tab" aria-selected="false" data-course-fit-subtab="distributions" id="course-fit-subtab-distributions">Past events</button>
-        </div>
-
-        <div id="course-fit-subpanel-adjustments" class="course-fit-subpanel">
-          <div class="course-fit-layout">
-            <aside class="leaderboard-card course-fit-sidebar">
-              <label class="course-fit-sidebar-label">Course
-                <select id="course-fit-venue" aria-label="Course for radar and similarity"></select>
-              </label>
-              <label class="course-fit-sidebar-label">Golfer
-                <div class="golfer-combobox-wrap golfer-suggest-anchor">
-                  <input
-                    type="search"
-                    id="course-fit-player-search"
-                    class="golfer-combobox-input"
-                    placeholder="Search golfer…"
-                    autocomplete="off"
-                    spellcheck="false"
-                    aria-label="Golfer for radar overlay"
-                  />
-                  <div id="course-fit-player-suggest" class="golfer-suggest-panel" hidden role="listbox" aria-label="Golfer suggestions"></div>
-                  <select id="course-fit-player" aria-label="Golfer for radar overlay" hidden></select>
-                </div>
-              </label>
-              <div class="course-fit-sidebar-block">
-                <h3 class="course-fit-sidebar-heading">Course similarity</h3>
-                <ol id="course-fit-similar-list" class="course-fit-similar-list"></ol>
-                <p id="course-fit-similar-empty" class="text-muted course-fit-empty" hidden>No similarity data (load player history).</p>
-              </div>
-            </aside>
-            <div class="leaderboard-card course-fit-radar-card">
-              <div class="course-fit-radar-head">
-                <span class="course-fit-radar-eyebrow">Radar</span>
-                <p class="course-fit-radar-sub" id="course-fit-radar-caption">—</p>
-              </div>
-              <div class="course-fit-radar-canvas-wrap">
-                <canvas id="course-fit-radar-canvas" width="520" height="420" aria-label="Course fit radar chart"></canvas>
-              </div>
-              <div class="course-fit-radar-legend" id="course-fit-radar-legend"></div>
-            </div>
+    <!-- Course Key Stats (replaces Course fit) -->
+    <section id="panel-course-fit" class="panel course-key-stats-panel" role="tabpanel" hidden>
+      <div class="cks-shell">
+        <article class="cks-card" aria-label="Course Key Stats">
+          <header class="cks-card-head">
+            <h2 class="cks-title">Course Key Stats</h2>
+            <p class="cks-venue" id="cks-venue-line"></p>
+          </header>
+          <div class="cks-wins-head">
+            <span class="cks-wins-label">What wins here</span>
+            <span class="cks-wins-col">Correlation to finish</span>
           </div>
-          <div class="leaderboard-card course-fit-table-card">
-            <h3 class="course-fit-table-title" id="course-fit-table-heading">Course ratings</h3>
-            <label class="course-fit-search-wrap">
-              <span class="course-fit-search-icon" aria-hidden="true">⌕</span>
-              <input type="search" id="course-fit-search" class="course-fit-search" placeholder="Find golfers…" autocomplete="off" />
-            </label>
-            <div class="table-wrap course-fit-table-wrap">
-              <table class="data-table course-fit-table" id="table-course-fit">
-                <thead><!-- headers built in app.js (per-spoke + course rating) --></thead>
-                <tbody></tbody>
-              </table>
-            </div>
+          <div class="cks-bars" id="cks-bars" role="list"></div>
+          <p class="cks-empty text-muted" id="cks-empty" hidden>Loading Rabbit Hole course history…</p>
+          <div class="cks-best" id="cks-best">
+            <span class="cks-best-lab">Best fit</span>
+            <div class="cks-best-player" id="cks-best-player"></div>
+            <span class="cks-best-fit" id="cks-best-fit">—</span>
           </div>
+          <button type="button" class="cks-open-link" id="cks-open-field">Open course key stats →</button>
+        </article>
 
-          <!-- Betsperts condition / surface / window visuals -->
-          <div class="leaderboard-card bbv-card" id="bbv-fit-block">
-            <div class="bbv-card-head">
-              <div>
-                <h3 class="bbv-title">Condition &amp; surface fit</h3>
-                <p class="bbv-sub">Rabbit Hole splits · green grass · form windows</p>
-              </div>
-              <label class="bbv-player-label">Golfer
-                <select id="bbv-player-fit" aria-label="Golfer for condition fit visuals"></select>
-              </label>
-            </div>
-            <div class="bbv-fit-grid">
-              <div class="bbv-section">
-                <h4 class="bbv-section-title">Condition fit radar</h4>
-                <canvas id="bbv-condition-radar" width="420" height="340" aria-label="Condition fit radar"></canvas>
-              </div>
-              <div class="bbv-section">
-                <h4 class="bbv-section-title">Green-surface SG</h4>
-                <div id="bbv-green-spark"></div>
-              </div>
-            </div>
-            <div class="bbv-section">
-              <h4 class="bbv-section-title">Filter heat (field)</h4>
-              <div id="bbv-filter-heat"></div>
-            </div>
-            <div class="bbv-section">
-              <h4 class="bbv-section-title">Form windows &amp; season stack</h4>
-              <div id="bbv-windows"></div>
-            </div>
+        <section class="cks-field-block" id="cks-field-block" hidden>
+          <div class="cks-field-head">
+            <h3 class="cks-field-title">Field fit rankings</h3>
+            <p class="cks-field-sub">Weighted to this week’s key stats · Rabbit Hole form + course history</p>
           </div>
-        </div>
-
-        <div id="course-fit-subpanel-distributions" class="course-fit-subpanel" hidden>
-          <div class="leaderboard-card course-fit-dist-card" id="course-fit-dist-card">
-            <div class="course-fit-dist-toolbar">
-              <div class="course-fit-dist-events-field">
-                <span class="course-fit-dist-toolbar-label">Analyze Past Events</span>
-                <div id="course-fit-past-events-host" class="course-fit-dist-events-host" role="group" aria-label="Past events at this course"></div>
-              </div>
-              <div class="course-fit-dist-round-field">
-                <span class="course-fit-dist-toolbar-label">Round</span>
-                <div class="course-fit-dist-round-toggle" role="group" aria-label="Round filter">
-                  <button type="button" class="course-fit-dist-round-btn active" data-cf-round="all">All</button>
-                  <button type="button" class="course-fit-dist-round-btn" data-cf-round="1">R1</button>
-                  <button type="button" class="course-fit-dist-round-btn" data-cf-round="2">R2</button>
-                  <button type="button" class="course-fit-dist-round-btn" data-cf-round="3">R3</button>
-                  <button type="button" class="course-fit-dist-round-btn" data-cf-round="4">R4</button>
-                </div>
-              </div>
-              <label class="course-fit-dist-golfer-field golfer-suggest-anchor">
-                <span class="course-fit-dist-toolbar-label">Golfer</span>
-                <input
-                  type="search"
-                  id="course-fit-dist-golfer"
-                  class="golfer-combobox-input course-fit-dist-golfer-input"
-                  placeholder="Select a golfer"
-                  autocomplete="off"
-                  spellcheck="false"
-                  aria-label="Golfer for individual rounds (also marked on tournament average)"
-                  required
-                />
-                <div id="course-fit-dist-golfer-suggest" class="golfer-suggest-panel" hidden role="listbox" aria-label="Golfer suggestions"></div>
-              </label>
-              <label class="course-fit-dist-prop-field">
-                <span class="course-fit-dist-toolbar-label">Round Prop</span>
-                <select id="course-fit-dist-prop" aria-label="Round prop for distributions">
-                  <option value="total" selected>Score</option>
-                  <option value="birdies">Birdies or Better</option>
-                  <option value="pars">Pars</option>
-                  <option value="bogeys">Bogeys or Worse</option>
-                  <option value="fairways">Fairways Hit</option>
-                  <option value="gir">Greens in Regulation</option>
-                </select>
-              </label>
-            </div>
-            <p id="course-fit-dist-empty" class="course-fit-dist-empty text-muted" hidden role="status">No data available for your chosen filters.</p>
-            <div class="course-fit-dist-charts" id="course-fit-dist-charts">
-              <div class="course-fit-dist-chart-card">
-                <h3 class="course-fit-dist-chart-title" id="course-fit-dist-avg-title">Score Distribution — Tournament Average</h3>
-                <div class="course-fit-dist-canvas-wrap">
-                  <canvas id="course-fit-dist-avg-canvas" class="course-fit-dist-canvas" width="560" height="320" aria-label="Round average distribution histogram"></canvas>
-                </div>
-                <dl class="course-fit-dist-stats" id="course-fit-dist-avg-stats"></dl>
-              </div>
-              <div class="course-fit-dist-chart-card">
-                <h3 class="course-fit-dist-chart-title" id="course-fit-dist-ind-title">Score Distribution — Individual Rounds</h3>
-                <div class="course-fit-dist-canvas-wrap">
-                  <canvas id="course-fit-dist-ind-canvas" class="course-fit-dist-canvas" width="560" height="320" aria-label="Individual round distribution histogram"></canvas>
-                </div>
-                <dl class="course-fit-dist-stats" id="course-fit-dist-ind-stats"></dl>
-              </div>
-            </div>
+          <div class="table-wrap">
+            <table class="data-table cks-field-table" id="cks-field-table">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Golfer</th>
+                  <th scope="col" class="num">Fit</th>
+                  <th scope="col">Top matches</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
           </div>
-        </div>
+        </section>
       </div>
     </section>
 
