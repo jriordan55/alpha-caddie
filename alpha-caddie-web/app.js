@@ -1688,38 +1688,55 @@ function paintPropsRhSourcePill(on, detail = "") {
 }
 
 function propsRhKpiPatchFromPlayer(rhRow) {
-  if (!rhRow) return;
-  const host = document.getElementById("props-trends-kpis");
+  const host = document.getElementById("props-rh-kpis");
+  // Clear any legacy duplicated strips left by earlier renders.
+  document.querySelectorAll(".props-rh-kpi-strip").forEach((n) => n.remove());
   if (!host) return;
-  const mk = (lab, val) => {
+  if (!rhRow) {
+    host.hidden = true;
+    host.replaceChildren();
+    return;
+  }
+  const mk = (lab, val, tone = "") => {
     const d = document.createElement("div");
-    d.className = "props-trends-kpi";
+    d.className = "props-rh-kpi";
     const l = document.createElement("span");
-    l.className = "props-trends-kpi-lab";
+    l.className = "props-rh-kpi-lab";
     l.textContent = lab;
     const v = document.createElement("span");
-    v.className = "props-trends-kpi-val";
+    v.className = `props-rh-kpi-val${tone ? ` ${tone}` : ""}`;
     v.textContent = val;
     d.appendChild(l);
     d.appendChild(v);
     return d;
   };
-  const fmtSg = (x) => (Number.isFinite(x) ? (x >= 0 ? `+${x.toFixed(2)}` : x.toFixed(2)) : "—");
-  const fmtPct = (x) => (Number.isFinite(x) ? `${x.toFixed(1)}%` : "—");
-  const strip = document.createElement("div");
-  strip.className = "props-trends-kpis props-rh-kpi-strip";
-  strip.style.marginTop = "8px";
-  strip.appendChild(mk("RH SG:TOT", fmtSg(num(rhRow.sg_total, NaN))));
-  strip.appendChild(mk("RH SG:OTT", fmtSg(num(rhRow.sg_ott, NaN))));
-  strip.appendChild(mk("RH SG:APP", fmtSg(num(rhRow.sg_app, NaN))));
-  strip.appendChild(mk("RH SG:ARG", fmtSg(num(rhRow.sg_arg, NaN))));
-  strip.appendChild(mk("RH SG:P", fmtSg(num(rhRow.sg_putt, NaN))));
-  strip.appendChild(mk("RH BoB%", fmtPct(num(rhRow.bob_pct, NaN))));
-  strip.appendChild(mk("RH Dr Acc", fmtPct(num(rhRow.dr_accuracy, NaN))));
-  strip.appendChild(mk("RH GIR%", fmtPct(num(rhRow.gir_pct, NaN))));
-  if (Number.isFinite(num(rhRow.rounds, NaN))) strip.appendChild(mk("RH Rounds", String(Math.round(num(rhRow.rounds)))));
-  host.querySelectorAll(".props-rh-kpi-strip").forEach((n) => n.remove());
-  host.after(strip);
+  const addSg = (lab, raw) => {
+    const x = num(raw, NaN);
+    if (!Number.isFinite(x)) return;
+    const tone = x > 0.02 ? "is-pos" : x < -0.02 ? "is-neg" : "";
+    host.appendChild(mk(lab, x >= 0 ? `+${x.toFixed(2)}` : x.toFixed(2), tone));
+  };
+  const addPct = (lab, raw) => {
+    const x = num(raw, NaN);
+    if (!Number.isFinite(x)) return;
+    host.appendChild(mk(lab, `${x.toFixed(1)}%`));
+  };
+  host.replaceChildren();
+  const eyebrow = document.createElement("span");
+  eyebrow.className = "props-rh-kpis-eyebrow";
+  eyebrow.textContent = propsRhFiltersAreActive() ? "Rabbit Hole · filtered" : "Rabbit Hole";
+  host.appendChild(eyebrow);
+  addSg("SG:TOT", rhRow.sg_total);
+  addSg("OTT", rhRow.sg_ott);
+  addSg("APP", rhRow.sg_app);
+  addSg("ARG", rhRow.sg_arg);
+  addSg("PUTT", rhRow.sg_putt);
+  addPct("BoB%", rhRow.bob_pct);
+  addPct("Dr Acc", rhRow.dr_accuracy);
+  addPct("GIR%", rhRow.gir_pct);
+  const rounds = num(rhRow.rounds, NaN);
+  if (Number.isFinite(rounds)) host.appendChild(mk("Rounds", String(Math.round(rounds))));
+  host.hidden = host.childElementCount <= 1;
 }
 
 async function fetchOuRhStatsForFilters(state = ouRhFilterState()) {
