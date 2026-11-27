@@ -94,6 +94,15 @@ async function mirrorPublishArtifacts() {
     [path.join(WEB_ROOT, "live-in-play-euro.json"), path.join(destDir, "live-in-play-euro.json")],
     [path.join(WEB_ROOT, "projections-euro.json"), path.join(destDir, "projections-euro.json")],
     [path.join(WEB_ROOT, "course-table.json"), path.join(destDir, "course-table.json")],
+    [path.join(WEB_ROOT, "approach_skill_ytd.json"), path.join(destDir, "approach_skill_ytd.json")],
+    [
+      path.join(WEB_ROOT, "data", "course_key_stats.json"),
+      path.join(destDir, "course_key_stats.json"),
+    ],
+    [
+      path.join(WEB_ROOT, "data", "app_week_precompute.json"),
+      path.join(destDir, "app_week_precompute.json"),
+    ],
     [
       path.join(WEB_ROOT, "paper-book", "paper-book-lines.json"),
       path.join(REPO_ROOT, "website", "public", "paper-book", "paper-book-lines.json"),
@@ -299,13 +308,6 @@ run(
 );
 
 run(
-  "build-course-key-stats.mjs",
-  "Course Key Stats precompute (finish correlations + field fit) → data/course_key_stats.json",
-  {},
-  softOpt,
-);
-
-run(
   "overlay-projections-betsperts-trad.mjs",
   "Prefer Betsperts RH traditional stats + form windows on projections players",
   {},
@@ -313,6 +315,13 @@ run(
 );
 
 run("build-player-headshots.mjs", "PGA/Betsperts player headshot map → data/player_headshots.json", {}, softOpt);
+
+run(
+  "build-app-precompute.mjs",
+  "App week precompute (CKS + prefetch manifest + breakdown) → data/app_week_precompute.json",
+  {},
+  softOpt,
+);
 
 await mirrorPublishArtifacts();
 

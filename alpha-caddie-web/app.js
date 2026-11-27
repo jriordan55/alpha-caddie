@@ -18798,9 +18798,76 @@ let cksWired = false;
 let cksRenderGen = 0;
 let COURSE_KEY_STATS_CACHE = null;
 let courseKeyStatsLoadPromise = null;
+let APP_WEEK_PRECOMPUTE = null;
+let appWeekPrecomputeLoadPromise = null;
+let appWeekPrefetchStarted = false;
+
+async function ensureAppWeekPrecomputeLoaded() {
+  if (APP_WEEK_PRECOMPUTE) return APP_WEEK_PRECOMPUTE;
+  if (appWeekPrecomputeLoadPromise) return appWeekPrecomputeLoadPromise;
+  appWeekPrecomputeLoadPromise = (async () => {
+    try {
+      const res = await fetch(cacheBustFetchUrl("data/app_week_precompute.json"), { cache: "no-store" });
+      if (res.ok) APP_WEEK_PRECOMPUTE = await res.json();
+    } catch {
+      APP_WEEK_PRECOMPUTE = null;
+    }
+    return APP_WEEK_PRECOMPUTE;
+  })().finally(() => {
+    appWeekPrecomputeLoadPromise = null;
+  });
+  return appWeekPrecomputeLoadPromise;
+}
+
+/** Fire-and-forget warm of every week sidecar so tabs never wait on first open. */
+function prefetchAppWeekSidecars(pre = APP_WEEK_PRECOMPUTE) {
+  if (appWeekPrefetchStarted || isFileProtocol() || typeof fetch !== "function") return;
+  appWeekPrefetchStarted = true;
+  const urls = Array.isArray(pre?.prefetch) && pre.prefetch.length
+    ? pre.prefetch
+    : [
+        "course-table.json",
+        "approach_skill_ytd.json",
+        "data/course_key_stats.json",
+        "data/betsperts_betting_viz.json",
+        "data/betsperts_course_facts.json",
+        "data/betsperts_rh_ou_stats.json",
+        "data/betsperts_sg_by_dg.json",
+        "data/player_headshots.json",
+        "data/course_event_context.json",
+        "data/historical_round_weather.json",
+        "live-in-play.json",
+        "player-history/courses-manifest.json",
+      ];
+  for (const rel of urls) {
+    const path = String(rel || "").trim();
+    if (!path || path === "projections.json" || path === "projections-pga.json") continue;
+    void fetch(cacheBustFetchUrl(path), { cache: "force-cache" }).catch(() => null);
+  }
+  // Also populate in-memory caches used by tabs.
+  void ensurePlayerHeadshotsLoaded().catch(() => null);
+  void ensureBetspertsCourseFactsLoaded().catch(() => null);
+  void ensureOuRhStatsLoaded().catch(() => null);
+  void ensurePropsRhVizLoaded().catch(() => null);
+  void ensureCourseEventContextLoaded().catch(() => null);
+  void loadCourseTableJson().catch(() => null);
+  void ensureApproachSkillByDgId().catch(() => null);
+  void ensureCourseKeyStatsLoaded().catch(() => null);
+  void loadPropsCoursesManifest().catch(() => null);
+}
 
 async function ensureCourseKeyStatsLoaded() {
   if (COURSE_KEY_STATS_CACHE) return COURSE_KEY_STATS_CACHE;
+  if (APP_WEEK_PRECOMPUTE?.courseKeyStats?.metrics?.length) {
+    COURSE_KEY_STATS_CACHE = {
+      generatedAt: APP_WEEK_PRECOMPUTE.generatedAt,
+      venue: APP_WEEK_PRECOMPUTE.venue,
+      eventName: APP_WEEK_PRECOMPUTE.eventName,
+      current: APP_WEEK_PRECOMPUTE.courseKeyStats,
+      byCourseKey: {},
+    };
+    return COURSE_KEY_STATS_CACHE;
+  }
   if (courseKeyStatsLoadPromise) return courseKeyStatsLoadPromise;
   courseKeyStatsLoadPromise = (async () => {
     try {
@@ -18959,7 +19026,8 @@ async function buildCourseKeyStatsTab() {
   }
   barsEl.replaceChildren();
 
-  // Fast path: precomputed JSON (built in refresh pipeline).
+  // Fast path: week precompute / course_key_stats.json (built in refresh pipeline).
+  await ensureAppWeekPrecomputeLoaded().catch(() => null);
   const pre = await ensureCourseKeyStatsLoaded().catch(() => null);
   if (gen !== cksRenderGen) return;
   const baked = cksResolvePrecomputed(venueRaw, pre);
@@ -28410,11 +28478,15 @@ function yieldToMain() {
 
 /** Live merge + course table: not needed for first paint; load after projections UI, then refresh affected tabs. */
 function prefetchPostProjectionsSidecarsAfterPaint() {
+  void ensureAppWeekPrecomputeLoaded()
+    .then((pre) => prefetchAppWeekSidecars(pre))
+    .catch(() => prefetchAppWeekSidecars(null));
   const jobs = [];
   if (!isFileProtocol()) {
-    jobs.push(ensureLiveTournamentHistoryMerged({ useCache: false }));
-    jobs.push(fetchAndMergeFieldTeeTimes({ force: true }));
-    if (datagolfLiveOverlayEnabled()) jobs.push(fetchAndMergeDatagolfLiveInPlay({ force: true }));
+    // Background only — never block tab paint on live merges.
+    void ensureLiveTournamentHistoryMerged({ useCache: false }).catch(() => null);
+    void fetchAndMergeFieldTeeTimes({ force: true }).catch(() => null);
+    if (datagolfLiveOverlayEnabled()) void fetchAndMergeDatagolfLiveInPlay({ force: true }).catch(() => null);
   }
   jobs.push(loadCourseTableJson());
   return Promise.all(jobs).finally(() => {
@@ -28488,8 +28560,9 @@ async function loadProjections(opts = {}) {
     if (HISTORY._ok) scrubNonActualRoundsFromHistoryBuckets();
     await yieldToMain();
     hydrateBakedWeatherFromPlayerFields();
-    void fetchAndMergeFieldTeeTimes({ force: true });
-    await ensureForecastWeatherLoaded();
+    // Prefer baked weather from refresh:live; only hit Open-Meteo when nothing usable is on disk.
+    void ensureForecastWeatherLoaded().catch(() => null);
+    void fetchAndMergeFieldTeeTimes({ force: true }).catch(() => null);
     void ensurePgatourEventRoundsLoaded().then(() => {
       if (HISTORY._ok && lastLiveInPlayBundleForHistory) {
         reapplyLiveInPlayHistoryMerge();
@@ -31128,12 +31201,15 @@ function initAlphaCaddieThemeToggle() {
 
 document.addEventListener("DOMContentLoaded", () => {
   initAlphaCaddieThemeToggle();
-  // Defer headshots until idle — don't compete with projections.json on first paint.
+  // Warm the whole week bundle immediately so every tab paints from precomputed JSON.
+  void ensureAppWeekPrecomputeLoaded()
+    .then((pre) => prefetchAppWeekSidecars(pre))
+    .catch(() => prefetchAppWeekSidecars(null));
   const kickOuSidecars = () => {
     void ensurePlayerHeadshotsLoaded();
   };
-  if (typeof requestIdleCallback === "function") requestIdleCallback(kickOuSidecars, { timeout: 1200 });
-  else setTimeout(kickOuSidecars, 200);
+  if (typeof requestIdleCallback === "function") requestIdleCallback(kickOuSidecars, { timeout: 800 });
+  else setTimeout(kickOuSidecars, 100);
   syncWeatherUiFromState();
   initPropsTopTableSortOnce();
   configureRoundPickerUi();
