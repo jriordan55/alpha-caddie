@@ -1214,6 +1214,10 @@ let propsRhLiveStats = null;
 let propsRhLiveFetchPromise = null;
 let PROPS_RH_VIZ = null;
 let propsRhVizLoadPromise = null;
+let propsRhBootstrapPromise = null;
+let propsRhBootstrapped = false;
+/** HT is Rabbit Hole–first (local JSON only). Round projections tab is untouched. */
+const PROPS_RH_FAST_MODE = true;
 
 function propsRhTimeframeValue() {
   return String(document.getElementById("props-rh-timeframe")?.value || "all").trim() || "all";
@@ -1361,9 +1365,8 @@ function highlightPropsRhFiltersForVenue() {
 function wirePropsRhFilterEvents() {
   if (propsRhFiltersWired) return;
   propsRhFiltersWired = true;
-  const onChange = () => {
-    void refreshPropsRhLiveStats().then(() => scheduleRenderPropsTrends(120));
-  };
+  // Local-only: never hit Betsperts from filter changes (that was the HT lag).
+  const onChange = () => scheduleRenderPropsTrends(160);
   document.getElementById("props-rh-timeframe")?.addEventListener("change", onChange);
   document.getElementById("props-rh-filter-dims")?.addEventListener("change", onChange);
   document.getElementById("props-rh-filters-reset")?.addEventListener("click", () => {
@@ -1372,8 +1375,7 @@ function wirePropsRhFilterEvents() {
     document.querySelectorAll("#props-rh-filter-dims select").forEach((el) => {
       el.value = "all";
     });
-    propsRhLiveStats = null;
-    void refreshPropsRhLiveStats().then(() => scheduleRenderPropsTrends(80));
+    scheduleRenderPropsTrends(80);
   });
 }
 
@@ -1392,49 +1394,35 @@ async function ensurePropsRhVizLoaded() {
   return propsRhVizLoadPromise;
 }
 
-async function refreshPropsRhLiveStats() {
-  await ensureOuRhFiltersLoaded();
-  populatePropsRhFilterSelects();
-  const state = propsRhFilterState();
-  if (!propsRhFiltersAreActive(state)) {
-    await ensureOuRhStatsLoaded();
+/** One-shot local RH bootstrap for Historical Trends (no live Betsperts calls). */
+async function ensurePropsRhBootstrap() {
+  if (propsRhBootstrapped) return true;
+  if (propsRhBootstrapPromise) return propsRhBootstrapPromise;
+  propsRhBootstrapPromise = (async () => {
+    await Promise.all([
+      ensureOuRhFiltersLoaded(),
+      ensureOuRhStatsLoaded(),
+      ensurePropsRhVizLoaded(),
+      ensureBetspertsCourseFactsLoaded(),
+    ]);
     propsRhLiveStats = OU_RH_STATS;
-    return propsRhLiveStats;
-  }
-  if (propsRhLiveFetchPromise) return propsRhLiveFetchPromise;
-  propsRhLiveFetchPromise = (async () => {
-    try {
-      const res = await fetch("/api/betsperts-rh-ou", {
-        method: "POST",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
-        body: JSON.stringify(state),
-        cache: "no-store",
-      });
-      const j = await res.json().catch(() => null);
-      if (res.ok && j?.ok && j.players) {
-        propsRhLiveStats = {
-          generatedAt: j.generatedAt,
-          filters: j.filters || state,
-          n: j.n,
-          players: j.players,
-          live: true,
-          source: "betsperts-rh",
-        };
-      } else {
-        console.warn("[props-rh] live filter fetch failed", res.status, j?.error);
-        await ensureOuRhStatsLoaded();
-        propsRhLiveStats = OU_RH_STATS;
-      }
-    } catch (e) {
-      console.warn("[props-rh] live filter fetch error", e?.message || e);
-      await ensureOuRhStatsLoaded();
-      propsRhLiveStats = OU_RH_STATS;
-    } finally {
-      propsRhLiveFetchPromise = null;
-    }
-    return propsRhLiveStats;
+    populatePropsRhFilterSelects();
+    paintPropsCourseCategories();
+    propsRhBootstrapped = true;
+    return true;
   })();
-  return propsRhLiveFetchPromise;
+  try {
+    return await propsRhBootstrapPromise;
+  } finally {
+    propsRhBootstrapPromise = null;
+  }
+}
+
+/** Kept for Round projections OU filters — HT must not call this on every paint. */
+async function refreshPropsRhLiveStats() {
+  await ensureOuRhStatsLoaded();
+  propsRhLiveStats = OU_RH_STATS;
+  return propsRhLiveStats;
 }
 
 function propsRhPlayerRow(dgId) {
@@ -1634,38 +1622,35 @@ function propsRhWindowSeriesForPlayer(dgId) {
   return out;
 }
 
-/** Preferred HT chart series from Rabbit Hole (filters → live/slices; else form windows). */
+/** Preferred HT chart series from Rabbit Hole (local windows / category slices only). */
 function propsRhChartSeriesForPlayer(dgId, statKey = "sg_total") {
   const id = Math.round(num(dgId, NaN));
   if (!Number.isFinite(id)) return [];
-  const filtersOn = propsRhFiltersAreActive();
-  if (filtersOn) {
-    const slices = propsRhCategorySliceSeries(id);
+  const cond = propsRhConditionState();
+  const hasSliceFilter = Boolean(cond.green || cond.clength || cond.condition);
+  if (hasSliceFilter) {
+    const slices = propsRhCategorySliceSeries(id, cond);
     if (slices.length) return slices;
-    const row = propsRhPlayerRow(id);
-    const v = propsRhValueForStat(row, statKey);
-    if (Number.isFinite(v)) {
-      return [
-        {
-          date: propsRhTimeframeLabel(),
-          actual: v,
-          course: "Rabbit Hole",
-          playerName: "",
-          dgId: id,
-          _aggregate: true,
-          _yearLabel: "RH filtered",
-          _rhFiltered: true,
-        },
-      ];
+  }
+  const windows = propsRhWindowSeriesForPlayer(id);
+  const tf = propsRhTimeframeValue();
+  if (tf && tf !== "all" && windows.length) {
+    if (tf.startsWith("round:")) {
+      const key = `round-${tf.slice(6)}`;
+      const hit = windows.filter((s) => s._rhWindow === key);
+      if (hit.length) return hit;
+    } else if (tf.startsWith("season:")) {
+      const key = `season-${tf.slice(7)}`;
+      const hit = windows.filter((s) => s._rhWindow === key);
+      if (hit.length) return hit;
     }
   }
-  // Unfiltered: form windows for SG markets; for trad RH stats use live row as a single bar.
-  if (statKey === "sg_total" || String(statKey).startsWith("sg_")) {
-    return propsRhWindowSeriesForPlayer(id);
+  if (statKey === "sg_total" || String(statKey).startsWith("sg_") || !windows.length) {
+    if (windows.length) return windows;
   }
   const row = propsRhPlayerRow(id);
   const v = propsRhValueForStat(row, statKey);
-  if (!Number.isFinite(v)) return [];
+  if (!Number.isFinite(v)) return windows;
   return [
     {
       date: propsRhTimeframeLabel(),
@@ -1678,6 +1663,83 @@ function propsRhChartSeriesForPlayer(dgId, statKey = "sg_total") {
       _rhFiltered: false,
     },
   ];
+}
+
+/** Lean Historical Trends paint — Rabbit Hole local data only (no DG history / weather / live RH). */
+function renderPropsTrendsRabbitHoleFast() {
+  ensurePropsStatSelectValid();
+  syncPropsCourseWindowUiState();
+  const dg = selectedDgId();
+  const empty = document.getElementById("props-chart-empty");
+  const titleEl = document.getElementById("props-trends-title");
+  const statKey = statKeyFromPropSelect();
+  const playerRow =
+    DATA.players.find((p) => Math.round(num(p.dg_id, NaN)) === dg && samePlayerRound(p, 1)) ||
+    DATA.players.find((p) => Math.round(num(p.dg_id, NaN)) === dg);
+  const flagEl = document.getElementById("props-flag");
+  if (flagEl) flagEl.hidden = false;
+  if (playerRow) {
+    setPropsCountryFlag(playerRow);
+    if (titleEl) titleEl.textContent = displayGolferName(playerRow.player_name) || "—";
+  } else if (titleEl) {
+    titleEl.textContent = "—";
+  }
+
+  paintPropsCourseCategories();
+
+  if (!propsRhBootstrapped) {
+    if (empty) {
+      empty.hidden = false;
+      empty.textContent = "Loading Rabbit Hole…";
+    }
+    drawPropsTrendCanvas([], NaN, "sg_total");
+    propsRhKpiPatchFromPlayer(null);
+    paintPropsRhSourcePill(false);
+    void ensurePropsRhBootstrap().then(() => {
+      if (activeAppTabId() === "props") scheduleRenderPropsTrends(0);
+    });
+    return;
+  }
+
+  const series = propsRhChartSeriesForPlayer(dg, statKey);
+  const rhRow = propsRhPlayerRow(dg);
+  const chartStat = String(statKey).startsWith("sg_") ? statKey : "sg_total";
+  let line = propsRhValueForStat(rhRow, chartStat);
+  if (!Number.isFinite(line) && series.length) {
+    line = series.reduce((a, s) => a + s.actual, 0) / series.length;
+  }
+  const lineInp = document.getElementById("prop-line");
+  if (lineInp && document.activeElement !== lineInp && Number.isFinite(line) && !propsTrendLineUserOverride) {
+    lineInp.value = formatPropLineValueForInput(line);
+  }
+
+  if (!series.length) {
+    if (empty) {
+      empty.hidden = false;
+      empty.textContent = Number.isFinite(dg)
+        ? "No Rabbit Hole windows for this golfer yet."
+        : "Pick a golfer.";
+    }
+    drawPropsTrendCanvas([], line, chartStat);
+  } else {
+    if (empty) empty.hidden = true;
+    drawPropsTrendCanvas(series, line, chartStat, { xAxisMode: "chrono" });
+  }
+
+  paintPropsTrendsInsightHeader(playerRow, chartStat, line, { over: 0, under: 0, valid: 0 }, series, dg);
+  propsRhKpiPatchFromPlayer(rhRow);
+  paintPropsRhSourcePill(
+    true,
+    propsRhFiltersAreActive() ? "filtered (local)" : "form windows",
+  );
+  const chartLeg = document.getElementById("props-chart-line-legend");
+  if (chartLeg) chartLeg.hidden = !Number.isFinite(line);
+
+  // Skip DG hit-rate / field history table — that path is the other HT stall.
+  const hitBlock = document.getElementById("props-hit-rate-block");
+  if (hitBlock) hitBlock.hidden = true;
+  const topWrap = document.getElementById("props-top-table-wrap") || document.getElementById("props-top-overs");
+  if (topWrap) topWrap.hidden = true;
 }
 
 function paintPropsRhSourcePill(on, detail = "") {
@@ -27219,14 +27281,18 @@ function propsAutoTrendLineForContext(dg, statKey, playerRow) {
 }
 
 function renderPropsTrends() {
+  if (PROPS_RH_FAST_MODE) {
+    // Hide legacy weather/history chrome — RH sidebar is the filter surface.
+    document.querySelectorAll("#panel-props .props-trends-sidebar .weather-toolbar:not(.props-rh-filters-panel)").forEach((el) => {
+      el.hidden = true;
+    });
+    const courseOnly = document.getElementById("props-course-window");
+    if (courseOnly?.closest?.("label")) courseOnly.closest("label").hidden = true;
+    else if (courseOnly) courseOnly.hidden = true;
+    renderPropsTrendsRabbitHoleFast();
+    return;
+  }
   ensurePropsStatSelectValid();
-  void ensureBetspertsCourseFactsLoaded().then(() => paintPropsCourseCategories());
-  void ensureOuRhFiltersLoaded().then(() => {
-    populatePropsRhFilterSelects();
-  });
-  void ensurePropsRhVizLoaded();
-  void refreshPropsRhLiveStats();
-  paintPropsCourseCategories();
   const fieldChartCapOnly =
     propsCourseWindowModeOn() &&
     propsAverageModeOn() &&
@@ -27654,7 +27720,8 @@ async function refreshAll() {
   await yieldToMain();
 
   if (tab === "props") {
-    await ensurePlayerHistoryLoadedForTab("props");
+    if (!PROPS_RH_FAST_MODE) await ensurePlayerHistoryLoadedForTab("props");
+    else void ensurePropsRhBootstrap();
     renderPropsTrendsNow();
   }
   if (tab === "live-prop") renderLivePropPredictor();
@@ -29143,7 +29210,10 @@ function showAppTab(tab) {
     });
   if (tab === "props") {
     requestAnimationFrame(() => {
-      void ensurePlayerHistoryLoadedForTab("props");
+      if (PROPS_RH_FAST_MODE) void ensurePropsRhBootstrap().then(() => {
+        if (activeAppTabId() === "props") scheduleRenderPropsTrends(0);
+      });
+      else void ensurePlayerHistoryLoadedForTab("props");
     });
   }
   if (tab === "matchup-analysis") {
@@ -29195,7 +29265,13 @@ function activeAppTabId() {
 
 function ensurePlayerHistoryLoadedForTab(tab) {
   // Round projections (ou) uses Rabbit Hole stats — never pull field-*.json for that tab.
+  // Historical Trends fast mode is Rabbit Hole local JSON only — skip DG history shards.
   if (!["props", "course-fit"].includes(String(tab || ""))) return Promise.resolve();
+  if (tab === "props" && PROPS_RH_FAST_MODE) {
+    return ensurePropsRhBootstrap().then(() => {
+      if (activeAppTabId() === "props") renderPropsTrendsNow();
+    });
+  }
   const p =
     tab === "props"
       ? (async () => {
