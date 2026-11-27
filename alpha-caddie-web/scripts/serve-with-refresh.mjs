@@ -17,9 +17,9 @@
  * Disable: GOLF_SKIP_LIVE_IN_PLAY_POLL_SERVER=1. GOLF_LIVE_IN_PLAY_SERVER_POLL_MS (default 60000; min 30000; max 600000).
  *
  * Book odds: runs fetch-book-odds-into-projections.mjs unless GOLF_SKIP_BOOK_ODDS_ON_START=1.
- * While serving, polls that script on GOLF_BOOK_ODDS_SERVER_POLL_MS (default 60000, min 45000) unless the
- * unified pipeline is on (default) — then pre-round still runs fetch:book-odds every tick; full fetch:dg is throttled.
- * Disable: GOLF_SKIP_BOOK_ODDS_POLL_SERVER=1.
+ * While serving, book odds refresh at most once per day (GOLF_BOOK_ODDS_SERVER_POLL_MS, default 86400000).
+ * Unified pipeline still polls in-play frequently; fetch:book-odds is day-throttled in both pre + live.
+ * Disable entirely: GOLF_SKIP_BOOK_ODDS_POLL_SERVER=1.
  *
  * Env:
  *   GOLF_SKIP_REFRESH_ON_START=1 — only serve (no API)
@@ -32,7 +32,7 @@
  *     GOLF_UNIFIED_PROJECTIONS_PIPELINE=1 (live mode otherwise never refreshes field/course rows; unified mode used to ignore this env).
  *   GOLF_SKIP_BOOK_ODDS_ON_START=1 — skip book odds fetch on start
  *   GOLF_SKIP_BOOK_ODDS_POLL_SERVER=1 — do not refresh betting-tools odds into projections.json while serving
- *   GOLF_BOOK_ODDS_SERVER_POLL_MS — book odds + DK round props poll in ms (default 60000, min 45000)
+ *   GOLF_BOOK_ODDS_SERVER_POLL_MS — book odds + DK round props poll in ms (default 86400000 = 1 day; min 3600000)
  *   GOLF_UNIFIED_PROJECTIONS_PIPELINE=1 — single scheduler: pre-round fetch:dg before Thursday ET, then live fetch:in-play + fetch:book-odds from Thursday onward.
  *   GOLF_PRE_ROUND_PROJECTIONS_POLL_MS — unified pre-round fetch:dg interval (default 21600000; min 1800000)
  *   GOLF_LIVE_PROJECTIONS_POLL_MS — unified live tick interval for in-play + book odds (default 60000; min 30000)
@@ -614,6 +614,12 @@ function startUnifiedProjectionPipeline() {
   const preMs = Math.max(1_800_000, Number(process.env.GOLF_PRE_ROUND_PROJECTIONS_POLL_MS || 21_600_000));
   const liveMs = Math.max(30_000, Number(process.env.GOLF_LIVE_PROJECTIONS_POLL_MS || 60_000));
   const probeMs = Math.max(30_000, Math.min(liveMs, Number(process.env.GOLF_LIVE_PROBE_POLL_MS || 60_000)));
+  /** Sportsbook odds: once a day by default (not every live tick). */
+  const bookOddsMs = Math.max(
+    3_600_000,
+    Number(process.env.GOLF_BOOK_ODDS_SERVER_POLL_MS || 86_400_000),
+  );
+  const skipBookOddsPoll = process.env.GOLF_SKIP_BOOK_ODDS_POLL_SERVER === "1";
 
   const envDgRaw = String(process.env.GOLF_FETCH_DG_SERVER_POLL_MS || "").trim();
   let dgPollMs = null;
@@ -630,6 +636,8 @@ function startUnifiedProjectionPipeline() {
   let lastNoKeyLog = 0;
   /** Last time we started fetch:dg (pre + optional live); 0 = never, allows first run immediately. */
   let lastFullDgRunAt = 0;
+  /** Last fetch:book-odds start; day-throttled. */
+  let lastBookOddsRunAt = 0;
   const logNoKeyThrottled = () => {
     const now = Date.now();
     if (now - lastNoKeyLog > 600_000) {
@@ -659,27 +667,45 @@ function startUnifiedProjectionPipeline() {
         mode = nextMode;
         if (nextMode === "live") {
           console.log(
-            "[alpha-caddie-web] Unified pipeline mode=live (DataGolf in-play aligned): fetch:in-play + fetch:book-odds" +
+            "[alpha-caddie-web] Unified pipeline mode=live (DataGolf in-play aligned): fetch:in-play" +
+              (skipBookOddsPoll
+                ? "; book odds poll off"
+                : `; fetch:book-odds at most every ${Math.round(bookOddsMs / 3600000)}h`) +
               (dgPollMs
                 ? `; fetch:dg at most every ${Math.round(dgPollMs / 1000)}s (GOLF_FETCH_DG_SERVER_POLL_MS).`
                 : ".")
           );
         } else {
           console.log(
-            "[alpha-caddie-web] Unified pipeline mode=pre-round: fetch:book-odds every tick; fetch:dg at most every",
+            "[alpha-caddie-web] Unified pipeline mode=pre-round: fetch:book-odds at most every",
+            Math.round(bookOddsMs / 3600000),
+            "h; fetch:dg at most every",
             Math.round(dgThrottlePreMs / 1000),
             "s.",
             dgPollMs ? "(GOLF_FETCH_DG_SERVER_POLL_MS)" : "(GOLF_PRE_ROUND_PROJECTIONS_POLL_MS default)"
           );
         }
       }
-      if (nextMode === "live") {
-        const bookJob = spawnScript(bookScript, "fetch:book-odds", { logNoKey: false });
-        if (!bookJob) {
-          busy = false;
+      const maybeRunBookOdds = (then) => {
+        if (skipBookOddsPoll) {
+          then();
           return;
         }
-        bookJob.on("exit", () => {
+        const nowBook = Date.now();
+        if (lastBookOddsRunAt !== 0 && nowBook - lastBookOddsRunAt < bookOddsMs) {
+          then();
+          return;
+        }
+        lastBookOddsRunAt = nowBook;
+        const bookJob = spawnScript(bookScript, "fetch:book-odds", { logNoKey: false });
+        if (!bookJob) {
+          then();
+          return;
+        }
+        bookJob.on("exit", () => then());
+      };
+      if (nextMode === "live") {
+        maybeRunBookOdds(() => {
           if (!dgPollMs) {
             busy = false;
             return;
@@ -701,13 +727,8 @@ function startUnifiedProjectionPipeline() {
         });
         return;
       }
-      // Pre-round: always merge fresh sportsbook lines (was incorrectly gated on fetch:dg only — odds stayed stale for hours).
-      const bookJob = spawnScript(bookScript, "fetch:book-odds", { logNoKey: false });
-      if (!bookJob) {
-        busy = false;
-        return;
-      }
-      bookJob.on("exit", () => {
+      // Pre-round: sportsbook lines at most daily; fetch:dg on its own throttle.
+      maybeRunBookOdds(() => {
         const now2 = Date.now();
         if (lastFullDgRunAt !== 0 && now2 - lastFullDgRunAt < dgThrottlePreMs) {
           busy = false;
@@ -737,7 +758,9 @@ function startUnifiedProjectionPipeline() {
     Math.round(dgThrottlePreMs / 1000),
     "s;",
     dgPollMs ? `fetch:dg in live every ${Math.round(dgPollMs / 1000)}s;` : "no fetch:dg in live (set GOLF_FETCH_DG_SERVER_POLL_MS);",
-    "live poll:",
+    "book odds:",
+    skipBookOddsPoll ? "off" : `every ${Math.round(bookOddsMs / 3600000)}h`,
+    "; live poll:",
     Math.round(liveMs / 1000),
     "s; probe:",
     Math.round(probeMs / 1000),
@@ -801,7 +824,8 @@ function startBookOddsDiskPoller() {
   }
   const script = path.join(WEB_ROOT, "scripts", "fetch-book-odds-into-projections.mjs");
   if (!fs.existsSync(script)) return;
-  const ms = Math.min(600_000, Math.max(45_000, Number(process.env.GOLF_BOOK_ODDS_SERVER_POLL_MS || 60_000)));
+  // Default once/day. Min 1h so an old 60s env cannot hammer sportsbooks.
+  const ms = Math.max(3_600_000, Number(process.env.GOLF_BOOK_ODDS_SERVER_POLL_MS || 86_400_000));
   let lastBookNoKeyLog = 0;
   const tick = () => {
     const key = loadApiKey();
@@ -837,8 +861,8 @@ function startBookOddsDiskPoller() {
   setInterval(tick, ms);
   console.log(
     "[alpha-caddie-web] projections + DraftKings props refresh every",
-    Math.round(ms / 1000),
-    "s (API key re-read each tick). Set GOLF_SKIP_BOOK_ODDS_POLL_SERVER=1 to disable."
+    Math.round(ms / 3600000),
+    "h (API key re-read each tick). Set GOLF_SKIP_BOOK_ODDS_POLL_SERVER=1 to disable."
   );
 }
 if (!usingUnifiedPipeline) startBookOddsDiskPoller();
