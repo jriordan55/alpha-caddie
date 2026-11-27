@@ -3701,6 +3701,35 @@ html[data-theme="light"] .book-logo-pill {
   overflow: visible;
   max-width: 100%;
 }
+/* Light theme: keep a clean dark chart well; tighten HT chrome */
+html[data-theme="light"] .props-shell {
+  background: #ffffff;
+  border-color: var(--golf-card-border);
+  box-shadow: 0 8px 28px rgba(17, 17, 17, 0.06);
+}
+html[data-theme="light"] .props-shell .props-trends-top-bar,
+html[data-theme="light"] .props-shell .props-trends-header {
+  background: linear-gradient(180deg, #faf9f6, #ffffff);
+  border-bottom-color: var(--golf-border);
+}
+html[data-theme="light"] .props-shell .props-trends-chart-wrap {
+  background: #0a0c0f;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.08);
+}
+html[data-theme="light"] .props-trends-kpi-val {
+  color: var(--golf-green);
+}
+html[data-theme="light"] #panel-props .props-trends-sidebar .toolbar.weather-toolbar.weather-toolbar-compact {
+  background: #f7f5f0;
+  box-shadow: none;
+}
+html[data-theme="light"] .props-weather-filter-input,
+html[data-theme="light"] .props-trends-top-market select,
+html[data-theme="light"] .golfer-combobox-input {
+  background: #ffffff;
+  border-color: var(--golf-border);
+  color: var(--golf-text);
+}
 .props-shell .props-footer-row {
   border: none;
   border-radius: 0;
@@ -3756,21 +3785,25 @@ html[data-theme="light"] .book-logo-pill {
   color: var(--golf-text-muted);
 }
 .props-trends-inline-line {
-  color: #fff;
+  color: var(--golf-text);
   font-weight: 600;
   font-variant-numeric: tabular-nums;
+  white-space: nowrap;
 }
 .props-trends-inline-market {
   color: var(--golf-text-muted);
   font-weight: 500;
+  white-space: nowrap;
 }
 .props-trends-inline-under {
   color: var(--golf-danger);
   font-weight: 700;
+  white-space: nowrap;
 }
 .props-trends-inline-over {
   color: var(--golf-green);
   font-weight: 700;
+  white-space: nowrap;
 }
 .props-trends-inline-meta.props-ou-lower-is-better .props-trends-inline-under {
   color: var(--golf-green);
@@ -4005,8 +4038,8 @@ html[data-theme="light"] .book-logo-pill {
   pointer-events: auto;
 }
 .props-chart-steppers .props-stepper-block {
-  flex: 1 1 156px;
-  min-width: min(100%, 200px);
+  flex: 0 1 180px;
+  min-width: min(100%, 160px);
   margin: 0;
 }
 

@@ -17758,7 +17758,12 @@ function buildCourseFitTab() {
     }
   }
 
-  const venueName = courseFitPrettyCourseKey(activeVk);
+  const venueName =
+    (eventVk && activeVk === eventVk
+      ? formatDualOrSingleCourseForDisplay(String(DATA?.meta?.course_used || DATA?.course_used || "").trim())
+      : "") ||
+    formatDualOrSingleCourseForDisplay(courseFitPrettyCourseKey(activeVk)) ||
+    courseFitPrettyCourseKey(activeVk);
   const vk = activeVk;
 
   const rows = courseFitPlayerPool();
@@ -21474,7 +21479,9 @@ function ensurePropsCourseSelectedForWindow(opts = {}) {
   if (![...courseSel.options].some((o) => o.value === prefer)) {
     const op = document.createElement("option");
     op.value = prefer;
-    op.textContent = courseFitPrettyCourseKey(prefer);
+    const metaVenue = String(DATA?.meta?.course_used || DATA?.course_used || "").trim();
+    op.textContent =
+      formatDualOrSingleCourseForDisplay(metaVenue) || courseFitPrettyCourseKey(prefer);
     courseSel.appendChild(op);
   }
   const cur = selectedPropsCourseFilter();
@@ -22593,7 +22600,12 @@ function refreshPropsCourseFilterOptionsAllPlayers() {
           if (!byKey.has(k)) byKey.set(k, courseFitPrettyCourseKey(k));
         }
       }
-      if (mkVenue && !byKey.has(mkVenue)) byKey.set(mkVenue, courseFitPrettyCourseKey(mkVenue));
+      if (mkVenue && !byKey.has(mkVenue)) {
+        byKey.set(
+          mkVenue,
+          formatDualOrSingleCourseForDisplay(metaVenue) || courseFitPrettyCourseKey(mkVenue),
+        );
+      }
       sortedEntries = [...byKey.entries()].sort((a, b) => {
         if (mkVenue && a[0] === mkVenue) return -1;
         if (mkVenue && b[0] === mkVenue) return 1;
@@ -22612,7 +22624,12 @@ function refreshPropsCourseFilterOptionsAllPlayers() {
       for (const k of propsCourseRoundIndex.keys()) {
         byKey.set(k, courseFitPrettyCourseKey(k));
       }
-      if (metaVenue && mkVenue && !byKey.has(mkVenue)) byKey.set(mkVenue, courseFitPrettyCourseKey(mkVenue));
+      if (metaVenue && mkVenue && !byKey.has(mkVenue)) {
+        byKey.set(
+          mkVenue,
+          formatDualOrSingleCourseForDisplay(metaVenue) || courseFitPrettyCourseKey(mkVenue),
+        );
+      }
       sortedEntries = [...byKey.entries()].sort((a, b) => a[0].localeCompare(b[0]));
     }
     propsAllPlayersCourseOptsCacheKey = optsCacheKey;
@@ -23297,10 +23314,19 @@ try {
   /* ignore */
 }
 
-function formatCourseNameForDisplay(raw) {
+/** One course name → display label (never pass dual `A · B` here). */
+function formatSingleCourseNameForDisplay(raw) {
   const k = normCourseNameKey(raw);
   if (!k) return enforceCourseDisplayAcronyms(String(raw || "").trim());
   return courseFitPrettyCourseKey(k);
+}
+
+function formatCourseNameForDisplay(raw) {
+  const s = String(raw || "").trim();
+  if (!s) return "";
+  // Dual-course weeks must keep the middot — normCourseNameKey would glue both sides.
+  if (s.includes(" · ") || s.includes(";")) return formatDualOrSingleCourseForDisplay(s);
+  return formatSingleCourseNameForDisplay(s);
 }
 
 /** Dual-course `course_used` (`A · B`) — keep Seaside/Plantation; avoid "Club Club" collapse. */
@@ -23310,7 +23336,7 @@ function formatDualOrSingleCourseForDisplay(raw) {
   if (s.includes(" · ") || s.includes(";")) {
     const parts = s
       .split(/\s*[·;]\s*/)
-      .map((part) => formatCourseNameForDisplay(part.trim()) || part.trim())
+      .map((part) => formatSingleCourseNameForDisplay(part.trim()) || part.trim())
       .filter(Boolean);
     const uniq = [...new Set(parts.map((p) => p.toLowerCase()))];
     if (uniq.length === 1 && parts.length > 1) {
@@ -23321,7 +23347,17 @@ function formatDualOrSingleCourseForDisplay(raw) {
     }
     return parts.join(" · ");
   }
-  return formatCourseNameForDisplay(s);
+  // Already-glued dual keys (middot lost via norm) — recover Sea Island sides.
+  const gluedSea = s.match(
+    /^(.*?\bsea island\b.*?)(seaside)\s+\1(plantation)$/i,
+  ) || s.match(
+    /^(.*?\bsea island\b.*?)(plantation)\s+\1(seaside)$/i,
+  );
+  if (gluedSea) {
+    const club = formatSingleCourseNameForDisplay(gluedSea[1]) || "Sea Island Golf Club";
+    return `${club} ${gluedSea[2][0].toUpperCase()}${gluedSea[2].slice(1).toLowerCase()} · ${club} ${gluedSea[3][0].toUpperCase()}${gluedSea[3].slice(1).toLowerCase()}`;
+  }
+  return formatSingleCourseNameForDisplay(s);
 }
 
 function formatHistoryRoundCourseNameInPlace(r) {
@@ -25285,8 +25321,8 @@ function propsChartBarLayout(series, padL, innerW) {
   const barW = new Array(n);
   if (n === 0) return { xCenter, barW };
   const slotEq = innerW / n;
-  const bwFrac = n > 48 ? 0.44 : n > 24 ? 0.56 : 0.72;
-  const minBarPx = n > 48 ? 4 : n > 24 ? 6 : 10;
+  const bwFrac = n > 48 ? 0.7 : n > 24 ? 0.64 : 0.76;
+  const minBarPx = n > 48 ? 5 : n > 24 ? 7 : 10;
   for (let i = 0; i < n; i++) {
     xCenter[i] = padL + (i + 0.5) * slotEq;
     if (n === 1) {
@@ -26101,15 +26137,16 @@ function drawPropsTrendCanvas(series, lineY, statKey, opts = {}) {
     const padX = 6;
     const tw = ctx.measureText(lineLbl).width + padX * 2;
     const bh = 16;
-    const bx = Math.max(pad.l + 4, lineX0 + 4);
-    const by = yL - bh / 2;
+    // Keep the line pill on the right so it doesn't cover the first bars.
+    const bx = Math.max(pad.l + 4, Math.min(lineX1 - tw - 4, w - pad.r - tw - 2));
+    const by = Math.max(pad.t + 2, Math.min(yL - bh / 2, h - pad.b - bh - 2));
     ctx.fillStyle = "#f5a623";
     ctx.beginPath();
     if (typeof ctx.roundRect === "function") ctx.roundRect(bx, by, tw, bh, 4);
     else ctx.rect(bx, by, tw, bh);
     ctx.fill();
     ctx.fillStyle = "#0a0c0f";
-    ctx.fillText(lineLbl, bx + padX, yL);
+    ctx.fillText(lineLbl, bx + padX, by + bh / 2);
     ctx.textAlign = "left";
     ctx.textBaseline = "alphabetic";
   }
@@ -27140,7 +27177,7 @@ function updateHomePage() {
   if (!lineEl) return;
   const m = DATA?.meta || {};
   const ev = m.event_name ? String(m.event_name).trim() : "";
-  const course = m.course_used ? formatCourseNameForDisplay(m.course_used) : "";
+  const course = m.course_used ? formatDualOrSingleCourseForDisplay(m.course_used) : "";
   const venue = metaEventVenueLabel();
   const league = ouProjectionsTourLabel();
   lineEl.textContent = venue && venue !== "—" ? `${league} · ${venue}` : ev || "AlphaCaddie";
