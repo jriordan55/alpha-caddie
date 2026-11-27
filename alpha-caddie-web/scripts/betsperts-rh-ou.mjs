@@ -107,6 +107,45 @@ export function rabbitHoleLoadBody(overrides = {}) {
   };
 }
 
+/** Scalar / array condition fields from Filter-by-Conditions UI. */
+const RH_CONDITION_SCALAR_FIELDS = Object.freeze([
+  "condition",
+  "clength",
+  "fieldStrength",
+  "par",
+  "cut",
+  "tournament",
+  "eventSeason",
+  "fieldSize",
+  "bunkerDanger",
+  "waterDanger",
+  "green",
+  "greenSize",
+  "speed",
+  "fairwaySurface",
+  "roughSurface",
+  "rough",
+  "elevation",
+  "architect",
+  "gainOTT",
+  "OTTClub",
+  "fwyAccuracy",
+  "missedFwyPenalty",
+  "roughPenalty",
+  "teeTime",
+]);
+
+function normalizeRhFilterValue(v) {
+  if (v == null) return null;
+  if (Array.isArray(v)) {
+    const arr = v.map(String).map((x) => x.trim()).filter((x) => x && x !== "all" && x !== "All");
+    return arr.length ? arr : null;
+  }
+  const s = String(v).trim();
+  if (!s || s === "all" || s === "All") return null;
+  return s;
+}
+
 /** Parse UI filter values into RH load overrides (excluding view). */
 export function rhFiltersToLoadOverrides(filters = {}) {
   const out = {
@@ -119,6 +158,7 @@ export function rhFiltersToLoadOverrides(filters = {}) {
     courseName: [],
     startDate: "",
     endDate: "",
+    display: String(filters.display || "Average").trim() || "Average",
   };
   const tf = String(filters.timeframe || filters.time || "all").trim().toLowerCase();
   if (tf.startsWith("round:")) {
@@ -132,17 +172,22 @@ export function rhFiltersToLoadOverrides(filters = {}) {
   }
   // else all
 
-  const region = filters.region;
-  if (Array.isArray(region)) out.region = region.map(String).filter(Boolean);
-  else if (region && region !== "all" && region !== "All") out.region = [String(region)];
+  const region = normalizeRhFilterValue(filters.region);
+  if (region) out.region = Array.isArray(region) ? region : [region];
 
-  const ctype = filters.ctype || filters.courseType;
-  if (Array.isArray(ctype)) out.ctype = ctype.map(String).filter(Boolean);
-  else if (ctype && ctype !== "all" && ctype !== "All") out.ctype = [String(ctype)];
+  const ctype = normalizeRhFilterValue(filters.ctype || filters.courseType || filters.course_type);
+  if (ctype) out.ctype = Array.isArray(ctype) ? ctype : [ctype];
 
-  const course = filters.course;
-  if (Array.isArray(course)) out.course = course.map(String).filter(Boolean);
-  else if (course && course !== "all" && course !== "All") out.course = [String(course)];
+  const course = normalizeRhFilterValue(filters.course);
+  if (course) out.course = Array.isArray(course) ? course : [course];
+
+  const conditions = filters.conditions && typeof filters.conditions === "object" ? filters.conditions : filters;
+  for (const field of RH_CONDITION_SCALAR_FIELDS) {
+    const raw = normalizeRhFilterValue(conditions[field] ?? filters[field]);
+    if (raw == null) continue;
+    // Multi-select condition fields are arrays on rabbit_hole/load.
+    out[field] = Array.isArray(raw) ? raw : [raw];
+  }
 
   return out;
 }
@@ -219,6 +264,16 @@ export function mergeRhOuViewRows(byPga, rows, view) {
     if (view === "Strokes Gained") {
       const v = num(row["SG:TOT"], NaN);
       if (Number.isFinite(v)) prev.sg_total = round3(v);
+      const ott = num(row["SG:OTT"], NaN);
+      const app = num(row["SG:APP"], NaN);
+      const arg = num(row["SG:ARG"], NaN);
+      const putt = num(row["SG:P"] ?? row["SG:PUTT"], NaN);
+      const t2g = num(row["SG:T2G"], NaN);
+      if (Number.isFinite(ott)) prev.sg_ott = round3(ott);
+      if (Number.isFinite(app)) prev.sg_app = round3(app);
+      if (Number.isFinite(arg)) prev.sg_arg = round3(arg);
+      if (Number.isFinite(putt)) prev.sg_putt = round3(putt);
+      if (Number.isFinite(t2g)) prev.sg_t2g = round3(t2g);
     } else if (view === "Scoring") {
       const bob = num(row["BoB %"], NaN);
       const bog = num(row["Bogey %"], NaN);

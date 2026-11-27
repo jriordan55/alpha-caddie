@@ -3701,6 +3701,122 @@ html[data-theme="light"] .book-logo-pill {
   overflow: visible;
   max-width: 100%;
 }
+.props-course-cats {
+  margin: 0;
+  padding: 12px 18px 14px;
+  border-bottom: 1px solid var(--golf-border);
+  background: linear-gradient(180deg, rgba(var(--golf-green-rgb), 0.08), transparent);
+}
+.props-course-cats-head {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  align-items: baseline;
+  margin-bottom: 8px;
+}
+.props-course-cats-eyebrow {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--golf-text-muted);
+}
+.props-course-cats-venue {
+  font-size: 0.92rem;
+  font-weight: 650;
+  color: var(--golf-text);
+}
+.props-course-cats-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.props-course-cat-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 9px;
+  border-radius: 999px;
+  border: 1px solid var(--golf-border);
+  background: var(--golf-elevated-soft);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--golf-text);
+  line-height: 1.2;
+}
+.props-course-cat-chip-lab {
+  opacity: 0.65;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  font-size: 0.62rem;
+}
+.props-course-cat-chip--type {
+  border-color: rgba(var(--golf-green-rgb), 0.35);
+  background: rgba(var(--golf-green-rgb), 0.1);
+}
+.props-course-cat-chip--grass {
+  border-color: rgba(59, 113, 159, 0.35);
+  background: rgba(59, 113, 159, 0.1);
+}
+.props-course-cat-chip--skill {
+  border-color: rgba(251, 191, 36, 0.35);
+  background: rgba(251, 191, 36, 0.1);
+}
+.props-rh-filters-panel {
+  margin-bottom: 12px !important;
+}
+.props-rh-filters-note {
+  margin: -4px 0 8px;
+  font-size: 0.7rem;
+  color: var(--golf-text-muted);
+  line-height: 1.35;
+}
+.props-rh-filter-dims {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 340px;
+  overflow: auto;
+  padding-right: 2px;
+}
+.props-rh-filter-dims .toolbar-label {
+  margin: 0;
+}
+.props-rh-filters-reset {
+  margin-top: 8px;
+  align-self: flex-start;
+  border: 1px solid var(--golf-border);
+  background: var(--golf-elevated-soft);
+  color: var(--golf-text);
+  border-radius: 8px;
+  padding: 6px 10px;
+  font: inherit;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.props-rh-filters-reset:hover {
+  border-color: rgba(var(--golf-green-rgb), 0.45);
+}
+.props-rh-filter-dims option.props-rh-opt-venue-match {
+  font-weight: 600;
+}
+.props-rh-source-pill {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  z-index: 2;
+  margin: 0;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: rgba(var(--golf-green-rgb), 0.9);
+  color: #04140e;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
 /* Light theme: keep a clean dark chart well; tighten HT chrome */
 html[data-theme="light"] .props-shell {
   background: #ffffff;

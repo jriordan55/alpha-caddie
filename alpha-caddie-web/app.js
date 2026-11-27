@@ -1204,6 +1204,522 @@ function populateOuRhFilterSelects() {
     (meta.courses || []).map((c) => ({ value: String(c.id), label: c.name })),
   );
   ouRhFiltersReady = true;
+  populatePropsRhFilterSelects();
+}
+
+/** Historical Trends Rabbit Hole filter UI state (Filter-by-Conditions). */
+let propsRhFiltersWired = false;
+let propsRhFilterDimsReady = false;
+let propsRhLiveStats = null;
+let propsRhLiveFetchPromise = null;
+let PROPS_RH_VIZ = null;
+let propsRhVizLoadPromise = null;
+
+function propsRhTimeframeValue() {
+  return String(document.getElementById("props-rh-timeframe")?.value || "all").trim() || "all";
+}
+
+function propsRhConditionState() {
+  const conditions = {};
+  const wrap = document.getElementById("props-rh-filter-dims");
+  if (!wrap) return conditions;
+  wrap.querySelectorAll("select[data-rh-api-field]").forEach((el) => {
+    const field = String(el.getAttribute("data-rh-api-field") || "").trim();
+    const val = String(el.value || "").trim();
+    if (!field || !val || val === "all") return;
+    conditions[field] = val;
+  });
+  return conditions;
+}
+
+function propsRhFilterState() {
+  const conditions = propsRhConditionState();
+  const region = conditions.region || "all";
+  const ctype = conditions.ctype || conditions.course_type || "all";
+  delete conditions.region;
+  delete conditions.ctype;
+  delete conditions.course_type;
+  return {
+    timeframe: propsRhTimeframeValue(),
+    region,
+    ctype,
+    course: "all",
+    conditions,
+    display: "Average",
+  };
+}
+
+function propsRhFiltersAreActive(state = propsRhFilterState()) {
+  if (state.timeframe && state.timeframe !== "all") return true;
+  if (state.region && state.region !== "all") return true;
+  if (state.ctype && state.ctype !== "all") return true;
+  return Object.keys(state.conditions || {}).length > 0;
+}
+
+function populatePropsRhFilterSelects() {
+  const meta = OU_RH_FILTERS;
+  if (!meta) return;
+  const tf = document.getElementById("props-rh-timeframe");
+  if (tf && !tf.options.length) {
+    const cur = String(tf.value || "all");
+    tf.innerHTML = "";
+    for (const o of meta.timeframes || []) {
+      const opt = document.createElement("option");
+      opt.value = String(o.value ?? "all");
+      opt.textContent = String(o.label ?? o.value ?? "All");
+      tf.appendChild(opt);
+    }
+    if (![...tf.options].some((x) => x.value === cur)) tf.value = "all";
+    else tf.value = cur;
+  }
+  const host = document.getElementById("props-rh-filter-dims");
+  if (!host || propsRhFilterDimsReady) return;
+  host.innerHTML = "";
+  const dims = Array.isArray(meta.dimensions) ? meta.dimensions : [];
+  for (const dim of dims) {
+    if (!dim || dim.pull === false) continue;
+    const apiField = String(dim.apiField || "").trim();
+    if (!apiField) continue;
+    const values = Array.isArray(dim.values) ? dim.values : [];
+    if (!values.length) continue;
+    const lab = document.createElement("label");
+    lab.className = "toolbar-label";
+    lab.textContent = String(dim.label || apiField);
+    const sel = document.createElement("select");
+    sel.setAttribute("data-rh-api-field", apiField);
+    sel.setAttribute("data-rh-dim-key", String(dim.key || apiField));
+    sel.title = String(dim.label || apiField);
+    const all = document.createElement("option");
+    all.value = "all";
+    all.textContent = "All";
+    sel.appendChild(all);
+    for (const v of values) {
+      const opt = document.createElement("option");
+      const value = String(v?.apiValue ?? v?.value ?? v ?? "").trim();
+      if (!value) continue;
+      opt.value = value;
+      opt.textContent = String(v?.label ?? v?.value ?? value);
+      sel.appendChild(opt);
+    }
+    lab.appendChild(sel);
+    host.appendChild(lab);
+  }
+  // Region / course type also live in top-level arrays — ensure selects exist if missing from dimensions.
+  const ensureDim = (apiField, label, values) => {
+    if (host.querySelector(`select[data-rh-api-field="${apiField}"]`)) return;
+    if (!values?.length) return;
+    const lab = document.createElement("label");
+    lab.className = "toolbar-label";
+    lab.textContent = label;
+    const sel = document.createElement("select");
+    sel.setAttribute("data-rh-api-field", apiField);
+    const all = document.createElement("option");
+    all.value = "all";
+    all.textContent = "All";
+    sel.appendChild(all);
+    for (const v of values) {
+      const opt = document.createElement("option");
+      opt.value = String(v);
+      opt.textContent = String(v);
+      sel.appendChild(opt);
+    }
+    lab.appendChild(sel);
+    host.appendChild(lab);
+  };
+  ensureDim("region", "Region", meta.regions || []);
+  ensureDim("ctype", "Course Type", meta.types || []);
+  propsRhFilterDimsReady = true;
+  wirePropsRhFilterEvents();
+  highlightPropsRhFiltersForVenue();
+}
+
+/** Mark RH filter options that match the current venue's Rabbit Hole categories. */
+function highlightPropsRhFiltersForVenue() {
+  const facts = propsRhCourseFactsForVenue();
+  if (!facts.length) return;
+  const match = new Set();
+  for (const f of facts) {
+    for (const t of f.course_types || []) match.add(String(t).toLowerCase());
+    for (const loc of f.locations || []) match.add(String(loc).toLowerCase());
+    if (f.difficulty) match.add(String(f.difficulty).toLowerCase());
+    for (const g of f.grass?.greens || []) match.add(String(g).toLowerCase());
+    for (const g of f.grass?.fairways || []) match.add(String(g).toLowerCase());
+    for (const g of f.grass?.rough || []) match.add(String(g).toLowerCase());
+    const sk = f.skill_labels || {};
+    for (const v of Object.values(sk)) if (v) match.add(String(v).toLowerCase());
+  }
+  document.querySelectorAll("#props-rh-filter-dims select option").forEach((opt) => {
+    const v = String(opt.value || "").trim();
+    if (!v || v === "all") return;
+    const hit = match.has(v.toLowerCase());
+    opt.classList.toggle("props-rh-opt-venue-match", hit);
+    const base = String(opt.textContent || "").replace(/\s*·\s*this course$/i, "");
+    opt.textContent = hit ? `${base} · this course` : base;
+  });
+}
+
+function wirePropsRhFilterEvents() {
+  if (propsRhFiltersWired) return;
+  propsRhFiltersWired = true;
+  const onChange = () => {
+    void refreshPropsRhLiveStats().then(() => scheduleRenderPropsTrends(120));
+  };
+  document.getElementById("props-rh-timeframe")?.addEventListener("change", onChange);
+  document.getElementById("props-rh-filter-dims")?.addEventListener("change", onChange);
+  document.getElementById("props-rh-filters-reset")?.addEventListener("click", () => {
+    const tf = document.getElementById("props-rh-timeframe");
+    if (tf) tf.value = "all";
+    document.querySelectorAll("#props-rh-filter-dims select").forEach((el) => {
+      el.value = "all";
+    });
+    propsRhLiveStats = null;
+    void refreshPropsRhLiveStats().then(() => scheduleRenderPropsTrends(80));
+  });
+}
+
+async function ensurePropsRhVizLoaded() {
+  if (PROPS_RH_VIZ) return PROPS_RH_VIZ;
+  if (propsRhVizLoadPromise) return propsRhVizLoadPromise;
+  propsRhVizLoadPromise = (async () => {
+    try {
+      const res = await fetch(cacheBustFetchUrl("data/betsperts_betting_viz.json"), { cache: "force-cache" });
+      if (res.ok) PROPS_RH_VIZ = await res.json();
+    } catch {
+      PROPS_RH_VIZ = null;
+    }
+    return PROPS_RH_VIZ;
+  })();
+  return propsRhVizLoadPromise;
+}
+
+async function refreshPropsRhLiveStats() {
+  await ensureOuRhFiltersLoaded();
+  populatePropsRhFilterSelects();
+  const state = propsRhFilterState();
+  if (!propsRhFiltersAreActive(state)) {
+    await ensureOuRhStatsLoaded();
+    propsRhLiveStats = OU_RH_STATS;
+    return propsRhLiveStats;
+  }
+  if (propsRhLiveFetchPromise) return propsRhLiveFetchPromise;
+  propsRhLiveFetchPromise = (async () => {
+    try {
+      const res = await fetch("/api/betsperts-rh-ou", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify(state),
+        cache: "no-store",
+      });
+      const j = await res.json().catch(() => null);
+      if (res.ok && j?.ok && j.players) {
+        propsRhLiveStats = {
+          generatedAt: j.generatedAt,
+          filters: j.filters || state,
+          n: j.n,
+          players: j.players,
+          live: true,
+          source: "betsperts-rh",
+        };
+      } else {
+        console.warn("[props-rh] live filter fetch failed", res.status, j?.error);
+        await ensureOuRhStatsLoaded();
+        propsRhLiveStats = OU_RH_STATS;
+      }
+    } catch (e) {
+      console.warn("[props-rh] live filter fetch error", e?.message || e);
+      await ensureOuRhStatsLoaded();
+      propsRhLiveStats = OU_RH_STATS;
+    } finally {
+      propsRhLiveFetchPromise = null;
+    }
+    return propsRhLiveStats;
+  })();
+  return propsRhLiveFetchPromise;
+}
+
+function propsRhPlayerRow(dgId) {
+  const id = Math.round(num(dgId, NaN));
+  if (!Number.isFinite(id)) return null;
+  return propsRhLiveStats?.players?.[String(id)] || OU_RH_STATS?.players?.[String(id)] || null;
+}
+
+function propsRhCourseFactsForVenue() {
+  const raw = String(DATA?.meta?.course_used || DATA?.course_used || "").trim();
+  if (!raw || !BETSPERTS_COURSE_FACTS?.byKey) return [];
+  const parts = raw.includes(" · ") || raw.includes(";") ? raw.split(/\s*[·;]\s*/) : [raw];
+  const out = [];
+  const seen = new Set();
+  for (const part of parts) {
+    const fact = betspertsCourseFactForNormKey(normCourseNameKey(part));
+    if (!fact?.key || seen.has(fact.key)) continue;
+    seen.add(fact.key);
+    out.push(fact);
+  }
+  return out;
+}
+
+function paintPropsCourseCategories() {
+  const wrap = document.getElementById("props-course-cats");
+  const chips = document.getElementById("props-course-cats-chips");
+  const venueEl = document.getElementById("props-course-cats-venue");
+  if (!wrap || !chips) return;
+  const facts = propsRhCourseFactsForVenue();
+  if (!facts.length) {
+    wrap.hidden = true;
+    chips.replaceChildren();
+    return;
+  }
+  wrap.hidden = false;
+  if (venueEl) {
+    venueEl.textContent = facts.map((f) => f.name).join(" · ");
+  }
+  const frag = document.createDocumentFragment();
+  const addChip = (lab, val, kind = "") => {
+    if (val == null || val === "" || (Array.isArray(val) && !val.length)) return;
+    const text = Array.isArray(val) ? val.filter(Boolean).join(", ") : String(val);
+    if (!text) return;
+    const span = document.createElement("span");
+    span.className = `props-course-cat-chip${kind ? ` props-course-cat-chip--${kind}` : ""}`;
+    const lb = document.createElement("span");
+    lb.className = "props-course-cat-chip-lab";
+    lb.textContent = lab;
+    span.appendChild(lb);
+    span.appendChild(document.createTextNode(text));
+    frag.appendChild(span);
+  };
+  for (const f of facts) {
+    const prefix = facts.length > 1 ? `${String(f.name || "").replace(/^Sea Island GC\s*/i, "")}: ` : "";
+    addChip(`${prefix}Type`, f.course_types, "type");
+    addChip(`${prefix}Region`, f.locations, "type");
+    addChip(`${prefix}Difficulty`, f.difficulty);
+    addChip(`${prefix}Par`, Number.isFinite(num(f.par, NaN)) ? Math.round(num(f.par)) : "");
+    addChip(`${prefix}Yards`, Number.isFinite(num(f.yards, NaN)) ? Math.round(num(f.yards)).toLocaleString() : "");
+    addChip(`${prefix}Greens`, f.grass?.greens, "grass");
+    addChip(`${prefix}Fairways`, f.grass?.fairways, "grass");
+    addChip(`${prefix}Rough`, f.grass?.rough, "grass");
+    if (Number.isFinite(num(f.grass?.green_stimp, NaN))) addChip(`${prefix}Stimp`, f.grass.green_stimp, "grass");
+    const sk = f.skill_labels || {};
+    addChip(`${prefix}OTT`, sk.ott, "skill");
+    addChip(`${prefix}APP`, sk.app, "skill");
+    addChip(`${prefix}ARG`, sk.arg, "skill");
+    addChip(`${prefix}Putt`, sk.putt, "skill");
+    addChip(`${prefix}Fwy Acc`, sk.fwy_accuracy, "skill");
+    addChip(`${prefix}OTT Club`, sk.ott_club, "skill");
+  }
+  chips.replaceChildren(frag);
+  highlightPropsRhFiltersForVenue();
+}
+
+function propsRhValueForStat(rhRow, statKey) {
+  if (!rhRow) return NaN;
+  const k = String(statKey || "sg_total");
+  if (k === "sg_total" || k === "total" || k === "sg") return num(rhRow.sg_total, NaN);
+  if (k === "sg_ott") return num(rhRow.sg_ott, NaN);
+  if (k === "sg_app") return num(rhRow.sg_app, NaN);
+  if (k === "sg_arg") return num(rhRow.sg_arg, NaN);
+  if (k === "sg_putt" || k === "sg_p") return num(rhRow.sg_putt, NaN);
+  if (k === "sg_t2g") return num(rhRow.sg_t2g, NaN);
+  if (k === "fairways" || k === "driving_acc" || k === "dr_accuracy") return num(rhRow.dr_accuracy, NaN);
+  if (k === "gir" || k === "gir_pct") return num(rhRow.gir_pct, NaN);
+  if (k === "birdies" || k === "bob" || k === "bob_pct") return num(rhRow.bob_pct, NaN);
+  if (k === "bogeys" || k === "bogey_pct") return num(rhRow.bogey_pct, NaN);
+  return num(rhRow.sg_total, NaN);
+}
+
+function propsRhTimeframeLabel(tf = propsRhTimeframeValue()) {
+  const t = String(tf || "all");
+  if (t === "all") return "All";
+  if (t.startsWith("round:")) return `L${t.slice(6)}`;
+  if (t.startsWith("season:")) return t.slice(7);
+  return t;
+}
+
+function propsRhVizPlayer(dgId) {
+  const id = Math.round(num(dgId, NaN));
+  if (!Number.isFinite(id)) return null;
+  return PROPS_RH_VIZ?.playersByDg?.[String(id)] || null;
+}
+
+/** Category-slice bars from RH viz (greens / length / scoring) — mirrors Filter-by-Conditions. */
+function propsRhCategorySliceSeries(dgId, cond = propsRhConditionState()) {
+  const id = Math.round(num(dgId, NaN));
+  const viz = propsRhVizPlayer(id);
+  if (!viz) return [];
+  const mk = (label, sg, n, kind) => {
+    const v = num(sg, NaN);
+    if (!Number.isFinite(v)) return null;
+    return {
+      date: label,
+      actual: v,
+      course: "Rabbit Hole",
+      playerName: "",
+      dgId: id,
+      _aggregate: true,
+      _yearLabel: Number.isFinite(num(n, NaN)) ? `n=${Math.round(num(n))}` : "RH",
+      _rhSlice: kind,
+    };
+  };
+  const green = String(cond.green || "").trim();
+  const clength = String(cond.clength || "").trim();
+  const condition = String(cond.condition || "").trim();
+  // Prefer the active condition dimension; otherwise show course-matched slices first.
+  if (green && Array.isArray(viz.greenGrass)) {
+    const hit = viz.greenGrass.find((r) => String(r.surface || "").toLowerCase() === green.toLowerCase());
+    if (hit) return [mk(hit.surface, hit.sg, hit.n, "green")].filter(Boolean);
+    return viz.greenGrass.map((r) => mk(r.surface, r.sg, r.n, "green")).filter(Boolean);
+  }
+  if (clength && Array.isArray(viz.courseLength)) {
+    const hit = viz.courseLength.find((r) => String(r.label || "").toLowerCase() === clength.toLowerCase());
+    if (hit) return [mk(hit.label, hit.sg, hit.n, "clength")].filter(Boolean);
+    return viz.courseLength.map((r) => mk(r.label, r.sg, r.n, "clength")).filter(Boolean);
+  }
+  if (condition && Array.isArray(viz.scoringCondition)) {
+    const hit = viz.scoringCondition.find((r) => String(r.label || "").toLowerCase() === condition.toLowerCase());
+    if (hit) return [mk(hit.label, hit.sg, hit.n, "condition")].filter(Boolean);
+    return viz.scoringCondition.map((r) => mk(r.label, r.sg, r.n, "condition")).filter(Boolean);
+  }
+  return [];
+}
+
+function propsRhWindowSeriesForPlayer(dgId) {
+  const id = Math.round(num(dgId, NaN));
+  if (!Number.isFinite(id)) return [];
+  const fromProj = DATA?.players?.find((p) => Math.round(num(p.dg_id)) === id)?.betsperts_form_windows;
+  const fromViz = propsRhVizPlayer(id)?.windows;
+  const win = fromProj || fromViz;
+  const avg = win?.average && typeof win.average === "object" ? win.average : win;
+  if (!avg || typeof avg !== "object") return [];
+  const order = [
+    ["round-12", "L12"],
+    ["round-24", "L24"],
+    ["round-50", "L50"],
+    ["round-100", "L100"],
+    ["all", "Career"],
+  ];
+  const out = [];
+  for (const [key, label] of order) {
+    const row = avg[key];
+    const v = num(row?.sg_tot ?? row?.sg ?? row, NaN);
+    if (!Number.isFinite(v)) continue;
+    out.push({
+      date: label,
+      actual: v,
+      course: "Rabbit Hole",
+      playerName: "",
+      dgId: id,
+      _aggregate: true,
+      _yearLabel: "RH",
+      _rhWindow: key,
+    });
+  }
+  // seasons newest first
+  const seasons = Object.keys(avg)
+    .filter((k) => /^season-\d{4}$/.test(k))
+    .sort((a, b) => b.localeCompare(a))
+    .slice(0, 6);
+  for (const key of seasons) {
+    const v = num(avg[key]?.sg_tot ?? avg[key]?.sg, NaN);
+    if (!Number.isFinite(v)) continue;
+    out.push({
+      date: key.replace("season-", ""),
+      actual: v,
+      course: "Rabbit Hole",
+      playerName: "",
+      dgId: id,
+      _aggregate: true,
+      _yearLabel: key.replace("season-", ""),
+      _rhWindow: key,
+    });
+  }
+  return out;
+}
+
+/** Preferred HT chart series from Rabbit Hole (filters → live/slices; else form windows). */
+function propsRhChartSeriesForPlayer(dgId, statKey = "sg_total") {
+  const id = Math.round(num(dgId, NaN));
+  if (!Number.isFinite(id)) return [];
+  const filtersOn = propsRhFiltersAreActive();
+  if (filtersOn) {
+    const slices = propsRhCategorySliceSeries(id);
+    if (slices.length) return slices;
+    const row = propsRhPlayerRow(id);
+    const v = propsRhValueForStat(row, statKey);
+    if (Number.isFinite(v)) {
+      return [
+        {
+          date: propsRhTimeframeLabel(),
+          actual: v,
+          course: "Rabbit Hole",
+          playerName: "",
+          dgId: id,
+          _aggregate: true,
+          _yearLabel: "RH filtered",
+          _rhFiltered: true,
+        },
+      ];
+    }
+  }
+  // Unfiltered: form windows for SG markets; for trad RH stats use live row as a single bar.
+  if (statKey === "sg_total" || String(statKey).startsWith("sg_")) {
+    return propsRhWindowSeriesForPlayer(id);
+  }
+  const row = propsRhPlayerRow(id);
+  const v = propsRhValueForStat(row, statKey);
+  if (!Number.isFinite(v)) return [];
+  return [
+    {
+      date: propsRhTimeframeLabel(),
+      actual: v,
+      course: "Rabbit Hole",
+      playerName: "",
+      dgId: id,
+      _aggregate: true,
+      _yearLabel: "RH",
+      _rhFiltered: false,
+    },
+  ];
+}
+
+function paintPropsRhSourcePill(on, detail = "") {
+  const el = document.getElementById("props-rh-source-pill");
+  if (!el) return;
+  el.hidden = !on;
+  el.textContent = detail ? `Rabbit Hole · ${detail}` : "Rabbit Hole";
+}
+
+function propsRhKpiPatchFromPlayer(rhRow) {
+  if (!rhRow) return;
+  const host = document.getElementById("props-trends-kpis");
+  if (!host) return;
+  const mk = (lab, val) => {
+    const d = document.createElement("div");
+    d.className = "props-trends-kpi";
+    const l = document.createElement("span");
+    l.className = "props-trends-kpi-lab";
+    l.textContent = lab;
+    const v = document.createElement("span");
+    v.className = "props-trends-kpi-val";
+    v.textContent = val;
+    d.appendChild(l);
+    d.appendChild(v);
+    return d;
+  };
+  const fmtSg = (x) => (Number.isFinite(x) ? (x >= 0 ? `+${x.toFixed(2)}` : x.toFixed(2)) : "—");
+  const fmtPct = (x) => (Number.isFinite(x) ? `${x.toFixed(1)}%` : "—");
+  const strip = document.createElement("div");
+  strip.className = "props-trends-kpis props-rh-kpi-strip";
+  strip.style.marginTop = "8px";
+  strip.appendChild(mk("RH SG:TOT", fmtSg(num(rhRow.sg_total, NaN))));
+  strip.appendChild(mk("RH SG:OTT", fmtSg(num(rhRow.sg_ott, NaN))));
+  strip.appendChild(mk("RH SG:APP", fmtSg(num(rhRow.sg_app, NaN))));
+  strip.appendChild(mk("RH SG:ARG", fmtSg(num(rhRow.sg_arg, NaN))));
+  strip.appendChild(mk("RH SG:P", fmtSg(num(rhRow.sg_putt, NaN))));
+  strip.appendChild(mk("RH BoB%", fmtPct(num(rhRow.bob_pct, NaN))));
+  strip.appendChild(mk("RH Dr Acc", fmtPct(num(rhRow.dr_accuracy, NaN))));
+  strip.appendChild(mk("RH GIR%", fmtPct(num(rhRow.gir_pct, NaN))));
+  if (Number.isFinite(num(rhRow.rounds, NaN))) strip.appendChild(mk("RH Rounds", String(Math.round(num(rhRow.rounds)))));
+  host.querySelectorAll(".props-rh-kpi-strip").forEach((n) => n.remove());
+  host.after(strip);
 }
 
 async function fetchOuRhStatsForFilters(state = ouRhFilterState()) {
@@ -26687,6 +27203,13 @@ function propsAutoTrendLineForContext(dg, statKey, playerRow) {
 
 function renderPropsTrends() {
   ensurePropsStatSelectValid();
+  void ensureBetspertsCourseFactsLoaded().then(() => paintPropsCourseCategories());
+  void ensureOuRhFiltersLoaded().then(() => {
+    populatePropsRhFilterSelects();
+  });
+  void ensurePropsRhVizLoaded();
+  void refreshPropsRhLiveStats();
+  paintPropsCourseCategories();
   const fieldChartCapOnly =
     propsCourseWindowModeOn() &&
     propsAverageModeOn() &&
@@ -26761,6 +27284,30 @@ function renderPropsTrends() {
     });
   }
   if (!HISTORY._ok || !historyHasSelectedBucket) {
+    const rhSeriesEarly = propsRhChartSeriesForPlayer(dg, statKey);
+    const rhRowEarly = propsRhPlayerRow(dg);
+    if (rhSeriesEarly.length) {
+      if (empty) empty.hidden = true;
+      const chartStatEarly =
+        statKey === "sg_total" || String(statKey).startsWith("sg_") || propsRhFiltersAreActive()
+          ? statKey === "fairways" || statKey === "gir" || statKey === "birdies"
+            ? "sg_total"
+            : String(statKey).startsWith("sg_")
+              ? statKey
+              : "sg_total"
+          : "sg_total";
+      const lineRh = Number.isFinite(propsRhValueForStat(rhRowEarly, chartStatEarly))
+        ? propsRhValueForStat(rhRowEarly, chartStatEarly)
+        : rhSeriesEarly.map((s) => s.actual).reduce((a, b) => a + b, 0) / rhSeriesEarly.length;
+      paintPropsTrendsInsightHeader(playerRow, chartStatEarly, lineRh, { over: 0, under: 0, valid: 0 }, rhSeriesEarly, dg);
+      propsRhKpiPatchFromPlayer(rhRowEarly);
+      paintPropsRhSourcePill(
+        true,
+        propsRhFiltersAreActive() ? "filtered" : rhSeriesEarly.some((s) => s._rhWindow) ? "form windows" : "RH",
+      );
+      drawPropsTrendCanvas(rhSeriesEarly, lineRh, chartStatEarly, { xAxisMode: "chrono" });
+      return;
+    }
     if (empty) {
       empty.hidden = false;
       const metaHint = String(HISTORY.meta?.note || "").trim();
@@ -26802,6 +27349,8 @@ function renderPropsTrends() {
     if (Number.isFinite(lineEarly)) propsTrendLastGoodLine = lineEarly;
     const stEarly = propsFullHitStatsForDg(dg, statKey, lineEarly, wnEarly);
     paintPropsTrendsInsightHeader(playerRow, statKey, lineEarly, stEarly, [], dg);
+    propsRhKpiPatchFromPlayer(propsRhPlayerRow(dg));
+    paintPropsRhSourcePill(Boolean(propsRhPlayerRow(dg)));
     const chartLegEarly = document.getElementById("props-chart-line-legend");
     if (chartLegEarly) chartLegEarly.hidden = !Number.isFinite(lineEarly);
     drawPropsTrendCanvas([], lineEarly, statKey);
@@ -26884,6 +27433,29 @@ function renderPropsTrends() {
       },
     ];
   }
+  // Prefer Rabbit Hole (form windows / filter slices / live RH) over DG round history.
+  const rhSeries = propsRhChartSeriesForPlayer(dg, statKey);
+  const preferRhChart =
+    rhSeries.length > 0 &&
+    (statKey === "sg_total" ||
+      String(statKey).startsWith("sg_") ||
+      propsRhFiltersAreActive() ||
+      ["fairways", "gir", "birdies", "bogeys"].includes(statKey));
+  const chartStat = preferRhChart
+    ? String(statKey).startsWith("sg_")
+      ? statKey
+      : statKey === "fairways" || statKey === "gir" || statKey === "birdies" || statKey === "bogeys"
+        ? "sg_total"
+        : "sg_total"
+    : statKey;
+  if (preferRhChart) {
+    seriesChart = rhSeries;
+    const rhMean = rhSeries.reduce((a, s) => a + s.actual, 0) / rhSeries.length;
+    if (!propsTrendLineUserOverride && Number.isFinite(rhMean)) {
+      line = rhMean;
+      if (lineInp && document.activeElement !== lineInp) lineInp.value = formatPropLineValueForInput(line);
+    }
+  }
   if (!seriesChart.length && empty) {
     empty.hidden = false;
     const weatherHint = propsWeatherFilterEmptyMessage(dg);
@@ -26897,13 +27469,18 @@ function renderPropsTrends() {
   }
   const tailMode = selectedPropsTailMode();
   let chartXAxisMode = "chrono";
-  if (!propsAverageModeOn() && (tailMode === "best" || tailMode === "worst")) {
+  if (!preferRhChart && !propsAverageModeOn() && (tailMode === "best" || tailMode === "worst")) {
     sortPropsFieldByCourseSeriesChart(statKey, seriesChart);
     chartXAxisMode = "valueSort";
   }
-  drawPropsTrendCanvas(seriesChart, line, statKey, { xAxisMode: chartXAxisMode });
+  drawPropsTrendCanvas(seriesChart, line, chartStat, { xAxisMode: chartXAxisMode });
   const stNow = propsFullHitStatsForDg(dg, statKey, line, winN);
-  paintPropsTrendsInsightHeader(playerRow, statKey, line, stNow, seriesChart, dg);
+  paintPropsTrendsInsightHeader(playerRow, preferRhChart ? chartStat : statKey, line, stNow, seriesChart, dg);
+  propsRhKpiPatchFromPlayer(propsRhPlayerRow(dg));
+  paintPropsRhSourcePill(
+    preferRhChart || Boolean(propsRhPlayerRow(dg)),
+    propsRhFiltersAreActive() ? "filtered" : preferRhChart ? "form windows" : "",
+  );
   const chartLeg = document.getElementById("props-chart-line-legend");
   if (chartLeg) chartLeg.hidden = !Number.isFinite(line);
   renderPropsHitRateAndTopTable(statKey, line, winN);

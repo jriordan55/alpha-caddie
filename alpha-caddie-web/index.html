@@ -362,9 +362,17 @@
         </div>
         <button type="button" class="ev-help-btn tab-help-btn props-tab-help-btn" data-tab-help="props" aria-label="Help: Historical Trends tab">?</button>
       </div>
+      <div class="props-course-cats" id="props-course-cats" aria-label="Rabbit Hole course categories" hidden>
+        <div class="props-course-cats-head">
+          <span class="props-course-cats-eyebrow">Rabbit Hole · course categories</span>
+          <span class="props-course-cats-venue" id="props-course-cats-venue"></span>
+        </div>
+        <div class="props-course-cats-chips" id="props-course-cats-chips"></div>
+      </div>
       <div class="props-trends-body">
         <div class="props-trends-main-row">
         <div class="props-trends-chart-wrap">
+          <p class="props-rh-source-pill" id="props-rh-source-pill" hidden>Rabbit Hole</p>
           <canvas id="props-trend-canvas" width="800" height="220" aria-label="Historical round bar chart"></canvas>
           <div id="props-chart-tooltip" class="props-chart-tooltip" hidden></div>
           <p class="props-chart-line-legend" id="props-chart-line-legend" hidden><span class="props-chart-line-legend-chip" aria-hidden="true"></span> Line</p>
@@ -381,8 +389,17 @@
           </div>
         </div>
         <aside class="props-trends-sidebar" aria-label="Historical trend filters">
+          <div class="toolbar weather-toolbar weather-toolbar-compact props-rh-filters-panel" aria-label="Rabbit Hole filters">
+            <span class="weather-toolbar-title">Rabbit Hole filters</span>
+            <p class="props-rh-filters-note">Filter-by-Conditions · same fields as Betsperts Rabbit Hole</p>
+            <label class="toolbar-label">Timeframe
+              <select id="props-rh-timeframe" title="Rabbit Hole rolling rounds / season"></select>
+            </label>
+            <div id="props-rh-filter-dims" class="props-rh-filter-dims"></div>
+            <button type="button" class="props-rh-filters-reset" id="props-rh-filters-reset">Clear RH filters</button>
+          </div>
           <div class="toolbar weather-toolbar weather-toolbar-compact" aria-label="Historical trend filters">
-            <span class="weather-toolbar-title">Filters</span>
+            <span class="weather-toolbar-title">Weather / round (history chart)</span>
             <div class="props-filter-temp-range-group">
               <span class="props-filter-temp-range-title">Temp °F</span>
               <div class="props-filter-temp-range-inputs">
