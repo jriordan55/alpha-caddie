@@ -155,6 +155,13 @@ import {
   mergeSgImportance,
   serializeSgImportanceForMeta,
 } from "./course-skill-tailoring.mjs";
+import {
+  applyPlus4CorToPlayers,
+  plus4CorEnabled,
+  projectionCourseFitRecipe,
+} from "./plus4-cor-score.mjs";
+import { makePlus4ExtrasApplicator } from "./plus4-extra-signals.mjs";
+import { enrichVenueScoringWithBetsperts } from "./betsperts-course-context.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
@@ -2365,6 +2372,19 @@ async function main() {
     );
   }
 
+  const betspertsVenueMeta = enrichVenueScoringWithBetsperts(venueScoring, courseKeyHist || course_used, {
+    nFw: fairwayHolesThisCourse,
+  });
+  if (betspertsVenueMeta.applied) {
+    console.log(
+      `[fetch-dg] Betsperts course metrics filled: ${betspertsVenueMeta.fills.join(",")} (${betspertsVenueMeta.facts?.name || "?"})`,
+    );
+  } else if (betspertsVenueMeta.facts) {
+    console.log(
+      `[fetch-dg] Betsperts course facts loaded: ${betspertsVenueMeta.facts.name} (grass=${betspertsVenueMeta.facts.green_grass || "—"}, correlated=${betspertsVenueMeta.facts.correlated?.length || 0})`,
+    );
+  }
+
   const base = [];
   for (const fr of fieldRows) {
     const id = fr.dg_id;
@@ -2464,31 +2484,46 @@ async function main() {
 
   const fieldMeanMu =
     base.length > 0 ? base.reduce((s, r) => s + num(r.mu_sg, 0), 0) / base.length : 0;
-  for (const row of base) {
-    row.mu_sg = applyVenueCourseFitToMu(row.mu_sg, row.dg_id, venueScoring, fieldMeanMu);
-    row.implied_mu_sg = row.mu_sg;
-  }
+  const courseFitRecipe = projectionCourseFitRecipe();
+  let plus4CorMeta = null;
   const ctRowTailor = resolveCourseTableForVenue(course_used);
   const venueSgFit = await fitVenueSgImportanceFromCsv(histCsvPath, courseKeyHist);
   const sgImportance = mergeSgImportance(venueSgFit, ctRowTailor);
   const historyByDgTailor = loadPlayerHistoryRoundsByDg(join(ROOT, "player_round_history.json"), fieldDgIds);
-  const tailoringMedians = fieldSgMedians(base);
-  for (const row of base) {
-    const shifts = computeCourseTailoringShifts({
-      row,
-      rounds: historyByDgTailor.get(Math.round(num(row.dg_id, NaN))) || [],
-      sgImportance,
-      fieldMedians: tailoringMedians,
-      venueScoring,
-      ctRow: ctRowTailor,
-      teeWaveShift: 0,
+
+  if (plus4CorEnabled()) {
+    plus4CorMeta = applyPlus4CorToPlayers(base, {
+      venueKey: courseKeyHist || course_used,
+      courseUsed: course_used,
+      historyPath: join(ROOT, "player_round_history.json"),
+      applyExtras: makePlus4ExtrasApplicator(courseKeyHist || course_used),
     });
-    applyCourseTailoringShiftsToRow(row, shifts, course_par_18);
-  }
-  if (sgImportance?.dominant) {
     console.log(
-      `[fetch-dg] Course-tailored projections: dominant ${sgImportance.dominant} (${sgImportance.source}${sgImportance.n ? `, n=${sgImportance.n}` : ""}); recent-form window ${8}–${12} rds`,
+      `[fetch-dg] Plus4 COR course-fit: venue=${plus4CorMeta.venue || "?"} cor_courses=${plus4CorMeta.cor_courses?.length || 0} applied=${plus4CorMeta.applied}`,
     );
+  } else {
+    for (const row of base) {
+      row.mu_sg = applyVenueCourseFitToMu(row.mu_sg, row.dg_id, venueScoring, fieldMeanMu);
+      row.implied_mu_sg = row.mu_sg;
+    }
+    const tailoringMedians = fieldSgMedians(base);
+    for (const row of base) {
+      const shifts = computeCourseTailoringShifts({
+        row,
+        rounds: historyByDgTailor.get(Math.round(num(row.dg_id, NaN))) || [],
+        sgImportance,
+        fieldMedians: tailoringMedians,
+        venueScoring,
+        ctRow: ctRowTailor,
+        teeWaveShift: 0,
+      });
+      applyCourseTailoringShiftsToRow(row, shifts, course_par_18);
+    }
+    if (sgImportance?.dominant) {
+      console.log(
+        `[fetch-dg] Course-tailored projections: dominant ${sgImportance.dominant} (${sgImportance.source}${sgImportance.n ? `, n=${sgImportance.n}` : ""}); recent-form window ${8}–${12} rds`,
+      );
+    }
   }
   const fieldMeanMuAdj =
     base.length > 0 ? base.reduce((s, r) => s + num(r.mu_sg, 0), 0) / base.length : fieldMeanMu;
@@ -3038,6 +3073,11 @@ async function main() {
         ? Math.round(courseBirdieEase * 1000) / 1000
         : null,
       course_sg_importance: serializeSgImportanceForMeta(sgImportance),
+      course_fit_recipe: courseFitRecipe,
+      cor_method: plus4CorMeta?.method || null,
+      cor_courses: plus4CorMeta?.cor_courses || null,
+      betsperts_course: betspertsVenueMeta?.facts || null,
+      betsperts_fills: betspertsVenueMeta?.fills?.length ? betspertsVenueMeta.fills : null,
       fairway_skill_spread_keep: Math.round(histBlendW.fairways.spreadKeep * 1000) / 1000,
       gir_skill_spread_keep: Math.round(histBlendW.gir.spreadKeep * 1000) / 1000,
       pret_expected_round_strokes_players: pretStrokesByDg.size,

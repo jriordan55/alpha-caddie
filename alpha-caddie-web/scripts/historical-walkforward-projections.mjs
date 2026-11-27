@@ -76,6 +76,12 @@ import {
   applyCourseTailoringToPlayers,
   fieldSgMedians,
 } from "./course-skill-tailoring.mjs";
+import { enrichVenueScoringWithBetsperts } from "./betsperts-course-context.mjs";
+import {
+  applyPlus4CorToPlayers,
+  plus4CorEnabled,
+} from "./plus4-cor-score.mjs";
+import { makePlus4ExtrasApplicator } from "./plus4-extra-signals.mjs";
 import {
   loadHistoricalRoundWeatherMap,
   roundWeatherKey,
@@ -881,6 +887,10 @@ export async function buildFullModelMuMapForEvent({
       : Promise.resolve(new Map()),
   ]);
 
+  enrichVenueScoringWithBetsperts(venueScoring, courseKey || courseName, {
+    nFw: N_FAIRWAY_HOLES,
+  });
+
   const tourPriors = computeTourPriorsFromHist(histRows, betTimeMs);
   const venueScoreIntercept = computeVenueStatisticalIntercept(histRows, courseKey, betTimeMs, tourPriors);
   const venueBirdMkt =
@@ -979,9 +989,19 @@ export async function buildFullModelMuMapForEvent({
     : courseAdjDrivingDistance;
 
   const fieldMeanMu = base.reduce((s, r) => s + num(r.mu_sg, 0), 0) / base.length;
-  for (const row of base) {
-    row.mu_sg = applyVenueCourseFitToMu(row.mu_sg, row.dg_id, venueScoring, fieldMeanMu);
-    row.implied_mu_sg = row.mu_sg;
+  if (plus4CorEnabled()) {
+    applyPlus4CorToPlayers(base, {
+      venueKey: courseKey || courseName,
+      courseUsed: courseName,
+      historyPath: join(webRoot, "player_round_history.json"),
+      asofMs: betTimeMs,
+      applyExtras: makePlus4ExtrasApplicator(courseKey || courseName),
+    });
+  } else {
+    for (const row of base) {
+      row.mu_sg = applyVenueCourseFitToMu(row.mu_sg, row.dg_id, venueScoring, fieldMeanMu);
+      row.implied_mu_sg = row.mu_sg;
+    }
   }
   const ctRow = resolveCourseTableForVenue(courseName);
   const venueFitRows = collectVenueHistRowsForSgFit(histRows, courseKey, betTimeMs, rowTimeMs);
@@ -1218,7 +1238,7 @@ export async function buildFullModelMuMapForEvent({
   const waveBias = teeWaveBiasFromHist(histRows, courseKey, betTimeMs);
   /** @type {Map<number, number>} */
   const teeWaveShiftByDg = new Map();
-  if (courseSgFitEnabled()) {
+  if (courseSgFitEnabled() && !plus4CorEnabled()) {
     const fieldMedians = fieldSgMedians(base);
     applyCourseTailoringToPlayers(players, {
       historyByDgId,
@@ -1257,6 +1277,9 @@ export async function buildFullModelMuMapForEvent({
     tee_wave_bias: waveBias,
   };
   syncVenueScoringToProjectionBasis(meta.projection_course_basis, venueScoring, coursePar18);
+  if (venueScoring.betsperts_course) {
+    meta.projection_course_basis.betsperts_course = venueScoring.betsperts_course;
+  }
   // Walk-forward Birdies: recency-weighted venue BoB (all prior rounds, no min N).
   if (Number.isFinite(num(venueScoring.historicalVenueAvgBirdies, NaN))) {
     meta.projection_course_basis.historical_venue_avg_birdies =

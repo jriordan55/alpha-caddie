@@ -26,9 +26,11 @@
  *
  * Writes: ../data/betsperts/
  */
-import { mkdirSync, writeFileSync, readFileSync, existsSync, readdirSync } from "fs";
+import { mkdirSync, writeFileSync, readFileSync, existsSync, readdirSync, renameSync, unlinkSync } from "fs";
 import { dirname, join, resolve } from "path";
 import { fileURLToPath } from "url";
+import { normalizeHoleStatsRows } from "./betsperts-course-context.mjs";
+import { pullRhMatrix } from "./betsperts-rh-matrix.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = resolve(__dirname, "..");
@@ -70,14 +72,18 @@ const withAuth =
 const limitPlayersArg = args.find((a) => a.startsWith("--limit-players="));
 const LIMIT_PLAYERS = limitPlayersArg ? Math.max(0, Number(limitPlayersArg.split("=")[1]) || 0) : 0;
 
-/** Default Rabbit Hole load body (All Players, last 50 rounds, SG average). */
+/**
+ * Default Rabbit Hole load body (All Players).
+ * Rolling windows must use `round` (e.g. "50"); year filters use `season: ["2026"]`.
+ * `display` is "Average" or "Total".
+ */
 function rabbitHoleLoadBody(overrides = {}) {
   return {
     playerID: "All Players",
     displayTourId: "All Players",
     tyear: null,
     tourIndex: 0,
-    date: "Last 50 Rounds",
+    date: "All",
     region: [],
     ctype: [],
     view: "Strokes Gained",
@@ -161,6 +167,7 @@ function ensureDirs() {
     join(OUT, "players", "by-id"),
     join(OUT, "courses"),
     join(OUT, "courses", "by-id"),
+    join(OUT, "courses", "hole-stats"),
     join(OUT, "tournaments"),
     join(OUT, "rabbit-hole"),
   ]) {
@@ -168,8 +175,44 @@ function ensureDirs() {
   }
 }
 
+function sleepMs(ms) {
+  const end = Date.now() + ms;
+  while (Date.now() < end) {
+    /* spin — short lock retries on Windows file locks */
+  }
+}
+
 function writeJson(path, data) {
-  writeFileSync(path, JSON.stringify(data, null, 2) + "\n", "utf8");
+  const text = JSON.stringify(data, null, 2) + "\n";
+  const tmp = `${path}.${process.pid}.${Date.now()}.tmp`;
+  writeFileSync(tmp, text, "utf8");
+  let lastErr = null;
+  for (let i = 0; i < 6; i++) {
+    try {
+      renameSync(tmp, path);
+      return;
+    } catch (e) {
+      lastErr = e;
+      try {
+        writeFileSync(path, text, "utf8");
+        try {
+          unlinkSync(tmp);
+        } catch {
+          /* ignore */
+        }
+        return;
+      } catch (e2) {
+        lastErr = e2;
+        sleepMs(40 * (i + 1));
+      }
+    }
+  }
+  try {
+    unlinkSync(tmp);
+  } catch {
+    /* ignore */
+  }
+  throw lastErr || new Error(`writeJson failed for ${path}`);
 }
 
 function headers(extra = {}) {
@@ -297,26 +340,93 @@ async function pullCourses() {
     } else {
       ok++;
     }
+    /** Course Metrics views matching the Betsperts Course Metrics UI (year × skill category). */
+    const METRIC_VIEWS = [
+      "Off the Tee",
+      "Approach",
+      "Around the Green",
+      "Putting",
+      "Scoring",
+      "Strokes Gained",
+    ];
+    const holeRowsExisting = Array.isArray(payload.auth?.holeBreakdown) ? payload.auth.holeBreakdown : [];
+    const holesMissing = holeRowsExisting.length === 0;
     const needAuth =
-      withAuth && (force || !payload.auth?.holeBreakdown || !payload.auth?.correlated);
+      withAuth &&
+      (force ||
+        holesMissing ||
+        !payload.auth?.correlated ||
+        !payload.auth?.metrics ||
+        !payload.auth?.metrics?.["Off the Tee"] ||
+        !Array.isArray(payload.holeStats) ||
+        payload.holeStats.length < 18);
     if (needAuth) {
       const id = Number(num) || num;
-      const [holes, correlated] = await Promise.all([
-        api("POST", "/user/hole_stats/get_breakdown", { tcourse: id }, { auth: true }),
+      /** Some list rows share multiple CourseNums — try each until hole stats return. */
+      const altNums = [
+        id,
+        ...((Array.isArray(c.CourseNums) ? c.CourseNums : payload.list?.CourseNums) || [])
+          .map((x) => Number(x) || x)
+          .filter((x) => x != null && String(x) !== String(id)),
+      ];
+      let holes = { ok: false, status: 0, json: null };
+      let holeTried = [];
+      for (const cid of altNums) {
+        const res = await api("POST", "/user/hole_stats/get_breakdown", { tcourse: cid }, { auth: true });
+        holeTried.push({ courseNum: cid, status: res.status, n: Array.isArray(res.json?.data) ? res.json.data.length : 0 });
+        if (res.ok && Array.isArray(res.json?.data) && res.json.data.length) {
+          holes = res;
+          break;
+        }
+        holes = res;
+      }
+      const [correlated, ...metricRes] = await Promise.all([
         api("POST", "/user/course/getCorrelatedCourse", { tcourse: id }, { auth: true }),
+        ...METRIC_VIEWS.map((view) =>
+          api("POST", "/user/course/courseMetrics", { CourseNums: [id], view }, { auth: true }),
+        ),
       ]);
+      const metrics = {};
+      let metricsOk = 0;
+      METRIC_VIEWS.forEach((view, i) => {
+        const r = metricRes[i];
+        metrics[view] = r?.ok ? r.json?.data ?? r.json : null;
+        if (r?.ok && Array.isArray(metrics[view]) && metrics[view].length) metricsOk++;
+      });
+      const holeBreakdown = holes.ok ? holes.json?.data ?? holes.json : holes.json;
+      const holeStats = normalizeHoleStatsRows(Array.isArray(holeBreakdown) ? holeBreakdown : []);
       payload.auth = {
-        holeBreakdown: holes.ok ? holes.json?.data ?? holes.json : holes.json,
+        ...(payload.auth && typeof payload.auth === "object" ? payload.auth : {}),
+        holeBreakdown,
         correlated: correlated.ok ? correlated.json?.data ?? correlated.json : correlated.json,
+        metrics,
         _meta: {
           pulledAt: new Date().toISOString(),
           holeStatus: holes.status,
+          holeTried,
+          holeStatsN: holeStats.length,
           correlatedStatus: correlated.status,
+          metricsOk,
+          metricViews: METRIC_VIEWS,
         },
       };
-      if (holes.ok) authOk++;
+      payload.holeStats = holeStats;
+      payload.holeStatsAvailable = holeStats.length >= 18;
+      if (holes.ok || metricsOk > 0) authOk++;
+    } else if (!Array.isArray(payload.holeStats) || !payload.holeStats.length) {
+      // Backfill normalized Hole Stats schema from existing raw breakdown without a network pull.
+      payload.holeStats = normalizeHoleStatsRows(holeRowsExisting);
+      payload.holeStatsAvailable = payload.holeStats.length >= 18;
     }
     writeJson(outPath, payload);
+    // Durable per-course Hole Stats sidecar (screenshot columns).
+    writeJson(join(OUT, "courses", "hole-stats", `${num}.json`), {
+      courseNum: num,
+      courseName: payload.courseName,
+      pulledAt: payload.auth?._meta?.pulledAt || payload._meta?.pulledAt || null,
+      available: Boolean(payload.holeStatsAvailable),
+      holes: Array.isArray(payload.holeStats) ? payload.holeStats : [],
+    });
   });
   console.log(`courses done ok=${ok} fail=${fail} authHoleOk=${authOk}`);
   return { courses: courses.length, courseOk: ok, courseFail: fail, courseAuthOk: authOk };
@@ -418,13 +528,19 @@ async function pullRabbitHoleAuth() {
       name: "load-last50",
       method: "POST",
       path: "/user/rabbit_hole/load",
-      body: rabbitHoleLoadBody({ date: "Last 50 Rounds" }),
+      body: rabbitHoleLoadBody({ round: "50", display: "Average" }),
     },
     {
       name: "load-last100",
       method: "POST",
       path: "/user/rabbit_hole/load",
-      body: rabbitHoleLoadBody({ date: "Last 100 Rounds" }),
+      body: rabbitHoleLoadBody({ round: "100", display: "Average" }),
+    },
+    {
+      name: "load-last50-total",
+      method: "POST",
+      path: "/user/rabbit_hole/load",
+      body: rabbitHoleLoadBody({ round: "50", display: "Total" }),
     },
     {
       name: "load-current-golfers-last50",
@@ -433,7 +549,8 @@ async function pullRabbitHoleAuth() {
       body: rabbitHoleLoadBody({
         playerID: "Current Golfers",
         displayTourId: "Current Golfers",
-        date: "Last 50 Rounds",
+        round: "50",
+        display: "Average",
       }),
     },
     { name: "presetSplits", method: "POST", path: "/user/rabbit_hole/preset_splits", body: {} },
@@ -459,12 +576,29 @@ async function pullRabbitHoleAuth() {
     });
     console.log(`  ${p.name} status=${res.status} rows=${rows ?? "—"} bytes≈${res.textLen}`);
   }
+
+  // Full matrix: all views × Average/Total × all seasons + rolling windows (all players).
+  let matrix = null;
+  if (!args.includes("--skip-rh-matrix") && !envTruthy("GOLF_SKIP_BETSPERTS_RH_MATRIX", false)) {
+    console.log("rabbit-hole full matrix (all views × Average/Total × years + rounds)…");
+    matrix = await pullRhMatrix({ sessionKey: SESSION });
+    out.rhMatrix = {
+      nSlices: matrix?.nSlices ?? 0,
+      nOk: matrix?.nOk ?? 0,
+      nEmpty: matrix?.nEmpty ?? 0,
+      nFail: matrix?.nFail ?? 0,
+    };
+  } else {
+    console.log("  skipping RH matrix (GOLF_SKIP_BETSPERTS_RH_MATRIX / --skip-rh-matrix)");
+  }
+
   writeJson(join(OUT, "rabbit-hole", "auth-status.json"), {
     pulledAt: new Date().toISOString(),
     sessionProvided: true,
     results: out,
+    matrix: out.rhMatrix || null,
   });
-  return { rabbitAuth: true, rabbitEndpoints: out };
+  return { rabbitAuth: true, rabbitEndpoints: out, rhMatrix: matrix };
 }
 
 async function main() {

@@ -711,7 +711,18 @@ $artifacts = @(
   "alpha-caddie-web/data/historical_rounds_all.csv",
   # Betsperts Rabbit Hole player/course dump (refresh:live / push:live nightly)
   "data/betsperts",
+  "data/betsperts/courses/hole-stats",
+  "data/betsperts/rabbit-hole/matrix",
+  "data/betsperts/rabbit-hole/filters",
+  "data/betsperts_rh_filters.json",
+  "data/betsperts_betting_viz.json",
+  "alpha-caddie-web/data/betsperts_betting_viz.json",
+  "data/betsperts_course_facts.json",
+  "alpha-caddie-web/data/betsperts_course_facts.json",
+  "alpha-caddie-web/data/course_event_context.json",
   "alpha-caddie-web/scripts/fetch-betsperts-db.mjs",
+  "alpha-caddie-web/scripts/build-betsperts-course-context.mjs",
+  "alpha-caddie-web/scripts/betsperts-course-context.mjs",
   "alpha-caddie-web/scripts/build-player-headshots.mjs",
   "alpha-caddie-web/data/player_headshots.json"
 )

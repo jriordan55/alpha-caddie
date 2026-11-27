@@ -1,17 +1,13 @@
 {
-  "started": "2026-11-23T02:36:13.883Z",
+  "started": "2026-11-27T03:50:34.254Z",
   "api": "https://api.betspertsgolf.com",
-  "session": false,
-  "withAuth": false,
+  "session": true,
+  "withAuth": true,
   "tournaments": 109,
   "courses": 120,
   "courseOk": 120,
   "courseFail": 0,
-  "courseAuthOk": 0,
-  "players": 3627,
-  "playerOk": 3627,
-  "playerSkip": 0,
-  "playerFail": 0,
+  "courseAuthOk": 49,
   "rabbitAuth": true,
   "rabbitEndpoints": {
     "load-last50": 200,
@@ -23,7 +19,7 @@
     "types": 200,
     "expertRankings": 200
   },
-  "finished": "2026-11-23T02:44:35.672Z",
+  "finished": "2026-11-27T03:50:56.154Z",
   "playerFiles": 3627,
   "courseFiles": 120
 }

@@ -68,12 +68,22 @@ const CADDIE_APP_FILES = [
   "index.html",
   "app.js",
   "styles.css",
+  "betsperts-betting-viz.js",
+  "betsperts-betting-viz.css",
   "projections.json",
   "live-in-play.json",
   "course-table.json",
   "hole_pars_from_shots.json",
   "approach_skill_ytd.json",
   "player_shots_web.json",
+];
+
+/** Copied to app/data/ so relative fetch("data/…") works on Pages. */
+const CADDIE_APP_DATA_FILES = [
+  "betsperts_betting_viz.json",
+  "betsperts_course_facts.json",
+  "betsperts_rh_filters.json",
+  "player_headshots.json",
 ];
 
 const out = argOut();
@@ -180,6 +190,18 @@ for (const name of CADDIE_APP_FILES) {
   appCopied++;
 }
 
+mkdirSync(join(appDir, "data"), { recursive: true });
+let appDataCopied = 0;
+for (const name of CADDIE_APP_DATA_FILES) {
+  const src = join(dataDir, name);
+  if (!existsSync(src)) {
+    console.warn("[assemble-tracker-pages] app data missing (skipped):", name);
+    continue;
+  }
+  copyFileSync(src, join(appDir, "data", name));
+  appDataCopied++;
+}
+
 writeFileSync(
   join(out, "deploy-meta.json"),
   JSON.stringify(
@@ -189,6 +211,7 @@ writeFileSync(
       data_files_copied: copied,
       script_modules_copied: scriptsCopied,
       caddie_app_files_copied: appCopied,
+      caddie_app_data_files_copied: appDataCopied,
     },
     null,
     2,
@@ -196,5 +219,5 @@ writeFileSync(
 );
 
 console.log(
-  `[assemble-tracker-pages] wrote ${out} (tracker + app + projections + ${copied} data files + ${scriptsCopied} scripts)`,
+  `[assemble-tracker-pages] wrote ${out} (tracker + app + projections + ${copied} data files + ${scriptsCopied} scripts + ${appDataCopied} app/data)`,
 );

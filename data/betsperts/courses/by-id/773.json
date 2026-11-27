@@ -104,7 +104,7 @@
     }
   ],
   "_meta": {
-    "pulledAt": "2026-11-23T02:36:15.502Z",
+    "pulledAt": "2026-11-27T03:41:35.965Z",
     "detailStatus": 200,
     "tournamentsStatus": 200
   },
@@ -172,10 +172,511 @@
         "CourseNums": "[947, 876]"
       }
     ],
+    "metrics": {
+      "Off the Tee": [
+        {
+          "year": "5-Year Course AVG",
+          "Driving Distance (yds)": "292.3",
+          "Driver Usage %": "70.5",
+          "Drives 320+ %": "12.8",
+          "Driving Accuracy %": "61.5",
+          "Good Drive %": "82.8",
+          "Left Rough Tendency %": "16.4",
+          "Right Rough Tendency %": "16.5",
+          "Left Tendency %": "50.6",
+          "Right Tendency %": "49.4",
+          "Right Rough Tendency RTP": "0.16",
+          "Left Rough Tendency RTP": "0.18",
+          "Distance From Edge of Fairway (ft)": "24.5",
+          "Distance From Center of Fairway (ft)": "24.4"
+        },
+        {
+          "year": "PGA Tour AVG",
+          "Driving Distance (yds)": "292.6",
+          "Driver Usage %": "69.8",
+          "Drives 320+ %": "15.1",
+          "Driving Accuracy %": "60.9",
+          "Good Drive %": "81.5",
+          "Left Rough Tendency %": "13.3",
+          "Right Rough Tendency %": "15.2",
+          "Left Tendency %": "48.5",
+          "Right Tendency %": "51.9",
+          "Right Rough Tendency RTP": "0.07",
+          "Left Rough Tendency RTP": "0.06",
+          "Distance From Edge of Fairway (ft)": "27.6",
+          "Distance From Center of Fairway (ft)": "22.4"
+        },
+        {
+          "year": "2026",
+          "Driving Distance (yds)": "300.6",
+          "Driver Usage %": "80.2",
+          "Drives 320+ %": "22.7",
+          "Driving Accuracy %": "55.3",
+          "Good Drive %": "77.9",
+          "Left Rough Tendency %": "19.1",
+          "Right Rough Tendency %": "17.0",
+          "Left Tendency %": "51.8",
+          "Right Tendency %": "48.2",
+          "Right Rough Tendency RTP": "0.19",
+          "Left Rough Tendency RTP": "0.24",
+          "Distance From Edge of Fairway (ft)": "23.7",
+          "Distance From Center of Fairway (ft)": "21.5"
+        },
+        {
+          "year": "2018",
+          "Driving Distance (yds)": "290.0",
+          "Driver Usage %": "67.6",
+          "Drives 320+ %": "11.0",
+          "Driving Accuracy %": "70.1",
+          "Good Drive %": "89.3",
+          "Left Rough Tendency %": "12.3",
+          "Right Rough Tendency %": "12.4",
+          "Left Tendency %": "51.2",
+          "Right Tendency %": "48.8",
+          "Right Rough Tendency RTP": "0.06",
+          "Left Rough Tendency RTP": "0.02",
+          "Distance From Edge of Fairway (ft)": "24.2",
+          "Distance From Center of Fairway (ft)": "26.7"
+        },
+        {
+          "year": "2011",
+          "Driving Distance (yds)": "289.9",
+          "Driver Usage %": "68.1",
+          "Drives 320+ %": "8.3",
+          "Driving Accuracy %": "61.2",
+          "Good Drive %": "83.6",
+          "Left Rough Tendency %": "16.7",
+          "Right Rough Tendency %": "18.1",
+          "Left Tendency %": "50.3",
+          "Right Tendency %": "49.7",
+          "Right Rough Tendency RTP": "0.18",
+          "Left Rough Tendency RTP": "0.19",
+          "Distance From Edge of Fairway (ft)": "25.3",
+          "Distance From Center of Fairway (ft)": "24.6"
+        },
+        {
+          "year": "2010",
+          "Driving Distance (yds)": "288.6",
+          "Driver Usage %": "66.1",
+          "Drives 320+ %": "9.1",
+          "Driving Accuracy %": "59.4",
+          "Good Drive %": "80.3",
+          "Left Rough Tendency %": "17.2",
+          "Right Rough Tendency %": "18.7",
+          "Left Tendency %": "49.2",
+          "Right Tendency %": "50.8",
+          "Right Rough Tendency RTP": "0.22",
+          "Left Rough Tendency RTP": "0.28",
+          "Distance From Edge of Fairway (ft)": "24.7",
+          "Distance From Center of Fairway (ft)": "25.0"
+        }
+      ],
+      "Approach": [
+        {
+          "year": "5-Year Course AVG",
+          "GIR %": "68.7",
+          "GIR % Fairway": "81.3",
+          "GIR % Rough": "53.5",
+          "GIR % Fwy Bunker": "39.1",
+          "Overall Proximity (ft)": "37.8",
+          "Fairway Proximity (ft)": "33.2",
+          "Rough Proximity (ft)": "48.1",
+          "GFG %": "57.0",
+          "GFG Hit Green %": "20.0",
+          "GFG BoB %": "54.0",
+          "GFG Proximity (yds)": "24.8"
+        },
+        {
+          "year": "PGA Tour AVG",
+          "GIR %": "66.3",
+          "GIR % Fairway": "77.3",
+          "GIR % Rough": "51.4",
+          "GIR % Fwy Bunker": "48.2",
+          "Overall Proximity (ft)": "37.2",
+          "Fairway Proximity (ft)": "32.3",
+          "Rough Proximity (ft)": "45.8",
+          "GFG %": "59.8",
+          "GFG Hit Green %": "23.5",
+          "GFG BoB %": "59.1",
+          "GFG Proximity (yds)": "24.4"
+        },
+        {
+          "year": "2026",
+          "GIR %": "64.7",
+          "GIR % Fairway": "79.0",
+          "GIR % Rough": "50.6",
+          "GIR % Fwy Bunker": "39.6",
+          "Overall Proximity (ft)": "42.2",
+          "Fairway Proximity (ft)": "36.4",
+          "Rough Proximity (ft)": "52.3",
+          "GFG %": "62.1",
+          "GFG Hit Green %": "18.7",
+          "GFG BoB %": "53.7",
+          "GFG Proximity (yds)": "25.5"
+        },
+        {
+          "year": "2018",
+          "GIR %": "77.4",
+          "GIR % Fairway": "85.5",
+          "GIR % Rough": "62.0",
+          "GIR % Fwy Bunker": "55.9",
+          "Overall Proximity (ft)": "33.8",
+          "Fairway Proximity (ft)": "31.2",
+          "Rough Proximity (ft)": "40.9",
+          "GFG %": "63.3",
+          "GFG Hit Green %": "22.8",
+          "GFG BoB %": "60.8",
+          "GFG Proximity (yds)": "26.0"
+        },
+        {
+          "year": "2011",
+          "GIR %": "67.3",
+          "GIR % Fairway": "79.8",
+          "GIR % Rough": "53.5",
+          "GIR % Fwy Bunker": "27.2",
+          "Overall Proximity (ft)": "36.8",
+          "Fairway Proximity (ft)": "32.2",
+          "Rough Proximity (ft)": "47.7",
+          "GFG %": "55.2",
+          "GFG Hit Green %": "19.2",
+          "GFG BoB %": "51.1",
+          "GFG Proximity (yds)": "23.3"
+        },
+        {
+          "year": "2010",
+          "GIR %": "65.5",
+          "GIR % Fairway": "80.7",
+          "GIR % Rough": "48.1",
+          "GIR % Fwy Bunker": "33.8",
+          "Overall Proximity (ft)": "38.5",
+          "Fairway Proximity (ft)": "33.2",
+          "Rough Proximity (ft)": "51.7",
+          "GFG %": "47.5",
+          "GFG Hit Green %": "19.3",
+          "GFG BoB %": "50.6",
+          "GFG Proximity (yds)": "24.5"
+        }
+      ],
+      "Around the Green": [
+        {
+          "year": "5-Year Course AVG",
+          "Scrambling %": "53.7",
+          "ARG Shot % Rough": "38.7",
+          "Scrambling % Rough": "47.4",
+          "ARG Shot % Short Grass": "35.6",
+          "Scrambling % Short Grass": "56.7",
+          "ARG Shot % Sand": "25.7",
+          "Sand Save %": "47.5",
+          "ARG Proximity": "9.2",
+          "ARG Proximity Rough": "10.7",
+          "ARG Proximity Short Grass": "7.2",
+          "ARG Proximity Sand": "10.7"
+        },
+        {
+          "year": "PGA Tour AVG",
+          "Scrambling %": "59.0",
+          "ARG Shot % Rough": "34.2",
+          "Scrambling % Rough": "54.9",
+          "ARG Shot % Short Grass": "42.0",
+          "Scrambling % Short Grass": "62.0",
+          "ARG Shot % Sand": "23.7",
+          "Sand Save %": "52.1",
+          "ARG Proximity": "7.7",
+          "ARG Proximity Rough": "8.8",
+          "ARG Proximity Short Grass": "6.3",
+          "ARG Proximity Sand": "9.8"
+        },
+        {
+          "year": "2026",
+          "Scrambling %": "47.6",
+          "ARG Shot % Rough": "34.8",
+          "Scrambling % Rough": "39.6",
+          "ARG Shot % Short Grass": "42.5",
+          "Scrambling % Short Grass": "55.7",
+          "ARG Shot % Sand": "22.8",
+          "Sand Save %": "43.7",
+          "ARG Proximity": "10.2",
+          "ARG Proximity Rough": "12.2",
+          "ARG Proximity Short Grass": "7.2",
+          "ARG Proximity Sand": "12.2"
+        },
+        {
+          "year": "2018",
+          "Scrambling %": "62.7",
+          "ARG Shot % Rough": "34.7",
+          "Scrambling % Rough": "58.2",
+          "ARG Shot % Short Grass": "39.7",
+          "Scrambling % Short Grass": "65.2",
+          "ARG Shot % Sand": "25.6",
+          "Sand Save %": "52.5",
+          "ARG Proximity": "7.9",
+          "ARG Proximity Rough": "9.2",
+          "ARG Proximity Short Grass": "7.2",
+          "ARG Proximity Sand": "9.3"
+        },
+        {
+          "year": "2011",
+          "Scrambling %": "53.5",
+          "ARG Shot % Rough": "43.6",
+          "Scrambling % Rough": "47.4",
+          "ARG Shot % Short Grass": "29.4",
+          "Scrambling % Short Grass": "54.9",
+          "ARG Shot % Sand": "27.0",
+          "Sand Save %": "47.8",
+          "ARG Proximity": "9.3",
+          "ARG Proximity Rough": null,
+          "ARG Proximity Short Grass": null,
+          "ARG Proximity Sand": null
+        },
+        {
+          "year": "2010",
+          "Scrambling %": "51.1",
+          "ARG Shot % Rough": "42.0",
+          "Scrambling % Rough": "44.6",
+          "ARG Shot % Short Grass": "30.7",
+          "Scrambling % Short Grass": "51.1",
+          "ARG Shot % Sand": "27.3",
+          "Sand Save %": "46.0",
+          "ARG Proximity": "9.2",
+          "ARG Proximity Rough": null,
+          "ARG Proximity Short Grass": null,
+          "ARG Proximity Sand": null
+        }
+      ],
+      "Putting": [
+        {
+          "year": "5-Year Course AVG",
+          "GIR Putting Average": "1.822",
+          "3-Putt AVD %": "3.88",
+          "3-Putt AVD 25'+ %": "10.14",
+          "APP Putt Proximity (ft)": "2.48",
+          "One-Putt %": "33.3",
+          "AVG Distance TOT Putts Made/Rd (ft)": "74.4",
+          "AVG Distance Birdie Putts Made (ft)": "10.6"
+        },
+        {
+          "year": "PGA Tour AVG",
+          "GIR Putting Average": "1.762",
+          "3-Putt AVD %": "2.80",
+          "3-Putt AVD 25'+ %": "8.78",
+          "APP Putt Proximity (ft)": "2.21",
+          "One-Putt %": "39.4",
+          "AVG Distance TOT Putts Made/Rd (ft)": "73.2",
+          "AVG Distance Birdie Putts Made (ft)": "9.5"
+        },
+        {
+          "year": "2026",
+          "GIR Putting Average": "1.855",
+          "3-Putt AVD %": "4.86",
+          "3-Putt AVD 25'+ %": "12.02",
+          "APP Putt Proximity (ft)": "2.58",
+          "One-Putt %": "31.6",
+          "AVG Distance TOT Putts Made/Rd (ft)": "73.0",
+          "AVG Distance Birdie Putts Made (ft)": "10.8"
+        },
+        {
+          "year": "2018",
+          "GIR Putting Average": "1.761",
+          "3-Putt AVD %": "2.30",
+          "3-Putt AVD 25'+ %": "7.13",
+          "APP Putt Proximity (ft)": "2.17",
+          "One-Putt %": "35.0",
+          "AVG Distance TOT Putts Made/Rd (ft)": "74.2",
+          "AVG Distance Birdie Putts Made (ft)": "9.9"
+        },
+        {
+          "year": "2011",
+          "GIR Putting Average": "1.832",
+          "3-Putt AVD %": "3.97",
+          "3-Putt AVD 25'+ %": "10.49",
+          "APP Putt Proximity (ft)": "2.50",
+          "One-Putt %": "33.4",
+          "AVG Distance TOT Putts Made/Rd (ft)": "74.8",
+          "AVG Distance Birdie Putts Made (ft)": "10.9"
+        },
+        {
+          "year": "2010",
+          "GIR Putting Average": "1.839",
+          "3-Putt AVD %": "4.37",
+          "3-Putt AVD 25'+ %": "10.92",
+          "APP Putt Proximity (ft)": "2.67",
+          "One-Putt %": "33.2",
+          "AVG Distance TOT Putts Made/Rd (ft)": "75.8",
+          "AVG Distance Birdie Putts Made (ft)": "11.0"
+        }
+      ],
+      "Scoring": [
+        {
+          "year": "5-Year Course AVG",
+          "Scoring AVG": "70.38",
+          "Birdie or Better %": "17.4",
+          "BoB % Fairway": "19.7",
+          "BoB % Rough": "10.5",
+          "Bogey AVD %": "18.0",
+          "Birdie to Bogey Ratio": "1.12",
+          "AM Scoring AVG": "70.34",
+          "PM Scoring AVG": "70.42",
+          "Round 1 Scoring AVG": "70.83",
+          "Round 2 Scoring AVG": "70.52",
+          "Round 3 Scoring AVG": "69.41",
+          "Round 4 Scoring AVG": "70.25"
+        },
+        {
+          "year": "PGA Tour AVG",
+          "Scoring AVG": "70.37",
+          "Birdie or Better %": "21.5",
+          "BoB % Fairway": "23.2",
+          "BoB % Rough": "15.5",
+          "Bogey AVD %": "16.1",
+          "Birdie to Bogey Ratio": "1.46",
+          "AM Scoring AVG": "70.30",
+          "PM Scoring AVG": "70.44",
+          "Round 1 Scoring AVG": "70.55",
+          "Round 2 Scoring AVG": "70.46",
+          "Round 3 Scoring AVG": "70.09",
+          "Round 4 Scoring AVG": "70.11"
+        },
+        {
+          "year": "2026",
+          "Scoring AVG": "71.70",
+          "Birdie or Better %": "15.2",
+          "BoB % Fairway": "16.6",
+          "BoB % Rough": "10.5",
+          "Bogey AVD %": "22.6",
+          "Birdie to Bogey Ratio": "0.68",
+          "AM Scoring AVG": "71.60",
+          "PM Scoring AVG": "71.81",
+          "Round 1 Scoring AVG": "72.26",
+          "Round 2 Scoring AVG": "72.61",
+          "Round 3 Scoring AVG": "70.00",
+          "Round 4 Scoring AVG": "70.61"
+        },
+        {
+          "year": "2018",
+          "Scoring AVG": "67.88",
+          "Birdie or Better %": "22.7",
+          "BoB % Fairway": "25.0",
+          "BoB % Rough": "14.5",
+          "Bogey AVD %": "10.4",
+          "Birdie to Bogey Ratio": "2.18",
+          "AM Scoring AVG": "67.70",
+          "PM Scoring AVG": "68.08",
+          "Round 1 Scoring AVG": "68.13",
+          "Round 2 Scoring AVG": "67.33",
+          "Round 3 Scoring AVG": "67.16",
+          "Round 4 Scoring AVG": "68.91"
+        },
+        {
+          "year": "2011",
+          "Scoring AVG": "70.72",
+          "Birdie or Better %": "16.2",
+          "BoB % Fairway": "18.7",
+          "BoB % Rough": "9.4",
+          "Bogey AVD %": "18.5",
+          "Birdie to Bogey Ratio": "0.88",
+          "AM Scoring AVG": "70.80",
+          "PM Scoring AVG": "70.63",
+          "Round 1 Scoring AVG": "71.53",
+          "Round 2 Scoring AVG": "70.77",
+          "Round 3 Scoring AVG": "69.33",
+          "Round 4 Scoring AVG": "70.76"
+        },
+        {
+          "year": "2010",
+          "Scoring AVG": "71.22",
+          "Birdie or Better %": "15.4",
+          "BoB % Fairway": "18.5",
+          "BoB % Rough": "7.6",
+          "Bogey AVD %": "20.5",
+          "Birdie to Bogey Ratio": "0.75",
+          "AM Scoring AVG": "71.27",
+          "PM Scoring AVG": "71.17",
+          "Round 1 Scoring AVG": "71.39",
+          "Round 2 Scoring AVG": "71.38",
+          "Round 3 Scoring AVG": "71.14",
+          "Round 4 Scoring AVG": "70.73"
+        }
+      ],
+      "Strokes Gained": [
+        {
+          "year": "5-Year Course AVG",
+          "Par 3 Scoring AVG": "3.14",
+          "Par 3 BoB %": "10.9",
+          "Par 4 Scoring AVG": "4.04",
+          "Par 4 BoB %": "15.6",
+          "Par 5 Scoring AVG": "4.66",
+          "Par 5 BoB %": "40.7"
+        },
+        {
+          "year": "PGA Tour AVG",
+          "Par 3 Scoring AVG": "3.06",
+          "Par 3 BoB %": "13.3",
+          "Par 4 Scoring AVG": "4.03",
+          "Par 4 BoB %": "17.4",
+          "Par 5 Scoring AVG": "4.60",
+          "Par 5 BoB %": "46.7"
+        },
+        {
+          "year": "2026",
+          "Par 3 Scoring AVG": "3.22",
+          "Par 3 BoB %": "8.8",
+          "Par 4 Scoring AVG": "4.12",
+          "Par 4 BoB %": "13.2",
+          "Par 5 Scoring AVG": "4.67",
+          "Par 5 BoB %": "40.3"
+        },
+        {
+          "year": "2018",
+          "Par 3 Scoring AVG": "2.99",
+          "Par 3 BoB %": "15.6",
+          "Par 4 Scoring AVG": "3.91",
+          "Par 4 BoB %": "20.2",
+          "Par 5 Scoring AVG": "4.48",
+          "Par 5 BoB %": "52.2"
+        },
+        {
+          "year": "2011",
+          "Par 3 Scoring AVG": "3.18",
+          "Par 3 BoB %": "9.0",
+          "Par 4 Scoring AVG": "4.05",
+          "Par 4 BoB %": "15.0",
+          "Par 5 Scoring AVG": "4.72",
+          "Par 5 BoB %": "37.3"
+        },
+        {
+          "year": "2010",
+          "Par 3 Scoring AVG": "3.17",
+          "Par 3 BoB %": "10.3",
+          "Par 4 Scoring AVG": "4.09",
+          "Par 4 BoB %": "14.1",
+          "Par 5 Scoring AVG": "4.75",
+          "Par 5 BoB %": "33.1"
+        }
+      ]
+    },
     "_meta": {
-      "pulledAt": "2026-11-23T02:36:15.648Z",
+      "pulledAt": "2026-11-27T03:50:35.593Z",
       "holeStatus": 200,
-      "correlatedStatus": 200
+      "holeTried": [
+        {
+          "courseNum": 773,
+          "status": 200,
+          "n": 0
+        }
+      ],
+      "holeStatsN": 0,
+      "correlatedStatus": 200,
+      "metricsOk": 6,
+      "metricViews": [
+        "Off the Tee",
+        "Approach",
+        "Around the Green",
+        "Putting",
+        "Scoring",
+        "Strokes Gained"
+      ]
     }
-  }
+  },
+  "holeStats": [],
+  "holeStatsAvailable": false
 }

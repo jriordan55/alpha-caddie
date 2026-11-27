@@ -1,0 +1,350 @@
+{
+  "generated_at": "2026-11-27T03:23:43.148Z",
+  "source": "data/round_projection_vs_actual.csv",
+  "method": "Plus4 COR rebuilds Total score; counting μ = published + β×(plus4_score−published_score). EV uses fair-devig edges; missing odds → -110/-110.",
+  "n_detail_rows": 4515,
+  "ev0": {
+    "published": [
+      {
+        "market": "Total score",
+        "mae_vs_book": 0.753,
+        "mae_vs_actual": 2.395,
+        "n_mae_book": 2165,
+        "n_mae_actual": 4515,
+        "bets": 2165,
+        "wins": 1120,
+        "losses": 1045,
+        "pushes": 0,
+        "pnl_u": -60.31,
+        "roi_pct": -2.8
+      },
+      {
+        "market": "Birdies",
+        "mae_vs_book": 0.454,
+        "mae_vs_actual": 1.599,
+        "n_mae_book": 2444,
+        "n_mae_actual": 4122,
+        "bets": 2236,
+        "wins": 1165,
+        "losses": 1071,
+        "pushes": 0,
+        "pnl_u": -47.89,
+        "roi_pct": -2.1
+      },
+      {
+        "market": "Pars",
+        "mae_vs_book": 0.434,
+        "mae_vs_actual": 2.103,
+        "n_mae_book": 1258,
+        "n_mae_actual": 4122,
+        "bets": 1161,
+        "wins": 579,
+        "losses": 582,
+        "pushes": 0,
+        "pnl_u": -56.89,
+        "roi_pct": -4.9
+      },
+      {
+        "market": "Bogeys",
+        "mae_vs_book": 0.581,
+        "mae_vs_actual": 1.475,
+        "n_mae_book": 1253,
+        "n_mae_actual": 4122,
+        "bets": 1158,
+        "wins": 631,
+        "losses": 527,
+        "pushes": 0,
+        "pnl_u": -2.87,
+        "roi_pct": -0.2
+      },
+      {
+        "market": "Fairways hit",
+        "mae_vs_book": 0.651,
+        "mae_vs_actual": 1.968,
+        "n_mae_book": 928,
+        "n_mae_actual": 3911,
+        "bets": 884,
+        "wins": 486,
+        "losses": 398,
+        "pushes": 0,
+        "pnl_u": -13.82,
+        "roi_pct": -1.6
+      },
+      {
+        "market": "GIR",
+        "mae_vs_book": 0.703,
+        "mae_vs_actual": 1.825,
+        "n_mae_book": 977,
+        "n_mae_actual": 4007,
+        "bets": 976,
+        "wins": 489,
+        "losses": 487,
+        "pushes": 0,
+        "pnl_u": -71.96,
+        "roi_pct": -7.4
+      }
+    ],
+    "plus4_cor": [
+      {
+        "market": "Total score",
+        "mae_vs_book": 0.68,
+        "mae_vs_actual": 2.502,
+        "n_mae_book": 2165,
+        "n_mae_actual": 4515,
+        "bets": 2165,
+        "wins": 1173,
+        "losses": 992,
+        "pushes": 0,
+        "pnl_u": 36.95,
+        "roi_pct": 1.7
+      },
+      {
+        "market": "Birdies",
+        "mae_vs_book": 0.412,
+        "mae_vs_actual": 1.639,
+        "n_mae_book": 2444,
+        "n_mae_actual": 4122,
+        "bets": 2236,
+        "wins": 1154,
+        "losses": 1082,
+        "pushes": 0,
+        "pnl_u": -74.42,
+        "roi_pct": -3.3
+      },
+      {
+        "market": "Pars",
+        "mae_vs_book": 0.45,
+        "mae_vs_actual": 2.102,
+        "n_mae_book": 1258,
+        "n_mae_actual": 4122,
+        "bets": 1161,
+        "wins": 582,
+        "losses": 579,
+        "pushes": 0,
+        "pnl_u": -53.66,
+        "roi_pct": -4.6
+      },
+      {
+        "market": "Bogeys",
+        "mae_vs_book": 0.487,
+        "mae_vs_actual": 1.47,
+        "n_mae_book": 1253,
+        "n_mae_actual": 4122,
+        "bets": 1158,
+        "wins": 627,
+        "losses": 531,
+        "pushes": 0,
+        "pnl_u": -22.86,
+        "roi_pct": -2
+      },
+      {
+        "market": "Fairways hit",
+        "mae_vs_book": 0.615,
+        "mae_vs_actual": 1.976,
+        "n_mae_book": 928,
+        "n_mae_actual": 3911,
+        "bets": 884,
+        "wins": 474,
+        "losses": 410,
+        "pushes": 0,
+        "pnl_u": -28.39,
+        "roi_pct": -3.2
+      },
+      {
+        "market": "GIR",
+        "mae_vs_book": 0.646,
+        "mae_vs_actual": 1.868,
+        "n_mae_book": 977,
+        "n_mae_actual": 4007,
+        "bets": 976,
+        "wins": 482,
+        "losses": 494,
+        "pushes": 0,
+        "pnl_u": -84.83,
+        "roi_pct": -8.7
+      }
+    ],
+    "published_combined": {
+      "bets": 8580,
+      "pnl_u": -253.74,
+      "roi_pct": -3
+    },
+    "plus4_cor_combined": {
+      "bets": 8580,
+      "pnl_u": -227.21,
+      "roi_pct": -2.6
+    }
+  },
+  "ev5": {
+    "published": [
+      {
+        "market": "Total score",
+        "mae_vs_book": null,
+        "mae_vs_actual": null,
+        "n_mae_book": 0,
+        "n_mae_actual": 0,
+        "bets": 1278,
+        "wins": 682,
+        "losses": 596,
+        "pushes": 0,
+        "pnl_u": 6.18,
+        "roi_pct": 0.5
+      },
+      {
+        "market": "Birdies",
+        "mae_vs_book": null,
+        "mae_vs_actual": null,
+        "n_mae_book": 0,
+        "n_mae_actual": 0,
+        "bets": 1424,
+        "wins": 763,
+        "losses": 661,
+        "pushes": 0,
+        "pnl_u": 13.61,
+        "roi_pct": 1
+      },
+      {
+        "market": "Pars",
+        "mae_vs_book": null,
+        "mae_vs_actual": null,
+        "n_mae_book": 0,
+        "n_mae_actual": 0,
+        "bets": 381,
+        "wins": 212,
+        "losses": 169,
+        "pushes": 0,
+        "pnl_u": 36.96,
+        "roi_pct": 9.7
+      },
+      {
+        "market": "Bogeys",
+        "mae_vs_book": null,
+        "mae_vs_actual": null,
+        "n_mae_book": 0,
+        "n_mae_actual": 0,
+        "bets": 777,
+        "wins": 418,
+        "losses": 359,
+        "pushes": 0,
+        "pnl_u": -15.18,
+        "roi_pct": -2
+      },
+      {
+        "market": "Fairways hit",
+        "mae_vs_book": null,
+        "mae_vs_actual": null,
+        "n_mae_book": 0,
+        "n_mae_actual": 0,
+        "bets": 567,
+        "wins": 307,
+        "losses": 260,
+        "pushes": 0,
+        "pnl_u": 1.88,
+        "roi_pct": 0.3
+      },
+      {
+        "market": "GIR",
+        "mae_vs_book": null,
+        "mae_vs_actual": null,
+        "n_mae_book": 0,
+        "n_mae_actual": 0,
+        "bets": 712,
+        "wins": 366,
+        "losses": 346,
+        "pushes": 0,
+        "pnl_u": -35.05,
+        "roi_pct": -4.9
+      }
+    ],
+    "plus4_cor": [
+      {
+        "market": "Total score",
+        "mae_vs_book": null,
+        "mae_vs_actual": null,
+        "n_mae_book": 0,
+        "n_mae_actual": 0,
+        "bets": 1312,
+        "wins": 709,
+        "losses": 603,
+        "pushes": 0,
+        "pnl_u": 25.4,
+        "roi_pct": 1.9
+      },
+      {
+        "market": "Birdies",
+        "mae_vs_book": null,
+        "mae_vs_actual": null,
+        "n_mae_book": 0,
+        "n_mae_actual": 0,
+        "bets": 1291,
+        "wins": 708,
+        "losses": 583,
+        "pushes": 0,
+        "pnl_u": 41.22,
+        "roi_pct": 3.2
+      },
+      {
+        "market": "Pars",
+        "mae_vs_book": null,
+        "mae_vs_actual": null,
+        "n_mae_book": 0,
+        "n_mae_actual": 0,
+        "bets": 400,
+        "wins": 219,
+        "losses": 181,
+        "pushes": 0,
+        "pnl_u": 30.76,
+        "roi_pct": 7.7
+      },
+      {
+        "market": "Bogeys",
+        "mae_vs_book": null,
+        "mae_vs_actual": null,
+        "n_mae_book": 0,
+        "n_mae_actual": 0,
+        "bets": 765,
+        "wins": 421,
+        "losses": 344,
+        "pushes": 0,
+        "pnl_u": -4.38,
+        "roi_pct": -0.6
+      },
+      {
+        "market": "Fairways hit",
+        "mae_vs_book": null,
+        "mae_vs_actual": null,
+        "n_mae_book": 0,
+        "n_mae_actual": 0,
+        "bets": 549,
+        "wins": 295,
+        "losses": 254,
+        "pushes": 0,
+        "pnl_u": -2.83,
+        "roi_pct": -0.5
+      },
+      {
+        "market": "GIR",
+        "mae_vs_book": null,
+        "mae_vs_actual": null,
+        "n_mae_book": 0,
+        "n_mae_actual": 0,
+        "bets": 673,
+        "wins": 338,
+        "losses": 335,
+        "pushes": 0,
+        "pnl_u": -47.07,
+        "roi_pct": -7
+      }
+    ],
+    "published_combined": {
+      "bets": 5139,
+      "pnl_u": 8.4,
+      "roi_pct": 0.2
+    },
+    "plus4_cor_combined": {
+      "bets": 4990,
+      "pnl_u": 43.1,
+      "roi_pct": 0.9
+    }
+  }
+}

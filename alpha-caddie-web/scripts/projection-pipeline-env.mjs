@@ -17,6 +17,8 @@ export function flatVenueProjectionPipelineEnv() {
     GOLF_COURSE_PRIOR_ROUND_DIFFICULTY: "0",
     GOLF_WITHIN_EVENT_FORM_CARRY: "0",
     GOLF_UNIFIED_BOUNCE_BACK_K: "0",
+    // Plus4 corollary-course fit (override with GOLF_PROJECTION_COURSE_FIT=legacy).
+    GOLF_PROJECTION_COURSE_FIT: process.env.GOLF_PROJECTION_COURSE_FIT || "plus4_cor",
   };
 }
 

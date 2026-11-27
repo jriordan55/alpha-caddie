@@ -60,6 +60,10 @@ data/**/*.tmp.*
 **/logs/*.log
 data/betsperts/pull.log
 data/betsperts/pull.log.err
+# Raw RH slice dumps (~1.5GB+); client uses slim data/betsperts_betting_viz.json
+data/betsperts/rabbit-hole/filters/by-slice/
+data/betsperts/rabbit-hole/matrix/by-slice/
+alpha-caddie-web/tmp-course-metrics.json
 
 java/alphacaddie/target/
 java/alphacaddie/.mvn-tools/

@@ -1,0 +1,259 @@
+{
+  "generated_at": "2026-11-27T03:15:24.504Z",
+  "source": "data/round_projection_vs_actual.csv",
+  "method": "skill seed → legacy(venue fit+tailor) vs plus4_cor(+extras); score = mean(book) − (μ − fieldMeanμ)",
+  "n_rows": 2165,
+  "n_events": 21,
+  "overall": {
+    "legacy": {
+      "mae_vs_book": 0.711,
+      "mae_vs_actual": 2.242,
+      "n": 2165
+    },
+    "plus4_cor": {
+      "mae_vs_book": 0.667,
+      "mae_vs_actual": 2.212,
+      "n": 2165
+    },
+    "published_model_line": {
+      "mae_vs_book": 0.753,
+      "mae_vs_actual": 2.273,
+      "n": 2165
+    }
+  },
+  "by_event": [
+    {
+      "event": "3M Open",
+      "course": "tpc twin cities",
+      "n": 73,
+      "legacy_mae_book": 0.874,
+      "legacy_mae_actual": 2.155,
+      "plus4_mae_book": 0.733,
+      "plus4_mae_actual": 2.014,
+      "published_mae_book": 0.585,
+      "published_mae_actual": 2.068
+    },
+    {
+      "event": "Austin Championship presented by Compliance Solutions",
+      "course": "omni barton creek resort and spa",
+      "n": 3,
+      "legacy_mae_book": 1.417,
+      "legacy_mae_actual": 2.497,
+      "plus4_mae_book": 1.491,
+      "plus4_mae_actual": 2.455,
+      "published_mae_book": 1.433,
+      "published_mae_actual": 3.067
+    },
+    {
+      "event": "Baycurrent Classic",
+      "course": "yokohama country club",
+      "n": 152,
+      "legacy_mae_book": 0.689,
+      "legacy_mae_actual": 2.386,
+      "plus4_mae_book": 0.652,
+      "plus4_mae_actual": 2.314,
+      "published_mae_book": 0.449,
+      "published_mae_actual": 2.164
+    },
+    {
+      "event": "BMW Championship",
+      "course": "bellerive country club",
+      "n": 168,
+      "legacy_mae_book": 0.719,
+      "legacy_mae_actual": 2.273,
+      "plus4_mae_book": 0.592,
+      "plus4_mae_actual": 2.178,
+      "published_mae_book": 0.573,
+      "published_mae_actual": 2.198
+    },
+    {
+      "event": "Butterfield Bermuda Championship",
+      "course": "port royal golf course",
+      "n": 13,
+      "legacy_mae_book": 0.759,
+      "legacy_mae_actual": 3.45,
+      "plus4_mae_book": 0.474,
+      "plus4_mae_actual": 3.483,
+      "published_mae_book": 0.169,
+      "published_mae_actual": 3.377
+    },
+    {
+      "event": "Charles Schwab Challenge",
+      "course": "colonial country club",
+      "n": 106,
+      "legacy_mae_book": 0.619,
+      "legacy_mae_actual": 2.288,
+      "plus4_mae_book": 0.655,
+      "plus4_mae_actual": 2.27,
+      "published_mae_book": 0.411,
+      "published_mae_actual": 2.258
+    },
+    {
+      "event": "FedEx St. Jude Championship",
+      "course": "tpc southwind",
+      "n": 63,
+      "legacy_mae_book": 0.655,
+      "legacy_mae_actual": 2.252,
+      "plus4_mae_book": 0.478,
+      "plus4_mae_actual": 2.148,
+      "published_mae_book": 0.454,
+      "published_mae_actual": 2.256
+    },
+    {
+      "event": "Genesis Scottish Open",
+      "course": "the renaissance club",
+      "n": 142,
+      "legacy_mae_book": 0.647,
+      "legacy_mae_actual": 2.072,
+      "plus4_mae_book": 0.534,
+      "plus4_mae_actual": 2.033,
+      "published_mae_book": 0.373,
+      "published_mae_actual": 2.059
+    },
+    {
+      "event": "John Deere Classic",
+      "course": "tpc deere run",
+      "n": 52,
+      "legacy_mae_book": 0.557,
+      "legacy_mae_actual": 1.956,
+      "plus4_mae_book": 0.487,
+      "plus4_mae_actual": 1.929,
+      "published_mae_book": 0.362,
+      "published_mae_actual": 1.962
+    },
+    {
+      "event": "PGA Championship",
+      "course": "aronimink golf club",
+      "n": 96,
+      "legacy_mae_book": 0.744,
+      "legacy_mae_actual": 2.326,
+      "plus4_mae_book": 0.679,
+      "plus4_mae_actual": 2.295,
+      "published_mae_book": 1.041,
+      "published_mae_actual": 2.37
+    },
+    {
+      "event": "RBC Canadian Open",
+      "course": "tpc toronto at osprey valley",
+      "n": 110,
+      "legacy_mae_book": 0.543,
+      "legacy_mae_actual": 2.146,
+      "plus4_mae_book": 0.734,
+      "plus4_mae_actual": 2.158,
+      "published_mae_book": 2.42,
+      "published_mae_actual": 2.795
+    },
+    {
+      "event": "Rocket Classic",
+      "course": "detroit golf club north course",
+      "n": 30,
+      "legacy_mae_book": 0.686,
+      "legacy_mae_actual": 2.472,
+      "plus4_mae_book": 0.668,
+      "plus4_mae_actual": 2.36,
+      "published_mae_book": 0.947,
+      "published_mae_actual": 2.54
+    },
+    {
+      "event": "THE CJ CUP Byron Nelson",
+      "course": "tpc craig ranch",
+      "n": 137,
+      "legacy_mae_book": 0.738,
+      "legacy_mae_actual": 2.091,
+      "plus4_mae_book": 0.72,
+      "plus4_mae_actual": 2.084,
+      "published_mae_book": 0.44,
+      "published_mae_actual": 2.131
+    },
+    {
+      "event": "the Memorial Tournament presented by Workday",
+      "course": "muirfield village golf club",
+      "n": 86,
+      "legacy_mae_book": 0.937,
+      "legacy_mae_actual": 2.367,
+      "plus4_mae_book": 0.786,
+      "plus4_mae_actual": 2.355,
+      "published_mae_book": 0.537,
+      "published_mae_actual": 2.493
+    },
+    {
+      "event": "The Open Championship",
+      "course": "royal birkdale golf club",
+      "n": 256,
+      "legacy_mae_book": 0.726,
+      "legacy_mae_actual": 2.086,
+      "plus4_mae_book": 0.768,
+      "plus4_mae_actual": 2.135,
+      "published_mae_book": 0.502,
+      "published_mae_actual": 2.17
+    },
+    {
+      "event": "The RSM Classic",
+      "course": "sea island golf club seaside sea island golf club plantation",
+      "n": 66,
+      "legacy_mae_book": 0.743,
+      "legacy_mae_actual": 1.978,
+      "plus4_mae_book": 0.567,
+      "plus4_mae_actual": 1.922,
+      "published_mae_book": 1.595,
+      "published_mae_actual": 2.271
+    },
+    {
+      "event": "TOUR Championship",
+      "course": "east lake golf club",
+      "n": 86,
+      "legacy_mae_book": 0.718,
+      "legacy_mae_actual": 2.569,
+      "plus4_mae_book": 0.681,
+      "plus4_mae_actual": 2.603,
+      "published_mae_book": 0.686,
+      "published_mae_actual": 2.828
+    },
+    {
+      "event": "Travelers Championship",
+      "course": "tpc river highlands",
+      "n": 116,
+      "legacy_mae_book": 0.644,
+      "legacy_mae_actual": 2.212,
+      "plus4_mae_book": 0.609,
+      "plus4_mae_actual": 2.27,
+      "published_mae_book": 0.964,
+      "published_mae_actual": 2.241
+    },
+    {
+      "event": "U.S. Open",
+      "course": "shinnecock hills golf club",
+      "n": 223,
+      "legacy_mae_book": 0.758,
+      "legacy_mae_actual": 2.241,
+      "plus4_mae_book": 0.82,
+      "plus4_mae_actual": 2.241,
+      "published_mae_book": 1.06,
+      "published_mae_actual": 2.15
+    },
+    {
+      "event": "World Wide Technology Championship",
+      "course": "el cardonal at diamante",
+      "n": 15,
+      "legacy_mae_book": 0.69,
+      "legacy_mae_actual": 2.66,
+      "plus4_mae_book": 0.505,
+      "plus4_mae_actual": 2.515,
+      "published_mae_book": 0.427,
+      "published_mae_actual": 2.273
+    },
+    {
+      "event": "Wyndham Championship",
+      "course": "sedgefield country club",
+      "n": 172,
+      "legacy_mae_book": 0.722,
+      "legacy_mae_actual": 2.412,
+      "plus4_mae_book": 0.556,
+      "plus4_mae_actual": 2.285,
+      "published_mae_book": 0.722,
+      "published_mae_actual": 2.348
+    }
+  ],
+  "default_recipe": "plus4_cor",
+  "note": "GOLF_PROJECTION_COURSE_FIT=plus4_cor|legacy"
+}

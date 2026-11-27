@@ -231,12 +231,51 @@ run(
 if (!envTruthy("GOLF_SKIP_BETSPERTS", false)) {
   run(
     "fetch-betsperts-db.mjs",
-    "Betsperts player + course DB (force refresh → data/betsperts)",
-    { GOLF_BETSPERTS_FORCE: "1", GOLF_BETSPERTS_WITH_AUTH: "1" },
+    "Betsperts player + course DB (force refresh → data/betsperts; all-time course history + metrics)",
+    {
+      GOLF_BETSPERTS_FORCE: "1",
+      GOLF_BETSPERTS_WITH_AUTH: "1",
+      // Matrix runs as its own step below (once) so 9pm doesn't pull it twice.
+      GOLF_SKIP_BETSPERTS_RH_MATRIX: "1",
+    },
     softOpt,
   );
 } else {
   console.log("[refresh:live] Skipping Betsperts pull (GOLF_SKIP_BETSPERTS=1).\n");
+}
+
+run(
+  "build-betsperts-course-context.mjs",
+  "Betsperts course facts/metrics index → betsperts_course_facts.json + course_event_context grass",
+  {},
+  softOpt,
+);
+
+run(
+  "build-betsperts-betting-viz.mjs",
+  "Betsperts betting visuals sidecar → data/betsperts_betting_viz.json",
+  {},
+  softOpt,
+);
+
+// Full RH matrix is also pulled inside fetch-betsperts-db when auth is on; re-run here so
+// 9pm still refreshes views×Average/Total×years even if the main pull was skipped mid-way.
+if (!envTruthy("GOLF_SKIP_BETSPERTS", false) && !envTruthy("GOLF_SKIP_BETSPERTS_RH_MATRIX", false)) {
+  run(
+    "fetch-betsperts-rh-matrix.mjs",
+    "Rabbit Hole matrix: all views × Average/Total × all seasons + rolling rounds (all players)",
+    {},
+    softOpt,
+  );
+}
+
+if (!envTruthy("GOLF_SKIP_BETSPERTS", false) && !envTruthy("GOLF_SKIP_BETSPERTS_RH_FILTERS", false)) {
+  run(
+    "fetch-betsperts-rh-filters.mjs",
+    "Rabbit Hole Filter-by-Conditions catalog + slices (all views × Avg/Tot × all+L50)",
+    {},
+    softOpt,
+  );
 }
 
 run(

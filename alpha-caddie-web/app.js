@@ -11628,6 +11628,9 @@ function buildEvTable() {
     evFrag.appendChild(tr);
   }
   tbody.appendChild(evFrag);
+  if (window.AlphaCaddieBettingViz?.render) {
+    void window.AlphaCaddieBettingViz.render();
+  }
 }
 
 /**
@@ -16558,6 +16561,9 @@ function buildCourseBreakdownTab() {
   renderCourseBreakdownSg(rows);
   void renderCourseBreakdownApproach(rows);
   void buildCourseBreakdownInsights(holePars, rows, courseName);
+  if (window.AlphaCaddieBettingViz?.render) {
+    void window.AlphaCaddieBettingViz.render();
+  }
 }
 
 function formatAmericanOddsShort(n) {
@@ -17855,6 +17861,9 @@ function buildCourseFitTab() {
     const bucket = propsGetSingleCourseBucketSync(vk);
     if (bucket?.entries?.length) buildCourseFitDistributionsPanel(vk);
     else void loadCourseFitDistributionsForVenue(vk);
+  }
+  if (window.AlphaCaddieBettingViz?.render) {
+    void window.AlphaCaddieBettingViz.render();
   }
 }
 
@@ -23166,6 +23175,12 @@ function normCourseNameKey(raw) {
   if (side) s = `${s} ${side}`.replace(/\s+/g, " ").trim();
   const alias = COURSE_NAME_CANONICAL_KEYS[s];
   return alias || s;
+}
+/** Expose for Betsperts betting-viz module (same keying as course facts). */
+try {
+  window.normCourseNameKey = normCourseNameKey;
+} catch {
+  /* ignore */
 }
 
 function formatCourseNameForDisplay(raw) {

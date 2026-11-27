@@ -26,7 +26,8 @@
     onload="this.media='all'"
   />
   <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Sans:wght@400;500;600;700&display=swap" /></noscript>
-  <link rel="stylesheet" href="styles.css?v=34" />
+  <link rel="stylesheet" href="styles.css?v=35" />
+  <link rel="stylesheet" href="betsperts-betting-viz.css?v=1" />
   <link rel="preconnect" href="https://pga-tour-res.cloudinary.com" crossorigin />
   <link rel="preload" href="data/player_headshots.json" as="fetch" crossorigin />
   <link rel="preload" href="player-history/ou-season-avgs-2026.json" as="fetch" crossorigin />
@@ -626,6 +627,37 @@
               </table>
             </div>
           </div>
+
+          <!-- Betsperts condition / surface / window visuals -->
+          <div class="leaderboard-card bbv-card" id="bbv-fit-block">
+            <div class="bbv-card-head">
+              <div>
+                <h3 class="bbv-title">Condition &amp; surface fit</h3>
+                <p class="bbv-sub">Rabbit Hole splits · green grass · form windows</p>
+              </div>
+              <label class="bbv-player-label">Golfer
+                <select id="bbv-player-fit" aria-label="Golfer for condition fit visuals"></select>
+              </label>
+            </div>
+            <div class="bbv-fit-grid">
+              <div class="bbv-section">
+                <h4 class="bbv-section-title">Condition fit radar</h4>
+                <canvas id="bbv-condition-radar" width="420" height="340" aria-label="Condition fit radar"></canvas>
+              </div>
+              <div class="bbv-section">
+                <h4 class="bbv-section-title">Green-surface SG</h4>
+                <div id="bbv-green-spark"></div>
+              </div>
+            </div>
+            <div class="bbv-section">
+              <h4 class="bbv-section-title">Filter heat (field)</h4>
+              <div id="bbv-filter-heat"></div>
+            </div>
+            <div class="bbv-section">
+              <h4 class="bbv-section-title">Form windows &amp; season stack</h4>
+              <div id="bbv-windows"></div>
+            </div>
+          </div>
         </div>
 
         <div id="course-fit-subpanel-distributions" class="course-fit-subpanel" hidden>
@@ -725,6 +757,35 @@
             </div>
           </div>
           <div class="course-breakdown-insights-body" id="course-breakdown-insights-body"></div>
+        </div>
+
+        <!-- Betsperts betting visuals: hole map / gauges / correlated -->
+        <div class="leaderboard-card bbv-card" id="bbv-breakdown-block">
+          <div class="bbv-card-head">
+            <div>
+              <h3 class="bbv-title">Betting course board</h3>
+              <p class="bbv-sub">Hole map · course vs Tour · correlated ladder · <span id="bbv-course-label">—</span></p>
+            </div>
+            <label class="bbv-player-label">Golfer
+              <select id="bbv-player" aria-label="Golfer for betting visuals"></select>
+            </label>
+          </div>
+          <div class="bbv-section">
+            <h4 class="bbv-section-title">Hole scoring map</h4>
+            <div id="bbv-hole-map"></div>
+          </div>
+          <div class="bbv-section">
+            <h4 class="bbv-section-title">Course vs Tour (market leans)</h4>
+            <div id="bbv-gauges"></div>
+          </div>
+          <div class="bbv-section">
+            <h4 class="bbv-section-title">Correlated-course ladder</h4>
+            <div id="bbv-correlated"></div>
+          </div>
+          <div class="bbv-section">
+            <h4 class="bbv-section-title">Market lean chips</h4>
+            <div id="bbv-lean-chips"></div>
+          </div>
         </div>
 
         <div class="course-boxplot-grid" id="course-boxplot-grid" aria-label="Course stat distributions vs PGA Tour venues"></div>
@@ -917,6 +978,26 @@
         >
           ?
         </button>
+      </div>
+      <div class="leaderboard-card bbv-card bbv-card-ev" id="bbv-ev-block">
+        <div class="bbv-card-head">
+          <div>
+            <h3 class="bbv-title">Course market leans</h3>
+            <p class="bbv-sub">From Betsperts course metrics · model vs book</p>
+          </div>
+        </div>
+        <div id="bbv-lean-chips-ev" class="bbv-section"></div>
+        <div class="bbv-fit-grid">
+          <div class="bbv-section">
+            <h4 class="bbv-section-title">Model vs book waterfall</h4>
+            <div id="bbv-waterfall"></div>
+          </div>
+          <div class="bbv-section">
+            <h4 class="bbv-section-title">Mismatch finder</h4>
+            <canvas id="bbv-mismatch" width="480" height="300" aria-label="Book vs model mismatch scatter"></canvas>
+            <p class="bbv-caption">Color = green-surface fit. Far above y=x → model likes Under vs book.</p>
+          </div>
+        </div>
       </div>
       <div class="toolbar outrights-toolbar">
         <label class="toolbar-label">Golfer
@@ -1443,6 +1524,7 @@
     </div>
   </dialog>
 
-  <script src="app.js?v=391"></script>
+  <script src="betsperts-betting-viz.js?v=1"></script>
+  <script src="app.js?v=392"></script>
 </body>
 </html>

@@ -1,0 +1,348 @@
+/* Betsperts betting visuals */
+.bbv-card {
+  margin: 1rem 0 1.25rem;
+  padding: 1rem 1.1rem 1.15rem;
+}
+.bbv-card-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem 1.25rem;
+  margin-bottom: 0.85rem;
+}
+.bbv-title {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 650;
+}
+.bbv-sub {
+  margin: 0.2rem 0 0;
+  font-size: 0.82rem;
+  opacity: 0.72;
+}
+.bbv-player-label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  opacity: 0.85;
+}
+.bbv-player-label select {
+  min-width: 11rem;
+  font-size: 0.85rem;
+}
+.bbv-section {
+  margin-top: 0.95rem;
+}
+.bbv-section-title {
+  margin: 0 0 0.45rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  opacity: 0.78;
+}
+.bbv-caption {
+  margin: 0.45rem 0 0;
+  font-size: 0.75rem;
+  opacity: 0.65;
+  line-height: 1.35;
+}
+.bbv-empty {
+  margin: 0;
+  font-size: 0.85rem;
+  opacity: 0.65;
+}
+.bbv-fit-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+@media (max-width: 900px) {
+  .bbv-fit-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Hole map */
+.bbv-hole-grid {
+  display: grid;
+  grid-template-columns: repeat(9, minmax(0, 1fr));
+  gap: 0.35rem;
+}
+@media (max-width: 720px) {
+  .bbv-hole-grid {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+}
+.bbv-hole {
+  border: 1px solid color-mix(in srgb, var(--border, #444) 80%, transparent);
+  border-radius: 8px;
+  padding: 0.35rem 0.2rem;
+  background: transparent;
+  color: inherit;
+  cursor: default;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.05rem;
+  min-height: 3.4rem;
+}
+.bbv-hole-n {
+  font-size: 0.7rem;
+  opacity: 0.7;
+}
+.bbv-hole-pm {
+  font-size: 0.85rem;
+  font-weight: 650;
+}
+.bbv-hole-meta {
+  font-size: 0.65rem;
+  opacity: 0.6;
+}
+
+/* Gauges */
+.bbv-gauge-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9.5rem, 1fr));
+  gap: 0.55rem;
+}
+.bbv-gauge {
+  border: 1px solid color-mix(in srgb, var(--border, #444) 85%, transparent);
+  border-radius: 10px;
+  padding: 0.55rem 0.65rem;
+}
+.bbv-gauge.is-over {
+  border-color: color-mix(in srgb, #2ea064 45%, transparent);
+}
+.bbv-gauge.is-under {
+  border-color: color-mix(in srgb, #c84646 45%, transparent);
+}
+.bbv-gauge-label {
+  font-size: 0.72rem;
+  opacity: 0.75;
+}
+.bbv-gauge-label span {
+  opacity: 0.55;
+}
+.bbv-gauge-vals {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+  margin-top: 0.2rem;
+}
+.bbv-gauge-vals strong {
+  font-size: 1.05rem;
+}
+.bbv-gauge-vals em {
+  font-style: normal;
+  font-size: 0.75rem;
+  opacity: 0.6;
+}
+.bbv-gauge-delta {
+  margin-top: 0.2rem;
+  font-size: 0.72rem;
+  opacity: 0.8;
+}
+
+/* Correlated */
+.bbv-corr-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.bbv-corr-list li {
+  display: grid;
+  grid-template-columns: 1.5rem 1fr auto;
+  gap: 0.5rem;
+  align-items: baseline;
+  font-size: 0.85rem;
+}
+.bbv-corr-rank {
+  opacity: 0.5;
+  font-variant-numeric: tabular-nums;
+}
+.bbv-corr-stats {
+  font-size: 0.75rem;
+  opacity: 0.65;
+  text-align: right;
+}
+
+/* Chips */
+.bbv-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+.bbv-chip {
+  border-radius: 999px;
+  padding: 0.35rem 0.7rem;
+  border: 1px solid color-mix(in srgb, var(--border, #444) 80%, transparent);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.55rem;
+  align-items: baseline;
+  font-size: 0.78rem;
+  max-width: 100%;
+}
+.bbv-chip.is-over {
+  background: color-mix(in srgb, #2ea064 18%, transparent);
+}
+.bbv-chip.is-under {
+  background: color-mix(in srgb, #c84646 18%, transparent);
+}
+.bbv-chip.is-neutral {
+  opacity: 0.85;
+}
+.bbv-chip-mkt {
+  font-weight: 650;
+}
+.bbv-chip-lean {
+  font-weight: 600;
+}
+.bbv-chip-detail {
+  opacity: 0.7;
+  font-size: 0.72rem;
+}
+
+/* Heat */
+.bbv-heat-wrap {
+  max-height: 22rem;
+  overflow: auto;
+}
+.bbv-heat td.is-hot {
+  color: #2ea064;
+  font-weight: 600;
+}
+.bbv-heat td.is-cold {
+  color: #c84646;
+  font-weight: 600;
+}
+
+/* Green spark */
+.bbv-spark-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  align-items: flex-end;
+  min-height: 6rem;
+}
+.bbv-spark {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  min-width: 3.2rem;
+}
+.bbv-spark.is-venue .bbv-spark-lbl {
+  color: var(--accent, #b8956a);
+  font-weight: 650;
+}
+.bbv-spark-bar {
+  width: 1.35rem;
+  border-radius: 4px 4px 0 0;
+}
+.bbv-spark-bar.pos {
+  background: #2ea064;
+}
+.bbv-spark-bar.neg {
+  background: #c84646;
+}
+.bbv-spark-lbl {
+  font-size: 0.68rem;
+  opacity: 0.75;
+}
+.bbv-spark-val {
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Waterfall */
+.bbv-waterfall {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  font-size: 0.85rem;
+}
+.bbv-wf-step {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 0.5rem;
+  padding: 0.25rem 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--border, #444) 55%, transparent);
+}
+.bbv-wf-step em {
+  font-style: normal;
+  opacity: 0.55;
+  font-variant-numeric: tabular-nums;
+}
+.bbv-wf-final {
+  margin-top: 0.35rem;
+  font-size: 0.9rem;
+}
+
+/* Windows / seasons */
+.bbv-windows {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+.bbv-win-block h4 {
+  margin: 0 0 0.35rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+.bbv-win-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+.bbv-win-cell {
+  border: 1px solid color-mix(in srgb, var(--border, #444) 80%, transparent);
+  border-radius: 8px;
+  padding: 0.35rem 0.55rem;
+  min-width: 4.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+.bbv-win-cell span {
+  font-size: 0.68rem;
+  opacity: 0.65;
+}
+.bbv-win-cell strong {
+  font-variant-numeric: tabular-nums;
+}
+.bbv-season-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+  align-items: flex-end;
+  min-height: 5rem;
+}
+.bbv-season {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  min-width: 2.4rem;
+  font-size: 0.68rem;
+}
+.bbv-season-bar {
+  width: 1.1rem;
+  border-radius: 3px 3px 0 0;
+}
+.bbv-season-bar.pos {
+  background: #2ea064;
+}
+.bbv-season-bar.neg {
+  background: #c84646;
+}
+
+.bbv-card-ev {
+  margin-bottom: 0.85rem;
+}

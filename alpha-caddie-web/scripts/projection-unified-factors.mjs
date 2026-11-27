@@ -32,6 +32,7 @@ import {
   HIST_TEE_WAVE_AFTERNOON_STP,
 } from "./weather-mu-adjustments.mjs";
 import { teeWaveFromTeetimeAndLabel } from "./open-meteo-forecast.mjs";
+import { plus4CorEnabled } from "./plus4-cor-score.mjs";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const WEB_ROOT = join(__dirname, "..");
@@ -651,10 +652,15 @@ export async function applyUnifiedProjectionFactors(payload, opts = {}) {
   const liveLb = liveBundle ? buildLiveLeaderboardMap(liveBundle) : { byDg: new Map(), leaderScore: NaN };
   const byDgRound = buildPlayerRoundIndex(players);
 
-  const venueThin = num(meta?.projection_course_basis?.venue_rounds, 0) < 80;
+  const venueThin =
+    num(meta?.projection_course_basis?.venue_rounds ?? meta?.projection_course_basis?.venue_historical_rounds, 0) < 80;
+  // When Plus4 COR is active, corollary residual already covers similar-course signal — keep a tiny prior only.
+  const similarW = plus4CorEnabled()
+    ? Math.min(0.03, UNIFIED_FACTOR_WEIGHTS.similarCourse * 0.25)
+    : UNIFIED_FACTOR_WEIGHTS.similarCourse;
   const similarShift =
     venueThin && Number.isFinite(similarStp) && Number.isFinite(num(meta?.projection_course_basis?.venue_avg_stp, NaN))
-      ? (similarStp - num(meta.projection_course_basis.venue_avg_stp, 0)) * UNIFIED_FACTOR_WEIGHTS.similarCourse
+      ? (similarStp - num(meta.projection_course_basis.venue_avg_stp, 0)) * similarW
       : 0;
 
   let adjusted = 0;
