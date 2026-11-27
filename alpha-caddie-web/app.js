@@ -18745,6 +18745,46 @@ function cksComputeKeyStats(entries, ctx) {
   return { metrics: top, nRounds, nPlayers: byPlayer.size };
 }
 
+function cksShortMetricLabel(label) {
+  const s = String(label || "").trim();
+  if (/tee-to-green/i.test(s)) return "T2G";
+  if (/off-the-tee/i.test(s)) return "OTT";
+  if (/approach/i.test(s)) return "APP";
+  if (/around-the-green/i.test(s)) return "ARG";
+  if (/putting/i.test(s)) {
+    const m = s.match(/\(([^)]+)\)/);
+    return m ? `Putt ${m[1]}` : "Putt";
+  }
+  if (/course length/i.test(s)) {
+    const m = s.match(/\(([^)]+)\)/);
+    return m ? `Len ${m[1]}` : "Length";
+  }
+  if (/scoring/i.test(s)) {
+    const m = s.match(/\(([^)]+)\)/);
+    return m ? `Score ${m[1]}` : "Scoring";
+  }
+  if (/proximity/i.test(s)) return s.replace(/^Proximity\s*/i, "Prox ");
+  if (/driving distance/i.test(s)) return "Dist";
+  if (/driving accuracy/i.test(s)) return "Acc";
+  if (/^gir$/i.test(s)) return "GIR";
+  if (/fairways/i.test(s)) return "FWY";
+  return s.replace(/^SG:\s*/i, "").slice(0, 14);
+}
+
+/** Field percentile ranks (0–99) for each value; higher raw → higher %ile. */
+function cksPercentileRanks(vals) {
+  const indexed = vals
+    .map((v, i) => ({ v, i }))
+    .filter((x) => Number.isFinite(x.v));
+  indexed.sort((a, b) => a.v - b.v);
+  const out = vals.map(() => null);
+  const n = indexed.length;
+  for (let r = 0; r < n; r++) {
+    out[indexed[r].i] = Math.round((r / Math.max(1, n - 1)) * 99);
+  }
+  return out;
+}
+
 function cksScoreFieldFits(metrics, ctx) {
   const field = [];
   const seen = new Set();
@@ -18765,6 +18805,7 @@ function cksScoreFieldFits(metrics, ctx) {
   if (!metrics.length || !field.length) return [];
 
   const metricVals = metrics.map((m) => field.map((f) => cksPlayerFormMetric(f.dgId, m.key, ctx)));
+  const metricPcts = metricVals.map((col) => cksPercentileRanks(col));
   const metricZs = metricVals.map((col) => {
     const { mean, sd } = cksMeanSd(col);
     return col.map((v) => (Number.isFinite(v) && Number.isFinite(mean) ? (v - mean) / (sd || 1) : 0));
@@ -18773,14 +18814,15 @@ function cksScoreFieldFits(metrics, ctx) {
 
   const scored = field.map((f, i) => {
     let score = 0;
-    const parts = [];
+    const pctByKey = {};
     metrics.forEach((m, mi) => {
       const z = metricZs[mi][i];
       const w = Math.max(0, m.r) / wSum;
       score += w * z;
-      if (z > 0.25) parts.push(m.label.replace(/^SG:\s*/i, ""));
+      const pct = metricPcts[mi][i];
+      pctByKey[m.key] = Number.isFinite(pct) ? pct : null;
     });
-    return { ...f, raw: score, parts: parts.slice(0, 3) };
+    return { ...f, raw: score, pctByKey };
   });
 
   // Map raw z-blend to 0–99 fit via percentile ranks in field.
@@ -18980,6 +19022,24 @@ function cksPaintTab({ metrics, nRounds, nPlayers, fits, venueLabel, emptyMessag
   }
   if (bestFitEl) bestFitEl.textContent = best ? `${best.fit} fit` : "—";
 
+  const theadRow = document.getElementById("cks-field-thead-row");
+  if (theadRow) {
+    theadRow.replaceChildren();
+    const mkTh = (text, cls = "") => {
+      const th = document.createElement("th");
+      th.scope = "col";
+      if (cls) th.className = cls;
+      th.textContent = text;
+      return th;
+    };
+    theadRow.appendChild(mkTh("#"));
+    theadRow.appendChild(mkTh("Golfer"));
+    theadRow.appendChild(mkTh("Fit", "num"));
+    for (const m of metrics || []) {
+      theadRow.appendChild(mkTh(cksShortMetricLabel(m.label), "num cks-metric-col"));
+      theadRow.lastChild.title = m.label;
+    }
+  }
   if (fieldBody) {
     fieldBody.replaceChildren();
     for (let i = 0; i < Math.min(fits?.length || 0, 40); i++) {
@@ -18996,13 +19056,18 @@ function cksPaintTab({ metrics, nRounds, nPlayers, fits, venueLabel, emptyMessag
       const tdF = document.createElement("td");
       tdF.className = "num cks-field-fit";
       tdF.textContent = String(f.fit);
-      const tdM = document.createElement("td");
-      tdM.className = "cks-field-matches";
-      tdM.textContent = (f.parts || []).join(" · ") || "—";
       tr.appendChild(tdR);
       tr.appendChild(tdG);
       tr.appendChild(tdF);
-      tr.appendChild(tdM);
+      for (const m of metrics || []) {
+        const td = document.createElement("td");
+        td.className = "num cks-field-pct";
+        const pct = f.pctByKey?.[m.key];
+        td.textContent = Number.isFinite(pct) ? `${pct}%` : "—";
+        if (Number.isFinite(pct) && pct >= 75) td.classList.add("cks-field-pct--high");
+        else if (Number.isFinite(pct) && pct <= 25) td.classList.add("cks-field-pct--low");
+        tr.appendChild(td);
+      }
       fieldBody.appendChild(tr);
     }
   }
@@ -19033,12 +19098,33 @@ async function buildCourseKeyStatsTab() {
   const baked = cksResolvePrecomputed(venueRaw, pre);
   if (baked?.metrics?.length) {
     void ensurePlayerHeadshotsLoaded().catch(() => null);
+    // Prefer live field percentiles (per key-stat column); fall back to baked fits.
+    const ctx = cksVenueRhContext();
+    let fits = cksScoreFieldFits(baked.metrics, ctx);
+    if (!fits.length) fits = baked.fits || (baked.bestFit ? [baked.bestFit] : []);
     cksPaintTab({
       metrics: baked.metrics,
       nRounds: baked.nRounds,
       nPlayers: baked.nPlayers,
-      fits: baked.fits || (baked.bestFit ? [baked.bestFit] : []),
+      fits,
       venueLabel,
+    });
+    // Once RH / approach sidecars finish warming, refresh percentile columns.
+    void Promise.all([
+      ensurePropsRhBootstrap().catch(() => null),
+      ensureApproachSkillByDgId().catch(() => null),
+      ensureBetspertsCourseFactsLoaded().catch(() => null),
+    ]).then(() => {
+      if (gen !== cksRenderGen) return;
+      const refreshed = cksScoreFieldFits(baked.metrics, cksVenueRhContext());
+      if (!refreshed.length) return;
+      cksPaintTab({
+        metrics: baked.metrics,
+        nRounds: baked.nRounds,
+        nPlayers: baked.nPlayers,
+        fits: refreshed,
+        venueLabel,
+      });
     });
     return;
   }

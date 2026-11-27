@@ -430,9 +430,21 @@ function computeKeyStats(entries, ctx, deps, minYear) {
   return { metrics: top, nRounds, nPlayers: byPlayer.size };
 }
 
+function percentileRanks(vals) {
+  const indexed = vals.map((v, i) => ({ v, i })).filter((x) => Number.isFinite(x.v));
+  indexed.sort((a, b) => a.v - b.v);
+  const out = vals.map(() => null);
+  const n = indexed.length;
+  for (let r = 0; r < n; r++) {
+    out[indexed[r].i] = Math.round((r / Math.max(1, n - 1)) * 99);
+  }
+  return out;
+}
+
 function scoreFieldFits(metrics, ctx, deps, fieldPlayers) {
   if (!metrics.length || !fieldPlayers.length) return [];
   const metricVals = metrics.map((m) => fieldPlayers.map((f) => playerFormMetric(f.dgId, m.key, ctx, deps)));
+  const metricPcts = metricVals.map((col) => percentileRanks(col));
   const metricZs = metricVals.map((col) => {
     const { mean, sd } = meanSd(col);
     return col.map((v) => (Number.isFinite(v) && Number.isFinite(mean) ? (v - mean) / (sd || 1) : 0));
@@ -440,19 +452,20 @@ function scoreFieldFits(metrics, ctx, deps, fieldPlayers) {
   const wSum = metrics.reduce((a, m) => a + Math.max(0, m.r), 0) || 1;
   const scored = fieldPlayers.map((f, i) => {
     let score = 0;
-    const parts = [];
+    const pctByKey = {};
     metrics.forEach((m, mi) => {
       const z = metricZs[mi][i];
       score += (Math.max(0, m.r) / wSum) * z;
-      if (z > 0.25) parts.push(String(m.label).replace(/^SG:\s*/i, ""));
+      const pct = metricPcts[mi][i];
+      pctByKey[m.key] = Number.isFinite(pct) ? pct : null;
     });
-    return { dgId: f.dgId, name: f.name, raw: score, parts: parts.slice(0, 3) };
+    return { dgId: f.dgId, name: f.name, raw: score, pctByKey };
   });
   const sorted = [...scored].sort((a, b) => a.raw - b.raw);
   const n = sorted.length;
   for (let i = 0; i < n; i++) sorted[i].fit = Math.round((i / Math.max(1, n - 1)) * 99);
   scored.sort((a, b) => b.fit - a.fit || b.raw - a.raw);
-  return scored.map(({ dgId, name, fit, parts }) => ({ dgId, name, fit, parts }));
+  return scored.map(({ dgId, name, fit, pctByKey }) => ({ dgId, name, fit, pctByKey }));
 }
 
 function loadProjections() {

@@ -7532,11 +7532,6 @@ html.cks-theme .tabs--tool-nav .tab.active {
   font-weight: 650;
   color: #fff;
 }
-.cks-field-sub {
-  margin: 4px 0 14px;
-  font-size: 0.75rem;
-  color: var(--cks-muted);
-}
 .cks-table-wrap {
   overflow-x: auto;
   margin: 0 -6px;
@@ -7592,9 +7587,23 @@ html.cks-theme .tabs--tool-nav .tab.active {
   color: var(--cks-accent) !important;
   font-variant-numeric: tabular-nums;
 }
-.cks-field-matches {
-  font-size: 0.78rem;
-  color: var(--cks-muted);
+.cks-field-table thead th.cks-metric-col {
+  white-space: nowrap;
+  max-width: 5.5rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cks-field-pct {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.82rem;
+}
+.cks-field-pct--high {
+  color: var(--cks-accent);
+}
+.cks-field-pct--low {
+  color: rgba(255, 255, 255, 0.38);
 }
 @media (max-width: 560px) {
   .course-key-stats-panel .cks-shell {
