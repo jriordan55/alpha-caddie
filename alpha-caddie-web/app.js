@@ -1216,8 +1216,54 @@ let PROPS_RH_VIZ = null;
 let propsRhVizLoadPromise = null;
 let propsRhBootstrapPromise = null;
 let propsRhBootstrapped = false;
-/** HT is Rabbit Hole–first (local JSON only). Round projections tab is untouched. */
-const PROPS_RH_FAST_MODE = true;
+/** Keep legacy RH-only paint path off — HT uses RH + DG with field/3yr caps. */
+const PROPS_RH_FAST_MODE = false;
+/** Rabbit Hole / HT lookback: current season + prior (N-1) years. */
+const PROPS_RH_LOOKBACK_YEARS = 3;
+
+function propsRhMinSeasonYear() {
+  return new Date().getFullYear() - (PROPS_RH_LOOKBACK_YEARS - 1);
+}
+
+function propsRhIsCurrentFieldPlayer(dgId) {
+  const id = Math.round(num(dgId, NaN));
+  if (!Number.isFinite(id) || id <= 0) return false;
+  const field = ouProjectionFieldPlayerDgIds();
+  if (field.size) return field.has(id);
+  return (DATA.players || []).some((p) => Math.round(num(p.dg_id, NaN)) === id);
+}
+
+function propsRhPrunePlayersToField(playersObj) {
+  if (!playersObj || typeof playersObj !== "object") return {};
+  const field = ouProjectionFieldPlayerDgIds();
+  if (!field.size) return playersObj;
+  const out = {};
+  for (const id of field) {
+    const row = playersObj[String(id)];
+    if (row) out[String(id)] = row;
+  }
+  return out;
+}
+
+function propsHistoryRoundYear(r) {
+  const y = Math.round(num(r?.year ?? r?.season ?? r?.event_year, NaN));
+  if (y >= 1990 && y <= 2100) return y;
+  const completed = String(r?.event_completed || r?.date || "").trim();
+  const m = completed.match(/^(\d{4})/);
+  if (m) return Math.round(num(m[1], NaN));
+  const key = historyRoundChronoKey(r);
+  if (Number.isFinite(key) && key >= 19000101) return Math.floor(key / 10000);
+  return NaN;
+}
+
+function propsRoundsWithinLookback(list) {
+  const minY = propsRhMinSeasonYear();
+  const arr = Array.isArray(list) ? list : [];
+  return arr.filter((r) => {
+    const y = propsHistoryRoundYear(r);
+    return !Number.isFinite(y) || y >= minY;
+  });
+}
 
 function propsRhTimeframeValue() {
   return String(document.getElementById("props-rh-timeframe")?.value || "all").trim() || "all";
@@ -1266,10 +1312,17 @@ function populatePropsRhFilterSelects() {
   const tf = document.getElementById("props-rh-timeframe");
   if (tf && !tf.options.length) {
     const cur = String(tf.value || "all");
+    const minY = propsRhMinSeasonYear();
     tf.innerHTML = "";
     for (const o of meta.timeframes || []) {
+      const value = String(o.value ?? "all");
+      // Cap season presets to last 3 years; keep rolling windows + All.
+      if (value.startsWith("season:")) {
+        const y = Math.round(num(value.slice(7), NaN));
+        if (Number.isFinite(y) && y < minY) continue;
+      }
       const opt = document.createElement("option");
-      opt.value = String(o.value ?? "all");
+      opt.value = value;
       opt.textContent = String(o.label ?? o.value ?? "All");
       tf.appendChild(opt);
     }
@@ -1385,7 +1438,12 @@ async function ensurePropsRhVizLoaded() {
   propsRhVizLoadPromise = (async () => {
     try {
       const res = await fetch(cacheBustFetchUrl("data/betsperts_betting_viz.json"), { cache: "force-cache" });
-      if (res.ok) PROPS_RH_VIZ = await res.json();
+      if (res.ok) {
+        const raw = await res.json();
+        // Keep only current-field players — drops ~800 off-field rows.
+        if (raw?.playersByDg) raw.playersByDg = propsRhPrunePlayersToField(raw.playersByDg);
+        PROPS_RH_VIZ = raw;
+      }
     } catch {
       PROPS_RH_VIZ = null;
     }
@@ -1405,7 +1463,13 @@ async function ensurePropsRhBootstrap() {
       ensurePropsRhVizLoaded(),
       ensureBetspertsCourseFactsLoaded(),
     ]);
-    propsRhLiveStats = OU_RH_STATS;
+    const base = OU_RH_STATS && typeof OU_RH_STATS === "object" ? OU_RH_STATS : { players: {} };
+    propsRhLiveStats = {
+      ...base,
+      players: propsRhPrunePlayersToField(base.players || {}),
+      fieldOnly: true,
+      lookbackYears: PROPS_RH_LOOKBACK_YEARS,
+    };
     populatePropsRhFilterSelects();
     paintPropsCourseCategories();
     propsRhBootstrapped = true;
@@ -1418,16 +1482,22 @@ async function ensurePropsRhBootstrap() {
   }
 }
 
-/** Kept for Round projections OU filters — HT must not call this on every paint. */
+/** Local RH stats only (field-pruned). Never live-pull on HT paint. */
 async function refreshPropsRhLiveStats() {
   await ensureOuRhStatsLoaded();
-  propsRhLiveStats = OU_RH_STATS;
+  const base = OU_RH_STATS && typeof OU_RH_STATS === "object" ? OU_RH_STATS : { players: {} };
+  propsRhLiveStats = {
+    ...base,
+    players: propsRhPrunePlayersToField(base.players || {}),
+    fieldOnly: true,
+    lookbackYears: PROPS_RH_LOOKBACK_YEARS,
+  };
   return propsRhLiveStats;
 }
 
 function propsRhPlayerRow(dgId) {
   const id = Math.round(num(dgId, NaN));
-  if (!Number.isFinite(id)) return null;
+  if (!Number.isFinite(id) || !propsRhIsCurrentFieldPlayer(id)) return null;
   return propsRhLiveStats?.players?.[String(id)] || OU_RH_STATS?.players?.[String(id)] || null;
 }
 
@@ -1531,6 +1601,7 @@ function propsRhVizPlayer(dgId) {
 /** Category-slice bars from RH viz (greens / length / scoring) — mirrors Filter-by-Conditions. */
 function propsRhCategorySliceSeries(dgId, cond = propsRhConditionState()) {
   const id = Math.round(num(dgId, NaN));
+  if (!Number.isFinite(id) || !propsRhIsCurrentFieldPlayer(id)) return [];
   const viz = propsRhVizPlayer(id);
   if (!viz) return [];
   const mk = (label, sg, n, kind) => {
@@ -1571,18 +1642,17 @@ function propsRhCategorySliceSeries(dgId, cond = propsRhConditionState()) {
 
 function propsRhWindowSeriesForPlayer(dgId) {
   const id = Math.round(num(dgId, NaN));
-  if (!Number.isFinite(id)) return [];
+  if (!Number.isFinite(id) || !propsRhIsCurrentFieldPlayer(id)) return [];
   const fromProj = DATA?.players?.find((p) => Math.round(num(p.dg_id)) === id)?.betsperts_form_windows;
   const fromViz = propsRhVizPlayer(id)?.windows;
   const win = fromProj || fromViz;
   const avg = win?.average && typeof win.average === "object" ? win.average : win;
   if (!avg || typeof avg !== "object") return [];
+  // Recent form only — no career / L100 (those span beyond the 3-year cap).
   const order = [
     ["round-12", "L12"],
     ["round-24", "L24"],
     ["round-50", "L50"],
-    ["round-100", "L100"],
-    ["all", "Career"],
   ];
   const out = [];
   for (const [key, label] of order) {
@@ -1600,11 +1670,11 @@ function propsRhWindowSeriesForPlayer(dgId) {
       _rhWindow: key,
     });
   }
-  // seasons newest first
+  const minY = propsRhMinSeasonYear();
   const seasons = Object.keys(avg)
     .filter((k) => /^season-\d{4}$/.test(k))
-    .sort((a, b) => b.localeCompare(a))
-    .slice(0, 6);
+    .filter((k) => Math.round(num(k.slice(7), NaN)) >= minY)
+    .sort((a, b) => b.localeCompare(a));
   for (const key of seasons) {
     const v = num(avg[key]?.sg_tot ?? avg[key]?.sg, NaN);
     if (!Number.isFinite(v)) continue;
@@ -1622,10 +1692,10 @@ function propsRhWindowSeriesForPlayer(dgId) {
   return out;
 }
 
-/** Preferred HT chart series from Rabbit Hole (local windows / category slices only). */
+/** Preferred HT chart series from Rabbit Hole (field players, last 3 seasons). */
 function propsRhChartSeriesForPlayer(dgId, statKey = "sg_total") {
   const id = Math.round(num(dgId, NaN));
-  if (!Number.isFinite(id)) return [];
+  if (!Number.isFinite(id) || !propsRhIsCurrentFieldPlayer(id)) return [];
   const cond = propsRhConditionState();
   const hasSliceFilter = Boolean(cond.green || cond.clength || cond.condition);
   if (hasSliceFilter) {
@@ -24103,7 +24173,7 @@ function filteredHistoryRounds(dgId) {
 
 /** Newest-first rounds for chart + hit stats (respects Rounds stepper, including current-course filter). */
 function propsFilteredRoundsNewestFirst(dgId, winN) {
-  const list = filteredHistoryRounds(dgId);
+  const list = propsRoundsWithinLookback(filteredHistoryRounds(dgId));
   const wn = clamp(
     Math.round(num(winN, PROPS_HISTORY_ROUND_DEFAULT)),
     PROPS_HISTORY_ROUND_MIN,
@@ -27293,6 +27363,14 @@ function renderPropsTrends() {
     return;
   }
   ensurePropsStatSelectValid();
+  // Field-only RH bootstrap once (local JSON, no live Betsperts).
+  if (!propsRhBootstrapped) {
+    void ensurePropsRhBootstrap().then(() => {
+      if (activeAppTabId() === "props") scheduleRenderPropsTrends(0);
+    });
+  } else {
+    paintPropsCourseCategories();
+  }
   const fieldChartCapOnly =
     propsCourseWindowModeOn() &&
     propsAverageModeOn() &&
@@ -27352,10 +27430,8 @@ function renderPropsTrends() {
   } else {
     if (titleEl) titleEl.textContent = "—";
   }
-  const historyHasSelectedBucket =
-    Number.isFinite(dg) &&
-    historyBucketLoaded(dg) &&
-    (propsCourseWindowModeOn() || !historyBucketIsSeasonSliceOnly(dg));
+  // Paint immediately with whatever shard is loaded; upgrade career in background.
+  const historyHasSelectedBucket = Number.isFinite(dg) && historyBucketLoaded(dg);
   if (
     Number.isFinite(dg) &&
     !propsCourseWindowModeOn() &&
