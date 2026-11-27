@@ -7308,14 +7308,45 @@ html[data-theme="dark"] .nav-theme-toggle-icon {
   background: var(--golf-green);
 }
 
-/* Course Key Stats — dark tools panel (RickRunGood-style) */
-body:has(#panel-course-fit.active) .content-wrapper,
-body:has(#panel-course-fit.panel.active) .content-wrapper {
+/* Course Key Stats — unified dark chrome while this tab is open */
+html.cks-theme,
+html.cks-theme body {
+  background: #0c0e10;
+  color: #f4f6f5;
+}
+html.cks-theme .content-wrapper {
   background: #0c0e10;
 }
-body:has(#panel-course-fit.active) .data-status-primary,
-body:has(#panel-course-fit.panel.active) .data-status-primary {
+html.cks-theme .data-status-primary {
   display: none;
+}
+html.cks-theme .app-nav {
+  background: #0c0e10 !important;
+  border-bottom-color: rgba(255, 255, 255, 0.08) !important;
+  color: #f4f6f5;
+  box-shadow: none !important;
+}
+html.cks-theme .nav-brand-title,
+html.cks-theme .nav-brand-btn,
+html.cks-theme .app-nav a {
+  color: #fff;
+}
+html.cks-theme .nav-brand-sub {
+  color: #8b9198;
+}
+html.cks-theme .nav-theme-toggle {
+  color: #f4f6f5;
+  border-color: rgba(255, 255, 255, 0.14);
+}
+html.cks-theme .tabs--tool-nav {
+  background: #121518 !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+}
+html.cks-theme .tabs--tool-nav .tab {
+  color: rgba(255, 255, 255, 0.72);
+}
+html.cks-theme .tabs--tool-nav .tab.active {
+  color: #00e39a;
 }
 .course-key-stats-panel {
   --cks-bg: #0c0e10;
@@ -7488,41 +7519,82 @@ body:has(#panel-course-fit.panel.active) .data-status-primary {
   text-underline-offset: 3px;
 }
 .cks-field-block {
-  background: var(--cks-surface);
-  border: 1px solid var(--cks-line);
+  background: transparent;
+  border: 0;
+  border-top: 1px solid var(--cks-line);
   border-radius: 0;
-  padding: 16px 18px 8px;
+  padding: 20px 22px 12px;
   color: var(--cks-text);
 }
 .cks-field-title {
   margin: 0;
-  font-size: 1.05rem;
+  font-size: 0.95rem;
+  font-weight: 650;
   color: #fff;
 }
 .cks-field-sub {
-  margin: 4px 0 12px;
-  font-size: 0.78rem;
+  margin: 4px 0 14px;
+  font-size: 0.75rem;
   color: var(--cks-muted);
+}
+.cks-table-wrap {
+  overflow-x: auto;
+  margin: 0 -6px;
+}
+.cks-field-table {
+  width: 100%;
+  border-collapse: collapse;
+  color: var(--cks-text);
+  font-size: 0.88rem;
+}
+.cks-field-table thead th {
+  text-align: left;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--cks-muted);
+  padding: 8px 10px;
+  border-bottom: 1px solid var(--cks-line);
+  background: transparent;
+}
+.cks-field-table thead th.num,
+.cks-field-table td.num {
+  text-align: right;
+}
+.cks-field-table tbody td {
+  padding: 11px 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  background: transparent !important;
+  vertical-align: middle;
+  color: var(--cks-text);
+}
+.cks-field-table tbody tr:hover td {
+  background: rgba(255, 255, 255, 0.03) !important;
 }
 .cks-field-golfer {
   display: flex;
   align-items: center;
   gap: 10px;
+  color: #fff;
+  font-weight: 550;
+}
+.cks-field-golfer .player-avatar,
+.cks-field-golfer img {
+  width: 28px !important;
+  height: 28px !important;
+  border-radius: 999px;
+  object-fit: cover;
+  flex-shrink: 0;
 }
 .cks-field-fit {
   font-weight: 750;
-  color: var(--cks-accent);
+  color: var(--cks-accent) !important;
+  font-variant-numeric: tabular-nums;
 }
 .cks-field-matches {
   font-size: 0.78rem;
   color: var(--cks-muted);
-}
-.course-key-stats-panel .data-table {
-  color: var(--cks-text);
-}
-.course-key-stats-panel .data-table th,
-.course-key-stats-panel .data-table td {
-  border-color: var(--cks-line);
 }
 @media (max-width: 560px) {
   .course-key-stats-panel .cks-shell {

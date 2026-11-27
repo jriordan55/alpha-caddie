@@ -29966,6 +29966,7 @@ async function buildLiveStatsTab() {
 }
 
 function showHomeView() {
+  document.documentElement.classList.remove("cks-theme");
   document.querySelectorAll(".tabs .tab").forEach((b) => {
     b.classList.remove("active");
     b.setAttribute("aria-selected", "false");
@@ -29990,6 +29991,7 @@ function showAppTab(tab) {
     return;
   }
   setToolsChromeVisible(true);
+  document.documentElement.classList.toggle("cks-theme", tab === "course-fit");
   const btn = document.querySelector(`.tabs .tab[data-tab="${tab}"]`);
   document.querySelectorAll(".tabs .tab").forEach((b) => {
     const on = b === btn;
