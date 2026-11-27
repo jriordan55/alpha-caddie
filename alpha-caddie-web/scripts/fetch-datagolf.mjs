@@ -3026,6 +3026,8 @@ async function main() {
     /** Strokes-gained pillars (sg_total/ott/app/arg/putt/t2g) prefer Betsperts Rabbit Hole when mapped. */
     sg_source: betspertsSgApplied > 0 ? "betsperts" : "datagolf",
     betsperts_sg_n: betspertsSgApplied,
+    /** App + nightly overlays treat Betsperts as primary for SG, course facts, RH trad, form windows. */
+    prefer_betsperts: true,
     /** Web app: book columns are implied % (0–100); convert to American in UI like Shiny pct_to_american */
     outrights_odds_format: "percent",
     /** Stored raw from betting-tools/matchups with odds_format=decimal */

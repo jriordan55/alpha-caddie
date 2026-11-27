@@ -252,14 +252,13 @@ run(
 );
 
 run(
-  "build-betsperts-betting-viz.mjs",
-  "Betsperts betting visuals sidecar → data/betsperts_betting_viz.json",
+  "overlay-course-table-betsperts.mjs",
+  "Prefer Betsperts facts/metrics as primary course-table (CSV fallback)",
   {},
   softOpt,
 );
 
-// Full RH matrix is also pulled inside fetch-betsperts-db when auth is on; re-run here so
-// 9pm still refreshes views×Average/Total×years even if the main pull was skipped mid-way.
+// Full RH matrix before betting-viz so player form windows bake into the sidecar.
 if (!envTruthy("GOLF_SKIP_BETSPERTS", false) && !envTruthy("GOLF_SKIP_BETSPERTS_RH_MATRIX", false)) {
   run(
     "fetch-betsperts-rh-matrix.mjs",
@@ -280,7 +279,7 @@ if (!envTruthy("GOLF_SKIP_BETSPERTS", false) && !envTruthy("GOLF_SKIP_BETSPERTS_
 
 run(
   "build-betsperts-sg.mjs",
-  "Betsperts SG → data/betsperts_sg_by_dg.json + overlay projections sg_*",
+  "Betsperts SG → data/betsperts_sg_by_dg.json + overlay projections sg_* (primary pillars)",
   {},
   softOpt,
 );
@@ -288,6 +287,20 @@ run(
 run(
   "build-betsperts-rh-ou-stats.mjs",
   "Rabbit Hole OU market stats (SG/BoB/DrAcc/GIR/Bogey) → data/betsperts_rh_ou_stats.json",
+  {},
+  softOpt,
+);
+
+run(
+  "build-betsperts-betting-viz.mjs",
+  "Betsperts betting visuals sidecar → data/betsperts_betting_viz.json (after RH matrix)",
+  {},
+  softOpt,
+);
+
+run(
+  "overlay-projections-betsperts-trad.mjs",
+  "Prefer Betsperts RH traditional stats + form windows on projections players",
   {},
   softOpt,
 );

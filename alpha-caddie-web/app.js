@@ -548,9 +548,13 @@ let approachSkillYtdCache = null;
 let approachSkillYtdLoadPromise = null;
 /** Built by build:shots-web from all_shots_*.csv — unrelated to Historical Trends (round history JSON). */
 let SHOTS = { meta: {}, byDgId: {}, _ok: false };
-/** Built from data/course_table.json (see scripts/build-course-table-json.mjs, npm run build:course-table). */
+/** Built from data/course_table.json (see scripts/build-course-table-json.mjs, npm run build:course-table).
+ *  Prefer Betsperts via overlay-course-table-betsperts.mjs (`sourcePrimary: "betsperts"`). */
 let COURSE_TABLE_PAYLOAD = null;
 let courseTableJsonLoadPromise = null;
+/** Betsperts course facts/metrics/hole stats — primary venue profile when present. */
+let BETSPERTS_COURSE_FACTS = null;
+let betspertsCourseFactsLoadPromise = null;
 let RESULTS = { loaded: false, loading: false, error: "", payload: null };
 /** Chronological bet tuples for Kelly ROI — from `data/results_kelly_bets.json` (see build-results-backtest.mjs). */
 let KELLY = { loaded: false, loading: false, error: "", payload: null };
@@ -1724,6 +1728,54 @@ function courseTableJsonUrl() {
 }
 
 /** Loads course-table.json once; used by Course Fit, static course difficulty prior for live props, etc. */
+async function ensureBetspertsCourseFactsLoaded() {
+  if (BETSPERTS_COURSE_FACTS) return BETSPERTS_COURSE_FACTS;
+  if (betspertsCourseFactsLoadPromise) return betspertsCourseFactsLoadPromise;
+  betspertsCourseFactsLoadPromise = (async () => {
+    try {
+      const res = await fetch(cacheBustFetchUrl("data/betsperts_course_facts.json"), { cache: "no-store" });
+      if (!res.ok) throw new Error(String(res.status));
+      BETSPERTS_COURSE_FACTS = await res.json();
+    } catch {
+      BETSPERTS_COURSE_FACTS = null;
+    } finally {
+      betspertsCourseFactsLoadPromise = null;
+    }
+    return BETSPERTS_COURSE_FACTS;
+  })();
+  return betspertsCourseFactsLoadPromise;
+}
+
+function betspertsCourseFactForNormKey(vk) {
+  const facts = BETSPERTS_COURSE_FACTS?.byKey;
+  if (!facts || !vk) return null;
+  if (facts[vk]) return facts[vk];
+  for (const [k, v] of Object.entries(facts)) {
+    if (k.includes(vk) || vk.includes(k)) return v;
+  }
+  return null;
+}
+
+/** Hole pars from Betsperts hole_stats when live/DG pars are missing. */
+function holeParsFromBetspertsFact(fact) {
+  const hs = fact?.hole_stats;
+  if (!Array.isArray(hs) || hs.length < 9) return [];
+  const byHole = new Map();
+  for (const h of hs) {
+    const hole = Math.round(num(h.hole, NaN));
+    const par = Math.round(num(h.par, NaN));
+    if (!Number.isFinite(hole) || hole < 1 || hole > 18 || !Number.isFinite(par)) continue;
+    byHole.set(hole, par);
+  }
+  if (byHole.size < 9) return [];
+  const out = [];
+  for (let i = 1; i <= 18; i++) {
+    if (!byHole.has(i)) return [];
+    out.push(byHole.get(i));
+  }
+  return out;
+}
+
 async function loadCourseTableJson() {
   if (COURSE_TABLE_PAYLOAD) return COURSE_TABLE_PAYLOAD;
   if (courseTableJsonLoadPromise) return courseTableJsonLoadPromise;
@@ -1732,6 +1784,8 @@ async function loadCourseTableJson() {
       const res = await fetch(cacheBustFetchUrl(courseTableJsonUrl()), { cache: "no-store" });
       if (!res.ok) throw new Error(String(res.status));
       COURSE_TABLE_PAYLOAD = await res.json();
+      // Warm Betsperts facts in parallel for hole stats / correlated / grass.
+      void ensureBetspertsCourseFactsLoaded();
     } catch {
       COURSE_TABLE_PAYLOAD = null;
     } finally {
@@ -3702,6 +3756,8 @@ function applyPayload(raw) {
   approachSkillByDgIdCache = null;
   courseFitApproachBinWeightsCache = null;
   COURSE_TABLE_PAYLOAD = null;
+  BETSPERTS_COURSE_FACTS = null;
+  betspertsCourseFactsLoadPromise = null;
   const nextFieldFp = playerDgFingerprint(players);
   if (prevFieldFp !== nextFieldFp) {
     lastDatagolfInPlayToken = "";
@@ -13161,7 +13217,21 @@ function courseWeightedSkillFormBonus(rounds, ctRow, dgId, modelRound) {
   return clamp(out + courseTablePlayerMuNudge(row, ctRow, 0.1), -0.42, 0.42);
 }
 
-function recentFormMuBonusAdaptive(rounds) {
+/** Prefer Betsperts RH L12 vs L50 SG:TOT form when overlaid on the player row. */
+function betspertsFormMuBonusFromPlayer(playerRow) {
+  if (!playerRow || typeof playerRow !== "object") return NaN;
+  const l12 = num(playerRow.betsperts_sg_l12, NaN);
+  const l24 = num(playerRow.betsperts_sg_l24, NaN);
+  const l50 = num(playerRow.betsperts_sg_l50, NaN);
+  const recent = Number.isFinite(l12) ? l12 : l24;
+  const base = Number.isFinite(l50) ? l50 : num(playerRow.sg_total, NaN);
+  if (!Number.isFinite(recent) || !Number.isFinite(base)) return NaN;
+  return clamp((recent - base) * 0.9, -0.35, 0.35);
+}
+
+function recentFormMuBonusAdaptive(rounds, playerRow) {
+  const bp = betspertsFormMuBonusFromPlayer(playerRow);
+  if (Number.isFinite(bp)) return bp;
   const nRec = Math.min(6, Math.max(3, Math.floor(rounds.length / 2)));
   const recent = rounds.slice(0, nRec);
   const older = rounds.slice(nRec, Math.min(rounds.length, nRec + 18));
@@ -16523,11 +16593,33 @@ function buildCourseBreakdownTab() {
   const courseName =
     formatCourseNameForDisplay(String(m.course_used || DATA?.course_used || "").trim()) || "Course";
   const eventName = formatEventNameForDisplay(String(m.event_name || DATA?.event_name || "").trim()) || "";
-  const holePars = Array.isArray(m.hole_pars)
+  let holePars = Array.isArray(m.hole_pars)
     ? m.hole_pars
     : Array.isArray(DATA?.hole_pars)
       ? DATA.hole_pars
       : [];
+  // Prefer Betsperts hole_stats pars when live/DG hole pars are absent.
+  if (holePars.length < 18) {
+    const vk = normCourseNameKey(courseName);
+    const fact = betspertsCourseFactForNormKey(vk);
+    const bp = holeParsFromBetspertsFact(fact);
+    if (bp.length === 18) {
+      holePars = bp;
+      if (DATA?.meta) DATA.meta.hole_pars_source = "betsperts";
+    } else {
+      void ensureBetspertsCourseFactsLoaded().then(() => {
+        const f2 = betspertsCourseFactForNormKey(vk);
+        const bp2 = holeParsFromBetspertsFact(f2);
+        if (bp2.length === 18 && DATA?.meta?.hole_pars_source !== "live_hole_stats") {
+          if (DATA.meta) {
+            DATA.meta.hole_pars = bp2;
+            DATA.meta.hole_pars_source = "betsperts";
+          }
+          buildCourseBreakdownTab();
+        }
+      });
+    }
+  }
   const par =
     Math.round(num(m.course_par_18 ?? DATA?.course_par_18, NaN)) ||
     (holePars.length ? holePars.reduce((s, p) => s + Math.round(num(p, 4)), 0) : 72);
@@ -17323,7 +17415,11 @@ const COURSE_FIT_TABLE_RADAR_KEYS_DEFAULT = Object.freeze([
 ]);
 
 function playerDrivingAccuracyFrac(mrow) {
-  const da = num(mrow?.driving_accuracy ?? mrow?.driving_acc, NaN);
+  // Prefer Betsperts RH driving accuracy when overlaid onto the player row.
+  const da = num(
+    mrow?.betsperts_dr_accuracy ?? mrow?.driving_accuracy ?? mrow?.driving_acc,
+    NaN,
+  );
   if (!Number.isFinite(da)) return NaN;
   return da > 1 ? da / 100 : da;
 }
@@ -17514,6 +17610,24 @@ function courseFitSimilarCoursesFromCourseTable(activeVk, venueRow) {
     out.push({ ck: nk, dist: d, sim: 1 / (1 + d) });
   }
   out.sort((a, b) => b.sim - a.sim);
+  // Prefer Betsperts correlated courses at the top of the similar list.
+  const corr = Array.isArray(venueRow._betsperts_correlated) ? venueRow._betsperts_correlated : [];
+  if (corr.length) {
+    const boosted = [];
+    const seen = new Set();
+    for (const ck of corr) {
+      if (!ck || ck === activeVk || seen.has(ck)) continue;
+      const hit = out.find((x) => x.ck === ck) || { ck, dist: 0, sim: 0.99 };
+      boosted.push({ ...hit, sim: Math.max(hit.sim, 0.99), betsperts: true });
+      seen.add(ck);
+    }
+    for (const x of out) {
+      if (seen.has(x.ck)) continue;
+      boosted.push(x);
+      seen.add(x.ck);
+    }
+    return boosted.slice(0, 12);
+  }
   return out.slice(0, 12);
 }
 
@@ -23503,13 +23617,17 @@ function pricingModeMuSgBonusForMode(dgId, modeRaw, skillRaw = PRICING_STATE.ski
     let course = 0;
     let skill = 0;
     let venueRounds = 0;
+    const playerRow = DATA?.players?.find(
+      (p) => Math.round(num(p.dg_id)) === id && Math.round(num(p.round, 1)) === modelRound,
+    ) || DATA?.players?.find((p) => Math.round(num(p.dg_id)) === id);
     if (rounds.length >= 4) {
-      recent = recentFormMuBonusAdaptive(rounds);
+      recent = recentFormMuBonusAdaptive(rounds, playerRow);
       const ch = courseHistoryMuBonusAdaptive(rounds, venueCourseName());
       course = ch.bonus;
       venueRounds = ch.venueRounds;
       skill = courseWeightedSkillFormBonus(rounds, ctRow, id, modelRound);
     } else {
+      recent = recentFormMuBonusAdaptive([], playerRow);
       skill = courseWeightedSkillFormBonus([], ctRow, id, modelRound);
     }
     const out = blendAdaptiveMuSgBonus(recent, course, skill, venueRounds);
