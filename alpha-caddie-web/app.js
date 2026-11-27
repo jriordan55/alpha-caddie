@@ -18617,6 +18617,7 @@ function cksComputeKeyStats(entries, ctx) {
 
   const out = [];
   const puttLabel = ctx.greens ? `SG: Putting (${ctx.greens})` : "SG: Putting";
+  // Skill / process stats only — skip finish-tautological counting (birdies, putts, bogeys).
   const eventCandidates = [
     { key: "sg_app", label: "SG: Approach", invert: false },
     { key: "sg_ott", label: "SG: Off-the-Tee", invert: false },
@@ -18625,9 +18626,6 @@ function cksComputeKeyStats(entries, ctx) {
     { key: "sg_t2g", label: "SG: Tee-to-Green", invert: false },
     { key: "gir", label: "GIR", invert: false },
     { key: "fairways", label: "Fairways Hit", invert: false },
-    { key: "birdies", label: "Birdies", invert: false },
-    { key: "bogeys", label: "Bogey Avoidance", invert: true },
-    { key: "putts", label: "Putts", invert: true },
   ];
   for (const c of eventCandidates) {
     const xs = [];
